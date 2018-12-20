@@ -1,11 +1,30 @@
 @import '~@styles/index.less';
 .headers {
   display: flex;
+  align-items: center;
+  padding: 0 24px;
   height: 60px;
   background: #ffffff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  img {
+    height: 32px;
+  }
+  .net {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: @red;
+    width: 64px;
+    height: 24px;
+    border-radius: 12px;
+    margin-right: 40px;
+    margin-left: 4px;
+  }
   ul {
     display: flex;
+    height: 100%;
+
     li + li {
       margin-left: 32px;
     }

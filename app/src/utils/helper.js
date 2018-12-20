@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
 import store from 'store';
-import { fromJS, is } from 'immutable';
 import { forkJoin, from, of, Subject } from 'rxjs';
 import { map, race, retry, catchError, tap, take, share, debounceTime, takeWhile } from 'rxjs/operators';
 
@@ -81,11 +80,6 @@ export const localSave = {
   getUserInfo: () => {
     return store.get('userInfo');
   },
-};
-
-export const immutable = {
-  fromJS,
-  is,
 };
 
 export const moment_helper = {

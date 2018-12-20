@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mixin } from '../../components';
 import { Inject } from '../../utils';
+import * as styles from './index.less';
 
 @Inject(({ assetStore: model }) => ({ model }))
 class Asset extends Mixin {
@@ -9,7 +10,7 @@ class Asset extends Mixin {
   startInit = () => {};
 
   render() {
-    return <div>资产</div>;
+    return <div className={styles.asset}>资产</div>;
   }
 }
 
