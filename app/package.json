@@ -13,7 +13,6 @@
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",
     "classnames": "^2.2.6",
-    "immutable": "^3.8.2",
     "lodash": "^4.17.11",
     "mobx": "^5.5.0",
     "mobx-react": "^5.2.8",
