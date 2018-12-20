@@ -1,4 +1,4 @@
-const { BrowserWindow } = require("electron");
+const { BrowserWindow, globalShortcut } = require("electron");
 
 class Window {
   constructor(config = {}) {
@@ -23,6 +23,7 @@ class Window {
     });
     this.loadUrl(url);
     this.openDevTools();
+    this.setShortCut();
   }
 
   loadUrl(url) {
@@ -31,6 +32,11 @@ class Window {
 
   openDevTools() {
     this.window.webContents.openDevTools();
+  }
+  setShortCut() {
+    globalShortcut.register("CommandOrControl+R", () => {
+      this.window.reload();
+    });
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { _ } from '../../utils';
 
-class MixinCustom extends React.Component {
+class Mixin extends React.Component {
   constructor(props) {
     super(props);
     this._isMounted = true;
@@ -24,6 +24,4 @@ class MixinCustom extends React.Component {
   };
 }
 
-export default {
-  Custom: MixinCustom,
-};
+export default Mixin;

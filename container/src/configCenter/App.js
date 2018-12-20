@@ -31,10 +31,6 @@ class App {
     });
   }
 
-  static setMenuNull() {
-    Menu.setApplicationMenu(null);
-  }
-
   createWindow() {
     this.window = new Window({
       width: 1600,
@@ -43,6 +39,10 @@ class App {
       fullscreen: false,
       resizable: false
     });
+  }
+
+  static setMenuNull() {
+    Menu.setApplicationMenu(null);
   }
 }
 
