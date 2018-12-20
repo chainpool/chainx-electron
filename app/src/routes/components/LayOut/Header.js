@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { RouterGo } from '../../../components';
-import { PATH } from '../../../constants';
+import routers from '../../App/routers';
 
 class Header extends Component {
   render() {
+    const { location: { pathname } = {} } = this.props;
+    console.log(this.props);
     return (
       <div>
         <ul>
-          <RouterGo Ele="li" go={{ pathname: PATH.asset }}>
-            资产
-          </RouterGo>
-          <RouterGo Ele="li" go={{ pathname: PATH.election }}>
-            选举
-          </RouterGo>
+          {routers.map(item => (
+            <RouterGo key={item.path} Ele="li" go={{ pathname: item.path }}>
+              {item.title}
+              {pathname}
+            </RouterGo>
+          ))}
         </ul>
       </div>
     );

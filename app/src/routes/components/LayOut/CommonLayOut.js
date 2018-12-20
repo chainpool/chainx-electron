@@ -7,7 +7,7 @@ class CommonLayOut extends Component {
     const { children } = this.props;
     return (
       <div>
-        <Header />
+        <Header {...this.props} />
         <Content>{children}</Content>
       </div>
     );
