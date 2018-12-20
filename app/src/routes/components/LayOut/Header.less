@@ -1,0 +1,24 @@
+@import '~@styles/index.less';
+.headers {
+  display: flex;
+  height: 60px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  ul {
+    display: flex;
+    li + li {
+      margin-left: 32px;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      height: 100%;
+
+      &.active {
+        color: @blue;
+        border-bottom: 3px solid @blue;
+      }
+    }
+  }
+}
