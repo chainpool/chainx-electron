@@ -1,0 +1,73 @@
+import React, { Component } from 'react';
+import { Mixin } from '../../components';
+import { Inject, R, createSubject } from '../../utils';
+import * as styles from './index.less';
+
+const { debounceTime, takeWhile } = R;
+
+@Inject(({ homeStore: model }) => ({ model }))
+class Home extends Component {
+  state = {
+    val: '',
+  };
+
+  startInit = () => {
+    this.changeExample();
+  };
+
+  changeExample = v => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    if (this.changeExample$) {
+      return this.changeExample$.next(v);
+    }
+    this.changeExample$ = createSubject();
+    this.changeExample$
+      .pipe(
+        debounceTime(500),
+        takeWhile(v => this._isMounted)
+      )
+      .subscribe(v => {
+        dispatch({
+          type: 'getExample1',
+          payload: v,
+        });
+      });
+  };
+
+  render() {
+    const { changeExample } = this;
+    const { val } = this.state;
+    const {
+      model: { todos, loading },
+    } = this.props;
+    return (
+      <Mixin.Parent that={this}>
+        {loading.getExample1 ? <div>loading...</div> : null}
+
+        <div className={styles.home}>
+          {todos.map((item, index) => (
+            <div key={index}>{item.name}</div>
+          ))}
+          <input
+            value={val}
+            onChange={e => {
+              const value = e.target.value;
+              this.changeState(
+                {
+                  val: value,
+                },
+                () => {
+                  changeExample(value);
+                }
+              );
+            }}
+          />
+        </div>
+      </Mixin.Parent>
+    );
+  }
+}
+
+export default Home;

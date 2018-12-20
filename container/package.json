@@ -1,0 +1,53 @@
+{
+  "name": "app",
+  "productName": "app",
+  "version": "1.0.2",
+  "description": "My Electron application description",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron . --debug",
+    "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
+    "pack": "electron-builder --dir",
+    "dist": "rimraf dist&&electron-builder"
+  },
+  "keywords": [],
+  "author": "myapp",
+  "license": "MIT",
+  "build": {
+    "appId": "myapp",
+    "asarUnpack": [
+      "third-party/**/*"
+    ],
+    "files": [
+      "**/*",
+      "third-party/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "mac": {
+      "category": "finance"
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://localhost:7000/electron_update/"
+      }
+    ]
+  },
+  "dependencies": {
+    "pg": "^7.7.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.0.6",
+    "unzip": "^0.1.11"
+  },
+  "devDependencies": {
+    "electron": "^3.0.13",
+    "electron-builder": "^20.38.3",
+    "nodemon": "^1.18.8",
+    "rimraf": "^2.6.2"
+  }
+}
