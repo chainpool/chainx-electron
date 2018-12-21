@@ -1,1 +1,59 @@
 @import './variables';
+
+.mixin_tableContainer() {
+  .mixin_table {
+    .tr {
+      padding: 0 2px;
+      .td {
+        font-size: 12px;
+      }
+      .th {
+        color: #555555;
+      }
+      .td,
+      .th {
+        &:first-child {
+          // width: auto !important;
+          justify-content: flex-start;
+        }
+        &:last-child {
+          // width: auto !important;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+  :global {
+    .table {
+      // border: 1px solid red;
+    }
+    .tr {
+      border-bottom: 1px solid #eeeeee;
+      // border-bottom: 1px solid blue;
+    }
+    .thead {
+      .tr {
+        border-top: 1px solid #eeeeee;
+
+        .th {
+          color: #95989a;
+        }
+      }
+      .mixin_table();
+    }
+    .tbody {
+      .tr {
+        &:hover {
+          background: rgba(238, 238, 238, 0.9);
+          color: #555555;
+        }
+      }
+      .expandedRow {
+        display: flex;
+        align-items: center;
+        background: #eeeeee;
+      }
+      .mixin_table();
+    }
+  }
+}
