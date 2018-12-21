@@ -1,42 +1,50 @@
 @import '~@styles/index.less';
 .headers {
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
   height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   background: #ffffff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  img {
-    height: 32px;
-  }
-  .net {
+  > div {
+    height: 100%;
+    width: 1232px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    background: @red;
-    width: 64px;
-    height: 24px;
-    border-radius: 12px;
-    margin-right: 40px;
-    margin-left: 4px;
-  }
-  ul {
-    display: flex;
-    height: 100%;
+    padding: 0 24px;
 
-    li + li {
-      margin-left: 32px;
+    img {
+      height: 32px;
     }
-    li {
+    .net {
       display: flex;
       align-items: center;
-      font-size: 16px;
+      justify-content: center;
+      color: #ffffff;
+      background: @red;
+      width: 64px;
+      height: 24px;
+      border-radius: 12px;
+      margin-right: 40px;
+      margin-left: 4px;
+    }
+    ul {
+      display: flex;
       height: 100%;
 
-      &.active {
-        color: @blue;
-        border-bottom: 3px solid @blue;
+      li + li {
+        margin-left: 32px;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        height: 100%;
+
+        &.active {
+          color: @blue;
+          border-bottom: 3px solid @blue;
+        }
       }
     }
   }

@@ -9,19 +9,21 @@ class Header extends Component {
     const { location: { pathname } = {} } = this.props;
     return (
       <div className={styles.headers}>
-        <img src={logo} alt="logo" />
-        <div className={styles.net}>测试网</div>
-        <ul>
-          {routers.map(item => (
-            <RouterGo
-              key={item.path}
-              Ele="li"
-              go={{ pathname: item.path }}
-              className={pathname === item.path ? styles.active : null}>
-              {item.title}
-            </RouterGo>
-          ))}
-        </ul>
+        <div>
+          <img src={logo} alt="logo" />
+          <div className={styles.net}>测试网</div>
+          <ul>
+            {routers.map(item => (
+              <RouterGo
+                key={item.path}
+                Ele="li"
+                go={{ pathname: item.path }}
+                className={pathname === item.path ? styles.active : null}>
+                {item.title}
+              </RouterGo>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   }

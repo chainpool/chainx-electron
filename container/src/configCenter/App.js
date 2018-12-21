@@ -32,12 +32,14 @@ class App {
   }
 
   createWindow() {
+    const { screen } = require("electron");
     this.window = new Window({
-      width: 1600,
-      height: 2000,
+      width: screen.getPrimaryDisplay().workAreaSize.width,
+      height: screen.getPrimaryDisplay().workAreaSize.height,
       url: `http://localhost:8000/#/`,
       fullscreen: false,
-      resizable: false
+      resizable: true,
+      minWidth: 1280
     });
   }
 
