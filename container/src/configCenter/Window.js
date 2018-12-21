@@ -22,8 +22,8 @@ class Window {
       this.window = null;
     });
     this.loadUrl(url);
-    this.openDevTools();
     this.setShortCut();
+    this.openDevTools();
   }
 
   loadUrl(url) {
@@ -36,6 +36,9 @@ class Window {
   setShortCut() {
     globalShortcut.register("CommandOrControl+R", () => {
       this.window.reload();
+    });
+    globalShortcut.register("CommandOrControl+O", () => {
+      this.openDevTools();
     });
   }
 }

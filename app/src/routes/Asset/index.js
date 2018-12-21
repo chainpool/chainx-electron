@@ -13,16 +13,9 @@ class Asset extends Mixin {
   startInit = () => {};
 
   render() {
-    const setColumnsWidth = (table, widths = []) => {
-      return table.map((item, index) => ({
-        ...item,
-        width: widths[index],
-      }));
-    };
     const props = {
       ...this.props,
-      widths: [100, 100, 100, 200],
-      setColumnsWidth,
+      widths: [200, 200, 200, 200],
     };
     return (
       <div className={styles.asset}>

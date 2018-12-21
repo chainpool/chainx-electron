@@ -16,3 +16,10 @@ export const Inject = func => {
     return inject(func)(observer(c));
   };
 };
+
+export const setColumnsWidth = (table = [], widths = []) => {
+  return table.map((item, index) => ({
+    ...item,
+    width: widths[index],
+  }));
+};

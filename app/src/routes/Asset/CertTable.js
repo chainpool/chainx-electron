@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button } from '../../components';
 
 class CertTable extends Component {
   render() {
-    const { setColumnsWidth, widths } = this.props;
+    const { widths } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: setColumnsWidth(
