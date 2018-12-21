@@ -1,5 +1,6 @@
 import React from 'react';
-import { Mixin, Table } from '../../components';
+import { Mixin, Table, Icon } from '../../components';
+import { TableTitle } from '../components';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -47,10 +48,19 @@ class Asset extends Mixin {
     };
     return (
       <div className={styles.asset}>
-        资产d
-        <span>
-          <i className="iconfont icon-icon-xiangxiazhankai" />
-        </span>
+        <TableTitle title={'资产'}>
+          <ul>
+            <li>
+              <Icon name="icon-caozuojilu" />
+              操作记录
+            </li>
+            <li>
+              <Icon name="icon-dizhiguanli" />
+              地址管理
+            </li>
+          </ul>
+        </TableTitle>
+
         <Table {...tableProps} />
       </div>
     );
