@@ -47,7 +47,10 @@ class Asset extends Mixin {
     };
     return (
       <div className={styles.asset}>
-        资产
+        资产d
+        <span>
+          <i className="iconfont icon-icon-xiangxiazhankai" />
+        </span>
         <Table {...tableProps} />
       </div>
     );
