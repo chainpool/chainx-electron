@@ -1,0 +1,64 @@
+@import '~@styles/index.less';
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+
+  &.circle {
+    border-radius: 2px;
+  }
+
+  &.large {
+    padding: 8px 18px;
+  }
+  &.middle {
+    padding: 8px 16px;
+  }
+  &.small {
+    padding: 8px 10px;
+  }
+  &.mini {
+    padding: 8px 4px;
+  }
+  &.full {
+    padding: 10px;
+    width: 100%;
+  }
+  &.primary {
+    border: 1px solid @gray2;
+  }
+  &.outline {
+    //color: @black;
+  }
+  &.blank {
+    padding: 3px 10px;
+    background: none;
+    color: @blue;
+    border: none;
+    i {
+      margin-right: 5px;
+    }
+  }
+  &.warn {
+    background: @red;
+    color: white;
+    border: none;
+  }
+  &.disabeld,
+  &.disabled {
+    pointer-events: none;
+    // background: @gray3;
+    color: white;
+  }
+  &.more {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+  }
+  i {
+    margin-right: 5px;
+  }
+}
