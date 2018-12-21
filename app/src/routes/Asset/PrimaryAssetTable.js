@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, Button } from '../../components';
 
-class CertTable extends Component {
+class PrimaryAssetTable extends Component {
   render() {
     const { setColumnsWidth, widths } = this.props;
     const tableProps = {
@@ -14,16 +14,28 @@ class CertTable extends Component {
             dataIndex: 'data1',
           },
           {
-            title: '证书发放日期',
+            title: '简称',
             dataIndex: 'data2',
           },
           {
-            title: '抵押锁定期',
+            title: '可用余额',
             dataIndex: 'data3',
           },
           {
-            title: '剩余节点额度',
+            title: '投票冻结',
             dataIndex: 'data4',
+          },
+          {
+            title: '赎回冻结',
+            dataIndex: 'data5',
+          },
+          {
+            title: '交易冻结',
+            dataIndex: 'data6',
+          },
+          {
+            title: '总余额',
+            dataIndex: 'data7',
           },
           {
             title: '',
@@ -35,16 +47,13 @@ class CertTable extends Component {
       ),
       dataSource: [
         {
-          data1: 'zhengshud注册注册注册注册注册注册注册',
-          data2: '2018-10-31',
-          data3: '30天',
-          data4: '45',
-        },
-        {
-          data1: 'zhengshud注册注册注册注册注册注册注册',
-          data2: '2018-10-31',
-          data3: '30天',
-          data4: '45',
+          data1: 'Polkadot ChainX',
+          data2: 'PCX',
+          data3: '24,000.240',
+          data4: '10,000.000',
+          data5: '0.000',
+          data6: '0.000',
+          data7: '14,000.240',
         },
       ],
     };
@@ -52,4 +61,4 @@ class CertTable extends Component {
   }
 }
 
-export default CertTable;
+export default PrimaryAssetTable;

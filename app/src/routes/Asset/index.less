@@ -1,8 +1,14 @@
 @import '~@styles/index.less';
 
 .asset {
+  padding: 24px;
   .tableContainer {
     .mixin_tableContainer();
   }
-  padding: 24px;
+
+  > ul {
+    > li + li {
+      margin-top: 32px;
+    }
+  }
 }

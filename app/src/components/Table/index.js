@@ -36,6 +36,7 @@ export default class TableComponent extends Component {
       x: 0,
       loadingMore: false, //加载更多的加载状态
       currentPage: 0,
+      dataSource: this.props.dataSource,
     };
   }
 
@@ -65,10 +66,12 @@ export default class TableComponent extends Component {
     const { dataSource: prevDataSource, columns: prevColumns } = prevProps;
     const { dataSource, columns } = this.props;
     if (!_.isEqual(prevDataSource, dataSource)) {
-      this.changeState();
+      this.changeState({
+        dataSource,
+      });
     }
     if (!_.isEqual(JSON.stringify(prevColumns), JSON.stringify(columns))) {
-      this.setState(
+      this.changeState(
         {
           currentPage: 0,
         },
@@ -83,9 +86,12 @@ export default class TableComponent extends Component {
     window.onresize = null;
   }
 
-  changeState = payload => {
+  changeState = (payload, callback) => {
     if (this._isMount) {
-      payload && this.setState(payload);
+      payload &&
+        this.setState(payload, () => {
+          _.isFunction(callback) && callback();
+        });
       clearTimeout(this.interval1);
       this.interval1 = setTimeout(() => {
         this.scroller && this.scroller.refresh();
@@ -150,7 +156,6 @@ export default class TableComponent extends Component {
       className = {},
       style = {},
       columns = [],
-      dataSource = [],
       expandedRowRender,
       onClickRow,
       noDataTip,
@@ -164,10 +169,16 @@ export default class TableComponent extends Component {
 
     const getTdThProp = (item = {}) => {
       const style = item.width
-        ? { width: item.width, minWidth: item.width, maxWidth: item.maxWidth }
+        ? {
+            width: item.width,
+            minWidth: item.width,
+            maxWidth: item.maxWidth,
+          }
         : {
             width: `${(1 / (columns.length || 1)) * 100}%`,
             maxWidth: item.maxWidth,
+            flexShrink: 1,
+            flexGrow: 1,
           };
       return {
         style,
@@ -180,7 +191,7 @@ export default class TableComponent extends Component {
       scroll,
     };
 
-    const { currentPage } = this.state;
+    const { dataSource = [], currentPage } = this.state;
     return (
       <div
         style={{ height: this.calculateTableHeight(dataSource, ...tableHeight) }}
@@ -234,7 +245,11 @@ export default class TableComponent extends Component {
                                   key={index2}
                                   {...getTdThProp(item2)}
                                   className={classNames(item2.className, className)}>
-                                  {item2.ellipsis ? <span className={styles.ellipsis}>{result}</span> : result}
+                                  {item2.width || item2.ellipsis ? (
+                                    <span className={styles.ellipsis}>{result}</span>
+                                  ) : (
+                                    result
+                                  )}
                                 </Td>
                               );
                             })}
