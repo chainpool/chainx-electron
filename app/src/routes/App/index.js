@@ -4,18 +4,27 @@ import { Route, Switch, Redirect } from 'react-router';
 import { CommonLayOut } from '../components';
 import { PATH } from '../../constants';
 import routers from './routers';
+import { Inject } from '../../utils';
 
-function Main(Props) {
-  return (
-    <CommonLayOut {...Props}>
-      <Switch>
-        {routers.map(item => (
-          <Route key={item.path} path={item.path} exact render={props => <item.component {...props} {...Props} />} />
-        ))}
-        <Redirect key={0} to={PATH.asset} />
-      </Switch>
-    </CommonLayOut>
-  );
+@Inject(({ globalStore }) => ({ globalStore }))
+class Main extends Component {
+  render() {
+    return (
+      <CommonLayOut {...this.props}>
+        <Switch>
+          {routers.map(item => (
+            <Route
+              key={item.path}
+              path={item.path}
+              exact
+              render={props => <item.component {...props} {...this.props} />}
+            />
+          ))}
+          <Redirect key={0} to={PATH.asset} />
+        </Switch>
+      </CommonLayOut>
+    );
+  }
 }
 
 export default class App extends Component {

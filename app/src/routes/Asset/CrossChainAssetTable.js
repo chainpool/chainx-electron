@@ -6,7 +6,11 @@ import miniLogo from '../../resource/miniLogo.png';
 
 class CrossChainAssetTable extends Component {
   render() {
-    const { widths } = this.props;
+    const {
+      model: { openModal },
+      widths,
+    } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: setColumnsWidth(
@@ -51,7 +55,14 @@ class CrossChainAssetTable extends Component {
             render: () => (
               <ButtonGroup>
                 <Button type="primary">领币</Button>
-                <Button>充值</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'DepositModal',
+                    });
+                  }}>
+                  充值
+                </Button>
                 <Button>提现</Button>
                 <Button>转账</Button>
               </ButtonGroup>

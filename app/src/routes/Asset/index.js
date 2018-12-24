@@ -4,6 +4,7 @@ import { TableTitle } from '../components';
 import CertTable from './CertTable';
 import PrimaryAssetTable from './PrimaryAssetTable';
 import CrossChainAssetTable from './CrossChainAssetTable';
+import DepositModal from './Modal/DepositModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -11,13 +12,26 @@ import * as styles from './index.less';
 class Asset extends Mixin {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { openModal },
+    } = this.props;
+    openModal({
+      name: 'DepositModal',
+    });
+  };
 
   render() {
+    const {
+      globalStore: {
+        modal: { name },
+      },
+    } = this.props;
     const props = {
       ...this.props,
       widths: [160, 130, 130, 130, , , , 280],
     };
+
     return (
       <div className={styles.asset}>
         <ul>
@@ -58,6 +72,7 @@ class Asset extends Mixin {
             <CrossChainAssetTable {...props} />
           </li>
         </ul>
+        {name === 'DepositModal' ? <DepositModal /> : null}
       </div>
     );
   }

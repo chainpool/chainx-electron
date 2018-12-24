@@ -4,3 +4,4 @@ export { default as Scroller } from './Scroller';
 export { default as Table } from './Table';
 export { default as Icon } from './Icon';
 export { Button, ButtonGroup } from './Button';
+export { default as Modal } from './Modal';

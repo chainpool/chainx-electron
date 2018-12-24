@@ -33,4 +33,14 @@ export default class ModelExtend {
       console.error('dispatch参数的type是必须参数,并且必须存在这个方法');
     }
   };
+
+  openModal = payload => {
+    this.rootStore.globalStore.openModal(payload);
+  };
+
+  closeModal = payload => {
+    setTimeout(() => {
+      this.rootStore.globalStore.closeModal(payload);
+    }, 0);
+  };
 }
