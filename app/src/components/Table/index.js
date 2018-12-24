@@ -32,6 +32,7 @@ export default class TableComponent extends Component {
   constructor(props) {
     super(props);
     this._isMount = true;
+    this.action = '_action'; //区分出操作列
     this.state = {
       x: 0,
       loadingMore: false, //加载更多的加载状态
@@ -227,7 +228,7 @@ export default class TableComponent extends Component {
                               let className;
                               const key = item2.dataIndex;
                               let value = item[key];
-                              if (_.isNaN(value) || _.isUndefined(value)) {
+                              if (key !== this.action && (_.isNaN(value) || _.isUndefined(value))) {
                                 result = <span style={{ opacity: 0.5 }} />;
                               } else {
                                 if (_.isFunction(item2.render)) {
@@ -245,7 +246,7 @@ export default class TableComponent extends Component {
                                   key={index2}
                                   {...getTdThProp(item2)}
                                   className={classNames(item2.className, className)}>
-                                  {item2.width || item2.ellipsis ? (
+                                  {(item2.width || item2.ellipsis) && key !== this.action ? (
                                     <div className={styles.ellipsis}>{result}</div>
                                   ) : (
                                     result

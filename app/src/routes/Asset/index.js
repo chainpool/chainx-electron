@@ -1,8 +1,9 @@
 import React from 'react';
-import { Icon, Mixin } from '../../components';
+import { Icon, Mixin, Button } from '../../components';
 import { TableTitle } from '../components';
 import CertTable from './CertTable';
 import PrimaryAssetTable from './PrimaryAssetTable';
+import CrossChainAssetTable from './CrossChainAssetTable';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -15,7 +16,7 @@ class Asset extends Mixin {
   render() {
     const props = {
       ...this.props,
-      widths: [150, 150, 150, 150],
+      widths: [160, 130, 130, 130, , , , 280],
     };
     return (
       <div className={styles.asset}>
@@ -24,12 +25,16 @@ class Asset extends Mixin {
             <TableTitle title={'我的证书'}>
               <ul>
                 <li>
-                  <Icon name="icon-caozuojilu" />
-                  操作记录
+                  <Button type="blank">
+                    <Icon name="icon-caozuojilu" />
+                    操作记录
+                  </Button>
                 </li>
                 <li>
-                  <Icon name="icon-dizhiguanli" />
-                  地址管理
+                  <Button type="blank">
+                    <Icon name="icon-dizhiguanli" />
+                    地址管理
+                  </Button>
                 </li>
               </ul>
             </TableTitle>
@@ -38,6 +43,19 @@ class Asset extends Mixin {
           <li>
             <TableTitle title={'原生资产'} />
             <PrimaryAssetTable {...props} />
+          </li>
+          <li>
+            <TableTitle title={'跨链资产'}>
+              <ul>
+                <li>
+                  <Button type="blank">
+                    <Icon name="icon-chongtijilu" />
+                    充提记录
+                  </Button>
+                </li>
+              </ul>
+            </TableTitle>
+            <CrossChainAssetTable {...props} />
           </li>
         </ul>
       </div>

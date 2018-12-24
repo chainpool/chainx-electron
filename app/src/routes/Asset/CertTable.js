@@ -28,7 +28,7 @@ class CertTable extends Component {
           },
           {
             title: '',
-            dataIndex: 'data1',
+            dataIndex: '_action',
             render: () => <Button>注册</Button>,
           },
         ],
@@ -36,7 +36,7 @@ class CertTable extends Component {
       ),
       dataSource: [
         {
-          data1: 'zhengshuzhengshuzhengshuzhengshu',
+          data1: 'zhengshu',
           data2: '2018-10-31',
           data3: '30天',
           data4: '45',

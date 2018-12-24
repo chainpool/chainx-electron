@@ -4,7 +4,7 @@ import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 
-class PrimaryAssetTable extends Component {
+class CrossChainAssetTable extends Component {
   render() {
     const { widths } = this.props;
     const tableProps = {
@@ -26,15 +26,15 @@ class PrimaryAssetTable extends Component {
             dataIndex: 'data2',
           },
           {
-            title: '可用余额',
+            title: '原链',
             dataIndex: 'data3',
           },
           {
-            title: '投票冻结',
+            title: '可用余额',
             dataIndex: 'data4',
           },
           {
-            title: '赎回冻结',
+            title: '提现冻结',
             dataIndex: 'data5',
           },
           {
@@ -51,6 +51,8 @@ class PrimaryAssetTable extends Component {
             render: () => (
               <ButtonGroup>
                 <Button type="primary">领币</Button>
+                <Button>充值</Button>
+                <Button>提现</Button>
                 <Button>转账</Button>
               </ButtonGroup>
             ),
@@ -62,7 +64,7 @@ class PrimaryAssetTable extends Component {
         {
           data1: 'Polkadot ChainX',
           data2: 'PCX',
-          data3: '24,000.240',
+          data3: '24,000',
           data4: '10,000.000',
           data5: '0.000',
           data6: '0.000',
@@ -74,4 +76,4 @@ class PrimaryAssetTable extends Component {
   }
 }
 
-export default PrimaryAssetTable;
+export default CrossChainAssetTable;
