@@ -1,0 +1,70 @@
+@import '~@styles/variables.less';
+.bindAddress {
+  padding: 24px;
+  margin: -30px -24px 0;
+  background: @gray;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    button {
+      outline: none;
+      border: 1px solid #dce0e2;
+      border-radius: 2px;
+      background: #ffffff;
+      width: 92px;
+      height: 32px;
+    }
+  }
+  > ul {
+    li + li {
+      margin-top: 10px;
+    }
+    li {
+      display: flex;
+      span {
+        color: #95989a;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.publicAddress {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  > div + div {
+    margin-left: 24px;
+  }
+  > div {
+    .title {
+      margin-bottom: 16px;
+    }
+    .address {
+      margin-bottom: 24px;
+      span {
+        color: #95989a;
+      }
+    }
+    .warn {
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      .icon {
+        color: #eab83d;
+        font-size: 32px;
+      }
+      span {
+        margin-left: 16px;
+      }
+    }
+    &.back {
+      width: 112px;
+      min-width: 112px;
+      height: 112px;
+      background: @gray2;
+    }
+  }
+}

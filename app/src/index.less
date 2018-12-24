@@ -2,7 +2,6 @@
 @import '~@styles/index.less';
 * {
   box-sizing: border-box;
-  line-height: 1;
 }
 
 :global {
@@ -16,14 +15,12 @@
 
 body,
 html {
+  line-height: 1;
+  font-size: @fontSize;
   height: 100%;
-}
-
-body {
   font-weight: 400;
   background: @gray;
   color: @fontgray;
-  font-size: @fontSize;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
   font-family: Arial, 'Helvetica Neue', HelveticaNeue, Helvetica, Microsoft YaHei, sans-serif !important;
@@ -46,7 +43,6 @@ button {
   padding: 0;
   margin: 0;
   font-weight: unset;
-  font-size: unset;
 }
 
 ul,
