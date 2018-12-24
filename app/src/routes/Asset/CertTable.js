@@ -36,13 +36,7 @@ class CertTable extends Component {
       ),
       dataSource: [
         {
-          data1: 'zhengshud注册注册注册注册注册注册注册',
-          data2: '2018-10-31',
-          data3: '30天',
-          data4: '45',
-        },
-        {
-          data1: 'zhengshud注册注册注册注册注册注册注册',
+          data1: 'zhengshuzhengshuzhengshuzhengshu',
           data2: '2018-10-31',
           data3: '30天',
           data4: '45',

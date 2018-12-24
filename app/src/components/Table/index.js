@@ -246,7 +246,7 @@ export default class TableComponent extends Component {
                                   {...getTdThProp(item2)}
                                   className={classNames(item2.className, className)}>
                                   {item2.width || item2.ellipsis ? (
-                                    <span className={styles.ellipsis}>{result}</span>
+                                    <div className={styles.ellipsis}>{result}</div>
                                   ) : (
                                     result
                                   )}

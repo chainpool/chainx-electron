@@ -15,13 +15,13 @@ class Asset extends Mixin {
   render() {
     const props = {
       ...this.props,
-      widths: [200, 200, 200, 200],
+      widths: [150, 150, 150, 150],
     };
     return (
       <div className={styles.asset}>
         <ul>
           <li>
-            <TableTitle title={'资产'}>
+            <TableTitle title={'我的证书'}>
               <ul>
                 <li>
                   <Icon name="icon-caozuojilu" />
@@ -36,7 +36,7 @@ class Asset extends Mixin {
             <CertTable {...props} />
           </li>
           <li>
-            <TableTitle title={'资产'} />
+            <TableTitle title={'原生资产'} />
             <PrimaryAssetTable {...props} />
           </li>
         </ul>

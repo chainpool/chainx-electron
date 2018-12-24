@@ -28,10 +28,11 @@
     width: 100%;
   }
   &.primary {
-    border: 1px solid @gray2;
+    border: 1px solid @blue;
+    color: @blue;
   }
   &.outline {
-    //color: @black;
+    border: 1px solid @gray2;
   }
   &.blank {
     padding: 3px 10px;
@@ -60,5 +61,12 @@
   }
   i {
     margin-right: 5px;
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  .button + .button {
+    margin-left: 8px;
   }
 }

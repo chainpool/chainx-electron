@@ -2,12 +2,12 @@ import React from 'react';
 import { _, classNames } from '@utils';
 import * as styles from './index.less';
 
-export default class Button extends React.Component {
+export class Button extends React.Component {
   render() {
     const {
       children,
       size = 'middle',
-      type = 'primary',
+      type = 'outline',
       onClick,
       style = {},
       shape = 'circle',
@@ -23,5 +23,12 @@ export default class Button extends React.Component {
         {type === 'more' ? <>...</> : children}
       </button>
     );
+  }
+}
+
+export class ButtonGroup extends React.Component {
+  render() {
+    const { children } = this.props;
+    return <div className={styles.buttonGroup}>{children}</div>;
   }
 }
