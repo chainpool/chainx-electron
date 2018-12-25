@@ -3,3 +3,4 @@ export { default as TableTitle } from './TableTitle';
 export { default as InputHorizotalList } from './InputHorizotalList';
 export { default as FreeBalance } from './FreeBalance';
 export { default as BreadCrumb } from './BreadCrumb';
+export { default as Tab } from './Tab';

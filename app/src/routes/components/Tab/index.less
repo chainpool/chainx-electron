@@ -1,0 +1,15 @@
+@import '~@styles/variables.less';
+.Tab {
+  display: flex;
+  li + li {
+    margin-left: 40px;
+  }
+  li {
+    font-size: 16px;
+    cursor: pointer;
+    padding-bottom: 22px;
+    &.active {
+      border-bottom: 3px solid @blue;
+    }
+  }
+}
