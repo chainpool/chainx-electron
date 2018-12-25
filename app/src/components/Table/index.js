@@ -246,8 +246,8 @@ export default class TableComponent extends Component {
                                   key={index2}
                                   {...getTdThProp(item2)}
                                   className={classNames(item2.className, className)}>
-                                  {(item2.width || item2.ellipsis) && key !== this.action ? (
-                                    <div className={styles.ellipsis}>{result}</div>
+                                  {(item2.width || item2.ellipse) && key !== this.action ? (
+                                    <div className={styles.ellipse}>{result}</div>
                                   ) : (
                                     result
                                   )}

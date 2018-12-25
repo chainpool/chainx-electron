@@ -1,8 +1,12 @@
 import React from 'react';
 import { Mixin } from '../../components';
 import { BreadCrumb, Tab } from '../components';
+import DepositTable from './DepositTable';
+import WithDrawTable from './WithDrawTable';
 import * as styles from './index.less';
+import { Inject } from '../../utils';
 
+@Inject(({ assetStore: model }) => ({ model }))
 class DepositWithDrawRecord extends Mixin {
   state = {
     activeIndex: 0,
@@ -26,6 +30,8 @@ class DepositWithDrawRecord extends Mixin {
             }}
           />
         </div>
+        {activeIndex === 0 ? <DepositTable {...this.props} /> : null}
+        {activeIndex === 1 ? <WithDrawTable {...this.props} /> : null}
       </div>
     );
   }
