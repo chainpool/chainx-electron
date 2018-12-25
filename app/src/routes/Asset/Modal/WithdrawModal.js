@@ -11,6 +11,12 @@ class WithdrawModal extends Component {
     amountErrMsg: '',
   };
   checkAll = {
+    checkAddress: () => {
+      const { address } = this.state;
+      const errMsg = Patterns.check('required')(address);
+      this.setState({ addressErrMsg: errMsg });
+      return errMsg;
+    },
     checkAmount: () => {
       const { amount } = this.state;
       const errMsg = Patterns.check('required')(amount);
@@ -19,7 +25,7 @@ class WithdrawModal extends Component {
     },
 
     confirm: () => {
-      return ['checkAmount'].every(item => !this.checkAll[item]());
+      return ['checkAddress', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
   render() {
@@ -44,7 +50,15 @@ class WithdrawModal extends Component {
           </Button>
         }>
         <div>
-          <Input.Select prefix="Bitcoin" label="收款地址" value={address} errMsg={addressErrMsg} />
+          <Input.Select
+            prefix="Bitcoin"
+            label="收款地址"
+            value={address}
+            errMsg={addressErrMsg}
+            options={[{ label: 1, value: 1 }]}
+            onChange={value => this.setState({ address: value })}
+            onBlur={checkAll.checkAddress}
+          />
           <InputHorizotalList
             left={
               <Input.Text

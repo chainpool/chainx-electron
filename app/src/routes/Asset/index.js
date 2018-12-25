@@ -17,9 +17,9 @@ class Asset extends Mixin {
     const {
       model: { openModal },
     } = this.props;
-    openModal({
-      name: 'WithdrawModal',
-    });
+    // openModal({
+    //   name: 'WithdrawModal',
+    // });
   };
 
   render() {

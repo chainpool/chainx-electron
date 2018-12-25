@@ -63,7 +63,14 @@ class CrossChainAssetTable extends Component {
                   }}>
                   充值
                 </Button>
-                <Button>提现</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'WithdrawModal',
+                    });
+                  }}>
+                  提现
+                </Button>
                 <Button>转账</Button>
               </ButtonGroup>
             ),

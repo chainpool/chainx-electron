@@ -79,14 +79,26 @@ class CheckBox extends React.Component {
 }
 
 class InputSelect extends React.Component {
+  state = {
+    errMsg: this.props.errMsg,
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.errMsg !== this.props.errMsg) {
+      this.setState({
+        errMsg: this.props.errMsg,
+      });
+    }
+  }
   render() {
+    const { errMsg = '' } = this.state;
     const {
       className,
       size = 'middle',
       type = 'primary',
       value = '',
       onChange,
-      errMsg = '',
+      onBlur,
       disabled = false,
       label = '',
       onInputChange,
@@ -111,7 +123,11 @@ class InputSelect extends React.Component {
               value={value}
               className={styles.selectContainer}
               isClearable
-              onChange={onChange}
+              onChange={value => {
+                this.setState({ errMsg: '' });
+                _.isFunction(onChange) && onChange(value);
+              }}
+              onBlur={onBlur}
               onCreateOption={onCreateOption}
               onInputChange={onInputChange}
               options={options}
