@@ -3,7 +3,7 @@ import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Patterns } from '../../../utils';
 
-class WithdrawModal extends Component {
+class TransferModal extends Component {
   state = {
     address: '',
     addressErrMsg: '',
@@ -36,7 +36,7 @@ class WithdrawModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="跨链提现"
+        title="链内转账"
         button={
           <Button
             size="full"
@@ -51,8 +51,8 @@ class WithdrawModal extends Component {
         }>
         <div>
           <Input.Select
-            prefix="Bitcoin"
-            label="收款地址"
+            prefix="ChainX"
+            label="接收人地址"
             value={address}
             errMsg={addressErrMsg}
             options={[{ label: 1, value: 1 }]}
@@ -62,15 +62,15 @@ class WithdrawModal extends Component {
           <InputHorizotalList
             left={
               <Input.Text
-                suffix="BTC"
-                label="提现数量"
+                suffix="PCX"
+                label="转账数量"
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => this.setState({ amount: value })}
                 onBlur={checkAll.checkAmount}
               />
             }
-            right={<FreeBalance value={'78'} unit={'BTC'} />}
+            right={<FreeBalance value={'200.000'} unit={'PCX'} />}
           />
         </div>
       </Modal>
@@ -78,4 +78,4 @@ class WithdrawModal extends Component {
   }
 }
 
-export default WithdrawModal;
+export default TransferModal;

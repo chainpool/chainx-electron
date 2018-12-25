@@ -5,7 +5,11 @@ import { Table, Button } from '../../components';
 
 class CertTable extends Component {
   render() {
-    const { widths } = this.props;
+    const {
+      model: { openModal },
+      widths,
+    } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: setColumnsWidth(
@@ -29,7 +33,16 @@ class CertTable extends Component {
           {
             title: '',
             dataIndex: '_action',
-            render: () => <Button>注册</Button>,
+            render: () => (
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'RegisterNode',
+                  });
+                }}>
+                注册
+              </Button>
+            ),
           },
         ],
         widths

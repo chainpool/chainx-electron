@@ -71,7 +71,14 @@ class CrossChainAssetTable extends Component {
                   }}>
                   提现
                 </Button>
-                <Button>转账</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'TransferModal',
+                    });
+                  }}>
+                  转账
+                </Button>
               </ButtonGroup>
             ),
           },
@@ -80,8 +87,8 @@ class CrossChainAssetTable extends Component {
       ),
       dataSource: [
         {
-          data1: 'Polkadot ChainX',
-          data2: 'PCX',
+          data1: 'Bitcoin',
+          data2: 'BTC',
           data3: '24,000',
           data4: '10,000.000',
           data5: '0.000',

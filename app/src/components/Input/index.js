@@ -83,8 +83,8 @@ class InputSelect extends React.Component {
     errMsg: this.props.errMsg,
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.errMsg !== this.props.errMsg) {
+  componentDidUpdate() {
+    if (this.state.errMsg !== this.props.errMsg) {
       this.setState({
         errMsg: this.props.errMsg,
       });
@@ -155,8 +155,8 @@ class InputText extends React.Component {
     errMsg: this.props.errMsg,
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.errMsg !== this.props.errMsg) {
+  componentDidUpdate() {
+    if (this.state.errMsg !== this.props.errMsg) {
       this.setState({
         errMsg: this.props.errMsg,
       });
@@ -181,8 +181,10 @@ class InputText extends React.Component {
       prefix = '',
       suffix = '',
       shape = 'round',
+      placeholder = '',
     } = this.props;
     const props = {
+      placeholder,
       type: isPassword && passwordType ? 'password' : 'text',
       value: value,
       disabled: disabled,

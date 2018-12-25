@@ -6,6 +6,8 @@ import PrimaryAssetTable from './PrimaryAssetTable';
 import CrossChainAssetTable from './CrossChainAssetTable';
 import DepositModal from './Modal/DepositModal';
 import WithdrawModal from './Modal/WithdrawModal';
+import TransferModal from './Modal/TransferModal';
+import RegisterNode from './Modal/RegisterNode';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -18,7 +20,7 @@ class Asset extends Mixin {
       model: { openModal },
     } = this.props;
     // openModal({
-    //   name: 'WithdrawModal',
+    //   name: 'RegisterNode',
     // });
   };
 
@@ -75,6 +77,8 @@ class Asset extends Mixin {
         </ul>
         {name === 'DepositModal' ? <DepositModal {...this.props} /> : null}
         {name === 'WithdrawModal' ? <WithdrawModal {...this.props} /> : null}
+        {name === 'TransferModal' ? <TransferModal {...this.props} /> : null}
+        {name === 'RegisterNode' ? <RegisterNode {...this.props} /> : null}
       </div>
     );
   }

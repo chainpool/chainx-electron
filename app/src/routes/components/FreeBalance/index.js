@@ -3,10 +3,10 @@ import * as styles from './index.less';
 
 class FreeBalance extends Component {
   render() {
-    const { value, unit } = this.props;
+    const { label = '可用余额', value, unit } = this.props;
     return (
       <div className={styles.freeBalance}>
-        <span>可用余额:</span>
+        <span>{label}:</span>
         {value} {unit}
       </div>
     );

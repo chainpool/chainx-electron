@@ -6,7 +6,10 @@ import miniLogo from '../../resource/miniLogo.png';
 
 class PrimaryAssetTable extends Component {
   render() {
-    const { widths } = this.props;
+    const {
+      model: { openModal },
+      widths,
+    } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: setColumnsWidth(
@@ -51,7 +54,14 @@ class PrimaryAssetTable extends Component {
             render: () => (
               <ButtonGroup>
                 <Button type="primary">领币</Button>
-                <Button>转账</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'TransferModal',
+                    });
+                  }}>
+                  转账
+                </Button>
               </ButtonGroup>
             ),
           },

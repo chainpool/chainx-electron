@@ -3,10 +3,14 @@ import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Patterns } from '../../../utils';
 
-class WithdrawModal extends Component {
+class RegisterNode extends Component {
   state = {
     address: '',
     addressErrMsg: '',
+    name: '',
+    nameErrMsg: '',
+    website: '',
+    websiteErrMsg: '',
     amount: '',
     amountErrMsg: '',
   };
@@ -17,6 +21,18 @@ class WithdrawModal extends Component {
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
+    checkName: () => {
+      const { name } = this.state;
+      const errMsg = Patterns.check('required')(name) || Patterns.check('smaller')(name.length, 12, '不能超过12个字符');
+      this.setState({ nameErrMsg: errMsg });
+      return errMsg;
+    },
+    checkWebsite: () => {
+      const { website } = this.state;
+      const errMsg = Patterns.check('required')(website);
+      this.setState({ websiteErrMsg: errMsg });
+      return errMsg;
+    },
     checkAmount: () => {
       const { amount } = this.state;
       const errMsg = Patterns.check('required')(amount);
@@ -25,18 +41,18 @@ class WithdrawModal extends Component {
     },
 
     confirm: () => {
-      return ['checkAddress', 'checkAmount'].every(item => !this.checkAll[item]());
+      return ['checkAddress', 'checkName', 'checkWebsite', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, amount, amountErrMsg } = this.state;
+    const { address, addressErrMsg, name, nameErrMsg, website, websiteErrMsg, amount, amountErrMsg } = this.state;
     const {
       model: { closeModal },
     } = this.props;
     return (
       <Modal
-        title="跨链提现"
+        title="注册节点"
         button={
           <Button
             size="full"
@@ -51,8 +67,8 @@ class WithdrawModal extends Component {
         }>
         <div>
           <Input.Select
-            prefix="Bitcoin"
-            label="收款地址"
+            prefix="ChainX"
+            label="节点账户地址"
             value={address}
             errMsg={addressErrMsg}
             options={[{ label: 1, value: 1 }]}
@@ -62,15 +78,36 @@ class WithdrawModal extends Component {
           <InputHorizotalList
             left={
               <Input.Text
-                suffix="BTC"
-                label="提现数量"
+                placeholder="12个字符以内"
+                label="名称"
+                value={name}
+                errMsg={nameErrMsg}
+                onChange={value => this.setState({ name: value })}
+                onBlur={checkAll.checkName}
+              />
+            }
+            right={
+              <Input.Text
+                label="网站"
+                placeholder="www.chainx.org"
+                value={website}
+                errMsg={websiteErrMsg}
+                onChange={value => this.setState({ website: value })}
+                onBlur={checkAll.checkWebsite}
+              />
+            }
+          />
+          <InputHorizotalList
+            left={
+              <Input.Text
+                label="分配额度"
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => this.setState({ amount: value })}
                 onBlur={checkAll.checkAmount}
               />
             }
-            right={<FreeBalance value={'78'} unit={'BTC'} />}
+            right={<FreeBalance label="剩余额度" value={'40'} />}
           />
         </div>
       </Modal>
@@ -78,4 +115,4 @@ class WithdrawModal extends Component {
   }
 }
 
-export default WithdrawModal;
+export default RegisterNode;
