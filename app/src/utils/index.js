@@ -23,3 +23,47 @@ export const setColumnsWidth = (table = [], widths = []) => {
     width: widths[index],
   }));
 };
+
+export const Patterns = {
+  // decodeAddress: (value, errMsg = '格式错误') => {
+  //   try {
+  //     return addressDecode(value) ? '' : errMsg;
+  //   } catch (e) {
+  //     return errMsg;
+  //   }
+  // },
+
+  // encode: (password, encode) => {
+  //   return encodeService.encodingToPassword(password, encode) ? '' : '密码错误';
+  // },
+  required: (value, errMsg = '必填') => {
+    return !value ? errMsg : '';
+  },
+  equal: (value1, value2, errMsg = '不相等') => {
+    if (value1 && value2) {
+      return value1 === value2 ? '' : errMsg;
+    }
+    return '';
+  },
+  smaller: (inputValue, baseValue, errMsg = '余额不足') => {
+    if (inputValue && !_.isNaN(baseValue)) {
+      return Number(inputValue) > Number(baseValue) ? errMsg : '';
+    }
+  },
+  precision: (inputValue, precision, errMsg = '小数位数') => {
+    if (inputValue && !_.isNaN(precision)) {
+      inputValue = parseFloat(inputValue);
+      const length = _.get(String(inputValue).split('.')[1] || 0, 'length');
+      return length > Number(precision) ? `小数位数最大${precision}位` : '';
+    }
+  },
+
+  check: value => {
+    return (...params) => {
+      if (!Patterns[value]) {
+        return console.error('check对应的方法必须存在');
+      }
+      return Patterns[value](...params);
+    };
+  },
+};

@@ -5,6 +5,7 @@ import CertTable from './CertTable';
 import PrimaryAssetTable from './PrimaryAssetTable';
 import CrossChainAssetTable from './CrossChainAssetTable';
 import DepositModal from './Modal/DepositModal';
+import WithdrawModal from './Modal/WithdrawModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -12,7 +13,14 @@ import * as styles from './index.less';
 class Asset extends Mixin {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { openModal },
+    } = this.props;
+    openModal({
+      name: 'WithdrawModal',
+    });
+  };
 
   render() {
     const {
@@ -65,7 +73,8 @@ class Asset extends Mixin {
             <CrossChainAssetTable {...props} />
           </li>
         </ul>
-        {name === 'DepositModal' ? <DepositModal /> : null}
+        {name === 'DepositModal' ? <DepositModal {...this.props} /> : null}
+        {name === 'WithdrawModal' ? <WithdrawModal {...this.props} /> : null}
       </div>
     );
   }

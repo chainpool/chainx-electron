@@ -7,3 +7,4 @@ export { Button, ButtonGroup } from './Button';
 export { default as Modal } from './Modal';
 export { default as Clipboard } from './Clipboard';
 export { default as Tooltip } from './Tooltip';
+export { default as Input } from './Input';
