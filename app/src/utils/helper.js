@@ -46,6 +46,7 @@ export const lodash_helper = {
   cloneDeep: _.cloneDeep,
   uniqueId: _.uniqueId,
   isFunction: _.isFunction,
+  find: _.find,
 };
 
 export const Rxjs_helper = {

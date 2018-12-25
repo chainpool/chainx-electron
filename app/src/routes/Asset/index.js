@@ -1,6 +1,7 @@
 import React from 'react';
-import { Icon, Mixin, Button } from '../../components';
+import { Icon, Mixin, Button, RouterGo } from '../../components';
 import { TableTitle } from '../components';
+import { PATH } from '../../constants';
 import CertTable from './CertTable';
 import PrimaryAssetTable from './PrimaryAssetTable';
 import CrossChainAssetTable from './CrossChainAssetTable';
@@ -67,7 +68,7 @@ class Asset extends Mixin {
                 <li>
                   <Button type="blank">
                     <Icon name="icon-chongtijilu" />
-                    充提记录
+                    <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>充提记录</RouterGo>
                   </Button>
                 </li>
               </ul>
