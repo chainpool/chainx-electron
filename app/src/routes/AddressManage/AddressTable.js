@@ -4,6 +4,9 @@ import { Table, Clipboard, Button, ButtonGroup } from '../../components';
 
 class AddressTable extends Component {
   render() {
+    const {
+      model: { openModal },
+    } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -26,8 +29,22 @@ class AddressTable extends Component {
           dataIndex: '_action',
           render: () => (
             <ButtonGroup>
-              <Button>修改标签</Button>
-              <Button>删除</Button>
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'EditLabelModal',
+                  });
+                }}>
+                修改标签
+              </Button>
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'DeleteAddressModal',
+                  });
+                }}>
+                删除
+              </Button>
             </ButtonGroup>
           ),
         },
