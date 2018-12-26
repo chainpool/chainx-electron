@@ -9,6 +9,7 @@ class AddressTable extends Component {
       columns: [
         {
           title: '标签',
+          className: 'blue',
           dataIndex: 'data1',
         },
         {
@@ -33,7 +34,7 @@ class AddressTable extends Component {
       ],
       dataSource: [
         {
-          data1: '2018-04-13 16:56:34',
+          data1: 'name1',
           data2: 'ChainX',
           data3: '5E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u5E3ZkEB6b5zHxKSAVkEB',
         },
