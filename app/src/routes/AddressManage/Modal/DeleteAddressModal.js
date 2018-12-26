@@ -11,7 +11,7 @@ class DeleteAddressModal extends Component {
       <Modal title="删除地址">
         <div className={styles.deleteAddressModal}>
           <button onClick={closeModal}>取消</button>
-          <button className={styles.confirm} onClick={closeModal}>
+          <button className={styles.active} onClick={closeModal}>
             确定
           </button>
         </div>

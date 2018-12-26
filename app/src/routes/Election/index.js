@@ -5,16 +5,35 @@ import { Tab } from '../components';
 import TableTitle from '../components/TableTitle';
 import NodeTable from './NodeTable';
 import DepositMineTable from './DepositMineTable';
+import EditBlockAdressModal from './Modal/EditBlockAdressModal';
+import EditConfigModal from './Modal/EditConfigModal';
+import { Inject } from '../../utils';
 
+@Inject(({ electionStore: model }) => ({ model }))
 class Election extends Mixin {
   state = {
     activeIndex: 0,
   };
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { openModal },
+    } = this.props;
+    // openModal({
+    //   name: 'EditConfigModal',
+    // });
+  };
 
   render() {
     const { activeIndex } = this.state;
+    const {
+      model: { openModal },
+    } = this.props;
+    const {
+      globalStore: {
+        modal: { name },
+      },
+    } = this.props;
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
@@ -37,13 +56,25 @@ class Election extends Mixin {
               <TableTitle className={styles.tableTitle}>
                 <ul>
                   <li>
-                    <Button type="blank">
+                    <Button
+                      type="blank"
+                      onClick={() => {
+                        openModal({
+                          name: 'EditBlockAdressModal',
+                        });
+                      }}>
                       <Icon name="icon-xiugaichukuai" />
                       修改出块
                     </Button>
                   </li>
                   <li>
-                    <Button type="blank">
+                    <Button
+                      type="blank"
+                      onClick={() => {
+                        openModal({
+                          name: 'EditConfigModal',
+                        });
+                      }}>
                       <Icon name="icon-xiugaipeizhi" />
                       修改配置
                     </Button>
@@ -54,6 +85,8 @@ class Election extends Mixin {
           )}
         </div>
         {activeIndex === 4 ? <DepositMineTable {...this.props} /> : <NodeTable {...this.props} />}
+        {name === 'EditBlockAdressModal' ? <EditBlockAdressModal {...this.props} /> : null}
+        {name === 'EditConfigModal' ? <EditConfigModal {...this.props} /> : null}
       </div>
     );
   }

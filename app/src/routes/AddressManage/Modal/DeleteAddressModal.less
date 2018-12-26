@@ -1,4 +1,4 @@
-@import '~@styles/variables.less';
+@import '~@styles/index.less';
 .deleteAddressModal {
   margin-top: 32px;
   display: flex;
@@ -7,16 +7,8 @@
     margin-left: 16px;
   }
   button {
-    cursor: pointer;
-    background: unset;
-    border: 1px solid #dce0e2;
-    border-radius: 2px;
+    .mixin_button();
     width: 200px;
     height: 40px;
-    &.confirm {
-      background: @blue;
-      color: white;
-      border-color: @blue;
-    }
   }
 }
