@@ -182,6 +182,7 @@ class InputText extends React.Component {
       suffix = '',
       shape = 'round',
       placeholder = '',
+      rows = 1,
     } = this.props;
     const props = {
       placeholder,
@@ -203,7 +204,7 @@ class InputText extends React.Component {
       },
     };
     const input = isTextArea ? (
-      <textarea {...props} />
+      <textarea {...props} rows={rows} />
     ) : (
       <>
         {isPassword ? <input type="password" name="password" style={{ display: 'none' }} /> : null}
@@ -224,6 +225,7 @@ class InputText extends React.Component {
             styles[shape],
             styles[size],
             styles[type],
+            isTextArea ? styles.textarea : null,
             disabled ? styles.disabled : null
           )}>
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}

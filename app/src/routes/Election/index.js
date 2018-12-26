@@ -7,6 +7,7 @@ import NodeTable from './NodeTable';
 import DepositMineTable from './DepositMineTable';
 import EditBlockAdressModal from './Modal/EditBlockAdressModal';
 import EditConfigModal from './Modal/EditConfigModal';
+import VoteModal from './Modal/VoteModal';
 import { Inject } from '../../utils';
 
 @Inject(({ electionStore: model }) => ({ model }))
@@ -19,9 +20,9 @@ class Election extends Mixin {
     const {
       model: { openModal },
     } = this.props;
-    // openModal({
-    //   name: 'EditConfigModal',
-    // });
+    openModal({
+      name: 'VoteModal',
+    });
   };
 
   render() {
@@ -87,6 +88,7 @@ class Election extends Mixin {
         {activeIndex === 4 ? <DepositMineTable {...this.props} /> : <NodeTable {...this.props} />}
         {name === 'EditBlockAdressModal' ? <EditBlockAdressModal {...this.props} /> : null}
         {name === 'EditConfigModal' ? <EditConfigModal {...this.props} /> : null}
+        {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
       </div>
     );
   }
