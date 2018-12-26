@@ -15,10 +15,10 @@ export default class Clipboard extends Component {
 
   render() {
     const { uid } = this.state;
-    const { children, className } = this.props;
+    const { children, className, width } = this.props;
     return (
       <span className={classNames(styles.clipboard, className)}>
-        <span id={uid} className={styles.children}>
+        <span id={uid} className={classNames(styles.children, width ? styles.ellipse : null)} style={{ width }}>
           {children}
         </span>
         <Tooltip tip="复制成功" type="click">

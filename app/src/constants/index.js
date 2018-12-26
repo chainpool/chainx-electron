@@ -3,4 +3,5 @@ export const PATH = {
   election: '/election',
   depositWithdrawRecord: '/asset/depositWithdrawRecord',
   operationRecord: '/asset/operationRecord',
+  addressManage: '/asset/addressManage',
 };

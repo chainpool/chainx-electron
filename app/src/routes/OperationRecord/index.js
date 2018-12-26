@@ -16,7 +16,7 @@ class OperationRecord extends Mixin {
   render() {
     const { activeIndex } = this.state;
     return (
-      <div className={styles.depositWithDrawRecord}>
+      <div className={styles.operationRecord}>
         <BreadCrumb />
         <TableTitle title="操作记录" />
         {activeIndex === 0 ? <OperationTable {...this.props} /> : null}

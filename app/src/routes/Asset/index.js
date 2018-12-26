@@ -52,8 +52,10 @@ class Asset extends Mixin {
                 </li>
                 <li>
                   <Button type="blank">
-                    <Icon name="icon-dizhiguanli" />
-                    地址管理
+                    <RouterGo go={{ pathname: PATH.addressManage }}>
+                      <Icon name="icon-dizhiguanli" />
+                      地址管理
+                    </RouterGo>
                   </Button>
                 </li>
               </ul>

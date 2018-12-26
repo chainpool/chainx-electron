@@ -1,9 +1,14 @@
 @import '~@styles/index.less';
 
 .clipboard {
-  // display: flex;
-  > span.children {
-    flex-grow: 1;
+  .children {
+    &.ellipse {
+      vertical-align: bottom;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   i {
     color: @blue;
