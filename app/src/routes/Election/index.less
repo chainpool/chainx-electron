@@ -1,5 +1,23 @@
 @import '~@styles/index.less';
 
-.chatClub {
-  background: red;
+.election {
+  padding: 24px;
+  .tableContainer {
+    .mixin_tableContainer();
+  }
+  .tabLine {
+    .mixin_tabLine;
+  }
+  .titledesc {
+    > div {
+      color: #95989a;
+    }
+    .tableTitle {
+      margin-bottom: 0;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 62px;
+  }
 }

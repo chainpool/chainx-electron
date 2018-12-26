@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { classNames } from '../../../utils';
 import * as styles from './index.less';
 
 class TableTitle extends Component {
   render() {
-    const { children, title } = this.props;
+    const { children, title, className } = this.props;
     return (
-      <div className={styles.tableTitle}>
+      <div className={classNames(styles.tableTitle, className)}>
         <div>
           <h5>{title}</h5>
           <div />
