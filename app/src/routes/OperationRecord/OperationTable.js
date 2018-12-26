@@ -8,41 +8,36 @@ class DepositTable extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '发起时间',
+          title: '时间',
           dataIndex: 'data1',
         },
         {
           title: '原链交易ID',
+          ellipse: true,
           dataIndex: 'data2',
         },
         {
-          title: '币种',
-          width: 100,
+          title: '操作',
           dataIndex: 'data3',
         },
         {
-          title: '地址',
+          title: '参数信息',
           ellipse: true,
           dataIndex: 'data4',
         },
+
         {
-          title: '数量',
+          title: '手续费',
           dataIndex: 'data5',
-        },
-        {
-          title: '状态',
-          width: 100,
-          dataIndex: '_action',
-          render: () => '已确认',
         },
       ],
       dataSource: [
         {
           data1: '2018-04-13 16:56:34',
-          data2: 'e345773',
-          data3: 'BTC',
-          data4: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data5: '12.64937460',
+          data2: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
+          data3: '转账',
+          data4: '交易对:PCX/BTC; 方向:买入；报价:0.00043527; 数量:3.74638923',
+          data5: '0.001 PCX',
         },
       ],
     };

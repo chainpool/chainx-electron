@@ -44,8 +44,10 @@ class Asset extends Mixin {
               <ul>
                 <li>
                   <Button type="blank">
-                    <Icon name="icon-caozuojilu" />
-                    操作记录
+                    <RouterGo go={{ pathname: PATH.operationRecord }}>
+                      <Icon name="icon-caozuojilu" />
+                      操作记录
+                    </RouterGo>
                   </Button>
                 </li>
                 <li>
@@ -67,8 +69,10 @@ class Asset extends Mixin {
               <ul>
                 <li>
                   <Button type="blank">
-                    <Icon name="icon-chongtijilu" />
-                    <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>充提记录</RouterGo>
+                    <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>
+                      <Icon name="icon-chongtijilu" />
+                      充提记录
+                    </RouterGo>
                   </Button>
                 </li>
               </ul>

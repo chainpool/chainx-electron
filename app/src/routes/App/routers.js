@@ -1,6 +1,7 @@
 import { default as Asset } from '../Asset';
 import { default as Election } from '../Election';
 import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
+import { default as OperationRecord } from '../OperationRecord';
 import { PATH } from '../../constants';
 export default [
   {
@@ -18,5 +19,11 @@ export default [
     show: false,
     path: PATH.depositWithdrawRecord,
     component: DepositWithDrawRecord,
+  },
+  {
+    title: '操作记录',
+    show: false,
+    path: PATH.operationRecord,
+    component: OperationRecord,
   },
 ];

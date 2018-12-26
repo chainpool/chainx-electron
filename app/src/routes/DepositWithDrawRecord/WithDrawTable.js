@@ -35,6 +35,7 @@ class WithDrawTable extends Component {
         },
         {
           title: '状态',
+          width: 100,
           dataIndex: '_action',
           render: () => '已确认',
         },
