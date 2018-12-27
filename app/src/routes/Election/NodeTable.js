@@ -4,6 +4,9 @@ import { Table, ButtonGroup, Button } from '../../components';
 
 class NodeTable extends Component {
   render() {
+    const {
+      model: { openModal },
+    } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -52,8 +55,22 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: () => (
             <ButtonGroup>
-              <Button>投票</Button>
-              <Button>解冻</Button>
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'VoteModal',
+                  });
+                }}>
+                投票
+              </Button>
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'UnFreezeModal',
+                  });
+                }}>
+                解冻
+              </Button>
               <Button>提息</Button>
             </ButtonGroup>
           ),

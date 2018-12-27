@@ -84,7 +84,7 @@ class InputSelect extends React.Component {
   };
 
   componentDidUpdate() {
-    if (this.state.errMsg === '' && this.props.errMsg && this.props.value === null) {
+    if (this.state.errMsg === '' && this.props.errMsg && (this.props.value === null || this.props.value === '')) {
       this.setState({
         errMsg: this.props.errMsg,
       });

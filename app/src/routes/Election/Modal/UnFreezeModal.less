@@ -1,0 +1,16 @@
+@import '~@styles/index.less';
+
+.unFreezeModal {
+  .tableContainer {
+    .mixin_tableContainer();
+    :global {
+      .table {
+        .tbody {
+          .tr {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+}
