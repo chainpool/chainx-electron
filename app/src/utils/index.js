@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react';
 export { request } from './request';
 export const _ = lodash_helper;
 export const moment = moment_helper;
-export { localSave } from './helper';
+export { localSave, moment_helper } from './helper';
 export { default as classNames } from 'classnames';
 
 // ----------------------------项目适用
