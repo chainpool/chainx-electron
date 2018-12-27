@@ -196,7 +196,10 @@ export default class TableComponent extends Component {
           };
       return {
         style,
-        className: classNames(_.isFunction(item.title) ? 'function' : null, item.className),
+        className: classNames(
+          _.isFunction(item.title) ? 'function' : null,
+          _.isFunction(item.className) ? item.className() : item.className
+        ),
       };
     };
 

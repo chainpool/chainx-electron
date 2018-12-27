@@ -31,7 +31,6 @@ export const lodash_helper = {
   keys: _.keys,
   values: _.values,
   throttle: _.throttle,
-  random: _.random,
   has: _.has,
   get: _.get,
   set: _.set,
@@ -47,6 +46,7 @@ export const lodash_helper = {
   uniqueId: _.uniqueId,
   isFunction: _.isFunction,
   find: _.find,
+  random: _.random,
 };
 
 export const Rxjs_helper = {
