@@ -84,7 +84,7 @@ class InputSelect extends React.Component {
   };
 
   componentDidUpdate() {
-    if (this.state.errMsg !== this.props.errMsg) {
+    if (this.state.errMsg === '' && this.props.errMsg && this.props.value === null) {
       this.setState({
         errMsg: this.props.errMsg,
       });
@@ -156,11 +156,20 @@ class InputText extends React.Component {
   };
 
   componentDidUpdate() {
-    if (this.state.errMsg !== this.props.errMsg) {
+    if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
       this.setState({
         errMsg: this.props.errMsg,
       });
     }
+    // if (prevProps.errMsg !== this.props.errMsg) {
+    //   this.setState({
+    //     errMsg: this.props.errMsg,
+    //   });
+    // } else if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
+    //   this.setState({
+    //     errMsg: this.props.errMsg,
+    //   });
+    // }
   }
 
   render() {
@@ -191,9 +200,12 @@ class InputText extends React.Component {
       disabled: disabled,
       onChange: e => {
         if (!disabled) {
-          this.setState({
-            errMsg: '',
-          });
+          if (errMsg !== '') {
+            this.setState({
+              errMsg: '',
+            });
+          }
+
           _.isFunction(onChange) && onChange(e.target.value);
         }
       },
@@ -236,10 +248,9 @@ class InputText extends React.Component {
               <div
                 className={styles.icon}
                 onClick={() => {
-                  isPassword &&
-                    this.setState({
-                      passwordType: !passwordType,
-                    });
+                  this.setState({
+                    passwordType: !passwordType,
+                  });
                 }}>
                 {isPassword ? (
                   <i className={classNames('iconfont', `icon-${passwordType ? 'biyan' : 'yanjing'}`)} />

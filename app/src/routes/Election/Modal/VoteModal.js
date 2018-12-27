@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
+import { Modal, Input, Button, RadioGroup } from '../../../components';
 import { Patterns } from '../../../utils';
 import * as styles from './EditConfigModal.less';
 
 class VoteModal extends Component {
   state = {
+    action: 'add',
     amount: '',
     amountErrMsg: '',
     remark: '',
@@ -30,7 +31,7 @@ class VoteModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { amount, amountErrMsg, remark, remarkErrMsg } = this.state;
+    const { amount, amountErrMsg, remark, remarkErrMsg, action } = this.state;
     const {
       model: { closeModal },
     } = this.props;
@@ -50,6 +51,11 @@ class VoteModal extends Component {
           </Button>
         }>
         <div className={styles.voteModal}>
+          <RadioGroup>
+            <Input.Radio label="追加投票" value={action} onChange={value => this.setState({ action: 'add' })} />
+            <Input.Radio label="追加投票" value={action} onChange={value => this.setState({ action: 'cancel' })} />
+          </RadioGroup>
+
           <Input.Text
             label="投票数量"
             value={amount}
