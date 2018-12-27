@@ -19,18 +19,18 @@ class Trade extends SwitchPair {
       <div className={styles.trade}>
         <div className={styles.top}>
           <div className={styles.left}>
-            <div className={styles.handicap}>dd</div>
+            <div className={styles.handicap}>挂单</div>
           </div>
           <div className={styles.center}>
-            <div className={styles.kline}>dd</div>
-            <div className={styles.putOrder}>dd</div>
+            <div className={styles.kline}>kline</div>
+            <div className={styles.putOrder}>putorder</div>
           </div>
           <div className={styles.right}>
-            <div className={styles.orderPair}>dd</div>
-            <div className={styles.latestOrder}>dd</div>
+            <div className={styles.orderPair}>orderPair</div>
+            <div className={styles.latestOrder}>latestOrder</div>
           </div>
         </div>
-        <div className={styles.bottom} />
+        <div className={styles.bottom}>bottomorder</div>
       </div>
     );
   }
