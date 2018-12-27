@@ -1,0 +1,30 @@
+@import '~@styles/index.less';
+.mixinCommon() {
+  .title {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    height: 40px;
+  }
+
+  .tableContainer {
+    .mixin_tableContainer();
+    :global {
+      .table {
+        .tr {
+          padding: 0 12px;
+        }
+        .thead {
+          .tr {
+            background: #fcfdfd;
+            .th {
+              font-weight: 400;
+              color: #95989a;
+            }
+          }
+        }
+      }
+    }
+  }
+}

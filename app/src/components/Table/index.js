@@ -142,13 +142,17 @@ export default class TableComponent extends Component {
     expandBodyTr = 40,
     borderBottom = 1
   ) => {
-    const { scroll: { y } = {} } = this.props;
+    const { scroll: { y } = {}, showHead = true } = this.props;
+    if (!showHead) {
+      HeadTr = 0;
+    }
+    // 注意tr border 的1px 都在height里面啦(css border-box模式)，不用再算一次
     return y
       ? y + HeadTr
       : dataSource.reduce((sum, next = {}) => {
           const { expand = [] } = next;
           return (expand.length ? expand.length * expandBodyTr + expandHeadTr : 0) + sum;
-        }, dataSource.length * (bodyTr + borderBottom) + (HeadTr + borderBottom));
+        }, dataSource.length * bodyTr + (HeadTr + borderBottom));
   };
 
   render() {
@@ -161,11 +165,20 @@ export default class TableComponent extends Component {
       onClickRow,
       noDataTip,
       pagination: { total: totalPage } = {},
+      showHead = true,
     } = this.props;
 
-    let { scroll = {}, scroll: { tr } = {}, tableHeight = [34, 48, 48, 48, 1] } = this.props;
+    let { scroll = {}, scroll: { tr } = {}, tableHeight = [] } = this.props;
+    tableHeight = [
+      tableHeight[0] || 34, // head
+      tableHeight[1] || 48, // body tr
+      tableHeight[2] || 48, // expand head
+      tableHeight[3] || 48, // expand tr
+      tableHeight[4] || 1, // tr border
+    ];
     if (tr) {
-      scroll.y = tr * (tableHeight[1] + tableHeight[4]) + tableHeight[4];
+      // 注意tr border 的1px 都在height里面啦(css border-box模式)，不用再算一次
+      scroll.y = tr * tableHeight[1] + tableHeight[4];
     }
 
     const getTdThProp = (item = {}) => {
@@ -201,15 +214,17 @@ export default class TableComponent extends Component {
           <div className="default">{noDataTip()}</div>
         ) : (
           <Table className={style.table}>
-            <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
-              <Tr style={{ height: tableHeight[0] }}>
-                {columns.map((item = {}, index) => (
-                  <Th key={index} {...getTdThProp(item)}>
-                    {_.isFunction(item.title) ? item.title() : item.title}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
+            {showHead ? (
+              <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
+                <Tr style={{ height: tableHeight[0] }}>
+                  {columns.map((item = {}, index) => (
+                    <Th key={index} {...getTdThProp(item)}>
+                      {_.isFunction(item.title) ? item.title() : item.title}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+            ) : null}
             <div className={styles._scrollerTableContainer}>
               <div className={styles._scrollerTable}>
                 <Scroller {...scrollerConfig}>

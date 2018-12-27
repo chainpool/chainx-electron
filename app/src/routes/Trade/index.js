@@ -1,5 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
+import Handicap from './Handicap';
 
 import { Inject } from '../../utils';
 import * as styles from './index.less';
@@ -19,7 +20,9 @@ class Trade extends SwitchPair {
       <div className={styles.trade}>
         <div className={styles.top}>
           <div className={styles.left}>
-            <div className={styles.handicap}>挂单</div>
+            <div className={styles.handicap}>
+              <Handicap {...props} data-block="挂单" />
+            </div>
           </div>
           <div className={styles.center}>
             <div className={styles.kline}>kline</div>

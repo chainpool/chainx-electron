@@ -1,0 +1,24 @@
+@import './Mixin/common.less';
+.handicap {
+  .mixinCommon();
+  .tableContainer {
+    :global {
+      .table {
+        .tbody {
+          .tr {
+            border: 1px solid transparent;
+          }
+        }
+      }
+    }
+  }
+  > div.latestprice {
+    background: #fcfdfd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #dce0e2;
+    border-bottom: 1px solid #dce0e2;
+    height: 32px;
+  }
+}

@@ -47,14 +47,12 @@ class CertTable extends Component {
         ],
         widths
       ),
-      dataSource: [
-        {
-          data1: 'zhengshu',
-          data2: '2018-10-31',
-          data3: '30天',
-          data4: '45',
-        },
-      ],
+      dataSource: new Array(1).fill({}).map(() => ({
+        data1: 'zhengshu',
+        data2: '2018-10-31',
+        data3: '30天',
+        data4: '45',
+      })),
     };
     return <Table {...tableProps} />;
   }
