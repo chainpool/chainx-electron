@@ -4,4 +4,5 @@ export const PATH = {
   depositWithdrawRecord: '/asset/depositWithdrawRecord',
   operationRecord: '/asset/operationRecord',
   addressManage: '/asset/addressManage',
+  trade: '/trade',
 };

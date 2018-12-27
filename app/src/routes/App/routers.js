@@ -3,6 +3,7 @@ import { default as Election } from '../Election';
 import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
 import { default as OperationRecord } from '../OperationRecord';
 import { default as AddressManage } from '../AddressManage';
+import { default as Trade } from '../Trade';
 import { PATH } from '../../constants';
 export default [
   {
@@ -32,5 +33,10 @@ export default [
     show: false,
     path: PATH.addressManage,
     component: AddressManage,
+  },
+  {
+    title: '交易',
+    path: PATH.trade,
+    component: Trade,
   },
 ];
