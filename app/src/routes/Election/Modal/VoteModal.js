@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, RadioGroup } from '../../../components';
 import { Patterns } from '../../../utils';
-import * as styles from './EditConfigModal.less';
+import * as styles from './VoteModal.less';
 
 class VoteModal extends Component {
   state = {
@@ -51,18 +51,29 @@ class VoteModal extends Component {
           </Button>
         }>
         <div className={styles.voteModal}>
-          <RadioGroup>
-            <Input.Radio label="追加投票" value={action} onChange={value => this.setState({ action: 'add' })} />
-            <Input.Radio label="追加投票" value={action} onChange={value => this.setState({ action: 'cancel' })} />
-          </RadioGroup>
+          {action === 'vote' ? null : (
+            <RadioGroup>
+              {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map(item => (
+                <Input.Radio
+                  active={action === item.value}
+                  key={item.value}
+                  label={item.label}
+                  value={action}
+                  onClick={() => this.setState({ action: item.value })}>
+                  {item.value === 'cancel' ? <span className={styles.lockweek}>(锁定期一周)</span> : null}
+                </Input.Radio>
+              ))}
+            </RadioGroup>
+          )}
 
           <Input.Text
-            label="投票数量"
+            label={`${action === 'vote' ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
             value={amount}
             errMsg={amountErrMsg}
             onChange={value => this.setState({ amount: value })}
-            onBlur={checkAll.checkAmount}
-          />
+            onBlur={checkAll.checkAmount}>
+            <span>修改后投票数：3000</span>
+          </Input.Text>
           <Input.Text
             isTextArea
             rows={4}
