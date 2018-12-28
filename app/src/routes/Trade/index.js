@@ -5,6 +5,7 @@ import OrderPair from './OrderPair';
 import LatestOrder from './LatestOrder';
 import Kline from './Kline';
 import PutOrder from './PutOrder';
+import PersonalOrder from './PersonalOrder';
 
 import { Inject } from '../../utils';
 import * as styles from './index.less';
@@ -45,7 +46,11 @@ class Trade extends SwitchPair {
             </div>
           </div>
         </div>
-        <div className={styles.bottom}>bottomorder</div>
+        <div className={styles.bottom}>
+          <div className={styles.personalOrder}>
+            <PersonalOrder {...props} data-desc="当前委托和历史委托" />
+          </div>
+        </div>
       </div>
     );
   }

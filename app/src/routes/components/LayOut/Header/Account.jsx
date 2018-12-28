@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { Inject } from '@utils';
-import { default as ChainxAccount } from '@chainx/account'
+import { default as ChainxAccount } from '@chainx/account';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Component {
   componentDidMount() {
     const {
-      model: {
-        accounts,
-        dispatch
-      }
-    } = this.props
+      model: { accounts, dispatch },
+    } = this.props;
 
     if (accounts.length <= 0) {
       const tag = 'Alice';
@@ -23,18 +20,18 @@ class Account extends Component {
         payload: {
           tag,
           address: account.address,
-          encoded: json
-        }
-      })
+          encoded: json,
+        },
+      });
     }
   }
 
   render() {
-    const { model: { currentAccount, } } = this.props
+    const {
+      model: { currentAccount },
+    } = this.props;
 
-    return (
-      <span>{currentAccount && currentAccount.tag || 'None'}</span>
-    );
+    return <span>{(currentAccount && currentAccount.tag) || 'None'}</span>;
   }
 }
 

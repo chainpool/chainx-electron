@@ -140,9 +140,14 @@ export default class TableComponent extends Component {
     bodyTr = 40,
     expandHeadTr = 40,
     expandBodyTr = 40,
-    borderBottom = 1
+    borderBottom = 1,
+    options = {
+      showHead: true,
+      scroll: {},
+    }
   ) => {
-    const { scroll: { y } = {}, showHead = true } = this.props;
+    const { scroll: { y } = {}, showHead = true } = options;
+
     if (!showHead) {
       HeadTr = 0;
     }
@@ -151,7 +156,13 @@ export default class TableComponent extends Component {
       ? y + HeadTr
       : dataSource.reduce((sum, next = {}) => {
           const { expand = [] } = next;
-          return (expand.length ? expand.length * expandBodyTr + expandHeadTr : 0) + sum;
+          // 暂时只能支持一层展开
+          return (
+            (expand.length
+              ? this.calculateTableHeight(expand, expandHeadTr, expandBodyTr, 0, 0, 1, { showHead: false })
+              : 0) + sum
+          );
+          // return (expand.length ? expand.length * expandBodyTr + expandHeadTr : 0) + sum;
         }, dataSource.length * bodyTr + (HeadTr + borderBottom));
   };
 
@@ -176,6 +187,7 @@ export default class TableComponent extends Component {
       tableHeight[3] || 48, // expand tr
       tableHeight[4] || 1, // tr border
     ];
+
     if (tr) {
       // 注意tr border 的1px 都在height里面啦(css border-box模式)，不用再算一次
       scroll.y = tr * tableHeight[1] + tableHeight[4];
@@ -211,7 +223,7 @@ export default class TableComponent extends Component {
     const { dataSource = [], currentPage } = this.state;
     return (
       <div
-        style={{ height: this.calculateTableHeight(dataSource, ...tableHeight) }}
+        style={{ height: this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll }) }}
         className={classNames(styles.tableContainer, className)}>
         {_.isFunction(noDataTip) && noDataTip() ? (
           <div className="default">{noDataTip()}</div>
