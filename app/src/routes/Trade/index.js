@@ -4,6 +4,7 @@ import Handicap from './Handicap';
 import OrderPair from './OrderPair';
 import LatestOrder from './LatestOrder';
 import Kline from './Kline';
+import PutOrder from './PutOrder';
 
 import { Inject } from '../../utils';
 import * as styles from './index.less';
@@ -31,7 +32,9 @@ class Trade extends SwitchPair {
             <div className={styles.kline}>
               <Kline {...props} data-desc="K线图" />
             </div>
-            <div className={styles.putOrder}>putorder</div>
+            <div className={styles.putOrder}>
+              <PutOrder {...props} data-desc="下单" />
+            </div>
           </div>
           <div className={styles.right}>
             <div className={styles.orderPair}>
