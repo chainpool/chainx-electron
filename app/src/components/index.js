@@ -9,3 +9,4 @@ export { default as Clipboard } from './Clipboard';
 export { default as Tooltip } from './Tooltip';
 export { default as Input } from './Input';
 export { default as RadioGroup } from './Input/RadioGroup';
+export { default as Slider } from './Slider';

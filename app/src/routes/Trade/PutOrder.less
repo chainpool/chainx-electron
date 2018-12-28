@@ -1,3 +1,73 @@
 @import './Mixin/common.less';
 .putOrder {
+  .header {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-bottom: 1px solid #dce0e2;
+    padding: 13px;
+    span,
+    del {
+      color: #95989a;
+    }
+  }
+  .operation {
+    padding: 16px 24px;
+    display: flex;
+    .user + .user {
+      margin-left: 32px;
+    }
+    .user {
+      .userprice + .useramount {
+        margin-top: 16px;
+      }
+      .useramount + .slider {
+        margin-top: 20px;
+      }
+      .userprice,
+      .useramount {
+        display: flex;
+        flex-grow: 1;
+        .pricelabel,
+        .amountlabel {
+          color: #95989a;
+          min-width: 45px;
+          margin-right: 12px;
+          display: flex;
+          align-items: center;
+        }
+      }
+      .freebalance {
+        font-size: 12px;
+        margin-bottom: 16px;
+      }
+      .slider {
+        > div {
+          margin-top: 11px;
+          display: flex;
+          justify-content: space-between;
+          span {
+            font-size: 12px;
+            span {
+              padding: 3px;
+            }
+          }
+        }
+      }
+      .totalPrice {
+        margin-top: 20px;
+      }
+      .submit {
+        margin-top: 29px;
+        button {
+          color: white;
+          border: none;
+          width: 260px;
+          height: 40px;
+          background: @green;
+        }
+      }
+    }
+  }
 }
