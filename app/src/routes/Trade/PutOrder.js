@@ -7,23 +7,31 @@ import * as styles from './PutOrder.less';
 
 class PutOrder extends SwitchPair {
   state = {
-    sliderBuyAmount: '',
     buy: {
+      action: 'buy',
       price: '',
       amount: '',
-      slider: '',
     },
     sell: {
+      action: 'sell',
       price: '',
       amount: '',
-      slider: '',
     },
   };
 
   startInit = () => {};
 
-  renderArea = ({ direction: { price, amount } = {} }) => {
-    const { sliderBuyAmount } = this.state;
+  changeBS = (action = 'buy', payload = {}) => {
+    this.setState({
+      [action]: {
+        ...this.state[action],
+        ...payload,
+      },
+    });
+  };
+
+  renderArea = ({ direction: { price, amount, action } = {} }) => {
+    const { changeBS } = this;
     const max = 100;
     const marks = {
       0: '',
@@ -34,11 +42,9 @@ class PutOrder extends SwitchPair {
     };
 
     const sliderProps = {
-      value: Number(sliderBuyAmount),
-      onChange: v => {
-        this.setState({
-          sliderBuyAmount: v,
-        });
+      value: Number(amount),
+      onChange: value => {
+        changeBS(action, { amount: value });
       },
       marks: marks,
       max: max,
@@ -58,13 +64,27 @@ class PutOrder extends SwitchPair {
         <div className={styles.userprice}>
           <div className={styles.pricelabel}>买入价</div>
           <div>
-            <Input.Text suffix="BTC">dsddd</Input.Text>
+            <Input.Text
+              value={price}
+              onChange={value => {
+                changeBS(action, { price: value });
+              }}
+              suffix="BTC">
+              dsddd
+            </Input.Text>
           </div>
         </div>
         <div className={styles.useramount}>
           <div className={styles.amountlabel}>买入量</div>
           <div>
-            <Input.Text suffix="PCX">dsddd</Input.Text>
+            <Input.Text
+              value={amount}
+              onChange={value => {
+                changeBS(action, { amount: value });
+              }}
+              suffix="PCX">
+              dsddd
+            </Input.Text>
           </div>
         </div>
         <div className={styles.slider}>
@@ -80,7 +100,7 @@ class PutOrder extends SwitchPair {
         </div>
         <div className={styles.totalPrice}>交易额 0.1BTC</div>
         <div className={styles.submit}>
-          <button>买入PCX</button>
+          <button className={styles[action]}>买入PCX</button>
         </div>
       </div>
     );
