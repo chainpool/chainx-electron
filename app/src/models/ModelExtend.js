@@ -23,20 +23,22 @@ export default class ModelExtend {
         this.changeModel(`loading.${type}`, status);
       }
     };
-    if (type && this[type]) {
-      setLoading(true);
-      const result = this[type] && this[type](payload);
-      if (result && result.then) {
-        return result.then(res => {
-          setLoading(false);
-          return res;
-        });
-      } else {
-        setLoading(false);
-        return Promise.resolve(result);
-      }
-    } else {
+
+    if (!type || !this[type]) {
       console.error('dispatch参数的type是必须参数,并且必须存在这个方法');
+      return Promise.reject(new Error('dispatch参数的type是必须参数,并且必须存在这个方法'));
+    }
+
+    setLoading(true);
+    const result = this[type] && this[type](payload);
+    if (result && result.then) {
+      return result.then(res => {
+        setLoading(false);
+        return res;
+      });
+    } else {
+      setLoading(false);
+      return Promise.resolve(result);
     }
   };
 
