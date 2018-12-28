@@ -155,10 +155,10 @@ export default class TableComponent extends Component {
     return y
       ? y + HeadTr
       : dataSource.reduce((sum, next = {}) => {
-          const { expand = [] } = next;
+          const { expand = [], expandIsOpen } = next;
           // 暂时只能支持一层展开
           return (
-            (expand.length
+            (expand.length && expandIsOpen
               ? this.calculateTableHeight(expand, expandHeadTr, expandBodyTr, 0, 0, 1, { showHead: false })
               : 0) + sum
           );
@@ -285,7 +285,9 @@ export default class TableComponent extends Component {
                               );
                             })}
                           </Tr>
-                          {expandedRowRender && _.isFunction(expandedRowRender) ? expandedRowRender(item) : null}
+                          {expandedRowRender && _.isFunction(expandedRowRender) && item.expandIsOpen
+                            ? expandedRowRender(item)
+                            : null}
                         </React.Fragment>
                       );
                     })}

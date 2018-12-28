@@ -3,7 +3,6 @@ import SwitchPair from '../Mixin/SwitchPair';
 
 import * as styles from './index.less';
 import { Table } from '../../../components';
-import { classNames } from '../../../utils';
 
 class HistoryOrderTable extends SwitchPair {
   state = {};
@@ -68,6 +67,7 @@ class HistoryOrderTable extends SwitchPair {
         data5: '3,234,000',
         data6: '1,234,000',
         data7: '0.50000000',
+        expandIsOpen: true,
         expand: new Array(1).fill({}),
       })),
       expandedRowRender: item => {
