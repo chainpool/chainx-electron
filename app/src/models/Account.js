@@ -55,15 +55,3 @@ export default class Store extends ModelExtend {
     }
   }
 }
-
-class Account {
-  tag;
-  address;
-  encoded;
-
-  constructor(tag, address, encoded) {
-    this.tag = tag;
-    this.address = address;
-    this.encoded = encoded;
-  }
-}

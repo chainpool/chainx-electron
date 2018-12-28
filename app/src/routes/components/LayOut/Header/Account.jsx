@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Inject } from '@utils';
+import { default as ChainxAccount } from '@chainx/account'
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Component {
@@ -12,12 +13,17 @@ class Account extends Component {
     } = this.props
 
     if (accounts.length <= 0) {
+      const tag = 'Alice';
+      const passphrase = '123456';
+      const account = ChainxAccount.fromText(tag);
+      const json = account.keyPair.toJson(passphrase);
+
       dispatch({
         type: 'add',
         payload: {
-          tag: 'Alice',
-          address: '1111',
-          encoded: '22222'
+          tag,
+          address: account.address,
+          encoded: json
         }
       })
     }
