@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { RouterGo } from '../../../components';
-import routers from '../../App/routers';
+import { RouterGo } from '../../../../components';
+import routers from '../../../App/routers';
 import * as styles from './Header.less';
-import logo from '../../../resource/logo.png';
+import logo from '../../../../resource/logo.png';
+import Account from './Account';
 
 class Header extends Component {
   render() {
     const { location: { pathname } = {} } = this.props;
     return (
-      <div className={styles.headers}>
+      <header>
         <div>
           <img src={logo} alt="logo" />
           <div className={styles.net}>测试网</div>
@@ -25,8 +26,10 @@ class Header extends Component {
                 </RouterGo>
               ))}
           </ul>
+
+          <Account />
         </div>
-      </div>
+      </header>
     );
   }
 }

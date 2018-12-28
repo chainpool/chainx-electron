@@ -25,10 +25,16 @@ export default class ModelExtend {
     };
     if (type && this[type]) {
       setLoading(true);
-      return this[type](payload).then(res => {
+      const result = this[type] && this[type](payload);
+      if (result && result.then) {
+        return result.then(res => {
+          setLoading(false);
+          return res;
+        });
+      } else {
         setLoading(false);
-        return res;
-      });
+        return Promise.resolve(result);
+      }
     } else {
       console.error('dispatch参数的type是必须参数,并且必须存在这个方法');
     }

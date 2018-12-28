@@ -2,6 +2,7 @@ import { default as AssetStore } from './Asset';
 import { default as ElectionStroe } from './Election';
 import { default as GlobalStore } from './Global';
 import { default as TradeStore } from './Trade';
+import { default as AccountStore } from './Account';
 
 class RootStore {
   constructor() {
@@ -9,6 +10,7 @@ class RootStore {
     this.electionStore = new ElectionStroe(this);
     this.tradeStore = new TradeStore(this);
     this.globalStore = new GlobalStore(this);
+    this.accountStore = new AccountStore(this);
   }
 }
 
