@@ -34,6 +34,7 @@ class Kline extends SwitchPair {
         'chart_property_page_background',
       ],
       toolbar_bg: 'transparent',
+      symbol: 'Chainx',
       library_path: '/',
       width: '100%',
       height: '100%',
