@@ -52,4 +52,12 @@ export default class ModelExtend {
   closeModal = payload => {
     this.rootStore.globalStore.closeModal(payload);
   };
+
+  isLogin = () => {
+    return !_.isEmpty(this.rootStore.accountStore.currentAccount);
+  };
+
+  getCurrentAccount = () => {
+    return this.rootStore.accountStore.currentAccount;
+  };
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin } from '../../components';
 
 import { Inject } from '../../utils';
-import { ButtonGroup, Button } from '../../components';
+import { ButtonGroup, Button, Icon } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import * as styles from './index.less';
@@ -22,7 +22,7 @@ class Account extends Mixin {
 
   render() {
     const {
-      model: { openModal },
+      model: { openModal, isLogin, currentAccount },
       globalStore: {
         modal: { name },
       },
@@ -30,18 +30,27 @@ class Account extends Mixin {
 
     return (
       <div className={styles.account}>
-        <ButtonGroup>
-          <Button
-            onClick={() => {
-              openModal({
-                name: 'ImportAccountModal',
-              });
-            }}>
-            导入账户
-          </Button>
-          <Button type="success">创建账户</Button>
-          <Button type="success">下载钱包</Button>
-        </ButtonGroup>
+        {isLogin() ? (
+          <div className={styles.login}>
+            <Icon name="icon-zhanghu" />
+            <span>{currentAccount.name}</span>
+            <Icon name="icon-xiala" />
+          </div>
+        ) : (
+          <ButtonGroup>
+            <Button
+              onClick={() => {
+                openModal({
+                  name: 'ImportAccountModal',
+                });
+              }}>
+              导入账户
+            </Button>
+            <Button type="success">创建账户</Button>
+            <Button type="success">下载钱包</Button>
+          </ButtonGroup>
+        )}
+
         {name === 'ImportAccountModal' ? <ImportAccountModal {...this.props} /> : null}
         {name === 'SetPasswordModal' ? <SetPasswordModal {...this.props} /> : null}
       </div>

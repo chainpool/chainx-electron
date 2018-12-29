@@ -2,8 +2,8 @@ import { computed, observable } from 'mobx';
 import ModelExtend from './ModelExtend';
 
 export default class Store extends ModelExtend {
-  @observable accounts = [];
-  @observable currentIndex;
+  @observable accounts = [{ name: 'Chainx' }];
+  @observable currentIndex = 0;
 
   @computed get currentAccount() {
     if (typeof this.currentIndex !== 'undefined') {
