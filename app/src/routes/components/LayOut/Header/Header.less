@@ -14,41 +14,46 @@ header {
     max-width: @winWidth;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 24px;
-
-    img {
-      height: 32px;
-    }
-
-    .net {
+    .nav {
+      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      width: 64px;
-      height: 24px;
-      border-radius: 12px;
-      margin-right: 40px;
-      margin-left: 4px;
-    }
-
-    ul {
-      display: flex;
-      height: 100%;
-
-      li + li {
-        margin-left: 32px;
+      img {
+        height: 32px;
       }
 
-      li {
+      .net {
         display: flex;
         align-items: center;
-        font-size: 16px;
+        justify-content: center;
+        color: #ffffff;
+        width: 64px;
+        height: 24px;
+        border-radius: 12px;
+        margin-right: 40px;
+        margin-left: 4px;
+      }
+
+      ul {
+        display: flex;
         height: 100%;
 
-        &.active {
-          color: @blue;
-          border-bottom: 3px solid @blue;
+        li + li {
+          margin-left: 32px;
+        }
+
+        li {
+          display: flex;
+          align-items: center;
+          font-size: 16px;
+          height: 100%;
+
+          &.active {
+            color: @blue;
+            border-bottom: 3px solid @blue;
+          }
         }
       }
     }
