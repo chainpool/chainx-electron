@@ -1,0 +1,48 @@
+@import '~@styles/index.less';
+.step {
+  color: @blue;
+}
+.conformContainer {
+  display: flex;
+  justify-content: center;
+  .conform {
+    width: 200px !important;
+  }
+}
+
+.importAccountModal {
+  .title {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    .importicon {
+      color: @blue;
+      margin-right: 3px;
+    }
+  }
+  ul {
+    border: 1px solid #dce0e2;
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    padding: 8px;
+    li {
+      padding: 8px;
+      width: 25%;
+      .word {
+        input {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .errMsg {
+    margin-top: 5px;
+    color: @red;
+  }
+  .warn {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+}

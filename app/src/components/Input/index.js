@@ -192,6 +192,7 @@ class InputText extends React.Component {
       shape = 'round',
       placeholder = '',
       rows = 1,
+      className,
     } = this.props;
     const props = {
       placeholder,
@@ -238,7 +239,8 @@ class InputText extends React.Component {
             styles[size],
             styles[type],
             isTextArea ? styles.textarea : null,
-            disabled ? styles.disabled : null
+            disabled ? styles.disabled : null,
+            className
           )}>
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
           <div className={styles.userinput}>

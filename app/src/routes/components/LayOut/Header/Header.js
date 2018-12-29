@@ -29,7 +29,7 @@ class Header extends Component {
             </ul>
           </div>
           <div>
-            <Account />
+            <Account {...this.props} />
           </div>
         </div>
       </header>
