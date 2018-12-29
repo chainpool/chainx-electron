@@ -156,11 +156,13 @@ class InputText extends React.Component {
   };
 
   componentDidUpdate() {
-    if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
-      this.setState({
-        errMsg: this.props.errMsg,
-      });
-    }
+    // console.log(this.state.errMsg, this.props.errMsg, this.props.value, '==========');
+    // if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
+    //   this.setState({
+    //     errMsg: this.props.errMsg,
+    //   });
+    // }
+    // console.log(this.state.errMsg, '--', prevProps.errMsg, '||', this.props.errMsg, '++', this.props.value, '==');
     // if (prevProps.errMsg !== this.props.errMsg) {
     //   this.setState({
     //     errMsg: this.props.errMsg,
@@ -170,7 +172,23 @@ class InputText extends React.Component {
     //     errMsg: this.props.errMsg,
     //   });
     // }
+
+    this.checkStatus();
   }
+
+  checkStatus = (must = false) => {
+    if (must === false) {
+      if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
+        this.setState({
+          errMsg: this.props.errMsg,
+        });
+      }
+    } else {
+      this.setState({
+        errMsg: this.props.errMsg,
+      });
+    }
+  };
 
   render() {
     const { passwordType, errMsg } = this.state;
@@ -213,6 +231,9 @@ class InputText extends React.Component {
       onBlur: e => {
         if (!disabled) {
           _.isFunction(onBlur) && onBlur(e.target.value);
+          setTimeout(() => {
+            this.checkStatus(true);
+          }, 0);
         }
       },
     };
@@ -255,7 +276,7 @@ class InputText extends React.Component {
                   });
                 }}>
                 {isPassword ? (
-                  <i className={classNames('iconfont', `icon-${passwordType ? 'biyan' : 'yanjing'}`)} />
+                  <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
                 ) : (
                   icon || isPassword
                 )}

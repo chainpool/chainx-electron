@@ -38,24 +38,26 @@ class ImportAccountModal extends Component {
     const { checkAll } = this;
     const { step, mnemonicWord, secretKey, MnemonicWordErrMsg, secretKeyErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, openModal },
     } = this.props;
     return (
       <Modal
         title={
           <span>
-            导入账户 (<span className={styles.step}>{step}</span>/2)
+            导入账户 (<span className={styles.step}>1</span>/2)
           </span>
         }
         button={
           <div className={styles.conformContainer}>
             <Button
-              className={styles.conform}
+              className={styles.confirm}
               size="full"
               type="confirm"
               onClick={() => {
                 if (checkAll.confirm()) {
-                  closeModal();
+                  openModal({
+                    name: 'SetPasswordModal',
+                  });
                 }
               }}>
               导入

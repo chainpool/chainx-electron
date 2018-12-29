@@ -43,12 +43,13 @@ export default class ModelExtend {
   };
 
   openModal = payload => {
-    this.rootStore.globalStore.openModal(payload);
+    this.closeModal();
+    setTimeout(() => {
+      this.rootStore.globalStore.openModal(payload);
+    });
   };
 
   closeModal = payload => {
-    setTimeout(() => {
-      this.rootStore.globalStore.closeModal(payload);
-    }, 0);
+    this.rootStore.globalStore.closeModal(payload);
   };
 }
