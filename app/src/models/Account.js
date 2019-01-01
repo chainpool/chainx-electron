@@ -2,7 +2,10 @@ import { computed, observable } from 'mobx';
 import ModelExtend from './ModelExtend';
 
 export default class Store extends ModelExtend {
-  @observable accounts = [{ name: 'Chainx' }];
+  @observable accounts = [
+    { name: 'Chainx1', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
+    { name: 'Chainx2', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
+  ];
   @observable currentIndex = 0;
 
   @computed get currentAccount() {

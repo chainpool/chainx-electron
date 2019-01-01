@@ -1,7 +1,64 @@
+@import '~@styles/index.less';
 .account {
   .login {
+    position: relative;
     > span {
       margin: 0 8px;
+    }
+    .accountlist {
+      z-index: 1;
+      right: 0;
+      width: 288px;
+      position: absolute;
+      padding-top: 10px;
+      > div {
+        background: white;
+        border: 1px solid #dce0e2;
+        box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        > div.quickentry {
+          display: flex;
+          flex-grow: 1;
+          div + div {
+            border-left: 1px solid #dce0e2;
+          }
+          div {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            .icon {
+              margin-right: 8px;
+              color: @blue;
+            }
+          }
+        }
+        ul {
+          li {
+            height: 96px;
+            padding: 0 18px;
+            border-top: 1px solid #dce0e2;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            > div + div {
+              margin-top: 12px;
+            }
+            > div {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              .address {
+                line-height: 20px;
+                color: #95989a;
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

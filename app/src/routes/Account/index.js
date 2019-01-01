@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin } from '../../components';
 
 import { Inject } from '../../utils';
-import { ButtonGroup, Button, Icon } from '../../components';
+import { ButtonGroup, Button, Icon, Clipboard } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import * as styles from './index.less';
@@ -22,7 +22,7 @@ class Account extends Mixin {
 
   render() {
     const {
-      model: { openModal, isLogin, currentAccount },
+      model: { openModal, isLogin, currentAccount, accounts = [] },
       globalStore: {
         modal: { name },
       },
@@ -35,6 +35,34 @@ class Account extends Mixin {
             <Icon name="icon-zhanghu" />
             <span>{currentAccount.name}</span>
             <Icon name="icon-xiala" />
+            <div className={styles.accountlist}>
+              <div>
+                <div className={styles.quickentry}>
+                  <div>
+                    <Icon name="icon-daoruzhanghu" className={styles.icon} />
+                    导入账户
+                  </div>
+                  <div>
+                    <Icon name="icon-tianjia" className={styles.icon} /> 新增账户
+                  </div>
+                </div>
+                <ul>
+                  {accounts.map((item, index) => (
+                    <li key={index}>
+                      <div>
+                        <div>{item.name}</div>
+                        <Icon name="icon-gengduocaozuo" />
+                      </div>
+                      <div>
+                        <Clipboard>
+                          <span className={styles.address}>{item.address}</span>
+                        </Clipboard>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         ) : (
           <ButtonGroup>
