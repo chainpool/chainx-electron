@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin } from '../../components';
 
-import { Inject } from '../../utils';
+import { classNames, Inject } from '../../utils';
 import { ButtonGroup, Button, Icon, Clipboard, Popover } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
@@ -9,6 +9,7 @@ import ExportSecretModal from './Modal/ExportSecretModal';
 import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
 import ForgetAccountModal from './Modal/ForgetAccountModal';
+import CreateAccountModal from './Modal/CreateAccountModal';
 import * as styles from './index.less';
 
 @Inject(({ accountStore: model }) => ({ model }))
@@ -20,7 +21,7 @@ class Account extends Mixin {
       model: { openModal },
     } = this.props;
     // openModal({
-    //   name: 'ForgetAccountModal',
+    //   name: 'CreateAccountModal',
     // });
   };
 
@@ -39,74 +40,89 @@ class Account extends Mixin {
             <Icon name="icon-zhanghu" />
             <span>{currentAccount.name}</span>
             <Icon name="icon-xiala" />
-            <div className={styles.accountlist}>
+            <div className={classNames(styles.accountlist, 'accountlist')}>
               <div>
                 <div className={styles.quickentry}>
                   <div>
-                    <Button type="blank">
+                    <Button
+                      type="blank"
+                      onClick={() => {
+                        openModal({
+                          name: 'ImportAccountModal',
+                        });
+                      }}>
                       <Icon name="icon-daoruzhanghu" className={styles.icon} />
                       <span style={{ color: '#555555' }}>导入账户</span>
                     </Button>
                   </div>
                   <div>
-                    <Button type="blank">
+                    <Button
+                      type="blank"
+                      onClick={() => {
+                        openModal({
+                          name: 'CreateAccountModal',
+                        });
+                      }}>
                       <Icon name="icon-tianjia" className={styles.icon} />
                       <span style={{ color: '#555555' }}>新增账户</span>
                     </Button>
                   </div>
                 </div>
                 <ul>
-                  {accounts.map((item, index) => (
-                    <li key={index}>
-                      <div>
-                        <div>{item.name}</div>
-                        <Popover
-                          body={
-                            <ul className={styles.popover}>
-                              <li
-                                onClick={() => {
-                                  openModal({
-                                    name: 'ForgetAccountModal',
-                                  });
-                                }}>
-                                忘记账户
-                              </li>
-                              <li
-                                onClick={() => {
-                                  openModal({
-                                    name: 'EditLabelModal',
-                                  });
-                                }}>
-                                修改标签
-                              </li>
-                              <li
-                                onClick={() => {
-                                  openModal({
-                                    name: 'EditPasswordModal',
-                                  });
-                                }}>
-                                修改密码
-                              </li>
-                              <li
-                                onClick={() => {
-                                  openModal({
-                                    name: 'ExportSecretModal',
-                                  });
-                                }}>
-                                导出私钥
-                              </li>
-                            </ul>
-                          }>
-                          <Icon name="icon-gengduocaozuo" />
-                        </Popover>
-                      </div>
-                      <div>
-                        <Clipboard>
-                          <span className={styles.address}>{item.address}</span>
-                        </Clipboard>
-                      </div>
-                    </li>
-                  ))}
+                  {accounts.map((item, index) => {
+                    const id = `popoverid_${index}`;
+                    return (
+                      <li key={index} id={id}>
+                        <div>
+                          <div>{item.name}</div>
+                          <div className={styles.popover}>
+                            <Icon name="icon-gengduocaozuo" />
+                            <div>
+                              <ul className={styles.clickPopover}>
+                                <li
+                                  onClick={() => {
+                                    openModal({
+                                      name: 'ForgetAccountModal',
+                                    });
+                                  }}>
+                                  忘记账户
+                                </li>
+                                <li
+                                  onClick={() => {
+                                    openModal({
+                                      name: 'EditLabelModal',
+                                    });
+                                  }}>
+                                  修改标签
+                                </li>
+                                <li
+                                  onClick={() => {
+                                    openModal({
+                                      name: 'EditPasswordModal',
+                                    });
+                                  }}>
+                                  修改密码
+                                </li>
+                                <li
+                                  onClick={() => {
+                                    openModal({
+                                      name: 'ExportSecretModal',
+                                    });
+                                  }}>
+                                  导出私钥
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <Clipboard>
+                            <span className={styles.address}>{item.address}</span>
+                          </Clipboard>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
@@ -121,7 +137,15 @@ class Account extends Mixin {
               }}>
               导入账户
             </Button>
-            <Button type="success">创建账户</Button>
+            <Button
+              type="success"
+              onClick={() => {
+                openModal({
+                  name: 'CreateAccountModal',
+                });
+              }}>
+              创建账户
+            </Button>
             <Button type="success">下载钱包</Button>
           </ButtonGroup>
         )}
@@ -132,6 +156,7 @@ class Account extends Mixin {
         {name === 'EditPasswordModal' ? <EditPasswordModal {...this.props} /> : null}
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
+        {name === 'CreateAccountModal' ? <CreateAccountModal {...this.props} /> : null}
       </div>
     );
   }

@@ -42,12 +42,13 @@ class SetPasswordModal extends Component {
     const { label, labelErrMsg, password, passwordErrMsg, confirmPassword, confirmPasswordErrMsg } = this.state;
     const {
       model: { closeModal },
+      globalStore: { modal: { data: { step } = {} } = {} },
     } = this.props;
     return (
       <Modal
         title={
           <span>
-            设置密码 (<span className={styles.step}>2</span>/2)
+            设置密码 (<span className={styles.step}>{step}</span>/{step})
           </span>
         }
         button={

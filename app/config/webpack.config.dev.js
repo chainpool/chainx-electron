@@ -246,6 +246,7 @@ module.exports = {
             use: getStyleLoaders({
               importLoaders: 1,
               modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
             }),
           },
           // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
@@ -255,6 +256,7 @@ module.exports = {
             use: getStyleLoaders({
               importLoaders: 1,
               modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
               getLocalIdent: getCSSModuleLocalIdent,
             }),
           },

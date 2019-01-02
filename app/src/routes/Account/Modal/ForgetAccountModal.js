@@ -34,7 +34,6 @@ class ForgetAccountModal extends Component {
           <ButtonGroup className={styles.group}>
             <Button
               size="bigger"
-              // type="success"
               onClick={() => {
                 if (checkAll.confirm()) {
                   closeModal();
@@ -43,7 +42,6 @@ class ForgetAccountModal extends Component {
               取消
             </Button>
             <Button
-              style={{ marginLeft: 16 }}
               size="bigger"
               type="success"
               onClick={() => {

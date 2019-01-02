@@ -57,6 +57,9 @@ class ImportAccountModal extends Component {
                 if (checkAll.confirm()) {
                   openModal({
                     name: 'SetPasswordModal',
+                    data: {
+                      step: 2,
+                    },
                   });
                 }
               }}>

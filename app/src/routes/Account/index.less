@@ -5,7 +5,14 @@
     > span {
       margin: 0 8px;
     }
+    &:hover {
+      .accountlist {
+        display: block;
+      }
+    }
+
     .accountlist {
+      display: none;
       z-index: 1;
       right: 0;
       width: 288px;
@@ -34,8 +41,42 @@
             }
           }
         }
-        ul {
-          li {
+        > ul {
+          > li {
+            .popover {
+              // background: blue;
+              width: 100%;
+              display: flex;
+              justify-content: flex-end;
+              position: relative;
+              &:hover {
+                > div {
+                  display: block;
+                }
+              }
+              > div {
+                position: absolute;
+                right: 0;
+                z-index: 3;
+                display: none;
+                padding-top: 20px;
+                ul {
+                  background: white;
+                  width: 120px;
+                  padding: 12px 0;
+                  li {
+                    cursor: pointer;
+                    display: flex;
+                    padding: 0 23px;
+                    align-items: center;
+                    height: 38px;
+                    &:hover {
+                      background: #f8f8f8;
+                    }
+                  }
+                }
+              }
+            }
             height: 96px;
             padding: 0 18px;
             border-top: 1px solid #dce0e2;
@@ -43,6 +84,7 @@
             flex-wrap: wrap;
             justify-content: center;
             align-content: center;
+
             > div + div {
               margin-top: 12px;
             }
@@ -63,16 +105,17 @@
   }
 }
 
-.popover {
-  width: 120px;
-  padding: 12px 0;
-  li {
-    display: flex;
-    padding: 0 23px;
-    align-items: center;
-    height: 38px;
-    &:hover {
-      background: #f8f8f8;
-    }
-  }
-}
+//ul.clickPopover {
+//  width: 120px;
+//  padding: 12px 0;
+//  li {
+//    pointer-events: none;
+//    display: flex;
+//    padding: 0 23px;
+//    align-items: center;
+//    height: 38px;
+//    &:hover {
+//      background: #f8f8f8;
+//    }
+//  }
+//}

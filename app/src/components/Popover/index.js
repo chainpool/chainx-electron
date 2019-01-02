@@ -1,5 +1,6 @@
 import React from 'react';
 import { default as Pop } from 'react-popover';
+import { classNames } from '../../utils';
 import * as styles from './index.less';
 
 export default class Popover extends React.Component {
@@ -9,20 +10,22 @@ export default class Popover extends React.Component {
 
   render() {
     const { isOpen } = this.state;
-    const { children, body } = this.props;
+    const { children, body, className, target, appendTarget } = this.props;
     return (
       <Pop
+        target={target}
+        appendTarget={appendTarget}
         preferPlace="below"
         isOpen={isOpen}
         body={
           <div
-            className={styles.popovercontainer}
+            className={classNames(styles.popovercontainer, className)}
             onClick={() => {
               this.setState({
                 isOpen: false,
               });
             }}>
-            {body}
+            {children}
           </div>
         }
         onOuterAction={e => {
@@ -38,7 +41,7 @@ export default class Popover extends React.Component {
               isOpen: !isOpen,
             });
           }}>
-          {children}
+          {body}
         </div>
       </Pop>
     );

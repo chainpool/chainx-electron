@@ -1,0 +1,55 @@
+@import '~@styles/index.less';
+.step {
+  color: @blue;
+}
+.conformContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.createAccountModal {
+  .title {
+    margin-bottom: 24px;
+    > div {
+      color: #005581;
+      margin-bottom: 12px;
+    }
+    line-height: 22px;
+  }
+  .remember {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0;
+  }
+  ul {
+    &.inmemory {
+      margin-top: -16px;
+      border: none;
+    }
+    border: 1px solid #dce0e2;
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    padding: 8px;
+    li {
+      padding: 8px;
+      width: 25%;
+      .word {
+        input {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .errMsg {
+    margin-top: 5px;
+    color: @red;
+  }
+  .warn {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+}
