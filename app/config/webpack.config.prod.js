@@ -308,6 +308,7 @@ module.exports = {
             loader: getStyleLoaders({
               importLoaders: 1,
               modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
               sourceMap: shouldUseSourceMap,
             }),
             // Don't consider CSS imports dead code even if the
@@ -324,6 +325,7 @@ module.exports = {
               importLoaders: 1,
               sourceMap: shouldUseSourceMap,
               modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
               getLocalIdent: getCSSModuleLocalIdent,
             }),
           },

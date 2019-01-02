@@ -23,7 +23,20 @@
     align-items: center;
     margin: 16px 0;
   }
+  .word {
+    &.selected {
+      input {
+        background: #f2f3f4;
+        color: #bbbbbb;
+      }
+    }
+    input {
+      background: white;
+      text-align: center;
+    }
+  }
   ul {
+    height: 184px;
     &.inmemory {
       margin-top: -16px;
       border: none;
@@ -32,15 +45,12 @@
     display: flex;
     flex-grow: 1;
     flex-wrap: wrap;
+    align-content: flex-start;
     padding: 8px;
     li {
-      padding: 8px;
+      height: 56px;
       width: 25%;
-      .word {
-        input {
-          text-align: center;
-        }
-      }
+      padding: 8px;
     }
   }
   .errMsg {

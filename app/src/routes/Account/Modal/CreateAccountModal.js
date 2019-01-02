@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, ButtonGroup } from '../../../components';
-import { Patterns } from '../../../utils';
+import { _, Patterns, Chainx, classNames } from '../../../utils';
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {
-  state = {
-    step: 1,
-    mnemonicWord: new Array(12).fill('').map((item, index) => index),
-    MnemonicWordErrMsg: '',
-    secretKey: '',
-    secretKeyErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const generateMnemonic = Chainx.Account.newMnemonic().split(' ');
+    this.state = {
+      step: 2,
+      mnemonicWord: generateMnemonic,
+      shuffleMnemonicWord: _.shuffle(generateMnemonic),
+      userSelectMnemonicWord: [],
+      MnemonicWordErrMsg: '',
+      secretKey: '',
+      secretKeyErrMsg: '',
+    };
+  }
+  componentDidMount() {}
   checkAll = {
     checkMnemonicWord: () => {
       const { mnemonicWord } = this.state;
@@ -35,7 +42,7 @@ class CreateAccountModal extends Component {
     },
   };
   render() {
-    const { step, mnemonicWord } = this.state;
+    const { step, mnemonicWord, userSelectMnemonicWord, shuffleMnemonicWord } = this.state;
     const {
       model: { openModal },
     } = this.props;
@@ -58,6 +65,7 @@ class CreateAccountModal extends Component {
                 {mnemonicWord.map((item, index) => (
                   <li key={index}>
                     <Input.Text
+                      disabled
                       className={styles.word}
                       label=""
                       value={mnemonicWord[index]}
@@ -85,35 +93,47 @@ class CreateAccountModal extends Component {
             </>
           ) : (
             <div>
-              <ul>
-                {mnemonicWord.map((item, index) => (
+              <ul className={styles.userInputMnemonicWord}>
+                {userSelectMnemonicWord.map((item, index) => (
                   <li key={index}>
                     <Input.Text
+                      disabled
                       className={styles.word}
                       label=""
-                      value={mnemonicWord[index]}
+                      value={userSelectMnemonicWord[index]}
                       errMsg={''}
-                      onChange={value => {
-                        mnemonicWord.splice(index, 1, value);
-                        this.setState({ mnemonicWord });
-                      }}
                     />
                   </li>
                 ))}
               </ul>
               <div className={styles.remember}>按顺序确认您的助记词</div>
               <ul className={styles.inmemory}>
-                {mnemonicWord.map((item, index) => (
-                  <li key={index}>
+                {shuffleMnemonicWord.map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      const pos = _.findIndex(userSelectMnemonicWord, item => item === shuffleMnemonicWord[index]);
+                      if (pos > -1) {
+                        userSelectMnemonicWord.splice(pos, 1);
+                      } else {
+                        userSelectMnemonicWord.splice(userSelectMnemonicWord.length, 1, shuffleMnemonicWord[index]);
+                      }
+
+                      this.setState({
+                        userSelectMnemonicWord,
+                      });
+                    }}>
                     <Input.Text
-                      className={styles.word}
+                      disabled
+                      className={classNames(
+                        styles.word,
+                        _.findIndex(userSelectMnemonicWord, item => item === shuffleMnemonicWord[index]) > -1
+                          ? styles.selected
+                          : null
+                      )}
                       label=""
-                      value={mnemonicWord[index]}
+                      value={shuffleMnemonicWord[index]}
                       errMsg={''}
-                      onChange={value => {
-                        mnemonicWord.splice(index, 1, value);
-                        this.setState({ mnemonicWord });
-                      }}
                     />
                   </li>
                 ))}

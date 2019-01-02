@@ -1,8 +1,7 @@
 import React from 'react';
 import { Mixin } from '../../components';
-
 import { classNames, Inject } from '../../utils';
-import { ButtonGroup, Button, Icon, Clipboard, Popover } from '../../components';
+import { ButtonGroup, Button, Icon, Clipboard } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import ExportSecretModal from './Modal/ExportSecretModal';

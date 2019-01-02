@@ -47,6 +47,7 @@ export const lodash_helper = {
   isFunction: _.isFunction,
   find: _.find,
   random: _.random,
+  shuffle: _.shuffle,
 };
 
 export const Rxjs_helper = {

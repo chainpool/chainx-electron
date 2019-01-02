@@ -12,8 +12,8 @@ class AddressTable extends Component {
       columns: [
         {
           title: '标签',
-          className: 'blue',
           dataIndex: 'data1',
+          render: value => <span className="blue">{value}</span>,
         },
         {
           title: '链',

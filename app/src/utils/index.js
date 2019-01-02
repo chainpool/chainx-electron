@@ -1,5 +1,6 @@
 import { lodash_helper, moment_helper } from './helper';
 import { observer, inject } from 'mobx-react';
+import Account from '@chainx/account';
 
 //------------------通用部分
 export { request } from './request';
@@ -24,18 +25,11 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
-export const Patterns = {
-  // decodeAddress: (value, errMsg = '格式错误') => {
-  //   try {
-  //     return addressDecode(value) ? '' : errMsg;
-  //   } catch (e) {
-  //     return errMsg;
-  //   }
-  // },
+export const Chainx = {
+  Account,
+};
 
-  // encode: (password, encode) => {
-  //   return encodeService.encodingToPassword(password, encode) ? '' : '密码错误';
-  // },
+export const Patterns = {
   required: (value, errMsg = '必填') => {
     return !value ? errMsg : '';
   },

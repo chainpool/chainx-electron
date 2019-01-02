@@ -6,7 +6,7 @@ export default class Store extends ModelExtend {
     { name: 'Chainx1', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
     { name: 'Chainx2', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
   ];
-  @observable currentIndex = 0;
+  @observable currentIndex = null;
 
   @computed get currentAccount() {
     if (typeof this.currentIndex !== 'undefined') {
