@@ -5,6 +5,9 @@ import { Inject } from '../../utils';
 import { ButtonGroup, Button, Icon, Clipboard, Popover } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
+import ExportSecretModal from './Modal/ExportSecretModal';
+import EditPasswordModal from './Modal/EditPasswordModal';
+import EditLabelModal from './Modal/EditLabelModal';
 import * as styles from './index.less';
 
 @Inject(({ accountStore: model }) => ({ model }))
@@ -16,7 +19,8 @@ class Account extends Mixin {
       model: { openModal },
     } = this.props;
     // openModal({
-    //   name: 'SetPasswordModal',
+    //   // name: 'ExportSecretModal',
+    //   name: 'EditLabelModal',
     // });
   };
 
@@ -60,9 +64,30 @@ class Account extends Mixin {
                           body={
                             <ul className={styles.popover}>
                               <li>忘记账户</li>
-                              <li>修改标签</li>
-                              <li>修改密码</li>
-                              <li>导出私钥</li>
+                              <li
+                                onClick={() => {
+                                  openModal({
+                                    name: 'EditLabelModal',
+                                  });
+                                }}>
+                                修改标签
+                              </li>
+                              <li
+                                onClick={() => {
+                                  openModal({
+                                    name: 'EditPasswordModal',
+                                  });
+                                }}>
+                                修改密码
+                              </li>
+                              <li
+                                onClick={() => {
+                                  openModal({
+                                    name: 'ExportSecretModal',
+                                  });
+                                }}>
+                                导出私钥
+                              </li>
                             </ul>
                           }>
                           <Icon name="icon-gengduocaozuo" />
@@ -96,6 +121,9 @@ class Account extends Mixin {
 
         {name === 'ImportAccountModal' ? <ImportAccountModal {...this.props} /> : null}
         {name === 'SetPasswordModal' ? <SetPasswordModal {...this.props} /> : null}
+        {name === 'ExportSecretModal' ? <ExportSecretModal {...this.props} /> : null}
+        {name === 'EditPasswordModal' ? <EditPasswordModal {...this.props} /> : null}
+        {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
       </div>
     );
   }

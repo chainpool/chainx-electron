@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Icon, Clipboard } from '../../../components';
+import { Modal, Clipboard } from '../../../components';
+import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
 
 class DepositModal extends Component {
@@ -25,10 +26,7 @@ class DepositModal extends Component {
               <span className={styles.token}>Bitcoin:</span>
               <Clipboard>3E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u6b</Clipboard>
             </div>
-            <div className={styles.warn}>
-              <Icon name="icon-jinggao" className={styles.icon} />
-              <span>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</span>
-            </div>
+            <Warn>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</Warn>
           </div>
           <div className={styles.back} />
         </div>
