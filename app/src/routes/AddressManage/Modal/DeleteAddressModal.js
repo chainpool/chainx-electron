@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from '../../../components';
+import { Modal, Button, ButtonGroup } from '../../../components';
 import * as styles from './DeleteAddressModal.less';
 
 class DeleteAddressModal extends Component {
@@ -10,10 +10,19 @@ class DeleteAddressModal extends Component {
     return (
       <Modal title="删除地址">
         <div className={styles.deleteAddressModal}>
-          <button onClick={closeModal}>取消</button>
-          <button className={styles.active} onClick={closeModal}>
-            确定
-          </button>
+          <ButtonGroup className={styles.group}>
+            <Button size="bigger" onClick={closeModal}>
+              取消
+            </Button>
+            <Button
+              style={{ marginLeft: 16 }}
+              type="success"
+              size="bigger"
+              className={styles.active}
+              onClick={closeModal}>
+              确定
+            </Button>
+          </ButtonGroup>
         </div>
       </Modal>
     );

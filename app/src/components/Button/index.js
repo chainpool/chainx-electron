@@ -28,7 +28,7 @@ export class Button extends React.Component {
 
 export class ButtonGroup extends React.Component {
   render() {
-    const { children } = this.props;
-    return <div className={styles.buttonGroup}>{children}</div>;
+    const { children, className } = this.props;
+    return <div className={classNames(styles.buttonGroup, className)}>{children}</div>;
   }
 }

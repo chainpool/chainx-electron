@@ -8,6 +8,7 @@ import SetPasswordModal from './Modal/SetPasswordModal';
 import ExportSecretModal from './Modal/ExportSecretModal';
 import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
+import ForgetAccountModal from './Modal/ForgetAccountModal';
 import * as styles from './index.less';
 
 @Inject(({ accountStore: model }) => ({ model }))
@@ -19,8 +20,7 @@ class Account extends Mixin {
       model: { openModal },
     } = this.props;
     // openModal({
-    //   // name: 'ExportSecretModal',
-    //   name: 'EditLabelModal',
+    //   name: 'ForgetAccountModal',
     // });
   };
 
@@ -63,7 +63,14 @@ class Account extends Mixin {
                         <Popover
                           body={
                             <ul className={styles.popover}>
-                              <li>忘记账户</li>
+                              <li
+                                onClick={() => {
+                                  openModal({
+                                    name: 'ForgetAccountModal',
+                                  });
+                                }}>
+                                忘记账户
+                              </li>
                               <li
                                 onClick={() => {
                                   openModal({
@@ -124,6 +131,7 @@ class Account extends Mixin {
         {name === 'ExportSecretModal' ? <ExportSecretModal {...this.props} /> : null}
         {name === 'EditPasswordModal' ? <EditPasswordModal {...this.props} /> : null}
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
+        {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
       </div>
     );
   }

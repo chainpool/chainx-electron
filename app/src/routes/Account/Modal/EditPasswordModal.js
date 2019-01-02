@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { Patterns } from '../../../utils';
-import * as styles from './SetPasswordModal.less';
 
 class EditPasswordModal extends Component {
   state = {
@@ -65,7 +64,7 @@ class EditPasswordModal extends Component {
             完成
           </Button>
         }>
-        <div className={styles.setPasswordModal}>
+        <div>
           <Input.Text
             isPassword
             placeholder="输入密码"
