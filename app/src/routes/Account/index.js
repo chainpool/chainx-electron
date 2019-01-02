@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin } from '../../components';
 
 import { Inject } from '../../utils';
-import { ButtonGroup, Button, Icon, Clipboard } from '../../components';
+import { ButtonGroup, Button, Icon, Clipboard, Popover } from '../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import * as styles from './index.less';
@@ -39,11 +39,16 @@ class Account extends Mixin {
               <div>
                 <div className={styles.quickentry}>
                   <div>
-                    <Icon name="icon-daoruzhanghu" className={styles.icon} />
-                    导入账户
+                    <Button type="blank">
+                      <Icon name="icon-daoruzhanghu" className={styles.icon} />
+                      <span style={{ color: '#555555' }}>导入账户</span>
+                    </Button>
                   </div>
                   <div>
-                    <Icon name="icon-tianjia" className={styles.icon} /> 新增账户
+                    <Button type="blank">
+                      <Icon name="icon-tianjia" className={styles.icon} />
+                      <span style={{ color: '#555555' }}>新增账户</span>
+                    </Button>
                   </div>
                 </div>
                 <ul>
@@ -51,7 +56,17 @@ class Account extends Mixin {
                     <li key={index}>
                       <div>
                         <div>{item.name}</div>
-                        <Icon name="icon-gengduocaozuo" />
+                        <Popover
+                          body={
+                            <ul className={styles.popover}>
+                              <li>忘记账户</li>
+                              <li>修改标签</li>
+                              <li>修改密码</li>
+                              <li>导出私钥</li>
+                            </ul>
+                          }>
+                          <Icon name="icon-gengduocaozuo" />
+                        </Popover>
                       </div>
                       <div>
                         <Clipboard>
