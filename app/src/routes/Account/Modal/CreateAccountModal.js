@@ -57,7 +57,7 @@ class CreateAccountModal extends Component {
         callback: (label, password) => {
           const encoded = Chainx.Keystore.encrypt(account.privateKey, `${password}`);
           dispatch({
-            type: 'add',
+            type: 'addAccount',
             payload: {
               tag: label,
               address: account.address,

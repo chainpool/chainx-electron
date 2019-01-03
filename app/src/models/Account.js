@@ -2,13 +2,11 @@ import { computed, observable } from 'mobx';
 import { _, localSave } from '../utils';
 import ModelExtend from './ModelExtend';
 
-console.log(localSave.get('accounts'));
-
 export default class Store extends ModelExtend {
   @observable accounts = localSave.get('accounts') || [];
   @observable currentAccount = {};
 
-  setCurrent(address = '') {
+  setCurrentAccount(address = '') {
     let newCurrentAccount = this.currentAccount || {};
     const findAccount = _.find(this.accounts, (item = {}) => item.address === address);
     const currentAccount = _.find(this.accounts, (item = {}) => item.address === this.currentAccount.address);
@@ -21,9 +19,9 @@ export default class Store extends ModelExtend {
     localSave.set('accounts', this.accounts);
   }
 
-  add({ tag, address, encoded }) {
+  addAccount({ tag, address, encoded }) {
     this.changeModel('accounts', [...this.accounts, { tag, address, encoded }]);
-    this.setCurrent();
+    this.setCurrentAccount();
   }
 
   delete(tag) {
@@ -48,6 +46,6 @@ export default class Store extends ModelExtend {
   }
 
   switchAccount({ address }) {
-    this.setCurrent(address);
+    this.setCurrentAccount(address);
   }
 }

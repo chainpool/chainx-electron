@@ -43,8 +43,15 @@
         }
         > ul {
           > li {
+            position: relative;
+            height: 96px;
+            padding: 0 18px;
+            border-top: 1px solid #dce0e2;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
             .popover {
-              // background: blue;
               display: flex;
               justify-content: flex-end;
               position: relative;
@@ -79,20 +86,22 @@
 
             &.active {
               background: #f2f3f4;
-              border-left: 4px solid @blue;
+              .leftbar {
+                width: 4px;
+                background: @blue;
+                left: 0;
+                top: 0;
+                height: 100%;
+              }
             }
-            height: 96px;
-            padding: 0 18px;
-            border-top: 1px solid #dce0e2;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center;
 
             > div + div {
               margin-top: 12px;
             }
             > div {
+              &.leftbar {
+                position: absolute;
+              }
               width: 100%;
               display: flex;
               justify-content: space-between;

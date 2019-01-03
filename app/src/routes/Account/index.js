@@ -87,6 +87,7 @@ class Account extends Mixin {
                             },
                           });
                         }}>
+                        <div className={styles.leftbar} />
                         <div>
                           <div>{item.tag}</div>
                           <div className={styles.popover}>
