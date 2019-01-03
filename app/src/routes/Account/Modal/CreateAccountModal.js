@@ -8,68 +8,73 @@ class CreateAccountModal extends Component {
     super(props);
     const generateMnemonic = ChainX.Account.newMnemonic().split(' ');
     this.state = {
-      step: 2,
+      step: 1,
       mnemonicWord: generateMnemonic,
       shuffleMnemonicWord: _.shuffle(generateMnemonic),
       userSelectMnemonicWord: [],
-      MnemonicWordErrMsg: '',
+      userSelectMnemonicWordErrMsg: '',
       secretKey: '',
       secretKeyErrMsg: '',
     };
   }
   checkAll = {
-    checkMnemonicWord: () => {
-      const { mnemonicWord } = this.state;
-      const errMsg = mnemonicWord.some(item => {
-        return !!Patterns.check('required')(item);
-      })
-        ? '按顺序输入您的助记词，并以空格键区分'
-        : '';
-      this.setState({ MnemonicWordErrMsg: errMsg });
-      return errMsg;
-    },
-    checkSecretKey: () => {
-      const { secretKey } = this.state;
-      const errMsg = Patterns.check('required')(secretKey, '私钥错误，请核对后重新输入');
-      this.setState({ secretKeyErrMsg: errMsg });
+    checkUserSelectMnemonicWord: () => {
+      const { userSelectMnemonicWord, mnemonicWord } = this.state;
+      const errMsg = Patterns.check('equal')(
+        userSelectMnemonicWord.join(),
+        mnemonicWord.join(),
+        '助记词顺序错误，请核对后重新输入'
+      );
+      this.setState({ userSelectMnemonicWordErrMsg: errMsg });
       return errMsg;
     },
 
     confirm: () => {
       const { step } = this.state;
-      return [['checkMnemonicWord', 'checkSecretKey'][step - 1]].every(item => !this.checkAll[item]());
+      return [['checkUserSelectMnemonicWord'][step - 2]].every(item => !this.checkAll[item]());
     },
   };
 
   submit = () => {
+    const { checkAll } = this;
     const { mnemonicWord } = this.state;
     const {
       model: { openModal, dispatch },
     } = this.props;
-    const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
-    // const encry = ChainX.Keystore.encrypt(account.privateKey, '12345678');
-    // const newAccount = ChainX.Account.fromPrivateKey(ChainX.Keystore.decrypt(encry, '12345678'));
-    openModal({
-      name: 'SetPasswordModal',
-      data: {
-        step: 3,
-        callback: (label, password) => {
-          const encoded = ChainX.Keystore.encrypt(account.privateKey, `${password}`);
-          dispatch({
-            type: 'addAccount',
-            payload: {
-              tag: label,
-              address: account.address,
-              encoded,
-            },
-          });
+
+    if (checkAll.confirm()) {
+      const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
+      // const encry = ChainX.Keystore.encrypt(account.privateKey, '12345678');
+      // const newAccount = ChainX.Account.fromPrivateKey(ChainX.Keystore.decrypt(encry, '12345678'));
+      openModal({
+        name: 'SetPasswordModal',
+        data: {
+          step: 3,
+          callback: (label, password) => {
+            const encoded = ChainX.Keystore.encrypt(account.privateKey, `${password}`);
+            dispatch({
+              type: 'addAccount',
+              payload: {
+                tag: label,
+                address: account.address,
+                encoded,
+              },
+            });
+          },
         },
-      },
-    });
+      });
+    } else {
+    }
   };
   render() {
     const { submit } = this;
-    const { step, mnemonicWord, userSelectMnemonicWord, shuffleMnemonicWord } = this.state;
+    const {
+      step,
+      mnemonicWord,
+      userSelectMnemonicWord,
+      userSelectMnemonicWordErrMsg,
+      shuffleMnemonicWord,
+    } = this.state;
 
     return (
       <Modal
@@ -163,6 +168,10 @@ class CreateAccountModal extends Component {
                   </li>
                 ))}
               </ul>
+              {userSelectMnemonicWordErrMsg ? (
+                <div className={styles.errMsgCompare}>{userSelectMnemonicWordErrMsg}</div>
+              ) : null}
+
               <div className={styles.conformContainer}>
                 <ButtonGroup>
                   <Button

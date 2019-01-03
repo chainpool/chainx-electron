@@ -44,10 +44,7 @@ export const Patterns = {
     return !value ? errMsg : '';
   },
   equal: (value1, value2, errMsg = '不相等') => {
-    if (value1 && value2) {
-      return value1 === value2 ? '' : errMsg;
-    }
-    return '';
+    return value1 === value2 ? '' : errMsg;
   },
   smaller: (inputValue, baseValue, errMsg = '余额不足') => {
     if (inputValue && !_.isNaN(baseValue)) {

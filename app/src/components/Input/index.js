@@ -1,6 +1,6 @@
 import React from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Clipboard } from '../../components';
+import { Clipboard, Mixin } from '../../components';
 import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
@@ -149,7 +149,7 @@ class InputSelect extends React.Component {
   }
 }
 
-class InputText extends React.Component {
+class InputText extends Mixin {
   state = {
     passwordType: true,
     errMsg: this.props.errMsg,
@@ -179,12 +179,12 @@ class InputText extends React.Component {
   checkStatus = (must = false) => {
     if (must === false) {
       if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
-        this.setState({
+        this.changeState({
           errMsg: this.props.errMsg,
         });
       }
     } else {
-      this.setState({
+      this.changeState({
         errMsg: this.props.errMsg,
       });
     }
@@ -220,7 +220,7 @@ class InputText extends React.Component {
       onChange: e => {
         if (!disabled) {
           if (errMsg !== '') {
-            this.setState({
+            this.changeState({
               errMsg: '',
             });
           }
@@ -233,7 +233,7 @@ class InputText extends React.Component {
           _.isFunction(onBlur) && onBlur(e.target.value);
           setTimeout(() => {
             this.checkStatus(true);
-          }, 0);
+          });
         }
       },
     };

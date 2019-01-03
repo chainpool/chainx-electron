@@ -17,11 +17,14 @@ class Account extends Mixin {
 
   startInit = () => {
     const {
-      model: { dispatch },
+      model: { dispatch, openModal },
     } = this.props;
     dispatch({
       type: 'switchAccount',
     });
+    // openModal({
+    //   name: 'CreateAccountModal',
+    // });
   };
 
   render() {
@@ -134,6 +137,9 @@ class Account extends Mixin {
                                     e.stopPropagation();
                                     openModal({
                                       name: 'ExportSecretModal',
+                                      data: {
+                                        encoded: item.encoded,
+                                      },
                                     });
                                   }}>
                                   导出私钥
