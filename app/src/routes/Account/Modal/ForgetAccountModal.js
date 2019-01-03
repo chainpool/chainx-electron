@@ -12,7 +12,10 @@ class ForgetAccountModal extends Component {
   checkAll = {
     checkPassword: () => {
       const { password } = this.state;
-      const errMsg = Patterns.check('required')(password);
+      const {
+        globalStore: { modal: { data: { encoded } = {} } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(password) || Patterns.check('decode')(encoded, password);
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -25,7 +28,8 @@ class ForgetAccountModal extends Component {
     const { checkAll } = this;
     const { password, passwordErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch },
+      globalStore: { modal: { data: { address } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -35,9 +39,7 @@ class ForgetAccountModal extends Component {
             <Button
               size="bigger"
               onClick={() => {
-                if (checkAll.confirm()) {
-                  closeModal();
-                }
+                closeModal();
               }}>
               取消
             </Button>
@@ -46,6 +48,12 @@ class ForgetAccountModal extends Component {
               type="success"
               onClick={() => {
                 if (checkAll.confirm()) {
+                  dispatch({
+                    type: 'deleteAccount',
+                    payload: {
+                      address,
+                    },
+                  });
                   closeModal();
                 }
               }}>

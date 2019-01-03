@@ -32,6 +32,14 @@ export const Chainx = {
 };
 
 export const Patterns = {
+  decode: (encoded, password, errMsg = '密码错误') => {
+    try {
+      Chainx.Keystore.decrypt(encoded, password);
+      return '';
+    } catch (e) {
+      return errMsg;
+    }
+  },
   required: (value, errMsg = '必填') => {
     return !value ? errMsg : '';
   },

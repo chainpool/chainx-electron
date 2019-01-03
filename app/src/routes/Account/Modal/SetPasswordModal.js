@@ -49,6 +49,7 @@ class SetPasswordModal extends Component {
     const { checkAll } = this;
     const { label, labelErrMsg, password, passwordErrMsg, confirmPassword, confirmPasswordErrMsg } = this.state;
     const {
+      model: { closeModal },
       globalStore: { modal: { data: { step, callback } = {} } = {} },
     } = this.props;
     return (
@@ -65,6 +66,7 @@ class SetPasswordModal extends Component {
             onClick={() => {
               if (checkAll.confirm()) {
                 _.isFunction(callback) && callback(label, password);
+                closeModal();
               }
             }}>
             完成

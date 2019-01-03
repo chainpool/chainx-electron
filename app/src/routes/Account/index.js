@@ -17,14 +17,11 @@ class Account extends Mixin {
 
   startInit = () => {
     const {
-      model: { openModal, dispatch, currentAccount },
+      model: { dispatch },
     } = this.props;
     dispatch({
       type: 'switchAccount',
     });
-    // openModal({
-    //   name: 'CreateAccountModal',
-    // });
   };
 
   render() {
@@ -95,23 +92,33 @@ class Account extends Mixin {
                             <div>
                               <ul className={styles.clickPopover}>
                                 <li
-                                  onClick={() => {
+                                  onClick={e => {
+                                    e.stopPropagation();
                                     openModal({
                                       name: 'ForgetAccountModal',
+                                      data: {
+                                        encoded: item.encoded,
+                                        address: item.address,
+                                      },
                                     });
                                   }}>
                                   忘记账户
                                 </li>
                                 <li
-                                  onClick={() => {
+                                  onClick={e => {
+                                    e.stopPropagation();
                                     openModal({
                                       name: 'EditLabelModal',
+                                      data: {
+                                        address: item.address,
+                                      },
                                     });
                                   }}>
                                   修改标签
                                 </li>
                                 <li
-                                  onClick={() => {
+                                  onClick={e => {
+                                    e.stopPropagation();
                                     openModal({
                                       name: 'EditPasswordModal',
                                     });
@@ -119,7 +126,8 @@ class Account extends Mixin {
                                   修改密码
                                 </li>
                                 <li
-                                  onClick={() => {
+                                  onClick={e => {
+                                    e.stopPropagation();
                                     openModal({
                                       name: 'ExportSecretModal',
                                     });

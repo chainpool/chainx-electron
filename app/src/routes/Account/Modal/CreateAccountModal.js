@@ -17,7 +17,6 @@ class CreateAccountModal extends Component {
       secretKeyErrMsg: '',
     };
   }
-  componentDidMount() {}
   checkAll = {
     checkMnemonicWord: () => {
       const { mnemonicWord } = this.state;

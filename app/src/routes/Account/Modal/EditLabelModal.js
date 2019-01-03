@@ -23,7 +23,8 @@ class EditLabelModal extends Component {
     const { checkAll } = this;
     const { label, labelErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { dispatch, closeModal },
+      globalStore: { modal: { data: { address } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -34,6 +35,13 @@ class EditLabelModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'updateTag',
+                  payload: {
+                    address,
+                    tag: label,
+                  },
+                });
                 closeModal();
               }
             }}>
