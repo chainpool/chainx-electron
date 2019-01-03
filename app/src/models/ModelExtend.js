@@ -50,7 +50,9 @@ export default class ModelExtend {
   };
 
   closeModal = payload => {
-    this.rootStore.globalStore.closeModal(payload);
+    setTimeout(() => {
+      this.rootStore.globalStore.closeModal(payload);
+    });
   };
 
   isLogin = () => {

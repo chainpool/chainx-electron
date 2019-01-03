@@ -121,6 +121,10 @@ class Account extends Mixin {
                                     e.stopPropagation();
                                     openModal({
                                       name: 'EditPasswordModal',
+                                      data: {
+                                        encoded: item.encoded,
+                                        address: item.address,
+                                      },
                                     });
                                   }}>
                                   修改密码

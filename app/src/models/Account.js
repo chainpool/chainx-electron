@@ -36,10 +36,13 @@ export default class Store extends ModelExtend {
     }
   }
 
-  updateEncoded(tag, encoded) {
-    const account = this.accounts.find(account => account.tag === tag);
-    if (account) {
-      this.changeModel('encoded', encoded);
+  updateEncoded({ address, encoded }) {
+    const accounts = [...this.accounts];
+    const index = this.accounts.findIndex(account => account.address === address);
+    if (index > -1) {
+      accounts.splice(index, 1, { ...this.accounts[index], encoded });
+      this.changeModel('accounts', accounts);
+      this.setCurrentAccount();
     }
   }
 

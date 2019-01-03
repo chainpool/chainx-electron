@@ -6,3 +6,7 @@ export const PATH = {
   addressManage: '/asset/addressManage',
   trade: '/trade',
 };
+
+export const ErrMsg = {
+  passNotEqual: '两次输入的密码不一致',
+};

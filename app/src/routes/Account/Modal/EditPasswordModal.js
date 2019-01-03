@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
-import { Patterns } from '../../../utils';
+import { ErrMsg } from '../../../constants';
+import { Chainx, Patterns } from '../../../utils';
 
 class EditPasswordModal extends Component {
   state = {
@@ -14,21 +15,35 @@ class EditPasswordModal extends Component {
   checkAll = {
     checkPrimaryPassword: () => {
       const { primaryPassword } = this.state;
-      const errMsg = Patterns.check('required')(primaryPassword);
+      const {
+        globalStore: { modal: { data: { encoded } = {} } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(primaryPassword) || Patterns.check('decode')(encoded, primaryPassword);
+
       this.setState({ primaryPasswordErrMsg: errMsg });
       return errMsg;
     },
     checkPassword: () => {
-      const { password } = this.state;
+      const { password, confirmPassword } = this.state;
       const errMsg =
-        Patterns.check('required')(password) || Patterns.check('smaller')(6, password.length, '密码至少包含6个字符');
-      this.setState({ passwordErrMsg: errMsg });
+        Patterns.check('required')(password) ||
+        Patterns.check('smaller')(6, password.length, '密码至少包含6个字符') ||
+        Patterns.check('equal')(password, confirmPassword, ErrMsg.passNotEqual);
+      this.setState({
+        passwordErrMsg: errMsg,
+        confirmPasswordErrMsg: errMsg === ErrMsg.passNotEqual ? errMsg : '',
+      });
       return errMsg;
     },
     checkConfirmPassword: () => {
-      const { confirmPassword } = this.state;
-      const errMsg = Patterns.check('required')(confirmPassword);
-      this.setState({ confirmPasswordErrMsg: errMsg });
+      const { password, confirmPassword } = this.state;
+      const errMsg =
+        Patterns.check('required')(confirmPassword) ||
+        Patterns.check('equal')(password, confirmPassword, ErrMsg.passNotEqual);
+      this.setState({
+        passwordErrMsg: errMsg === ErrMsg.passNotEqual ? errMsg : '',
+        confirmPasswordErrMsg: errMsg,
+      });
       return errMsg;
     },
 
@@ -47,7 +62,8 @@ class EditPasswordModal extends Component {
       confirmPasswordErrMsg,
     } = this.state;
     const {
-      model: { closeModal },
+      model: { dispatch, closeModal },
+      globalStore: { modal: { data: { address, encoded } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -58,6 +74,16 @@ class EditPasswordModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'updateEncoded',
+                  payload: {
+                    address,
+                    encoded: Chainx.Keystore.encrypt(
+                      Chainx.Keystore.decrypt(encoded, `${primaryPassword}`),
+                      `${password}`
+                    ),
+                  },
+                });
                 closeModal();
               }
             }}>
@@ -74,7 +100,9 @@ class EditPasswordModal extends Component {
             onChange={value => {
               this.setState({ primaryPassword: value });
             }}
-            onBlur={checkAll.checkPrimaryPassword}
+            onBlur={() => {
+              checkAll.checkPrimaryPassword();
+            }}
           />
           <Input.Text
             isPassword
