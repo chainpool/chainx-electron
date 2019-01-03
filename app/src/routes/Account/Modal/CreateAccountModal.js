@@ -41,11 +41,37 @@ class CreateAccountModal extends Component {
       return [['checkMnemonicWord', 'checkSecretKey'][step - 1]].every(item => !this.checkAll[item]());
     },
   };
-  render() {
-    const { step, mnemonicWord, userSelectMnemonicWord, shuffleMnemonicWord } = this.state;
+
+  submit = () => {
+    const { mnemonicWord } = this.state;
     const {
-      model: { openModal },
+      model: { openModal, dispatch },
     } = this.props;
+    const account = Chainx.Account.fromMnemonic(mnemonicWord.join(' '));
+    // const encry = Chainx.Keystore.encrypt(account.privateKey, '12345678');
+    // const newAccount = Chainx.Account.fromPrivateKey(Chainx.Keystore.decrypt(encry, '12345678'));
+    openModal({
+      name: 'SetPasswordModal',
+      data: {
+        step: 3,
+        callback: (label, password) => {
+          const encoded = Chainx.Keystore.encrypt(account.privateKey, `${password}`);
+          dispatch({
+            type: 'add',
+            payload: {
+              tag: label,
+              address: account.address,
+              encoded,
+            },
+          });
+        },
+      },
+    });
+  };
+  render() {
+    const { submit } = this;
+    const { step, mnemonicWord, userSelectMnemonicWord, shuffleMnemonicWord } = this.state;
+
     return (
       <Modal
         title={
@@ -153,12 +179,7 @@ class CreateAccountModal extends Component {
                     size="bigger"
                     type="confirm"
                     onClick={() => {
-                      openModal({
-                        name: 'SetPasswordModal',
-                        data: {
-                          step: 3,
-                        },
-                      });
+                      submit();
                     }}>
                     完成
                   </Button>

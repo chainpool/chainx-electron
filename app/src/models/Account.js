@@ -1,46 +1,35 @@
 import { computed, observable } from 'mobx';
+import { _, localSave } from '../utils';
 import ModelExtend from './ModelExtend';
 
+console.log(localSave.get('accounts'));
+
 export default class Store extends ModelExtend {
-  @observable accounts = [
-    { name: 'Chainx1', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
-    { name: 'Chainx2', address: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8WBLi4y894oX41opq' },
-  ];
-  @observable currentIndex = null;
+  @observable accounts = localSave.get('accounts') || [];
+  @observable currentAccount = {};
 
-  @computed get currentAccount() {
-    if (typeof this.currentIndex !== 'undefined') {
-      return this.accounts[this.currentIndex];
+  setCurrent(address) {
+    let newCurrentAccount = this.currentAccount || {};
+    const findAccount = _.find(this.accounts, (item = {}) => item.address === address);
+    const currentAccount = _.find(this.accounts, (item = {}) => item.address === this.currentAccount.address);
+    if (findAccount) {
+      newCurrentAccount = findAccount;
+    } else if (!currentAccount && this.accounts[0]) {
+      newCurrentAccount = this.accounts[0];
     }
-
-    return null;
-  }
-
-  setCurrentIndex(index) {
-    if (index >= 0 && index < this.accounts.length) {
-      this.changeModel('currentIndex', index);
-    }
+    this.changeModel('currentAccount', newCurrentAccount);
+    localSave.set('accounts', this.accounts);
   }
 
   add({ tag, address, encoded }) {
-    if (this.accounts.filter(account => account.tag === tag).length > 0) {
-      return;
-    }
-
     this.changeModel('accounts', [...this.accounts, { tag, address, encoded }]);
-    if (this.accounts.length === 1) {
-      this.setCurrentIndex(0);
-    }
+    this.setCurrent();
   }
 
   delete(tag) {
     const index = this.accounts.findIndex(account => account.tag === tag);
     if (index >= 0) {
       this.changeModel('accounts', [...this.accounts].splice(index - 1, 1));
-    }
-
-    if (this.accounts.length <= 0) {
-      this.setCurrentIndex(undefined);
     }
   }
 

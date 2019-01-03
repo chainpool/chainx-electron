@@ -1,6 +1,7 @@
 import { lodash_helper, moment_helper } from './helper';
 import { observer, inject } from 'mobx-react';
 import Account from '@chainx/account';
+import Keystore from '@chainx/keystore';
 
 //------------------通用部分
 export { request } from './request';
@@ -27,6 +28,7 @@ export const setColumnsWidth = (table = [], widths = []) => {
 
 export const Chainx = {
   Account,
+  Keystore,
 };
 
 export const Patterns = {

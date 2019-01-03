@@ -17,8 +17,11 @@ class Account extends Mixin {
 
   startInit = () => {
     const {
-      model: { openModal },
+      model: { openModal, dispatch },
     } = this.props;
+    dispatch({
+      type: 'setCurrent',
+    });
     // openModal({
     //   name: 'CreateAccountModal',
     // });
@@ -37,7 +40,7 @@ class Account extends Mixin {
         {isLogin() ? (
           <div className={styles.login}>
             <Icon name="icon-zhanghu" />
-            <span>{currentAccount.name}</span>
+            <span>{currentAccount.tag}</span>
             <Icon name="icon-xiala" />
             <div className={classNames(styles.accountlist, 'accountlist')}>
               <div>
@@ -73,7 +76,7 @@ class Account extends Mixin {
                     return (
                       <li key={index} id={id}>
                         <div>
-                          <div>{item.name}</div>
+                          <div>{item.tag}</div>
                           <div className={styles.popover}>
                             <Icon name="icon-gengduocaozuo" />
                             <div>

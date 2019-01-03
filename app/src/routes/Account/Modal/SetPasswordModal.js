@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
-import { Patterns } from '../../../utils';
+import { _, Patterns } from '../../../utils';
 import * as styles from './SetPasswordModal.less';
 
 class SetPasswordModal extends Component {
@@ -13,6 +13,12 @@ class SetPasswordModal extends Component {
     confirmPasswordErrMsg: '',
   };
   checkAll = {
+    checkEqual: () => {
+      const { password, confirmPassword } = this.state;
+      if (password && confirmPassword) {
+        return password === confirmPassword ? '' : '两次输入的密码不一致';
+      }
+    },
     checkLabel: () => {
       const { label } = this.state;
       const errMsg = Patterns.check('required')(label) || Patterns.check('smaller')(label.length, 12, '12字符以内');
@@ -22,13 +28,15 @@ class SetPasswordModal extends Component {
     checkPassword: () => {
       const { password } = this.state;
       const errMsg =
-        Patterns.check('required')(password) || Patterns.check('smaller')(6, password.length, '密码至少包含6个字符');
+        Patterns.check('required')(password) ||
+        Patterns.check('smaller')(6, password.length, '密码至少包含6个字符') ||
+        this.checkAll.checkEqual();
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
     checkConfirmPassword: () => {
       const { confirmPassword } = this.state;
-      const errMsg = Patterns.check('required')(confirmPassword);
+      const errMsg = Patterns.check('required')(confirmPassword) || this.checkAll.checkEqual();
       this.setState({ confirmPasswordErrMsg: errMsg });
       return errMsg;
     },
@@ -41,8 +49,7 @@ class SetPasswordModal extends Component {
     const { checkAll } = this;
     const { label, labelErrMsg, password, passwordErrMsg, confirmPassword, confirmPasswordErrMsg } = this.state;
     const {
-      model: { closeModal },
-      globalStore: { modal: { data: { step } = {} } = {} },
+      globalStore: { modal: { data: { step, callback } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -57,7 +64,7 @@ class SetPasswordModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                _.isFunction(callback) && callback(label, password);
               }
             }}>
             完成
