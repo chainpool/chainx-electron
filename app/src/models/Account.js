@@ -8,13 +8,13 @@ export default class Store extends ModelExtend {
   @observable accounts = localSave.get('accounts') || [];
   @observable currentAccount = {};
 
-  setCurrent(address) {
+  setCurrent(address = '') {
     let newCurrentAccount = this.currentAccount || {};
     const findAccount = _.find(this.accounts, (item = {}) => item.address === address);
     const currentAccount = _.find(this.accounts, (item = {}) => item.address === this.currentAccount.address);
     if (findAccount) {
       newCurrentAccount = findAccount;
-    } else if (!currentAccount && this.accounts[0]) {
+    } else if (!currentAccount && this.accounts.length) {
       newCurrentAccount = this.accounts[0];
     }
     this.changeModel('currentAccount', newCurrentAccount);
@@ -45,5 +45,9 @@ export default class Store extends ModelExtend {
     if (account) {
       this.changeModel('tag', newTag);
     }
+  }
+
+  switchAccount({ address }) {
+    this.setCurrent(address);
   }
 }

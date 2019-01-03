@@ -40,7 +40,8 @@ export default class Tooltip extends React.Component {
           <>
             <span id={uid} data-tip={tip} className={styles.tip}>
               <span
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   if (onClick && _.isFunction(onClick)) {
                     onClick(tip => {
                       tip &&

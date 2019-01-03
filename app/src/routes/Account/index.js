@@ -17,10 +17,10 @@ class Account extends Mixin {
 
   startInit = () => {
     const {
-      model: { openModal, dispatch },
+      model: { openModal, dispatch, currentAccount },
     } = this.props;
     dispatch({
-      type: 'setCurrent',
+      type: 'switchAccount',
     });
     // openModal({
     //   name: 'CreateAccountModal',
@@ -29,7 +29,8 @@ class Account extends Mixin {
 
   render() {
     const {
-      model: { openModal, isLogin, currentAccount, accounts = [] },
+      model: { openModal, dispatch, isLogin, currentAccount = {}, accounts = [] },
+
       globalStore: {
         modal: { name },
       },
@@ -42,7 +43,7 @@ class Account extends Mixin {
             <Icon name="icon-zhanghu" />
             <span>{currentAccount.tag}</span>
             <Icon name="icon-xiala" />
-            <div className={classNames(styles.accountlist, 'accountlist')}>
+            <div className={classNames(styles.accountlist)}>
               <div>
                 <div className={styles.quickentry}>
                   <div>
@@ -71,10 +72,21 @@ class Account extends Mixin {
                   </div>
                 </div>
                 <ul>
-                  {accounts.map((item, index) => {
+                  {accounts.map((item = {}, index) => {
                     const id = `popoverid_${index}`;
                     return (
-                      <li key={index} id={id}>
+                      <li
+                        className={currentAccount.address === item.address ? styles.active : null}
+                        key={index}
+                        id={id}
+                        onClick={() => {
+                          dispatch({
+                            type: 'switchAccount',
+                            payload: {
+                              address: item.address,
+                            },
+                          });
+                        }}>
                         <div>
                           <div>{item.tag}</div>
                           <div className={styles.popover}>
