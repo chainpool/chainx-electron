@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { ErrMsg } from '../../../constants';
-import { Chainx, Patterns } from '../../../utils';
+import { ChainX, Patterns } from '../../../utils';
 
 class EditPasswordModal extends Component {
   state = {
@@ -78,8 +78,8 @@ class EditPasswordModal extends Component {
                   type: 'updateEncoded',
                   payload: {
                     address,
-                    encoded: Chainx.Keystore.encrypt(
-                      Chainx.Keystore.decrypt(encoded, `${primaryPassword}`),
+                    encoded: ChainX.Keystore.encrypt(
+                      ChainX.Keystore.decrypt(encoded, `${primaryPassword}`),
                       `${password}`
                     ),
                   },

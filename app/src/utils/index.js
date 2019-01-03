@@ -26,7 +26,7 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
-export const Chainx = {
+export const ChainX = {
   Account,
   Keystore,
 };
@@ -34,7 +34,7 @@ export const Chainx = {
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
     try {
-      Chainx.Keystore.decrypt(encoded, password);
+      ChainX.Keystore.decrypt(encoded, password);
       return '';
     } catch (e) {
       return errMsg;

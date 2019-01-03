@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, ButtonGroup } from '../../../components';
-import { _, Patterns, Chainx, classNames } from '../../../utils';
+import { _, Patterns, ChainX, classNames } from '../../../utils';
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {
   constructor(props) {
     super(props);
-    const generateMnemonic = Chainx.Account.newMnemonic().split(' ');
+    const generateMnemonic = ChainX.Account.newMnemonic().split(' ');
     this.state = {
       step: 2,
       mnemonicWord: generateMnemonic,
@@ -46,15 +46,15 @@ class CreateAccountModal extends Component {
     const {
       model: { openModal, dispatch },
     } = this.props;
-    const account = Chainx.Account.fromMnemonic(mnemonicWord.join(' '));
-    // const encry = Chainx.Keystore.encrypt(account.privateKey, '12345678');
-    // const newAccount = Chainx.Account.fromPrivateKey(Chainx.Keystore.decrypt(encry, '12345678'));
+    const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
+    // const encry = ChainX.Keystore.encrypt(account.privateKey, '12345678');
+    // const newAccount = ChainX.Account.fromPrivateKey(ChainX.Keystore.decrypt(encry, '12345678'));
     openModal({
       name: 'SetPasswordModal',
       data: {
         step: 3,
         callback: (label, password) => {
-          const encoded = Chainx.Keystore.encrypt(account.privateKey, `${password}`);
+          const encoded = ChainX.Keystore.encrypt(account.privateKey, `${password}`);
           dispatch({
             type: 'addAccount',
             payload: {
