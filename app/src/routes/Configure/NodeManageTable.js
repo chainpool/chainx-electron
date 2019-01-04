@@ -55,7 +55,7 @@ class NodeManageTable extends Component {
                 <Button
                   onClick={() => {
                     openModal({
-                      name: 'WithdrawModal',
+                      name: 'DeleteNodeModal',
                     });
                   }}>
                   修改
@@ -63,7 +63,7 @@ class NodeManageTable extends Component {
                 <Button
                   onClick={() => {
                     openModal({
-                      name: 'TransferModal',
+                      name: 'DeleteNodeModal',
                     });
                   }}>
                   删除

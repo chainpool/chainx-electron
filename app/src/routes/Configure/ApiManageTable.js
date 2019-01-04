@@ -51,7 +51,7 @@ class ApiManageTable extends Component {
                 <Button
                   onClick={() => {
                     openModal({
-                      name: 'TransferModal',
+                      name: 'DeleteApiModal',
                     });
                   }}>
                   删除

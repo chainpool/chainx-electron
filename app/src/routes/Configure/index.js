@@ -6,6 +6,8 @@ import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
 import AddNodeModal from './Modal/AddNodeModal';
 import AddApiModal from './Modal/AddApiModal';
+import DeleteNodeModal from './Modal/DeleteNodeModal';
+import DeleteApiModal from './Modal/DeleteApiModal';
 import * as styles from './index.less';
 
 @Inject(({ Configure: model }) => ({ model }))
@@ -15,7 +17,7 @@ class Configure extends Mixin {
       model: { openModal },
     } = this.props;
     // openModal({
-    //   name: 'AddApiModal',
+    //   name: 'DeleteApiModal',
     // });
   };
   render() {
@@ -95,6 +97,8 @@ class Configure extends Mixin {
         <ApiManageTable {...tableProps} />
         {name === 'AddNodeModal' ? <AddNodeModal {...this.props} /> : null}
         {name === 'AddApiModal' ? <AddApiModal {...this.props} /> : null}
+        {name === 'DeleteNodeModal' ? <DeleteNodeModal {...this.props} /> : null}
+        {name === 'DeleteApiModal' ? <DeleteApiModal {...this.props} /> : null}
       </div>
     );
   }
