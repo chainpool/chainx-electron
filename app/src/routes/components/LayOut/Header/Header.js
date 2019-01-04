@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { RouterGo } from '../../../../components';
+import { RouterGo, Icon } from '../../../../components';
+import { PATH } from '../../../../constants';
 import routers from '../../../App/routers';
 import * as styles from './Header.less';
 import logo from '../../../../resource/logo.png';
@@ -28,7 +29,14 @@ class Header extends Component {
                 ))}
             </ul>
           </div>
-          <div>
+          <div className={styles.right}>
+            <div>
+              <RouterGo
+                go={{ pathname: PATH.configure }}
+                className={pathname === PATH.configure ? styles.active : null}>
+                <Icon name="icon-shezhi" />
+              </RouterGo>
+            </div>
             <Account {...this.props} />
           </div>
         </div>

@@ -4,6 +4,7 @@ import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
 import { default as OperationRecord } from '../OperationRecord';
 import { default as AddressManage } from '../AddressManage';
 import { default as Trade } from '../Trade';
+import { default as Configure } from '../Configure';
 import { PATH } from '../../constants';
 export default [
   {
@@ -38,5 +39,11 @@ export default [
     title: '交易',
     path: PATH.trade,
     component: Trade,
+  },
+  {
+    title: '配置',
+    show: false,
+    path: PATH.configure,
+    component: Configure,
   },
 ];

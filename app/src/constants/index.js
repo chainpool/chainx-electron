@@ -5,6 +5,7 @@ export const PATH = {
   operationRecord: '/asset/operationRecord',
   addressManage: '/asset/addressManage',
   trade: '/trade',
+  configure: '/configure',
 };
 
 export const ErrMsg = {
