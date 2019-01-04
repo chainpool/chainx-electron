@@ -14,3 +14,14 @@ export const ErrMsg = {
   mnemonicOrderNotFormat: '助记词顺序错误，请核对后重新输入',
   mnemonicNotFormat: '助记词错误，请核对后重新输入',
 };
+
+export const NetWork = [
+  {
+    name: '测试网',
+    ip: '192.168.1.1',
+  },
+  {
+    name: '正式网',
+    ip: '192.168.1.2',
+  },
+];

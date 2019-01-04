@@ -4,11 +4,12 @@ import * as styles from './index.less';
 
 class TableTitle extends Component {
   render() {
-    const { children, title, className } = this.props;
+    const { children, title, helpTitle = '', className, style } = this.props;
     return (
-      <div className={classNames(styles.tableTitle, className)}>
+      <div className={classNames(styles.tableTitle, className)} style={style}>
         <div>
           <h5>{title}</h5>
+          {helpTitle ? <div className={styles.helptitle}>{helpTitle}</div> : null}
           <div />
         </div>
         <div>{children}</div>
