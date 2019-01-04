@@ -1,21 +1,34 @@
-import React, { Component } from 'react';
-import { Button, Input, Icon } from '../../components';
+import React from 'react';
+import { Button, Input, Icon, Mixin } from '../../components';
 import { TableTitle } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
+import AddNodeModal from './Modal/AddNodeModal';
+import AddApiModal from './Modal/AddApiModal';
 import * as styles from './index.less';
 
 @Inject(({ Configure: model }) => ({ model }))
-class Configure extends Component {
+class Configure extends Mixin {
+  startInit = () => {
+    const {
+      model: { openModal },
+    } = this.props;
+    // openModal({
+    //   name: 'AddApiModal',
+    // });
+  };
   render() {
     const {
-      model: { netWork = [], currentNetWork = {}, dispatch },
+      model: { netWork = [], currentNetWork = {}, dispatch, openModal },
+      globalStore: {
+        modal: { name },
+      },
     } = this.props;
 
     const tableProps = {
       ...this.props,
-      widths: [150, 150, 150, 150, 150],
+      widths: [150, 150, 200, 150, 150],
     };
     return (
       <div className={styles.configure}>
@@ -46,7 +59,13 @@ class Configure extends Component {
               查看节点部署文档
             </Button>
           }>
-          <Button type="blank">
+          <Button
+            type="blank"
+            onClick={() => {
+              openModal({
+                name: 'AddNodeModal',
+              });
+            }}>
             <Icon name="icon-tianjia" />
             添加节点
           </Button>
@@ -62,12 +81,20 @@ class Configure extends Component {
               查看API部署文档
             </Button>
           }>
-          <Button type="blank">
+          <Button
+            type="blank"
+            onClick={() => {
+              openModal({
+                name: 'AddApiModal',
+              });
+            }}>
             <Icon name="icon-tianjia" />
             添加API
           </Button>
         </TableTitle>
         <ApiManageTable {...tableProps} />
+        {name === 'AddNodeModal' ? <AddNodeModal {...this.props} /> : null}
+        {name === 'AddApiModal' ? <AddApiModal {...this.props} /> : null}
       </div>
     );
   }

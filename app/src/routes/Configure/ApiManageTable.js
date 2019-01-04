@@ -46,14 +46,6 @@ class ApiManageTable extends Component {
                       name: 'WithdrawModal',
                     });
                   }}>
-                  停止同步
-                </Button>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'WithdrawModal',
-                    });
-                  }}>
                   修改
                 </Button>
                 <Button
