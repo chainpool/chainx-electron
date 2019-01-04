@@ -17,7 +17,7 @@ class ImportAccountModal extends Component {
       const errMsg = mnemonicWord.some(item => {
         return !!Patterns.check('required')(item);
       })
-        ? '按顺序输入您的助记词，并以空格键区分'
+        ? '请填写完整'
         : '' || Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
       this.setState({ MnemonicWordErrMsg: errMsg });
       return errMsg;

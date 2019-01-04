@@ -10,5 +10,6 @@ export const PATH = {
 export const ErrMsg = {
   passNotEqual: '两次输入的密码不一致',
   privateKeyNotFormat: '私钥错误，请核对后重新输入',
+  mnemonicOrderNotFormat: '助记词顺序错误，请核对后重新输入',
   mnemonicNotFormat: '助记词错误，请核对后重新输入',
 };

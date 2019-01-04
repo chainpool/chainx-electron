@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, ButtonGroup } from '../../../components';
 import { _, Patterns, ChainX, classNames } from '../../../utils';
+import { ErrMsg } from '../../../constants';
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {
@@ -23,7 +24,7 @@ class CreateAccountModal extends Component {
       const errMsg = Patterns.check('strictEqual')(
         userSelectMnemonicWord.join(),
         mnemonicWord.join(),
-        '助记词顺序错误，请核对后重新输入'
+        ErrMsg.mnemonicOrderNotFormat
       );
       this.setState({ userSelectMnemonicWordErrMsg: errMsg });
       return errMsg;
@@ -39,7 +40,7 @@ class CreateAccountModal extends Component {
     const { checkAll } = this;
     const { mnemonicWord } = this.state;
     const {
-      model: { openModal, dispatch },
+      model: { openModal },
     } = this.props;
 
     if (checkAll.confirm()) {

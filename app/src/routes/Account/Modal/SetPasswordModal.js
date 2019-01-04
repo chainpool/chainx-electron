@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
-import { _, ChainX, Patterns } from '../../../utils';
+import { ChainX, Patterns } from '../../../utils';
+import { ErrMsg } from '../../../constants';
 import * as styles from './SetPasswordModal.less';
 
 class SetPasswordModal extends Component {
@@ -16,7 +17,7 @@ class SetPasswordModal extends Component {
     checkEqual: () => {
       const { password, confirmPassword } = this.state;
       if (password && confirmPassword) {
-        return password === confirmPassword ? '' : '两次输入的密码不一致';
+        return password === confirmPassword ? '' : ErrMsg.passNotEqual;
       }
     },
     checkLabel: () => {
