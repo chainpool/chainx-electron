@@ -20,7 +20,7 @@ class CreateAccountModal extends Component {
   checkAll = {
     checkUserSelectMnemonicWord: () => {
       const { userSelectMnemonicWord, mnemonicWord } = this.state;
-      const errMsg = Patterns.check('equal')(
+      const errMsg = Patterns.check('strictEqual')(
         userSelectMnemonicWord.join(),
         mnemonicWord.join(),
         '助记词顺序错误，请核对后重新输入'
@@ -50,20 +50,10 @@ class CreateAccountModal extends Component {
         name: 'SetPasswordModal',
         data: {
           step: 3,
-          callback: (label, password) => {
-            const encoded = ChainX.Keystore.encrypt(account.privateKey, `${password}`);
-            dispatch({
-              type: 'addAccount',
-              payload: {
-                tag: label,
-                address: account.address,
-                encoded,
-              },
-            });
-          },
+          privateKey: account.privateKey,
+          address: account.address,
         },
       });
-    } else {
     }
   };
   render() {

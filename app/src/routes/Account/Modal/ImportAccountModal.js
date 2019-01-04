@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, Icon } from '../../../components';
-import { Patterns } from '../../../utils';
+import { ChainX, Patterns } from '../../../utils';
 import * as styles from './ImportAccountModal.less';
 
 class ImportAccountModal extends Component {
   state = {
     step: 1,
-    mnemonicWord: new Array(12).fill(''),
+    mnemonicWord: new Array(12).fill('').map((item, index) => index + 1),
     MnemonicWordErrMsg: '',
     secretKey: '',
     secretKeyErrMsg: '',
@@ -38,7 +38,7 @@ class ImportAccountModal extends Component {
     const { checkAll } = this;
     const { step, mnemonicWord, secretKey, MnemonicWordErrMsg, secretKeyErrMsg } = this.state;
     const {
-      model: { closeModal, openModal },
+      model: { openModal },
     } = this.props;
     return (
       <Modal
@@ -55,10 +55,13 @@ class ImportAccountModal extends Component {
               type="confirm"
               onClick={() => {
                 if (checkAll.confirm()) {
+                  const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
                   openModal({
                     name: 'SetPasswordModal',
                     data: {
                       step: 2,
+                      privateKey: account.privateKey,
+                      address: account.address,
                     },
                   });
                 }

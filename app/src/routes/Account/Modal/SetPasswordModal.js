@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
-import { _, Patterns } from '../../../utils';
+import { _, ChainX, Patterns } from '../../../utils';
 import * as styles from './SetPasswordModal.less';
 
 class SetPasswordModal extends Component {
@@ -49,8 +49,8 @@ class SetPasswordModal extends Component {
     const { checkAll } = this;
     const { label, labelErrMsg, password, passwordErrMsg, confirmPassword, confirmPasswordErrMsg } = this.state;
     const {
-      model: { closeModal },
-      globalStore: { modal: { data: { step, callback } = {} } = {} },
+      model: { dispatch, closeModal },
+      globalStore: { modal: { data: { step, privateKey, address } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -65,7 +65,15 @@ class SetPasswordModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                _.isFunction(callback) && callback(label, password);
+                const encoded = ChainX.Keystore.encrypt(privateKey, `${password}`);
+                dispatch({
+                  type: 'addAccount',
+                  payload: {
+                    tag: label,
+                    address: address,
+                    encoded,
+                  },
+                });
                 closeModal();
               }
             }}>
