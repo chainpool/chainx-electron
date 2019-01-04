@@ -1,5 +1,6 @@
 import { lodash_helper, moment_helper } from './helper';
 import { observer, inject } from 'mobx-react';
+import { ErrMsg } from '../constants';
 import Account from '@chainx/account';
 import Keystore from '@chainx/keystore';
 
@@ -36,7 +37,23 @@ export const Patterns = {
     try {
       ChainX.Keystore.decrypt(encoded, password);
       return '';
-    } catch (e) {
+    } catch (err) {
+      return errMsg;
+    }
+  },
+  isPrivateKey: (privateKey, errMsg = ErrMsg.privateKeyNotFormat) => {
+    try {
+      ChainX.Account.fromPrivateKey(privateKey);
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
+  },
+  isMnemonicValid: (mnemonic, errMsg = ErrMsg.mnemonicNotFormat) => {
+    try {
+      ChainX.Account.isMnemonicValid(mnemonic);
+      return '';
+    } catch (err) {
       return errMsg;
     }
   },

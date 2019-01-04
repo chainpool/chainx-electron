@@ -1,5 +1,5 @@
 {
-  "name": "rxjs_mobx",
+  "name": "mobx",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@chainx/account": "^1.0.1",
+    "@chainx/account": "1.0.3",
     "@chainx/keystore": "^1.0.0",
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",

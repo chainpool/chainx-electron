@@ -6,7 +6,7 @@ import * as styles from './ImportAccountModal.less';
 class ImportAccountModal extends Component {
   state = {
     step: 1,
-    mnemonicWord: new Array(12).fill('').map((item, index) => index + 1),
+    mnemonicWord: new Array(12).fill(''),
     MnemonicWordErrMsg: '',
     secretKey: '',
     secretKeyErrMsg: '',
@@ -18,13 +18,13 @@ class ImportAccountModal extends Component {
         return !!Patterns.check('required')(item);
       })
         ? '按顺序输入您的助记词，并以空格键区分'
-        : '';
+        : '' || Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
       this.setState({ MnemonicWordErrMsg: errMsg });
       return errMsg;
     },
     checkSecretKey: () => {
       const { secretKey } = this.state;
-      const errMsg = Patterns.check('required')(secretKey, '私钥错误，请核对后重新输入');
+      const errMsg = Patterns.check('required')(secretKey) || Patterns.check('isPrivateKey')(secretKey);
       this.setState({ secretKeyErrMsg: errMsg });
       return errMsg;
     },
@@ -55,7 +55,11 @@ class ImportAccountModal extends Component {
               type="confirm"
               onClick={() => {
                 if (checkAll.confirm()) {
-                  const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
+                  const account =
+                    step === 1
+                      ? ChainX.Account.fromMnemonic(mnemonicWord.join(' '))
+                      : ChainX.Account.fromPrivateKey(secretKey);
+
                   openModal({
                     name: 'SetPasswordModal',
                     data: {
@@ -115,6 +119,7 @@ class ImportAccountModal extends Component {
               onChange={value => {
                 this.setState({ secretKey: value });
               }}
+              onBlur={checkAll.checkSecretKey}
             />
           )}
         </div>
