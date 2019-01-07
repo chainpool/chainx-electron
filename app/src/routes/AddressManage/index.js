@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button, Icon, Mixin } from '../../components';
-import { BreadCrumb, TableTitle } from '../components';
+import { BreadCrumb, TableTitle, ConfirmAndCancelModal } from '../components';
 import AddressTable from './AddressTable';
 import AddAddressModal from './Modal/AddAddressModal';
 import EditLabelModal from './Modal/EditLabelModal';
-import DeleteAddressModal from './Modal/DeleteAddressModal';
 import * as styles from './index.less';
 import { Inject } from '../../utils';
 
@@ -46,7 +45,7 @@ class AddressManage extends Mixin {
         {activeIndex === 0 ? <AddressTable {...this.props} /> : null}
         {name === 'AddAddressModal' ? <AddAddressModal {...this.props} /> : null}
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
-        {name === 'DeleteAddressModal' ? <DeleteAddressModal {...this.props} /> : null}
+        {name === 'ConfirmAndCancelModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
       </div>
     );
   }

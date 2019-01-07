@@ -1,13 +1,11 @@
 import React from 'react';
 import { Button, Input, Icon, Mixin } from '../../components';
-import { TableTitle } from '../components';
+import { TableTitle, ConfirmAndCancelModal } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
 import AddNodeModal from './Modal/AddNodeModal';
 import AddApiModal from './Modal/AddApiModal';
-import DeleteNodeModal from './Modal/DeleteNodeModal';
-import DeleteApiModal from './Modal/DeleteApiModal';
 import * as styles from './index.less';
 
 @Inject(({ Configure: model }) => ({ model }))
@@ -97,8 +95,8 @@ class Configure extends Mixin {
         <ApiManageTable {...tableProps} />
         {name === 'AddNodeModal' ? <AddNodeModal {...this.props} /> : null}
         {name === 'AddApiModal' ? <AddApiModal {...this.props} /> : null}
-        {name === 'DeleteNodeModal' ? <DeleteNodeModal {...this.props} /> : null}
-        {name === 'DeleteApiModal' ? <DeleteApiModal {...this.props} /> : null}
+        {name === 'DeleteNodeModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
+        {name === 'DeleteApiModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
       </div>
     );
   }

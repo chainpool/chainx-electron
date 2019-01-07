@@ -64,6 +64,9 @@ class NodeManageTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'DeleteNodeModal',
+                      data: {
+                        title: '删除节点',
+                      },
                     });
                   }}>
                   删除

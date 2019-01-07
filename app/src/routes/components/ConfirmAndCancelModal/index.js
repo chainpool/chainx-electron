@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
+import { _ } from '../../../utils';
 import { Modal, Button, ButtonGroup } from '../../../components';
-import * as styles from './DeleteNodeModal.less';
+import * as styles from './index.less';
 
-class DeleteNodeModal extends Component {
+class ConfirmAndCancelModal extends Component {
   render() {
     const {
       model: { closeModal },
+      globalStore: { modal: { data: { title, callback } = {} } = {} },
     } = this.props;
     return (
       <Modal
-        title="删除节点"
+        title={title}
         button={
-          <div className={styles.deleteNodeModal}>
+          <div className={styles.confirmAndCancelModal}>
             <ButtonGroup>
               <Button
                 size="bigger"
@@ -24,6 +26,7 @@ class DeleteNodeModal extends Component {
                 size="bigger"
                 type="confirm"
                 onClick={() => {
+                  _.isFunction(callback) && callback();
                   closeModal();
                 }}>
                 确定
@@ -36,4 +39,4 @@ class DeleteNodeModal extends Component {
   }
 }
 
-export default DeleteNodeModal;
+export default ConfirmAndCancelModal;

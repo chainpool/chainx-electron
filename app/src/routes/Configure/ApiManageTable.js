@@ -52,6 +52,10 @@ class ApiManageTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'DeleteApiModal',
+                      data: {
+                        title: '删除API',
+                        callback: () => {},
+                      },
                     });
                   }}>
                   删除

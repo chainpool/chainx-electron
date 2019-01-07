@@ -120,9 +120,9 @@ class InputSelect extends React.Component {
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
           <div className={styles.userinput}>
             <CreatableSelect
+              isClearable={false}
               value={value}
               className={styles.selectContainer}
-              isClearable
               onChange={value => {
                 this.setState({ errMsg: '' });
                 _.isFunction(onChange) && onChange(value);

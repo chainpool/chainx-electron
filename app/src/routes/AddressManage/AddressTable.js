@@ -40,7 +40,11 @@ class AddressTable extends Component {
               <Button
                 onClick={() => {
                   openModal({
-                    name: 'DeleteAddressModal',
+                    name: 'ConfirmAndCancelModal',
+                    data: {
+                      title: '删除地址',
+                      callback: () => {},
+                    },
                   });
                 }}>
                 删除
