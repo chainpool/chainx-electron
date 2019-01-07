@@ -40,14 +40,7 @@ class ApiManageTable extends Component {
             width: 200,
             render: () => (
               <ButtonGroup>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'WithdrawModal',
-                    });
-                  }}>
-                  修改
-                </Button>
+                <Button onClick={() => {}}>修改</Button>
                 <Button
                   onClick={() => {
                     openModal({

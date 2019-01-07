@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { Warn } from '../../components';
-import { ChainX, Patterns } from '../../../utils';
+import { Modal, Input, Button } from '../../../../../../components';
+import { Warn } from '../../../../../components';
+import { ChainX, Patterns } from '../../../../../../utils';
 import * as styles from './ExportSecretModal.less';
 
 class ExportSecretModal extends Component {

@@ -44,22 +44,8 @@ class NodeManageTable extends Component {
             width: 200,
             render: () => (
               <ButtonGroup>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'WithdrawModal',
-                    });
-                  }}>
-                  停止同步
-                </Button>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'DeleteNodeModal',
-                    });
-                  }}>
-                  修改
-                </Button>
+                <Button onClick={() => {}}>停止同步</Button>
+                <Button onClick={() => {}}>修改</Button>
                 <Button
                   onClick={() => {
                     openModal({

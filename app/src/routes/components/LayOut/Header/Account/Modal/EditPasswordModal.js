@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { ErrMsg } from '../../../constants';
-import { ChainX, Patterns } from '../../../utils';
+import { Modal, Input, Button } from '../../../../../../components';
+import { ErrMsg } from '../../../../../../constants';
+import { ChainX, Patterns } from '../../../../../../utils';
 
 class EditPasswordModal extends Component {
   state = {
