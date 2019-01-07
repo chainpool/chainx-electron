@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
-import { CommonLayOut } from '../components';
+import CommonLayOut from './CommonLayOut';
 import { PATH } from '../../constants';
 import routers from './routers';
 import { Inject } from '../../utils';

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { RouterGo, Icon } from '../../../../components';
-import { PATH } from '../../../../constants';
-import routers from '../../../App/routers';
+import { RouterGo, Icon } from '../../../components';
+import { PATH } from '../../../constants';
+import routers from '../../App/routers';
 import * as styles from './Header.less';
-import logo from '../../../../resource/logo.png';
+import logo from '../../../resource/logo.png';
 import Account from './Account';
 
 class Header extends Component {

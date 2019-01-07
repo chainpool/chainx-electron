@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, Icon } from '../../../../../../components';
-import { ChainX, Patterns } from '../../../../../../utils';
+import { Modal, Input, Button, Icon } from '../../../../../components';
+import { ChainX, Patterns } from '../../../../../utils';
 import * as styles from './ImportAccountModal.less';
 
 class ImportAccountModal extends Component {

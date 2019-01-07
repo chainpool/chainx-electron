@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, ButtonGroup } from '../../../../../../components';
-import { Warn } from '../../../../../components';
-import { Patterns } from '../../../../../../utils';
+import { Modal, Input, Button, ButtonGroup } from '../../../../../components';
+import { Warn } from '../../../../components';
+import { Patterns } from '../../../../../utils';
 import * as styles from './ForgetAccountModal.less';
 
 class ForgetAccountModal extends Component {

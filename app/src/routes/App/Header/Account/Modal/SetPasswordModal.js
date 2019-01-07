@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../../../../components';
-import { ChainX, Patterns } from '../../../../../../utils';
-import { ErrMsg } from '../../../../../../constants';
+import { Modal, Input, Button } from '../../../../../components';
+import { ChainX, Patterns } from '../../../../../utils';
+import { ErrMsg } from '../../../../../constants';
 import * as styles from './SetPasswordModal.less';
 
 class SetPasswordModal extends Component {

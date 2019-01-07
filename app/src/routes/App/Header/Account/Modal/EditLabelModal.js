@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../../../../components';
-import { Patterns } from '../../../../../../utils';
+import { Modal, Input, Button } from '../../../../../components';
+import { Patterns } from '../../../../../utils';
 
 class EditLabelModal extends Component {
   state = {
