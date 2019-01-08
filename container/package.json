@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "productName": "app",
+  "name": "chainx",
+  "productName": "ChainX",
   "version": "1.0.2",
   "description": "My Electron application description",
   "main": "src/main.js",

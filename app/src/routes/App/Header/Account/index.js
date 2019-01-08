@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin } from '../../../../components';
-import { classNames, Inject } from '../../../../utils';
+import { classNames, Inject, Device } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
@@ -9,8 +9,10 @@ import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
 import ForgetAccountModal from './Modal/ForgetAccountModal';
 import CreateAccountModal from './Modal/CreateAccountModal';
-import DownLoadModal from './Modal/DownLoadModal';
 import * as styles from './index.less';
+import Linux from '../../../../resource/Linux.png';
+import Mac from '../../../../resource/Mac.png';
+import Win from '../../../../resource/Win.png';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Mixin {
@@ -180,8 +182,46 @@ class Account extends Mixin {
               }}>
               创建账户
             </Button>
-            <Button type="success" onClick={() => {}}>
+            <Button type="success" onClick={() => {}} className={styles.download}>
               下载钱包
+              <div>
+                <div>
+                  <Icon name="icon-xiazai" className={styles.downloadicon} />
+                  <div className={styles.appname}>桌面端安全钱包</div>
+                  <div className={styles.desc}>去中心化全节点钱包，不依赖中心化交易所</div>
+                  <ul>
+                    {[
+                      {
+                        src: Win,
+                        alias: 'Win',
+                        name: 'Windows',
+                      },
+                      {
+                        src: Mac,
+                        alias: 'Mac',
+                        name: 'MacOs',
+                      },
+                      {
+                        src: Linux,
+                        alias: 'Linux',
+                        name: 'Linux',
+                      },
+                    ].map(item => (
+                      <li key={item.name}>
+                        <img src={item.src} alt={`${item.src}`} />
+                        <div>{item.name}</div>
+                        <div
+                          className={classNames(
+                            styles.button,
+                            Device.getOS() === `${item.alias}` ? styles.active : null
+                          )}>
+                          下载
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </Button>
           </ButtonGroup>
         )}
@@ -193,7 +233,6 @@ class Account extends Mixin {
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
         {name === 'CreateAccountModal' ? <CreateAccountModal {...this.props} /> : null}
-        {name === 'DownLoadModal' ? <DownLoadModal {...this.props} /> : null}
       </div>
     );
   }

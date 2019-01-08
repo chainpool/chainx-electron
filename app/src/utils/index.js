@@ -1,5 +1,6 @@
 import { lodash_helper, moment_helper } from './helper';
 import { observer, inject } from 'mobx-react';
+import device from 'current-device';
 import { ErrMsg } from '../constants';
 import Account from '@chainx/account';
 import Keystore from '@chainx/keystore';
@@ -91,3 +92,28 @@ export const Patterns = {
     };
   },
 };
+
+export const Device = (() => {
+  const userAgentInfo = navigator.userAgent;
+  return {
+    isApp: () => {
+      return device.desktop() && !!userAgentInfo.match(/electron/i);
+    },
+    isPC: () => {
+      return device.desktop() && !userAgentInfo.match(/electron/i);
+    },
+    getOS: () => {
+      const platform = navigator.platform;
+      const isWin = platform === 'Win32' || platform === 'Windows';
+      const isMac =
+        platform === 'Mac68K' || platform === 'MacPPC' || platform === 'Macintosh' || platform === 'MacIntel';
+      const isUnix = platform === 'X11' && !isWin && !isMac;
+      const isLinux = platform.indexOf('Linux') > -1;
+      if (isWin) return 'Win';
+      if (isMac) return 'Mac';
+      if (isUnix) return 'Unix';
+      if (isLinux) return 'Linux';
+      return 'other';
+    },
+  };
+})();
