@@ -11,6 +11,7 @@ export default [
     title: '资产',
     path: PATH.asset,
     component: Asset,
+    authority: [1],
   },
   {
     title: '选举',

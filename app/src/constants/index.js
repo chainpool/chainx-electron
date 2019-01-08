@@ -1,4 +1,5 @@
 export const PATH = {
+  default: '/election',
   asset: '/asset',
   election: '/election',
   depositWithdrawRecord: '/asset/depositWithdrawRecord',

@@ -9,6 +9,7 @@ import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
 import ForgetAccountModal from './Modal/ForgetAccountModal';
 import CreateAccountModal from './Modal/CreateAccountModal';
+import DownLoadModal from './Modal/DownLoadModal';
 import * as styles from './index.less';
 
 @Inject(({ accountStore: model }) => ({ model }))
@@ -23,7 +24,7 @@ class Account extends Mixin {
       type: 'switchAccount',
     });
     // openModal({
-    //   name: 'CreateAccountModal',
+    //   name: 'DownLoadModal',
     // });
   };
 
@@ -179,7 +180,9 @@ class Account extends Mixin {
               }}>
               创建账户
             </Button>
-            <Button type="success">下载钱包</Button>
+            <Button type="success" onClick={() => {}}>
+              下载钱包
+            </Button>
           </ButtonGroup>
         )}
 
@@ -190,6 +193,7 @@ class Account extends Mixin {
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
         {name === 'CreateAccountModal' ? <CreateAccountModal {...this.props} /> : null}
+        {name === 'DownLoadModal' ? <DownLoadModal {...this.props} /> : null}
       </div>
     );
   }

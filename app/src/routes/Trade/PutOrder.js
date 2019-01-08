@@ -1,7 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Input, Slider } from '../../components';
-import { HoverTip } from '../components';
 
 import * as styles from './PutOrder.less';
 
@@ -69,9 +68,8 @@ class PutOrder extends SwitchPair {
               onChange={value => {
                 changeBS(action, { price: value });
               }}
-              suffix="BTC">
-              dsddd
-            </Input.Text>
+              suffix="BTC"
+            />
           </div>
         </div>
         <div className={styles.useramount}>
@@ -118,8 +116,7 @@ class PutOrder extends SwitchPair {
     return (
       <div className={styles.putOrder}>
         <div className={styles.header}>
-          <span>交易手续费:</span>Maker(<del>0.05%</del> 0.03%) Taker (<del>0.1%</del> 0.06%)
-          <HoverTip>解释</HoverTip>
+          <span>撮合手续费：0.00%</span>
         </div>
         <div className={styles.operation}>
           {renderArea(buyConfig)}

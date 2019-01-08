@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
 import CommonLayOut from './CommonLayOut';
 import { PATH } from '../../constants';
+import { AuthorityRoute } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 
@@ -13,14 +14,15 @@ class Main extends Component {
       <CommonLayOut {...this.props}>
         <Switch>
           {routers.map(item => (
-            <Route
+            <AuthorityRoute
+              authority={item.authority}
               key={item.path}
               path={item.path}
               exact
               render={props => <item.component {...props} {...this.props} />}
             />
           ))}
-          <Redirect key={0} to={PATH.asset} />
+          <Redirect key={0} to={PATH.default} />
         </Switch>
       </CommonLayOut>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { RouterGo, Icon } from '../../../components';
+import { RouterGo, Icon, AuthorityComponent } from '../../../components';
 import { PATH } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
@@ -13,21 +13,27 @@ class Header extends Component {
       <header className={className}>
         <div>
           <div className={styles.nav}>
-            <img src={logo} alt="logo" />
+            <RouterGo isOutSide go={{ pathname: 'https://chainx.org' }}>
+              <img src={logo} alt="logo" />
+            </RouterGo>
+
             <div className={styles.net}>测试网</div>
             <ul>
               {routers
                 .filter(item => item.show !== false)
-                .map(item => (
-                  <RouterGo
-                    key={item.path}
-                    Ele="li"
-                    go={{ pathname: item.path }}
-                    className={pathname === item.path ? styles.active : null}>
-                    {item.title}
-                    {item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}
-                  </RouterGo>
-                ))}
+                .map(item => {
+                  const com = (
+                    <RouterGo
+                      key={item.path}
+                      Ele="li"
+                      go={{ pathname: item.path }}
+                      className={pathname === item.path ? styles.active : null}>
+                      {item.title}
+                      {item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}
+                    </RouterGo>
+                  );
+                  return item.path === PATH.asset ? <AuthorityComponent>{com}</AuthorityComponent> : com;
+                })}
             </ul>
           </div>
           <div className={styles.right}>
