@@ -8,9 +8,9 @@ import Account from './Account';
 
 class Header extends Component {
   render() {
-    const { location: { pathname } = {} } = this.props;
+    const { location: { pathname } = {}, className } = this.props;
     return (
-      <header>
+      <header className={className}>
         <div>
           <div className={styles.nav}>
             <img src={logo} alt="logo" />

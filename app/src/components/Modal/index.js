@@ -32,7 +32,7 @@ class Modal extends Component {
         parentSelector={() => document.getElementById('overContent') || document.body}
         style={{
           overlay: {
-            zIndex: 3,
+            zIndex: 100001,
             background: style.background || 'rgba(0,0,0,.4)',
           },
           content: {
