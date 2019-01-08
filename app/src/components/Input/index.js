@@ -51,21 +51,23 @@ class CheckBox extends React.Component {
       disabled = false,
       label = '',
       value,
+      style,
     } = this.props;
     return (
-      <div className={classNames(styles.inputcontainer, className)}>
+      <div className={classNames(styles.inputcontainer)}>
         <div
           className={classNames(
             styles.input,
             styles.checkboxinput,
             styles[size],
             styles[type],
+            className,
             disabled ? styles.disabled : null
           )}
           onClick={() => {
             _.isFunction(onClick) && onClick();
           }}>
-          <div className={classNames(styles.checkbox, value ? styles.active : null)}>
+          <div style={style} className={classNames(styles.checkbox, value ? styles.active : null)}>
             {value ? <i className="iconfont icon-xuanzekuangxuanzhong" /> : null}
           </div>
           <div className={styles.label}>
