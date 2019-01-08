@@ -25,17 +25,31 @@ class Header extends Component {
                     go={{ pathname: item.path }}
                     className={pathname === item.path ? styles.active : null}>
                     {item.title}
+                    {item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}
                   </RouterGo>
                 ))}
             </ul>
           </div>
           <div className={styles.right}>
             <div>
-              <RouterGo
-                go={{ pathname: PATH.configure }}
-                className={pathname === PATH.configure ? styles.active : null}>
-                <Icon name="icon-shezhi" />
-              </RouterGo>
+              <ul>
+                <li>
+                  <RouterGo
+                    go={{ pathname: PATH.configure }}
+                    className={pathname === PATH.configure ? styles.active : null}>
+                    <Icon name="icon-shezhi" />
+                    <span>设置</span>
+                  </RouterGo>
+                </li>
+                <li>
+                  <RouterGo
+                    go={{ pathname: PATH.operationRecord }}
+                    className={pathname === PATH.operationRecord ? styles.active : null}>
+                    <Icon name="icon-caozuojilu" />
+                    <span>操作记录</span>
+                  </RouterGo>
+                </li>
+              </ul>
             </div>
             <Account {...this.props} />
           </div>

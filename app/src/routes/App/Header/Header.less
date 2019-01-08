@@ -10,12 +10,24 @@ header {
 
   > div {
     .right {
+      color: #7b7f82;
       > div {
         .active {
           color: @blue;
         }
         cursor: pointer;
         margin-right: 32px;
+        > ul {
+          display: flex;
+          li + li {
+            margin-left: 32px;
+          }
+          li {
+            span {
+              margin-left: 8px;
+            }
+          }
+        }
       }
       display: flex;
     }
@@ -35,6 +47,7 @@ header {
       }
 
       .net {
+        background: @red;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -55,10 +68,26 @@ header {
         }
 
         li {
+          position: relative;
           display: flex;
           align-items: center;
           font-size: 16px;
           height: 100%;
+
+          .feewarn {
+            width: 50px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            position: absolute;
+            right: -50px;
+            top: 12px;
+            border-radius: 10px;
+            background: @red;
+          }
 
           &.active {
             color: @blue;

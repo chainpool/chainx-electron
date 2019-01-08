@@ -33,16 +33,12 @@ class Asset extends Mixin {
       <div className={styles.asset}>
         <ul>
           <li>
-            <TableTitle title={'我的证书'}>
+            <TableTitle title={'我的证书'} />
+            <CertTable {...props} />
+          </li>
+          <li>
+            <TableTitle title={'原生资产'}>
               <ul>
-                <li>
-                  <Button type="blank">
-                    <RouterGo go={{ pathname: PATH.operationRecord }}>
-                      <Icon name="icon-caozuojilu" />
-                      操作记录
-                    </RouterGo>
-                  </Button>
-                </li>
                 <li>
                   <Button type="blank">
                     <RouterGo go={{ pathname: PATH.addressManage }}>
@@ -53,10 +49,6 @@ class Asset extends Mixin {
                 </li>
               </ul>
             </TableTitle>
-            <CertTable {...props} />
-          </li>
-          <li>
-            <TableTitle title={'原生资产'} />
             <PrimaryAssetTable {...props} />
           </li>
           <li>

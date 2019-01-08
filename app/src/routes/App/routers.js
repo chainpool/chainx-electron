@@ -36,7 +36,7 @@ export default [
     component: AddressManage,
   },
   {
-    title: '交易',
+    title: '币币交易',
     path: PATH.trade,
     component: Trade,
   },
