@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input } from '../../../../components';
+import { Input, Icon } from '../../../../components';
 import { classNames } from '../../../../utils';
 import * as styles from './index.less';
 
@@ -8,13 +8,16 @@ class Node extends Component {
     const {} = this.props;
     return (
       <div className={styles.node}>
-        <span>最新高度:5,000,000</span>
+        <div>
+          <span>2019/01/09 16:27:23</span>
+          <span>最新高度:5,000,000</span>
+        </div>
         <ul>
           <li>
-            <div className={styles.circle} />
+            <Icon name="icon-xinhao" className={styles.xinhao} />
             杭州节点
             <div className={styles.triangle} />
-            <div className={styles.switchNode}>
+            <div className={classNames(styles.switchNode, styles.switchfirst)}>
               <ul>
                 <li key={0} className={classNames(styles.api, styles.header)}>
                   <Input.Checkbox style={{ width: 14, height: 14 }} className={styles.check} />
@@ -34,7 +37,7 @@ class Node extends Component {
             </div>
           </li>
           <li>
-            <div className={styles.circle} />
+            <Icon name="icon-xinhao" className={styles.xinhao} />
             杭州API
             <div className={styles.triangle} />
             <div className={styles.switchNode}>

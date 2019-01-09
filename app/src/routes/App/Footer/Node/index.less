@@ -4,6 +4,11 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  > div {
+    span + span {
+      margin-left: 20px;
+    }
+  }
   > ul {
     display: flex;
     justify-content: space-between;
@@ -11,6 +16,9 @@
       margin-left: 32px;
     }
     > li {
+      &:first-of-type {
+        z-index: 3;
+      }
       display: flex;
       align-items: center;
       position: relative;
@@ -26,11 +34,8 @@
           background: @red;
         }
       }
-      .circle {
-        margin-right: 8px;
-        width: 8px;
-        height: 8px;
-        border-radius: 100%;
+      .xinhao {
+        margin-right: 4px;
       }
       .triangle {
         margin-left: 4px;
@@ -46,6 +51,9 @@
         }
       }
       .switchNode {
+        &.switchfirst {
+          z-index: 1;
+        }
         position: absolute;
         right: 0;
         width: 182px;
