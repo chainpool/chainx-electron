@@ -48,13 +48,14 @@ class Toast {
             status === 'warn' ? styles.warn : null
           )}>
           <div />
-          委托成功
+          <i className="iconfont icon-icon-wancheng" />
+          {title}
         </div>
         {message ? <div className={styles.desc}>{message}</div> : null}
       </div>,
       {
         hideProgressBar: true,
-        autoClose: 2000,
+        autoClose: 1500,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
       }

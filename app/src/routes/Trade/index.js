@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toast } from '../../components';
 import SwitchPair from './Mixin/SwitchPair';
 import Handicap from './Handicap';
 import OrderPair from './OrderPair';
@@ -14,7 +15,18 @@ import * as styles from './index.less';
 class Trade extends SwitchPair {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    setTimeout(() => {
+      Toast.success(
+        '挂单已完成',
+        <div>
+          交易对 PCX/BTC; 方向 买入；报价 0.00043527
+          <br />
+          数量 3.74638923
+        </div>
+      );
+    }, 1000);
+  };
 
   render() {
     const props = {

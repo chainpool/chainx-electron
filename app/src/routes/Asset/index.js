@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Mixin, Button, RouterGo, Toast } from '../../components';
+import { Icon, Mixin, Button, RouterGo } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';
 import CertTable from './CertTable';
@@ -16,11 +16,7 @@ import * as styles from './index.less';
 class Asset extends Mixin {
   state = {};
 
-  startInit = () => {
-    setTimeout(() => {
-      Toast.success('委托成功');
-    }, 1000);
-  };
+  startInit = () => {};
 
   render() {
     const {
