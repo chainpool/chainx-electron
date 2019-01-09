@@ -56,7 +56,7 @@ export default class ModelExtend {
   };
 
   isLogin = () => {
-    return !_.isEmpty(this.rootStore.accountStore.currentAccount) || this.rootStore.accountStore.accounts.length;
+    return !_.isEmpty(this.rootStore.accountStore.currentAccount) || !!this.rootStore.accountStore.accounts.length;
   };
 
   getCurrentAccount = () => {

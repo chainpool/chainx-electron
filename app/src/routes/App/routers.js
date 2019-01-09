@@ -23,12 +23,14 @@ export default [
     show: false,
     path: PATH.depositWithdrawRecord,
     component: DepositWithDrawRecord,
+    authority: [1],
   },
   {
     title: '操作记录',
     show: false,
     path: PATH.operationRecord,
     component: OperationRecord,
+    authority: [1],
   },
   {
     title: '地址管理',

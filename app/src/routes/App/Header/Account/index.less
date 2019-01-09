@@ -1,5 +1,6 @@
 @import '~@styles/index.less';
 .account {
+  .addaccount,
   .download {
     position: relative;
     &:hover {
@@ -9,22 +10,50 @@
     }
     > div {
       display: none;
-      // pointer-events: none;
-      padding-top: 20px;
+      padding-top: 6px;
       position: absolute;
       z-index: 10000;
       right: 0;
       top: 32px;
-
       > div {
         cursor: Default;
-        padding: 16px 32px 32px;
-        color: #95989a;
         box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
         border-radius: 4px;
-        width: 480px;
-        // height: 328px;
         background: white;
+      }
+    }
+  }
+  .addaccount {
+    > div {
+      > div {
+        background: white;
+        width: 134px;
+        padding: 12px 0 12px;
+
+        ul {
+          li + li {
+            margin-left: unset;
+          }
+          li {
+            padding-left: 24px;
+            height: 38px;
+            &:hover {
+              background: #f8f8f8;
+            }
+            i {
+              margin-right: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .download {
+    > div {
+      > div {
+        padding: 16px 32px 32px;
+        color: #95989a;
+        width: 480px;
         .downloadicon {
           font-size: 50px;
           color: @blue;
@@ -68,7 +97,7 @@
   .login {
     position: relative;
     > span {
-      margin: 0 8px;
+      // margin: 0 8px;
     }
     &:hover {
       .accountlist {
@@ -107,6 +136,9 @@
           }
         }
         > ul {
+          li + li {
+            margin-left: unset;
+          }
           > li {
             position: relative;
             height: 96px;
@@ -132,11 +164,14 @@
                 z-index: 3;
                 display: none;
                 padding-top: 20px;
-                ul {
+                > ul {
+                  border: 1px solid #dce0e2;
+                  box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
                   background: white;
                   width: 120px;
                   padding: 12px 0;
                   li {
+                    margin-left: unset;
                     cursor: pointer;
                     display: flex;
                     padding: 0 23px;

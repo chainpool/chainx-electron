@@ -5,10 +5,16 @@ import routers from '../../App/routers';
 import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
 import Account from './Account';
+import { Inject } from '../../../utils';
 
+@Inject(({ globalStore }) => ({ globalStore }))
 class Header extends Component {
   render() {
-    const { location: { pathname } = {}, className } = this.props;
+    const {
+      location: { pathname } = {},
+      className,
+      globalStore: { isLogin },
+    } = this.props;
     return (
       <header className={className}>
         <div>
@@ -29,7 +35,7 @@ class Header extends Component {
                       go={{ pathname: item.path }}
                       className={pathname === item.path ? styles.active : null}>
                       {item.title}
-                      {item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}
+                      {/*{item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}*/}
                     </RouterGo>
                   );
                   return item.path === PATH.asset ? (
@@ -43,25 +49,33 @@ class Header extends Component {
           <div className={styles.right}>
             <div>
               <ul>
-                <li>
-                  <RouterGo
-                    go={{ pathname: PATH.configure }}
-                    className={pathname === PATH.configure ? styles.active : null}>
-                    <Icon name="icon-shezhi" />
-                    <span>设置</span>
-                  </RouterGo>
-                </li>
-                <li>
-                  <RouterGo
-                    go={{ pathname: PATH.operationRecord }}
-                    className={pathname === PATH.operationRecord ? styles.active : null}>
-                    <Icon name="icon-caozuojilu" />
-                    <span>操作记录</span>
-                  </RouterGo>
-                </li>
+                <AuthorityComponent>
+                  <li>
+                    <RouterGo
+                      go={{ pathname: PATH.operationRecord }}
+                      className={pathname === PATH.operationRecord ? styles.active : null}>
+                      <Icon name="icon-caozuojilu" />
+                      <span style={{ marginLeft: 9 }}>操作记录</span>
+                    </RouterGo>
+                  </li>
+                </AuthorityComponent>
+                {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
+                  return item === 0 ? (
+                    <li key={index}>
+                      <RouterGo
+                        go={{ pathname: PATH.configure }}
+                        className={pathname === PATH.configure ? styles.active : null}>
+                        <Icon name="icon-shezhi" />
+                      </RouterGo>
+                    </li>
+                  ) : item === 1 ? (
+                    <li key={index}>
+                      <Account {...this.props} />
+                    </li>
+                  ) : null;
+                })}
               </ul>
             </div>
-            <Account {...this.props} />
           </div>
         </div>
       </header>

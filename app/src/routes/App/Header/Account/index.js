@@ -44,8 +44,8 @@ class Account extends Mixin {
         {isLogin() ? (
           <div className={styles.login}>
             <Icon name="icon-zhanghu" />
-            <span>{currentAccount.tag}</span>
-            <Icon name="icon-xiala" />
+            <span style={{ marginLeft: 9 }}>{currentAccount.tag}</span>
+            {/*<Icon name="icon-xiala" />*/}
             <div className={classNames(styles.accountlist)}>
               <div>
                 <div className={styles.quickentry}>
@@ -165,22 +165,32 @@ class Account extends Mixin {
           </div>
         ) : (
           <ButtonGroup>
-            <Button
-              onClick={() => {
-                openModal({
-                  name: 'ImportAccountModal',
-                });
-              }}>
-              导入账户
-            </Button>
-            <Button
-              type="success"
-              onClick={() => {
-                openModal({
-                  name: 'CreateAccountModal',
-                });
-              }}>
-              创建账户
+            <Button type="warnoutline" className={styles.addaccount}>
+              添加账户
+              <div>
+                <div>
+                  <ul>
+                    <li
+                      onClick={() => {
+                        openModal({
+                          name: 'ImportAccountModal',
+                        });
+                      }}>
+                      <Icon name="icon-daoruzhanghu" />
+                      导入账户
+                    </li>
+                    <li
+                      onClick={() => {
+                        openModal({
+                          name: 'CreateAccountModal',
+                        });
+                      }}>
+                      <Icon name="icon-tianjia" />
+                      新增账户
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </Button>
             <Button type="success" onClick={() => {}} className={styles.download}>
               下载钱包
