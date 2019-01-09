@@ -11,4 +11,5 @@ export { default as Input } from './Input';
 export { default as RadioGroup } from './Input/RadioGroup';
 export { default as Slider } from './Slider';
 export { AuthorityRoute, AuthorityComponent } from './Authority';
+export { default as Toast } from './Toast';
 // export { default as Popover } from './Popover';

@@ -42,7 +42,8 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // style files regexes
-const cssRegex = /\.(css|less)$/;
+const lessRegex = /\.(less)$/;
+const cssRegex = /\.(css)$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
@@ -307,6 +308,22 @@ module.exports = {
             exclude: cssModuleRegex,
             loader: getStyleLoaders({
               importLoaders: 1,
+              // modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
+              sourceMap: shouldUseSourceMap,
+            }),
+            // Don't consider CSS imports dead code even if the
+            // containing package claims to have no side effects.
+            // Remove this when webpack adds a warning or an error for this.
+            // See https://github.com/webpack/webpack/issues/6571
+            sideEffects: true,
+          },
+
+          {
+            test: lessRegex,
+            exclude: cssModuleRegex,
+            loader: getStyleLoaders({
+              importLoaders: 1,
               modules: true,
               localIdentName: '[local]__[hash:base64:10]',
               sourceMap: shouldUseSourceMap,
@@ -317,6 +334,7 @@ module.exports = {
             // See https://github.com/webpack/webpack/issues/6571
             sideEffects: true,
           },
+
           // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
           // using the extension .module.css
           {
@@ -324,7 +342,7 @@ module.exports = {
             loader: getStyleLoaders({
               importLoaders: 1,
               sourceMap: shouldUseSourceMap,
-              modules: true,
+              // modules: true,
               localIdentName: '[local]__[hash:base64:10]',
               getLocalIdent: getCSSModuleLocalIdent,
             }),

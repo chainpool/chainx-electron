@@ -27,7 +27,8 @@ const publicUrl = '';
 const env = getClientEnvironment(publicUrl);
 
 // style files regexes
-const cssRegex = /\.(css|less)$/;
+const cssRegex = /\.(css)$/;
+const lessRegex = /\.(less)$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
@@ -245,6 +246,16 @@ module.exports = {
             exclude: cssModuleRegex,
             use: getStyleLoaders({
               importLoaders: 1,
+              // modules: true,
+              localIdentName: '[local]__[hash:base64:10]',
+            }),
+          },
+
+          {
+            test: lessRegex,
+            exclude: cssModuleRegex,
+            use: getStyleLoaders({
+              importLoaders: 1,
               modules: true,
               localIdentName: '[local]__[hash:base64:10]',
             }),
@@ -255,7 +266,7 @@ module.exports = {
             test: cssModuleRegex,
             use: getStyleLoaders({
               importLoaders: 1,
-              modules: true,
+              //  modules: true,
               localIdentName: '[local]__[hash:base64:10]',
               getLocalIdent: getCSSModuleLocalIdent,
             }),

@@ -1,0 +1,81 @@
+.toast_tip {
+  z-index: 1000;
+  pointer-events: none;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  top: 38%;
+  padding: 19px 31px;
+  .content {
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 19px 31px;
+    border-radius: 4px;
+  }
+
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+}
+
+.toast_message {
+  pointer-events: none;
+  width: 400px;
+  // height: 70px;
+  padding: 20px;
+  .title {
+    display: flex;
+    align-items: center;
+    color: black;
+
+    > div {
+      border-radius: 5px;
+      width: 10px;
+      height: 10px;
+      margin-right: 8px;
+      border: 3px solid black;
+    }
+    &.success {
+      > div {
+        border-color: green;
+      }
+    }
+    &.warn {
+      > div {
+        border-color: #dc5d5d;
+        color: #dc5d5d;
+      }
+    }
+  }
+  .desc {
+    margin-top: 15px;
+  }
+}
+
+:global {
+  .Toastify__toast-container--top-right {
+    top: 80px;
+  }
+  .Toastify__toast-container {
+    width: unset;
+    padding: unset;
+  }
+  .Toastify__toast + .Toastify__toast {
+    margin-top: 10px;
+  }
+  .Toastify__toast {
+    box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: unset;
+    margin-bottom: unset;
+  }
+  .Toastify__close-button {
+    background: orangered;
+    width: 25px;
+    height: 25px;
+  }
+  .Toastify__close-button--default {
+    color: white;
+    opacity: unset;
+  }
+}
