@@ -7,7 +7,7 @@ export class Button extends React.Component {
     const {
       children,
       size = 'middle',
-      type = 'outline',
+      type = 'primary',
       onClick,
       style = {},
       shape = 'circle',

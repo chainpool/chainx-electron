@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _ } from '../utils';
+import { _, toJS } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -56,7 +56,7 @@ export default class ModelExtend {
   };
 
   isLogin = () => {
-    return !_.isEmpty(this.rootStore.accountStore.currentAccount);
+    return !_.isEmpty(this.rootStore.accountStore.currentAccount) || this.rootStore.accountStore.accounts.length;
   };
 
   getCurrentAccount = () => {

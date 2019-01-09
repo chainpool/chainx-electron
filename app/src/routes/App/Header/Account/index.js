@@ -92,7 +92,7 @@ class Account extends Mixin {
                         }}>
                         <div className={styles.leftbar} />
                         <div>
-                          <div>{item.tag}</div>
+                          <div className={styles.tag}>{item.tag}</div>
                           <div className={styles.popover}>
                             <Icon name="icon-gengduocaozuo" />
                             <div>

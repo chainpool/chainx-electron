@@ -1,25 +1,24 @@
 @import '~@styles/index.less';
 
 header {
+  color: white;
   height: 60px;
   width: 100%;
   display: flex;
   justify-content: center;
-  background: #ffffff;
+  background: #3f3f3f;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
 
   > div {
     .right {
-      color: #7b7f82;
-
       > div {
         .active {
-          color: @blue;
+          color: @yellow;
         }
         display: flex;
         align-items: center;
         cursor: pointer;
-        margin-right: 32px;
+        // margin-right: 32px;
         > ul {
           display: flex;
           li + li {
@@ -93,8 +92,8 @@ header {
           }
 
           &.active {
-            color: @blue;
-            border-bottom: 3px solid @blue;
+            color: @yellow;
+            border-bottom: 3px solid @yellow;
           }
         }
       }
