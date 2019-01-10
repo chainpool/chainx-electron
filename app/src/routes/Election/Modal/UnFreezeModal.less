@@ -1,10 +1,21 @@
 @import '~@styles/index.less';
 
 .unFreezeModal {
+  .desc {
+    color: #95989a;
+    margin-left: 2px;
+  }
   .tableContainer {
     .mixin_tableContainer();
     :global {
       .table {
+        margin-top: -26px;
+        .thead {
+          .tr {
+            margin: 0 -23px;
+            padding: 0 24px;
+          }
+        }
         .tbody {
           .tr {
             border-bottom: none;

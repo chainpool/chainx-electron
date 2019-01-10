@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, RadioGroup } from '../../../components';
+import { PlaceHolder } from '../../../constants';
 import { Patterns } from '../../../utils';
 import * as styles from './VoteModal.less';
 
@@ -18,20 +19,14 @@ class VoteModal extends Component {
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
-    checkRemark: () => {
-      const { remark } = this.state;
-      const errMsg = Patterns.check('smaller')(remark.length, 128, '不能超过128个字符');
-      this.setState({ remarkErrMsg: errMsg });
-      return errMsg;
-    },
 
     confirm: () => {
-      return ['checkAmount', 'checkRemark'].every(item => !this.checkAll[item]());
+      return ['checkAmount'].every(item => !this.checkAll[item]());
     },
   };
   render() {
     const { checkAll } = this;
-    const { amount, amountErrMsg, remark, remarkErrMsg, action } = this.state;
+    const { amount, amountErrMsg, remark, action } = this.state;
     const {
       model: { closeModal },
     } = this.props;
@@ -78,11 +73,9 @@ class VoteModal extends Component {
             isTextArea
             rows={4}
             label="备注"
-            placeholder="128个字符"
+            placeholder={PlaceHolder.setTextAreaLength}
             value={remark}
-            errMsg={remarkErrMsg}
-            onChange={value => this.setState({ remark: value })}
-            onBlur={checkAll.checkRemark}
+            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
           />
         </div>
       </Modal>

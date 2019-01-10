@@ -8,11 +8,15 @@ class UnFreezeModal extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '赎回金额',
+          title: '冻结金额',
           dataIndex: 'data1',
         },
         {
-          title: '到期时间',
+          title: (
+            <span>
+              到期时间<span className={styles.desc}>(预估)</span>
+            </span>
+          ),
           dataIndex: 'data2',
         },
 

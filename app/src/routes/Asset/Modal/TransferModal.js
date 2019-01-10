@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Patterns } from '../../../utils';
+import { PlaceHolder } from '../../../constants';
 
 class TransferModal extends Component {
   state = {
@@ -9,6 +10,7 @@ class TransferModal extends Component {
     addressErrMsg: '',
     amount: '',
     amountErrMsg: '',
+    remark: '',
   };
   checkAll = {
     checkAddress: () => {
@@ -30,7 +32,7 @@ class TransferModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, amount, amountErrMsg } = this.state;
+    const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
       model: { closeModal },
     } = this.props;
@@ -71,6 +73,14 @@ class TransferModal extends Component {
               />
             }
             right={<FreeBalance value={'200.000'} unit={'PCX'} />}
+          />
+          <Input.Text
+            isTextArea
+            rows={4}
+            label="备注"
+            placeholder={PlaceHolder.setTextAreaLength}
+            value={remark}
+            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
           />
         </div>
       </Modal>

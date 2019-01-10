@@ -16,6 +16,19 @@ export const ErrMsg = {
   mnemonicNotFormat: '助记词错误，请核对后重新输入',
 };
 
+export const PlaceHolder = (() => {
+  const setLength = length => {
+    return `${length}个字符以内`;
+  };
+  return {
+    setLength,
+    setInputLength: setLength(12),
+    getInputLength: 12,
+    setTextAreaLength: setLength(64),
+    getTextAreaLength: 64,
+  };
+})();
+
 export const NetWork = [
   {
     name: '测试网',

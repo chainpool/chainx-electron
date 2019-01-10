@@ -21,7 +21,7 @@ class Election extends Mixin {
     //   model: { openModal },
     // } = this.props;
     // openModal({
-    //   name: 'UpdateNodeModal',
+    //   name: 'VoteModal',
     // });
   };
 

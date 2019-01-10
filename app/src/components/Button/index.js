@@ -1,5 +1,5 @@
 import React from 'react';
-import { _, classNames } from '@utils';
+import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
 export class Button extends React.Component {

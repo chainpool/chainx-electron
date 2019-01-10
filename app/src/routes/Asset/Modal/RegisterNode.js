@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Patterns } from '../../../utils';
+import { PlaceHolder } from '@constants';
 
 class RegisterNode extends Component {
   state = {
@@ -13,6 +14,7 @@ class RegisterNode extends Component {
     websiteErrMsg: '',
     amount: '',
     amountErrMsg: '',
+    remark: '',
   };
   checkAll = {
     checkAddress: () => {
@@ -46,7 +48,17 @@ class RegisterNode extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, name, nameErrMsg, website, websiteErrMsg, amount, amountErrMsg } = this.state;
+    const {
+      address,
+      addressErrMsg,
+      name,
+      nameErrMsg,
+      website,
+      websiteErrMsg,
+      amount,
+      amountErrMsg,
+      remark,
+    } = this.state;
     const {
       model: { closeModal },
     } = this.props;
@@ -108,6 +120,14 @@ class RegisterNode extends Component {
               />
             }
             right={<FreeBalance label="剩余额度" value={'40'} />}
+          />
+          <Input.Text
+            isTextArea
+            rows={4}
+            label="备注"
+            placeholder={PlaceHolder.setTextAreaLength}
+            value={remark}
+            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
           />
         </div>
       </Modal>
