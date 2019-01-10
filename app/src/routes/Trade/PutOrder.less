@@ -1,13 +1,14 @@
 @import './Mixin/common.less';
 .putOrder {
   .mixinCommon();
+  height: 100%;
+  position: relative;
   .header {
     height: 35px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #dce0e2;
-    padding: 13px;
     span,
     del {
       // color: #95989a;
@@ -16,71 +17,93 @@
   .operation {
     padding: 16px 13px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
-    .seperation {
-      // width: 10px;
-      margin: 0 15px;
-      border-left: 1px solid #d8d8d8;
-    }
-    .user {
-      width: 100%;
-      // background: red;
-      // background: red;
-      .userprice + .useramount {
-        margin-top: 16px;
+    .top {
+      display: flex;
+      justify-content: space-between;
+      flex-grow: 1;
+      .seperation {
+        // width: 10px;
+        margin: 0 15px;
+        border-left: 1px solid #d8d8d8;
       }
-      .useramount + .slider {
-        margin-top: 20px;
-      }
-      .userprice,
-      .useramount {
-        display: flex;
-        flex-grow: 1;
-        .pricelabel,
-        .amountlabel {
-          color: #95989a;
-          min-width: 45px;
-          margin-right: 12px;
-          display: flex;
-          align-items: center;
+      .user {
+        width: 100%;
+        // background: red;
+        // background: red;
+        .userprice + .useramount {
+          margin-top: 16px;
         }
-      }
-      .freebalance {
-        font-size: 12px;
-        margin-bottom: 16px;
-      }
-      .slider {
-        > div {
-          margin-top: 11px;
+        .useramount + .slider {
+          margin-top: 20px;
+        }
+        .userprice,
+        .useramount {
           display: flex;
-          justify-content: space-between;
-          span {
-            font-size: 12px;
+          flex-grow: 1;
+          .pricelabel,
+          .amountlabel {
+            color: #95989a;
+            min-width: 45px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+          }
+        }
+        .freebalance {
+          font-size: 12px;
+          margin-bottom: 16px;
+        }
+        .slider {
+          > div {
+            margin-top: 11px;
+            display: flex;
+            justify-content: space-between;
             span {
-              padding: 3px;
+              font-size: 12px;
+              span {
+                padding: 3px;
+              }
             }
           }
         }
-      }
-      .totalPrice {
-        margin-top: 20px;
-      }
-      .submit {
-        display: flex;
-        justify-content: center;
-        margin-top: 29px;
-        button {
-          color: white;
-          border: none;
-          width: 100%;
-          border-radius: 2px;
-          height: 40px;
-          &.sell {
-            background: @red;
-          }
-          background: @green;
+        .totalPrice {
+          margin-top: 20px;
         }
+        .submit {
+          display: flex;
+          justify-content: center;
+          margin-top: 29px;
+          button {
+            color: white;
+            border: none;
+            width: 100%;
+            border-radius: 2px;
+            height: 40px;
+            &.sell {
+              background: @red;
+            }
+            background: @green;
+          }
+        }
+      }
+    }
+
+    .download {
+      font-size: 12px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      align-items: center;
+      bottom: 20px;
+      span {
+        margin-right: 12px;
+      }
+      button {
+        font-weight: bold;
       }
     }
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { Input, Slider } from '../../components';
+import { Button, ButtonGroup, Input, Slider } from '../../components';
 
 import * as styles from './PutOrder.less';
 
@@ -31,6 +31,9 @@ class PutOrder extends SwitchPair {
 
   renderArea = ({ direction: { price, amount, action } = {} }) => {
     const { changeBS } = this;
+    const {
+      model: { isLogin },
+    } = this.props;
     const max = 100;
     const marks = {
       0: '',
@@ -80,9 +83,8 @@ class PutOrder extends SwitchPair {
               onChange={value => {
                 changeBS(action, { amount: value });
               }}
-              suffix="PCX">
-              dsddd
-            </Input.Text>
+              suffix="PCX"
+            />
           </div>
         </div>
         <div className={styles.slider}>
@@ -97,9 +99,11 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.totalPrice}>交易额 0.00000000 BTC</div>
-        <div className={styles.submit}>
-          <button className={styles[action]}>买入PCX</button>
-        </div>
+        {isLogin() ? (
+          <div className={styles.submit}>
+            <button className={styles[action]}>买入PCX</button>
+          </div>
+        ) : null}
       </div>
     );
   };
@@ -107,6 +111,12 @@ class PutOrder extends SwitchPair {
   render() {
     const { renderArea } = this;
     const { buy, sell } = this.state;
+    const {
+      model: { openModal },
+    } = this.props;
+    const {
+      model: { isLogin },
+    } = this.props;
     const buyConfig = {
       direction: buy,
     };
@@ -120,9 +130,35 @@ class PutOrder extends SwitchPair {
           <span>撮合手续费：0.00%</span>
         </div>
         <div className={styles.operation}>
-          {renderArea(buyConfig)}
-          <div className={styles.seperation} />
-          {renderArea(sellConfig)}
+          <div className={styles.top}>
+            {renderArea(buyConfig)}
+            <div className={styles.seperation} />
+            {renderArea(sellConfig)}
+          </div>
+          {!isLogin() ? (
+            <div className={styles.download}>
+              <span>请先设置账户</span>
+              <ButtonGroup>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'ImportAccountModal',
+                    });
+                  }}>
+                  导入账户
+                </Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'CreateAccountModal',
+                    });
+                  }}>
+                  新增账户
+                </Button>
+                <Button type="warn">下载钱包</Button>
+              </ButtonGroup>
+            </div>
+          ) : null}
         </div>
       </div>
     );
