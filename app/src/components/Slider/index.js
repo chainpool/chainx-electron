@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { default as ReactSlider } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import './index.less';
 
 export default class Slider extends Component {
   render() {
@@ -16,7 +17,7 @@ export default class Slider extends Component {
       style = {},
       disabled,
     } = this.props;
-    const [blue, gray] = ['#3da0d2', '#dce0e2'];
+    const [blue, gray] = ['#f6c94a', '#dce0e2'];
 
     const props = {
       onChange,
@@ -32,23 +33,24 @@ export default class Slider extends Component {
         // marginLeft: 'unset',
         backgroundColor: gray,
         border: 'none',
-        // bottom: '-2px',
+        bottom: '-1px',
       },
       railStyle: {
-        height: '4px',
+        height: '2px',
         backgroundColor: gray,
       },
       handleStyle: {
-        // marginTop: '-6px',
+        marginTop: '-6px',
         marginLeft: '-6px',
+        // marginTop: '1px',
         width: '14px',
         height: '14px',
-        border: 'none',
-        backgroundColor: blue,
+        border: '2px solid #f6c94a',
+        backgroundColor: 'white',
       },
       // 后面两个当开启includetrue时有效
       trackStyle: {
-        height: '3px',
+        height: '2px',
         backgroundColor: blue,
       },
       activeDotStyle: {

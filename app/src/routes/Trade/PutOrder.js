@@ -96,7 +96,7 @@ class PutOrder extends SwitchPair {
             </span>
           </div>
         </div>
-        <div className={styles.totalPrice}>交易额 0.1BTC</div>
+        <div className={styles.totalPrice}>交易额 0.00000000 BTC</div>
         <div className={styles.submit}>
           <button className={styles[action]}>买入PCX</button>
         </div>
