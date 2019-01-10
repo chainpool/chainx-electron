@@ -6,3 +6,4 @@ export { default as Tab } from './Tab';
 export { default as HoverTip } from './HoverTip';
 export { default as Warn } from './Warn';
 export { default as ConfirmAndCancelModal } from './ConfirmAndCancelModal';
+export { default as SignModal } from './SignModal';

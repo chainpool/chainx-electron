@@ -1,0 +1,37 @@
+.signModal {
+  ul {
+    margin: 0 -24px;
+    padding: 0 24px 24px;
+    border-bottom: 1px solid #dce0e2;
+    li + li {
+      margin-top: 16px;
+    }
+    li {
+      display: flex;
+      span {
+        font-weight: bold;
+        &:first-of-type {
+          font-weight: unset;
+          min-width: 100px;
+        }
+      }
+    }
+  }
+  .fee {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    margin-bottom: 32px;
+    .feevalue {
+      font-weight: bold;
+      span {
+        margin-left: 5px;
+        font-weight: 400;
+      }
+    }
+    .speed {
+      width: 110px;
+    }
+  }
+}

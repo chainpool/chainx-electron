@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
 import CommonLayOut from './CommonLayOut';
+import { SignModal } from '../components';
 import { PATH } from '../../constants';
 import { AuthorityRoute } from '../../components';
 import routers from './routers';
@@ -10,6 +11,11 @@ import { Inject } from '../../utils';
 @Inject(({ globalStore }) => ({ globalStore }))
 class Main extends Component {
   render() {
+    const {
+      globalStore: {
+        modal: { name },
+      },
+    } = this.props;
     return (
       <CommonLayOut {...this.props}>
         <Switch>
@@ -24,6 +30,7 @@ class Main extends Component {
           ))}
           <Redirect key={0} to={PATH.default} />
         </Switch>
+        {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
     );
   }
