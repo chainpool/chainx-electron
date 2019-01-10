@@ -65,7 +65,7 @@ class PutOrder extends SwitchPair {
         </div>
         <div className={styles.userprice}>
           <div className={styles.pricelabel}>买入价</div>
-          <div>
+          <div className={styles.input}>
             <Input.Text
               value={price}
               onChange={value => {
@@ -77,7 +77,7 @@ class PutOrder extends SwitchPair {
         </div>
         <div className={styles.useramount}>
           <div className={styles.amountlabel}>买入量</div>
-          <div>
+          <div className={styles.input}>
             <Input.Text
               value={amount}
               onChange={value => {
