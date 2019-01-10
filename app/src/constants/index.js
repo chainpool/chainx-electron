@@ -26,6 +26,7 @@ export const PlaceHolder = (() => {
     getInputLength: 12,
     setTextAreaLength: setLength(64),
     getTextAreaLength: 64,
+    password: '输入密码',
   };
 })();
 

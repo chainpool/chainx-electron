@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { _, Patterns } from '../../../utils';
 import { Modal, Button, Input } from '../../../components';
+import { PlaceHolder } from '../../../constants';
 import * as styles from './index.less';
 
 class SignModal extends Component {
@@ -77,7 +78,7 @@ class SignModal extends Component {
           </div>
           <Input.Text
             isPassword
-            placeholder="输入密码"
+            placeholder={PlaceHolder.password}
             label=""
             value={password}
             errMsg={passwordErrMsg}

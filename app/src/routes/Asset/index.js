@@ -16,7 +16,14 @@ import * as styles from './index.less';
 class Asset extends Mixin {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    // const {
+    //   model: { openModal },
+    // } = this.props;
+    // openModal({
+    //   name: 'TransferModal',
+    // });
+  };
 
   render() {
     const {
