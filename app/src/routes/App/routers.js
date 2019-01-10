@@ -1,7 +1,7 @@
 import { default as Asset } from '../Asset';
 import { default as Election } from '../Election';
 import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
-import { default as OperationRecord } from '../OperationRecord';
+import { default as TradeRecord } from '../TradeRecord';
 import { default as AddressManage } from '../AddressManage';
 import { default as Trade } from '../Trade';
 import { default as Configure } from '../Configure';
@@ -28,9 +28,9 @@ export default [
   {
     title: '操作记录',
     show: false,
-    path: PATH.operationRecord,
-    component: OperationRecord,
-    authority: [1],
+    path: PATH.tradeRecord,
+    component: TradeRecord,
+    // authority: [1],
   },
   {
     title: '地址管理',

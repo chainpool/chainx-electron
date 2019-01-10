@@ -1,12 +1,12 @@
 import React from 'react';
 import { Mixin } from '../../components';
 import { BreadCrumb, TableTitle } from '../components';
-import OperationTable from './OperationTable';
+import TradeTable from './TradeTable';
 import * as styles from './index.less';
 import { Inject } from '../../utils';
 
 @Inject(({ assetStore: model }) => ({ model }))
-class OperationRecord extends Mixin {
+class TradeRecord extends Mixin {
   state = {
     activeIndex: 0,
   };
@@ -16,13 +16,12 @@ class OperationRecord extends Mixin {
   render() {
     const { activeIndex } = this.state;
     return (
-      <div className={styles.operationRecord}>
-        <BreadCrumb />
-        <TableTitle title="操作记录" />
-        {activeIndex === 0 ? <OperationTable {...this.props} /> : null}
+      <div className={styles.tradeRecord}>
+        <TableTitle title="交易记录" />
+        {activeIndex === 0 ? <TradeTable {...this.props} /> : null}
       </div>
     );
   }
 }
 
-export default OperationRecord;
+export default TradeRecord;

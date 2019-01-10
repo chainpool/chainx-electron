@@ -116,10 +116,12 @@ class PutOrder extends SwitchPair {
     return (
       <div className={styles.putOrder}>
         <div className={styles.header}>
+          <div className={styles.title}>限价交易</div>
           <span>撮合手续费：0.00%</span>
         </div>
         <div className={styles.operation}>
           {renderArea(buyConfig)}
+          <div className={styles.seperation} />
           {renderArea(sellConfig)}
         </div>
       </div>

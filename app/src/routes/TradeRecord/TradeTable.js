@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table } from '../../components';
 
-class DepositTable extends Component {
+class TradeTable extends Component {
   render() {
     const tableProps = {
       className: styles.tableContainer,
@@ -45,4 +45,4 @@ class DepositTable extends Component {
   }
 }
 
-export default DepositTable;
+export default TradeTable;

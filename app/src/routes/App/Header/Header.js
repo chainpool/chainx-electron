@@ -52,10 +52,10 @@ class Header extends Component {
                 <AuthorityComponent>
                   <li>
                     <RouterGo
-                      go={{ pathname: PATH.operationRecord }}
-                      className={pathname === PATH.operationRecord ? styles.active : null}>
+                      go={{ pathname: PATH.tradeRecord }}
+                      className={pathname === PATH.tradeRecord ? styles.active : null}>
                       <Icon name="icon-caozuojilu" />
-                      <span style={{ marginLeft: 9 }}>操作记录</span>
+                      <span style={{ marginLeft: 9 }}>交易记录</span>
                     </RouterGo>
                   </li>
                 </AuthorityComponent>

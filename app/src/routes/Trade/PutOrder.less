@@ -1,10 +1,11 @@
 @import './Mixin/common.less';
 .putOrder {
+  .mixinCommon();
   .header {
     height: 35px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     border-bottom: 1px solid #dce0e2;
     padding: 13px;
     span,
@@ -15,10 +16,14 @@
   .operation {
     padding: 16px 24px;
     display: flex;
-    .user + .user {
-      margin-left: 32px;
+    justify-content: space-between;
+    flex-grow: 1;
+    .seperation {
+      // width: 10px;
+      border-left: 1px solid #d8d8d8;
     }
     .user {
+      // background: red;
       .userprice + .useramount {
         margin-top: 16px;
       }
@@ -59,11 +64,14 @@
         margin-top: 20px;
       }
       .submit {
+        display: flex;
+        justify-content: center;
         margin-top: 29px;
         button {
           color: white;
           border: none;
-          width: 260px;
+          width: 100%;
+          border-radius: 2px;
           height: 40px;
           &.sell {
             background: @red;
