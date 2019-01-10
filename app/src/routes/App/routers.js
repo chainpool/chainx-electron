@@ -26,11 +26,11 @@ export default [
     authority: [1],
   },
   {
-    title: '操作记录',
+    title: '交易记录',
     show: false,
     path: PATH.tradeRecord,
     component: TradeRecord,
-    // authority: [1],
+    authority: [1],
   },
   {
     title: '地址管理',

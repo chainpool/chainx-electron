@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin } from '../../components';
-import { BreadCrumb, TableTitle } from '../components';
+import { TableTitle } from '../components';
 import TradeTable from './TradeTable';
 import * as styles from './index.less';
 import { Inject } from '../../utils';

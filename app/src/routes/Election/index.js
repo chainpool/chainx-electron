@@ -5,8 +5,7 @@ import { Tab } from '../components';
 import TableTitle from '../components/TableTitle';
 import NodeTable from './NodeTable';
 import DepositMineTable from './DepositMineTable';
-import EditBlockAdressModal from './Modal/EditBlockAdressModal';
-import EditConfigModal from './Modal/EditConfigModal';
+import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
 import { Inject } from '../../utils';
@@ -22,7 +21,7 @@ class Election extends Mixin {
     //   model: { openModal },
     // } = this.props;
     // openModal({
-    //   name: 'UnFreezeModal',
+    //   name: 'UpdateNodeModal',
     // });
   };
 
@@ -54,7 +53,7 @@ class Election extends Mixin {
             <div>按照持有资产兑PCX市值的 50%折合成投票，自动参与充值挖矿获取利息</div>
           ) : (
             <>
-              <div>全网总投票数 878,837,000，每日利息为 0.1%，年化利息约为 37%</div>
+              <div>全网总投票数 878,837,000，年化利息约为 4%</div>
               <TableTitle className={styles.tableTitle}>
                 <ul>
                   <li>
@@ -62,23 +61,11 @@ class Election extends Mixin {
                       type="blank"
                       onClick={() => {
                         openModal({
-                          name: 'EditBlockAdressModal',
-                        });
-                      }}>
-                      <Icon name="icon-xiugaichukuai" />
-                      修改出块
-                    </Button>
-                  </li>
-                  <li>
-                    <Button
-                      type="blank"
-                      onClick={() => {
-                        openModal({
-                          name: 'EditConfigModal',
+                          name: 'UpdateNodeModal',
                         });
                       }}>
                       <Icon name="icon-xiugaipeizhi" />
-                      修改配置
+                      更新节点
                     </Button>
                   </li>
                 </ul>
@@ -87,8 +74,8 @@ class Election extends Mixin {
           )}
         </div>
         {activeIndex === 4 ? <DepositMineTable {...this.props} /> : <NodeTable {...this.props} />}
-        {name === 'EditBlockAdressModal' ? <EditBlockAdressModal {...this.props} /> : null}
-        {name === 'EditConfigModal' ? <EditConfigModal {...this.props} /> : null}
+        {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
+
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
       </div>

@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { Patterns } from '../../../utils';
-import * as styles from './EditConfigModal.less';
+import * as styles from './UpdateNodeModal.less';
 
-class EditConfigModal extends Component {
+class UpdateNodeModal extends Component {
   state = {
+    address: '',
+    addressErrMsg: '',
     website: '',
     websiteErrMsg: '',
     participating: true,
   };
   checkAll = {
+    checkAddress: () => {
+      const { address } = this.state;
+      const errMsg = Patterns.check('required')(address);
+      this.setState({ addressErrMsg: errMsg });
+      return errMsg;
+    },
+
     checkWebsite: () => {
       const { website } = this.state;
       const errMsg =
@@ -19,18 +28,18 @@ class EditConfigModal extends Component {
     },
 
     confirm: () => {
-      return ['checkWebsite'].every(item => !this.checkAll[item]());
+      return ['checkAddress', 'checkWebsite'].every(item => !this.checkAll[item]());
     },
   };
   render() {
     const { checkAll } = this;
-    const { website, websiteErrMsg, participating } = this.state;
+    const { address, addressErrMsg, website, websiteErrMsg, participating } = this.state;
     const {
       model: { closeModal },
     } = this.props;
     return (
       <Modal
-        title="修改配置"
+        title="更新节点"
         button={
           <Button
             size="full"
@@ -43,7 +52,15 @@ class EditConfigModal extends Component {
             确定
           </Button>
         }>
-        <div className={styles.editConfigModal}>
+        <div className={styles.updateNodeModal}>
+          <Input.Text
+            prefix="ChainX"
+            label="出块地址"
+            value={address}
+            errMsg={addressErrMsg}
+            onChange={value => this.setState({ address: value })}
+            onBlur={checkAll.checkAddress}
+          />
           <Input.Text
             label="网址"
             placeholder="32个字符以内"
@@ -77,4 +94,4 @@ class EditConfigModal extends Component {
   }
 }
 
-export default EditConfigModal;
+export default UpdateNodeModal;
