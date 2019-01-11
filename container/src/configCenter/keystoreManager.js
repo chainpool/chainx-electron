@@ -1,15 +1,17 @@
 const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
+const util = require('util');
 
 class KeystoreManager {
   constructor(dirPath = '~/Library/Application Support/ChainX/keystore') {
     // TODO: 根据不同系统设置不同的默认路径
     this.dirPath = path.join(dirPath, 'keystore');
-    this._encoding = 'utf8'
+    this._encoding = 'utf8';
+    this._isReady = this._init();
   }
 
-  init() {
+  _init() {
     return new Promise((resolve, reject) => {
       mkdirp(this.dirPath, err => {
         if (err) {
@@ -21,23 +23,19 @@ class KeystoreManager {
     })
   }
 
-  save(keystoreObj, fileName, extendObj) {
-    return new Promise((resolve, reject) => {
-      const finalObj = extendObj ? { ...keystoreObj, ...extendObj } : keystoreObj;
-      const filePath = path.join(this.dirPath, fileName);
+  async save(keystoreObj, fileName, extendObj) {
+    await this._isReady;
 
-      fs.writeFile(filePath, JSON.stringify(finalObj), this._encoding, err => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve()
-        }
-      })
-    })
+    const finalObj = extendObj ? { ...keystoreObj, ...extendObj } : keystoreObj;
+    const filePath = path.join(this.dirPath, fileName);
 
+    const writeFile = util.promisify(fn.writeFile)
+    return writeFile(filePath, JSON.stringify(finalObj), this._encoding)
   }
 
-  getAllKeystore() {
+  async getAllKeystore() {
+    await this._isReady;
+
     return new Promise((resolve, reject) => {
       const keystores = [];
       try {
