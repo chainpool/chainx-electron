@@ -8,7 +8,7 @@ import AddNodeModal from './Modal/AddNodeModal';
 import AddApiModal from './Modal/AddApiModal';
 import * as styles from './index.less';
 
-@Inject(({ Configure: model }) => ({ model }))
+@Inject(({ configureStore: model }) => ({ model }))
 class Configure extends Mixin {
   startInit = () => {
     const {

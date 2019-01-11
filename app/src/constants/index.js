@@ -7,6 +7,7 @@ export const PATH = {
   addressManage: '/asset/addressManage',
   trade: '/trade',
   configure: '/configure',
+  trust: '/trust',
 };
 
 export const ErrMsg = {

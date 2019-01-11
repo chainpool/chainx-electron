@@ -5,6 +5,7 @@ import { default as TradeRecord } from '../TradeRecord';
 import { default as AddressManage } from '../AddressManage';
 import { default as Trade } from '../Trade';
 import { default as Configure } from '../Configure';
+import { default as Trust } from '../Trust';
 import { PATH } from '../../constants';
 export default [
   {
@@ -37,6 +38,11 @@ export default [
     show: false,
     path: PATH.addressManage,
     component: AddressManage,
+  },
+  {
+    title: '信托',
+    path: PATH.trust,
+    component: Trust,
   },
   {
     title: '币币交易',
