@@ -53,7 +53,15 @@ class PrimaryAssetTable extends Component {
             dataIndex: '_action',
             render: () => (
               <ButtonGroup>
-                <Button type="warn">领币</Button>
+                <Button
+                  type="warn"
+                  onClick={() => {
+                    openModal({
+                      name: 'GetCollarModal',
+                    });
+                  }}>
+                  领币
+                </Button>
                 <Button
                   onClick={() => {
                     openModal({

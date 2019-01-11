@@ -3,7 +3,7 @@ import { Modal, Clipboard, RouterGo } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import Bitcoin_ChainX from '../../../resource/Bitcoin_ChainX.png';
-import { classNames } from '@utils';
+import { classNames } from '../../../utils';
 
 class CrossChainBindModal extends Component {
   render() {

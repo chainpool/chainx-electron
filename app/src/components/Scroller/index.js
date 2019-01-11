@@ -10,7 +10,7 @@ export default class Scroller extends Component {
   startInit = () => {
     const {
       getScroller,
-      scroll, //作为覆盖默认配置项传入，
+      scroll = {}, //作为覆盖默认配置项传入，
       ...rest
     } = this.props;
 
