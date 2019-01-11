@@ -44,15 +44,12 @@ class CreateAccountModal extends Component {
     } = this.props;
 
     if (checkAll.confirm()) {
-      const account = ChainX.Account.fromMnemonic(mnemonicWord.join(' '));
-      // const encry = ChainX.Keystore.encrypt(account.privateKey, '12345678');
-      // const newAccount = ChainX.Account.fromPrivateKey(ChainX.Keystore.decrypt(encry, '12345678'));
+      const account = ChainX.Account.from(mnemonicWord.join(' '));
       openModal({
         name: 'SetPasswordModal',
         data: {
           step: 3,
-          privateKey: account.privateKey,
-          address: account.address,
+          account,
         },
       });
     }

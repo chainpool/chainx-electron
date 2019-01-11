@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@chainx/account": "1.0.4",
+    "@chainx/account": "^1.0.11",
     "@chainx/keystore": "^1.0.0",
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",

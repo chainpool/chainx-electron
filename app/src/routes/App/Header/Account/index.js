@@ -26,7 +26,7 @@ class Account extends Mixin {
       type: 'switchAccount',
     });
     // openModal({
-    //   name: 'DownLoadModal',
+    //   name: 'ImportAccountModal',
     // });
   };
 

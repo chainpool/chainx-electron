@@ -51,7 +51,7 @@ class SetPasswordModal extends Component {
     const { label, labelErrMsg, password, passwordErrMsg, confirmPassword, confirmPasswordErrMsg } = this.state;
     const {
       model: { dispatch, closeModal },
-      globalStore: { modal: { data: { step, privateKey, address } = {} } = {} },
+      globalStore: { modal: { data: { step, account } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -66,12 +66,12 @@ class SetPasswordModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const encoded = ChainX.Keystore.encrypt(privateKey, `${password}`);
+                const encoded = account.encrypt(password);
                 dispatch({
                   type: 'addAccount',
                   payload: {
                     tag: label,
-                    address: address,
+                    address: account.address(),
                     encoded,
                   },
                 });

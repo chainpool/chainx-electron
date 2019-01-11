@@ -6,20 +6,7 @@ import * as styles from './ImportAccountModal.less';
 class ImportAccountModal extends Component {
   state = {
     step: 1,
-    mnemonicWord: [
-      'stadium',
-      'forest',
-      'explain',
-      'gain',
-      'syrup',
-      'helmet',
-      'degree',
-      'vast',
-      'analyst',
-      'rack',
-      'detail',
-      'human',
-    ], //new Array(12).fill(''),
+    mnemonicWord: new Array(12).fill(''),
     MnemonicWordErrMsg: '',
     secretKey: '',
     secretKeyErrMsg: '',
@@ -32,8 +19,6 @@ class ImportAccountModal extends Component {
       })
         ? '请填写完整'
         : '' || Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
-      // console.log(ChainX.Account.isMnemonicValid(mnemonicWord.join(' ')), '===========');
-      // console.log(mnemonicWord, Patterns.check('isMnemonicValid')(mnemonicWord.join(' ')), '==============');
 
       this.setState({ MnemonicWordErrMsg: errMsg });
       return errMsg;
@@ -72,17 +57,13 @@ class ImportAccountModal extends Component {
               onClick={() => {
                 if (checkAll.confirm()) {
                   const account =
-                    step === 1
-                      ? ChainX.Account.fromMnemonic(mnemonicWord.join(' '))
-                      : ChainX.Account.fromPrivateKey(secretKey);
+                    step === 1 ? ChainX.Account.from(mnemonicWord.join(' ')) : ChainX.Account.from(secretKey);
 
-                  console.log(account, '===============');
                   openModal({
                     name: 'SetPasswordModal',
                     data: {
                       step: 2,
-                      privateKey: account.privateKey,
-                      address: account.address,
+                      account,
                     },
                   });
                 }

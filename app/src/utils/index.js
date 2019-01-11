@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
 import Account from '@chainx/account';
-import Keystore from '@chainx/keystore';
+// import Keystore from '@chainx/keystore';
 
 //------------------通用部分
 export { request } from './request';
@@ -30,13 +30,12 @@ export const setColumnsWidth = (table = [], widths = []) => {
 
 export const ChainX = {
   Account,
-  Keystore,
 };
 
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
     try {
-      ChainX.Keystore.decrypt(encoded, password);
+      ChainX.Account.fromKeyStore(encoded, password);
       return '';
     } catch (err) {
       return errMsg;
