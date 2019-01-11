@@ -27,8 +27,8 @@ class ChainxNodeManager extends EventEmitter {
 
     this._process.once('close', code => {
       // 程序可能因某种原因退出，应通知上层应用
-      this.emit('close', code);
-    })
+      this.emit('chainx-close', code);
+    });
 
     this._process.stdout.on('data', data => {
       // TODO: 考虑log
