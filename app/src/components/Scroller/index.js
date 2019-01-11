@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BScroll from 'better-scroll';
 import { _ } from '../../../src/utils';
+import './index.less';
 
 export default class Scroller extends Component {
   componentDidMount() {
