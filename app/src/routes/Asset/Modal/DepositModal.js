@@ -5,12 +5,22 @@ import * as styles from './DepositModal.less';
 
 class DepositModal extends Component {
   render() {
+    const {
+      model: { openModal },
+    } = this.props;
     return (
       <Modal title="跨链充值">
         <div className={styles.bindAddress}>
           <div>
             已绑定地址：
-            <button>绑定新地址</button>
+            <button
+              onClick={() => {
+                openModal({
+                  name: 'CrossChainBindModal',
+                });
+              }}>
+              绑定新地址
+            </button>
           </div>
           <ul>
             <li>

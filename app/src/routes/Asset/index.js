@@ -9,6 +9,7 @@ import DepositModal from './Modal/DepositModal';
 import WithdrawModal from './Modal/WithdrawModal';
 import TransferModal from './Modal/TransferModal';
 import RegisterNode from './Modal/RegisterNode';
+import CrossChainBindModal from './Modal/CrossChainBindModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -17,11 +18,11 @@ class Asset extends Mixin {
   state = {};
 
   startInit = () => {
-    // const {
-    //   model: { openModal },
-    // } = this.props;
+    const {
+      model: { openModal },
+    } = this.props;
     // openModal({
-    //   name: 'TransferModal',
+    //   name: 'CrossChainBindModal',
     // });
   };
 
@@ -78,6 +79,7 @@ class Asset extends Mixin {
         {name === 'WithdrawModal' ? <WithdrawModal {...this.props} /> : null}
         {name === 'TransferModal' ? <TransferModal {...this.props} /> : null}
         {name === 'RegisterNode' ? <RegisterNode {...this.props} /> : null}
+        {name === 'CrossChainBindModal' ? <CrossChainBindModal {...this.props} /> : null}
       </div>
     );
   }
