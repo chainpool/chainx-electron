@@ -22,8 +22,7 @@ class App {
       this.createWindow();
 
       /**
-       * TODO: 1. start chainx node, call `this.nodeManager.startNode()`.
-       * TODO: 2. load all keys by keystore manager, and notify renderer by ipc.
+       * TODO:  start chainx node, call `this.nodeManager.startNode()`.
        */
 
       App.setMenuNull();
