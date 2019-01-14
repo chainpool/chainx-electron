@@ -33,6 +33,7 @@ class Window {
   openDevTools() {
     this.window.webContents.openDevTools();
   }
+
   setShortCut() {
     globalShortcut.register("CommandOrControl+R", () => {
       this.window.reload();

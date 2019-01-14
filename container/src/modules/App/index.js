@@ -48,4 +48,6 @@ class App {
   }
 }
 
-module.exports = new App();
+module.exports = function startApp() {
+  new App();
+};
