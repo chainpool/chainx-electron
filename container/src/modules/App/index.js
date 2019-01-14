@@ -1,9 +1,15 @@
 const Window = require("./Window");
 const { app, Menu } = require("electron");
+const ChainxNodeManager = require('../ChainxNodeManager')
+const KeystoreManager = require('../KeystoreManager')
+const initIpc = require('../initIpc');
 
 class App {
   constructor() {
     this.app = app;
+    this.nodeManager = new ChainxNodeManager();
+    this.keystoreManager = new KeystoreManager();
+
     this.init();
   }
 
@@ -14,6 +20,11 @@ class App {
 
     this.app.on("ready", () => {
       this.createWindow();
+
+      /**
+       * TODO:  start chainx node, call `this.nodeManager.startNode()`.
+       */
+
       App.setMenuNull();
       // tray.setToolTip("myapp");
     });
@@ -41,6 +52,8 @@ class App {
       resizable: true,
       minWidth: 1280
     });
+
+    initIpc(this.window, this.keystoreManager);
   }
 
   static setMenuNull() {
@@ -48,4 +61,6 @@ class App {
   }
 }
 
-module.exports = new App();
+module.exports = function startApp() {
+  new App();
+};

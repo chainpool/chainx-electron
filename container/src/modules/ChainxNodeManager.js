@@ -66,4 +66,4 @@ class ChainxNodeManager extends EventEmitter {
   }
 }
 
-export default ChainxNodeManager;
+module.exports = ChainxNodeManager;

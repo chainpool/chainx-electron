@@ -1,4 +1,5 @@
-require("./configCenter/App");
+require("./modules/Sql");
 
-require("./configCenter/Ipc");
-require("./configCenter/Sql");
+const startApp = require("./modules/App");
+startApp();
+
