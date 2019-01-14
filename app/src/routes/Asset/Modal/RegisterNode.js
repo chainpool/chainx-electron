@@ -62,7 +62,7 @@ class RegisterNode extends Component {
       remark,
     } = this.state;
     const {
-      model: { dispatch, openModal, closeModal },
+      model: { dispatch, openModal },
       accountStore: { accounts },
     } = this.props;
     return (

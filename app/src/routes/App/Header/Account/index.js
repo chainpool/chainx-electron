@@ -19,7 +19,7 @@ class Account extends Mixin {
   state = {};
   startInit = () => {
     const {
-      model: { dispatch, openModal },
+      model: { dispatch },
       location: { search },
     } = this.props;
     dispatch({
@@ -28,10 +28,6 @@ class Account extends Mixin {
         address: parseQueryString(search).address,
       },
     });
-
-    // openModal({
-    //   name: 'ImportAccountModal',
-    // });
   };
 
   render() {

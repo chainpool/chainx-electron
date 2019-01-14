@@ -5,9 +5,9 @@ import * as styles from './UpdateNodeModal.less';
 
 class UpdateNodeModal extends Component {
   state = {
-    address: '',
+    address: '5CNaUfw2GXfzhBwd7puFEpRHQB8PtcuHgBEs3Zkazp9YRKuH',
     addressErrMsg: '',
-    website: '',
+    website: 'www.baidu.com',
     websiteErrMsg: '',
     participating: true,
   };
@@ -35,7 +35,7 @@ class UpdateNodeModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, website, websiteErrMsg, participating } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch, openModal },
     } = this.props;
     return (
       <Modal
@@ -46,7 +46,25 @@ class UpdateNodeModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '转账' }, { name: '网站', value: website }],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'register',
+                        payload: {
+                          signer,
+                          intention: address.address,
+                          acceleration,
+                          certName: 'genesis_cert',
+                          url: website,
+                          // shareCount: amount,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             确定

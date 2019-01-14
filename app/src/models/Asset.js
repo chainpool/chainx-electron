@@ -9,7 +9,6 @@ export default class Asset extends ModelExtend {
   @observable name = 'asset';
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
-    console.log(acceleration, certName, intention, name, url, shareCount, remark);
     ChainX.stake.register(
       signer,
       Number(acceleration),

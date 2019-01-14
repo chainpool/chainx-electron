@@ -35,10 +35,13 @@ export default class Election extends ModelExtend {
   };
 
   /*更新节点*/
-  refresh = () => {
+  refresh = ({}) => {
     ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {
       console.log(result);
     });
+    // ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {
+    //   console.log(result);
+    // });
   };
 
   /*提息*/
