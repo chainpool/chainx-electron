@@ -1,0 +1,3 @@
+[submodule "container/third-party/chainx-bin"]
+	path = container/third-party/chainx-bin
+	url = git@github.com:chainpool/chainx-bin.git
