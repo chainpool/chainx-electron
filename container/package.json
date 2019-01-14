@@ -8,36 +8,11 @@
     "start": "electron . --debug",
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
-    "dist": "rimraf dist&&electron-builder"
+    "dist": "rimraf dist&&electron-builder --config ./electron-builder.js"
   },
   "keywords": [],
   "author": "myapp",
   "license": "MIT",
-  "build": {
-    "appId": "myapp",
-    "asarUnpack": [
-      "third-party/**/*"
-    ],
-    "files": [
-      "**/*",
-      "third-party/**/*"
-    ],
-    "win": {
-      "target": [
-        "nsis",
-        "zip"
-      ]
-    },
-    "mac": {
-      "category": "finance"
-    },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "http://localhost:7000/electron_update/"
-      }
-    ]
-  },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.0.6",
