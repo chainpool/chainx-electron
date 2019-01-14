@@ -7,7 +7,7 @@ import * as styles from './CreateAccountModal.less';
 class CreateAccountModal extends Component {
   constructor(props) {
     super(props);
-    const generateMnemonic = ChainX.Account.newMnemonic().split(' ');
+    const generateMnemonic = ChainX.account.newMnemonic().split(' ');
     this.state = {
       step: 1,
       mnemonicWord: generateMnemonic,
@@ -44,7 +44,7 @@ class CreateAccountModal extends Component {
     } = this.props;
 
     if (checkAll.confirm()) {
-      const account = ChainX.Account.from(mnemonicWord.join(' '));
+      const account = ChainX.account.from(mnemonicWord.join(' '));
       openModal({
         name: 'SetPasswordModal',
         data: {

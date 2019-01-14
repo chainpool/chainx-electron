@@ -78,7 +78,7 @@ class EditPasswordModal extends Component {
                   type: 'updateEncoded',
                   payload: {
                     address,
-                    encoded: ChainX.Account.fromKeyStore(encoded, primaryPassword).encrypt(password),
+                    encoded: ChainX.account.fromKeyStore(encoded, primaryPassword).encrypt(password),
                   },
                 });
                 closeModal();

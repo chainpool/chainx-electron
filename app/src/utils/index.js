@@ -3,8 +3,7 @@ import { default as queryString } from 'query-string';
 import { observer, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
-import Account from '@chainx/account';
-// import Keystore from '@chainx/keystore';
+import { default as Chainx } from 'chainx.js';
 
 //------------------通用部分
 export { request } from './request';
@@ -29,14 +28,12 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
-export const ChainX = {
-  Account,
-};
+export const ChainX = new Chainx('ws://127.0.0.1:9944');
 
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
     try {
-      ChainX.Account.fromKeyStore(encoded, password);
+      ChainX.account.fromKeyStore(encoded, password);
       return '';
     } catch (err) {
       return errMsg;
@@ -44,7 +41,7 @@ export const Patterns = {
   },
   isPrivateKey: (privateKey, errMsg = ErrMsg.privateKeyNotFormat) => {
     try {
-      ChainX.Account.fromPrivateKey(privateKey);
+      ChainX.account.fromPrivateKey(privateKey);
       return '';
     } catch (err) {
       return errMsg;
@@ -52,7 +49,7 @@ export const Patterns = {
   },
   isMnemonicValid: (mnemonic, errMsg = ErrMsg.mnemonicNotFormat) => {
     try {
-      ChainX.Account.isMnemonicValid(mnemonic);
+      ChainX.account.isMnemonicValid(mnemonic);
       return '';
     } catch (err) {
       return errMsg;

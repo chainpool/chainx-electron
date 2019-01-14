@@ -57,7 +57,7 @@ class ImportAccountModal extends Component {
               onClick={() => {
                 if (checkAll.confirm()) {
                   const account =
-                    step === 1 ? ChainX.Account.from(mnemonicWord.join(' ')) : ChainX.Account.from(secretKey);
+                    step === 1 ? ChainX.account.from(mnemonicWord.join(' ')) : ChainX.account.from(secretKey);
 
                   openModal({
                     name: 'SetPasswordModal',
