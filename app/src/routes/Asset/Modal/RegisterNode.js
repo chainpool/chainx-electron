@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Patterns } from '../../../utils';
+import { Inject, Patterns, RegEx } from '../../../utils';
 import { PlaceHolder } from '@constants';
 
+@Inject(({ accountStore }) => ({ accountStore }))
 class RegisterNode extends Component {
   state = {
     address: '',
@@ -46,6 +47,7 @@ class RegisterNode extends Component {
       return ['checkAddress', 'checkName', 'checkWebsite', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const {
@@ -60,7 +62,8 @@ class RegisterNode extends Component {
       remark,
     } = this.state;
     const {
-      model: { closeModal },
+      model: { dispatch, openModal, closeModal },
+      accountStore: { accounts },
     } = this.props;
     return (
       <Modal
@@ -71,7 +74,32 @@ class RegisterNode extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [
+                      { name: '操作', value: '转账' },
+                      { name: '名称', value: name },
+                      { name: '网站', value: website },
+                      { name: '分配额度', value: amount },
+                    ],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'register',
+                        payload: {
+                          signer,
+                          intention: address.address,
+                          acceleration,
+                          certName: 'genesis_cert',
+                          name,
+                          url: website,
+                          shareCount: amount,
+                          remark,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             确定
@@ -79,11 +107,13 @@ class RegisterNode extends Component {
         }>
         <div>
           <Input.Select
+            getOptionLabel={item => item.tag}
+            getOptionValue={item => item.address}
             prefix="ChainX"
             label="节点账户地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[{ label: 1, value: 1 }]}
+            options={accounts}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
@@ -115,7 +145,11 @@ class RegisterNode extends Component {
                 label="分配额度"
                 value={amount}
                 errMsg={amountErrMsg}
-                onChange={value => this.setState({ amount: value })}
+                onChange={value => {
+                  if (RegEx.number.test(value)) {
+                    this.setState({ amount: value });
+                  }
+                }}
                 onBlur={checkAll.checkAmount}
               />
             }
@@ -123,7 +157,7 @@ class RegisterNode extends Component {
           />
           <Input.Text
             isTextArea
-            rows={4}
+            rows={1}
             label="备注"
             placeholder={PlaceHolder.setTextAreaLength}
             value={remark}
