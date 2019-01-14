@@ -8,7 +8,7 @@ export default class Asset extends ModelExtend {
 
   @observable name = 'asset';
 
-  transfer = async () => {
+  transfer = () => {
     ChainX.asset.transfer(
       ChainX.account.from('Alice'),
       1,
@@ -17,9 +17,7 @@ export default class Asset extends ModelExtend {
       0.1,
       '哈哈哈哈哈',
       (err, result) => {
-        if (!err) {
-          console.log(result, '---------');
-        }
+        console.log(result);
       }
     );
   };

@@ -17,12 +17,12 @@ class Election extends Mixin {
   };
 
   startInit = () => {
-    // const {
-    //   model: { openModal },
-    // } = this.props;
-    // openModal({
-    //   name: 'SignModal',
-    // });
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'nominate',
+    });
   };
 
   render() {
@@ -75,7 +75,6 @@ class Election extends Mixin {
         </div>
         {activeIndex === 4 ? <DepositMineTable {...this.props} /> : <NodeTable {...this.props} />}
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
-
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
       </div>

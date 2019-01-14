@@ -11,13 +11,13 @@ import { Inject } from '../../utils';
 
 @Inject(({ globalStore }) => ({ globalStore }))
 class Main extends Component {
-  componentDidMount() {
-    this.ready();
-  }
-
   state = {
     ready: false,
   };
+
+  componentDidMount() {
+    this.ready();
+  }
 
   ready = async () => {
     await ChainX.isRpcReady();
