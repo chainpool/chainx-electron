@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Inject, Patterns } from '../../../utils';
+import { Inject, Patterns, RegEx } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ accountStore }) => ({ accountStore }))
@@ -96,7 +96,11 @@ class TransferModal extends Component {
                 label="转账数量"
                 value={amount}
                 errMsg={amountErrMsg}
-                onChange={value => this.setState({ amount: value })}
+                onChange={value => {
+                  if (RegEx.number.test(value)) {
+                    this.setState({ amount: value });
+                  }
+                }}
                 onBlur={checkAll.checkAmount}
               />
             }

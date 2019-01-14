@@ -118,3 +118,8 @@ export const Device = (() => {
 export const parseQueryString = payload => {
   return queryString.parse(payload);
 };
+
+export const RegEx = {
+  number: /^[0-9]*$/,
+  decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
+};
