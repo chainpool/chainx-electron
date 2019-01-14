@@ -2,6 +2,7 @@ const Window = require("./Window");
 const { app, Menu } = require("electron");
 const ChainxNodeManager = require('../ChainxNodeManager')
 const KeystoreManager = require('../KeystoreManager')
+const initIpc = require('../initIpc');
 
 class App {
   constructor() {
@@ -52,6 +53,8 @@ class App {
       resizable: true,
       minWidth: 1280
     });
+
+    initIpc(this.window, this.keystoreManager);
   }
 
   static setMenuNull() {
