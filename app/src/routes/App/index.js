@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
+import { ChainX } from '../../utils';
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
@@ -10,13 +11,29 @@ import { Inject } from '../../utils';
 
 @Inject(({ globalStore }) => ({ globalStore }))
 class Main extends Component {
+  componentDidMount() {
+    this.ready();
+  }
+
+  state = {
+    ready: false,
+  };
+
+  ready = async () => {
+    await ChainX.isRpcReady();
+    this.setState({
+      ready: true,
+    });
+  };
+
   render() {
+    const { ready } = this.state;
     const {
       globalStore: {
         modal: { name },
       },
     } = this.props;
-    return (
+    return ready ? (
       <CommonLayOut {...this.props}>
         <Switch>
           {routers.map(item => (
@@ -32,6 +49,8 @@ class Main extends Component {
         </Switch>
         {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
+    ) : (
+      '连接中'
     );
   }
 }

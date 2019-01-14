@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin, RouterGo } from '../../../../components';
-import { classNames, Inject, Device, parseQueryString, chainx } from '../../../../utils';
+import { classNames, Inject, Device, parseQueryString } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
@@ -17,12 +17,6 @@ import Win from '../../../../resource/Win.png';
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Mixin {
   state = {};
-
-  async main() {
-    // await chainx.isRpcReady()
-    console.log('hahhahah');
-  }
-
   startInit = () => {
     const {
       model: { dispatch, openModal },
@@ -35,7 +29,6 @@ class Account extends Mixin {
       },
     });
 
-    this.main();
     // openModal({
     //   name: 'ImportAccountModal',
     // });

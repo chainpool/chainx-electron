@@ -20,11 +20,11 @@ class Asset extends Mixin {
 
   startInit = () => {
     const {
-      model: { openModal },
+      model: { dispatch },
     } = this.props;
-    // openModal({
-    //   name: 'GetCollarModal',
-    // });
+    dispatch({
+      type: 'transfer',
+    });
   };
 
   render() {
