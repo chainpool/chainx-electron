@@ -1,4 +1,4 @@
-require("./configCenter/App");
+require("./modules/App");
 
-require("./configCenter/Ipc");
-require("./configCenter/Sql");
+require("./modules/Ipc");
+require("./modules/Sql");
