@@ -1,9 +1,14 @@
 const Window = require("./Window");
 const { app, Menu } = require("electron");
+const ChainxNodeManager = require('../ChainxNodeManager')
+const KeystoreManager = require('../KeystoreManager')
 
 class App {
   constructor() {
     this.app = app;
+    this.nodeManager = new ChainxNodeManager();
+    this.keystoreManager = new KeystoreManager();
+
     this.init();
   }
 
@@ -14,6 +19,12 @@ class App {
 
     this.app.on("ready", () => {
       this.createWindow();
+
+      /**
+       * TODO: 1. start chainx node, call `this.nodeManager.startNode()`.
+       * TODO: 2. load all keys by keystore manager, and notify renderer by ipc.
+       */
+
       App.setMenuNull();
       // tray.setToolTip("myapp");
     });

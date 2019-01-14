@@ -62,4 +62,4 @@ class KeystoreManager {
   }
 }
 
-export default KeystoreManager;
+module.exports = KeystoreManager;
