@@ -14,6 +14,7 @@ class RouterGo extends Component {
       go: { pathname } = {},
       className,
       isOutSide = false,
+      onClick,
     } = this.props;
     const routerGo = payload => {
       if (_.isNumber(payload)) return history.go(payload);
@@ -32,6 +33,7 @@ class RouterGo extends Component {
         className={className}
         onClick={() => {
           routerGo(go);
+          _.isFunction(onClick) && onClick();
         }}>
         {children}
       </Ele>

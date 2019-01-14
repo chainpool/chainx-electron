@@ -1,6 +1,6 @@
 import React from 'react';
-import { Mixin } from '../../../../components';
-import { classNames, Inject, Device } from '../../../../utils';
+import { Mixin, RouterGo } from '../../../../components';
+import { classNames, Inject, Device, parseQueryString } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
@@ -21,9 +21,13 @@ class Account extends Mixin {
   startInit = () => {
     const {
       model: { dispatch, openModal },
+      location: { search },
     } = this.props;
     dispatch({
       type: 'switchAccount',
+      payload: {
+        address: parseQueryString(search).address,
+      },
     });
     // openModal({
     //   name: 'ImportAccountModal',
@@ -45,7 +49,6 @@ class Account extends Mixin {
           <div className={styles.login}>
             <Icon name="icon-zhanghu" />
             <span style={{ marginLeft: 9 }}>{currentAccount.tag}</span>
-            {/*<Icon name="icon-xiala" />*/}
             <div className={classNames(styles.accountlist)}>
               <div>
                 <div className={styles.quickentry}>
@@ -78,7 +81,11 @@ class Account extends Mixin {
                   {accounts.map((item = {}, index) => {
                     const id = `popoverid_${index}`;
                     return (
-                      <li
+                      <RouterGo
+                        Ele="li"
+                        go={{
+                          search: `?address=${item.address}`,
+                        }}
                         className={currentAccount.address === item.address ? styles.active : null}
                         key={index}
                         id={id}
@@ -156,7 +163,7 @@ class Account extends Mixin {
                             <span className={styles.address}>{item.address}</span>
                           </Clipboard>
                         </div>
-                      </li>
+                      </RouterGo>
                     );
                   })}
                 </ul>

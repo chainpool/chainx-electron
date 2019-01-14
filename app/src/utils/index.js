@@ -1,4 +1,5 @@
 import { lodash_helper, moment_helper } from './helper';
+import { default as queryString } from 'query-string';
 import { observer, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
@@ -116,3 +117,7 @@ export const Device = (() => {
     },
   };
 })();
+
+export const parseQueryString = payload => {
+  return queryString.parse(payload);
+};
