@@ -106,6 +106,8 @@ class InputSelect extends React.Component {
       onInputChange,
       onCreateOption,
       options = [],
+      getOptionLabel = (item = {}) => item.label,
+      getOptionValue = (item = {}) => item.value,
       prefix = '',
     } = this.props;
     return (
@@ -122,6 +124,8 @@ class InputSelect extends React.Component {
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
           <div className={styles.userinput}>
             <CreatableSelect
+              getOptionLabel={getOptionLabel}
+              getOptionValue={getOptionValue}
               isClearable={false}
               value={value}
               className={styles.selectContainer}

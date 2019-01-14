@@ -66,6 +66,9 @@ class PrimaryAssetTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'TransferModal',
+                      data: {
+                        token: 'PCX',
+                      },
                     });
                   }}>
                   转账

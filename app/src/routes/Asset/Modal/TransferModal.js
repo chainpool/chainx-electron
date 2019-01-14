@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Patterns } from '../../../utils';
+import { Inject, Patterns } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
+@Inject(({ accountStore }) => ({ accountStore }))
 class TransferModal extends Component {
   state = {
     address: '',
@@ -34,7 +35,9 @@ class TransferModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
-      model: { closeModal },
+      model: { dispatch, openModal },
+      globalStore: { modal: { data: { token } = {} } = {} },
+      accountStore: { accounts },
     } = this.props;
     return (
       <Modal
@@ -45,7 +48,30 @@ class TransferModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    token: token,
+                    description: [
+                      { name: '操作', value: '转账' },
+                      { name: '转账数量', value: `${amount}${token}` },
+                      { name: '接收人地址', value: address.address },
+                    ],
+                    callback: ({ signer, acceleration, token }) => {
+                      dispatch({
+                        type: 'transfer',
+                        payload: {
+                          signer,
+                          dest: address.address,
+                          acceleration,
+                          token,
+                          amount,
+                          remark,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             确定
@@ -57,7 +83,9 @@ class TransferModal extends Component {
             label="接收人地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[{ label: 1, value: 1 }]}
+            getOptionLabel={item => item.tag}
+            getOptionValue={item => item.address}
+            options={accounts}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
@@ -76,7 +104,7 @@ class TransferModal extends Component {
           />
           <Input.Text
             isTextArea
-            rows={4}
+            rows={1}
             label="备注"
             placeholder={PlaceHolder.setTextAreaLength}
             value={remark}

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { _, Patterns } from '../../../utils';
+import { _, ChainX, Inject, Patterns } from '../../../utils';
 import { Modal, Button, Input } from '../../../components';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './index.less';
 
+@Inject(({ accountStore: model }) => ({ model }))
 class SignModal extends Component {
   state = {
+    acceleration: { label: 1, value: 1 },
     password: '',
     passwordErrMsg: '',
   };
@@ -13,7 +15,10 @@ class SignModal extends Component {
   checkAll = {
     checkPassword: () => {
       const { password } = this.state;
-      const errMsg = Patterns.check('required')(password);
+      const {
+        model: { currentAccount: { encoded } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(password) || Patterns.check('decode')(encoded, password);
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -24,13 +29,14 @@ class SignModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { password, passwordErrMsg } = this.state;
+    const { acceleration, password, passwordErrMsg } = this.state;
     const {
       globalStore: {
         closeModal,
         modal: {
           data: {
             callback,
+            token = '',
             description = [
               { name: '操作', value: '挂单' },
               { name: '交易对', value: 'PCX /BTC' },
@@ -41,6 +47,7 @@ class SignModal extends Component {
           } = {},
         } = {},
       },
+      model: { currentAccount },
     } = this.props;
     return (
       <Modal
@@ -51,7 +58,12 @@ class SignModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                _.isFunction(callback) && callback();
+                _.isFunction(callback) &&
+                  callback({
+                    signer: ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                    acceleration: acceleration.value,
+                    token,
+                  });
                 closeModal();
               }
             }}>
@@ -69,12 +81,20 @@ class SignModal extends Component {
           </ul>
           <div className={styles.fee}>
             <span>交易费用</span>
-            <span className={styles.feevalue}>
-              0.001PCX <span>(90%销毁，10%支付给打包节点)</span>
-            </span>
             <div className={styles.speed}>
-              <Input.Select>ddd</Input.Select>
+              <Input.Select
+                getOptionLabel={item => `${item.label}${token}`}
+                options={[{ label: 1, value: 1 }]}
+                value={acceleration}
+                onChange={value => {
+                  this.setState({ acceleration: value });
+                }}>
+                ddd
+              </Input.Select>
             </div>
+            <span className={styles.feevalue}>
+              <span>90%销毁，10%支付给打包节点，费用越高打包速度越快</span>
+            </span>
           </div>
           <Input.Text
             isPassword

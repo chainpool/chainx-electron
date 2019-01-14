@@ -21,7 +21,7 @@ class Election extends Mixin {
       model: { dispatch },
     } = this.props;
     dispatch({
-      type: 'nominate',
+      type: 'unfreeze',
     });
   };
 
