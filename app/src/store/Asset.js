@@ -1,4 +1,4 @@
-import { observable, moment_helper } from '../utils';
+import { _, observable, moment_helper, formatNumber } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getCert, getAsset, register, transfer } from '../services';
 
@@ -9,6 +9,8 @@ export default class Asset extends ModelExtend {
 
   @observable name = 'asset';
   @observable certs = []; // 我的证书
+  @observable primaryAsset = []; // 原生资产
+  @observable crossChainAsset = []; // 原生资产
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
@@ -22,7 +24,35 @@ export default class Asset extends ModelExtend {
   getAssets = async () => {
     const currenAccount = this.getCurrentAccount();
     const res = await getAsset(currenAccount.address);
-    console.log(res);
+    let primaryAsset = [];
+    let crossChainAsset = [];
+    const format = isNative => {
+      return res
+        .filter(item => item.isNative === isNative)
+        .map(item => {
+          const { Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot } = item.details;
+          const total = _.sum([Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot]);
+          return {
+            ...item,
+            freeShow: formatNumber.localString(Free),
+            free: Free,
+            reservedStakingShow: formatNumber.localString(ReservedStaking),
+            reservedStaking: ReservedStaking,
+            reservedStakingRevocationShow: formatNumber.localString(ReservedStakingRevocation),
+            reservedStakingRevocation: ReservedStakingRevocation,
+            reservedDexSpotShow: formatNumber.localString(ReservedDexSpot),
+            reservedDexSpot: ReservedDexSpot,
+            totalShow: formatNumber.localString(total),
+            total,
+          };
+        });
+    };
+    if (res) {
+      primaryAsset = format(true);
+      crossChainAsset = format(false);
+    }
+    this.changeModel('primaryAsset', primaryAsset, []);
+    this.changeModel('crossChainAsset', crossChainAsset, []);
   };
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {

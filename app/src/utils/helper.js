@@ -5,6 +5,7 @@ import { forkJoin, from, of, Subject } from 'rxjs';
 import { map, race, retry, catchError, tap, take, share, debounceTime, takeWhile } from 'rxjs/operators';
 
 export const lodash_helper = {
+  sum: _.sum,
   invert: _.invert,
   findIndex: _.findIndex,
   isInteger: _.isInteger,

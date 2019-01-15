@@ -126,3 +126,13 @@ export const RegEx = {
   number: /^[0-9]*$/,
   decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
 };
+
+const isEmpty = value => {
+  return _.isUndefined(value) || _.isNull(value) || _.isNaN(value);
+};
+export const formatNumber = {
+  localString: value => {
+    if (isEmpty(value)) return '';
+    return Number(value).toLocaleString();
+  },
+};

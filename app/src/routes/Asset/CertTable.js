@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { setColumnsWidth, toJS, observer, moment_helper } from '../../utils';
+import { setColumnsWidth, observer } from '../../utils';
 import * as styles from './index.less';
 import { Mixin, Table, Button } from '../../components';
 
@@ -19,7 +19,6 @@ class CertTable extends Mixin {
       model: { openModal, certs = [] },
       widths,
     } = this.props;
-    console.log(toJS(certs));
 
     const tableProps = {
       className: styles.tableContainer,
