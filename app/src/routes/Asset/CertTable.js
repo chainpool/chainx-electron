@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import { setColumnsWidth } from '../../utils';
+import { setColumnsWidth, observer } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button } from '../../components';
+import { Mixin, Table, Button } from '../../components';
 
-class CertTable extends Component {
+@observer
+class CertTable extends Mixin {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getCert',
+    });
+  };
+
   render() {
     const {
-      model: { openModal },
+      model: { openModal, certs = [] },
       widths,
     } = this.props;
 
@@ -16,28 +26,31 @@ class CertTable extends Component {
         [
           {
             title: '名称',
-            dataIndex: 'data1',
+            dataIndex: 'name',
           },
           {
             title: '证书发放日期',
-            dataIndex: 'data2',
+            dataIndex: 'issuedAt',
           },
           {
             title: '抵押锁定期',
-            dataIndex: 'data3',
+            dataIndex: 'frozenDuration',
           },
           {
             title: '剩余节点额度',
-            dataIndex: 'data4',
+            dataIndex: 'remainingShares',
           },
           {
             title: '',
             dataIndex: '_action',
-            render: () => (
+            render: (value, item = {}) => (
               <Button
                 onClick={() => {
                   openModal({
                     name: 'RegisterNode',
+                    data: {
+                      certName: item.name,
+                    },
                   });
                 }}>
                 注册
@@ -47,12 +60,7 @@ class CertTable extends Component {
         ],
         widths
       ),
-      dataSource: new Array(1).fill({}).map(() => ({
-        data1: 'zhengshu',
-        data2: '2018-10-31',
-        data3: '30天',
-        data4: '45',
-      })),
+      dataSource: certs,
     };
     return <Table {...tableProps} />;
   }

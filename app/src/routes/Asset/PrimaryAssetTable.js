@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { setColumnsWidth } from '../../utils';
+import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 
+@observer
 class PrimaryAssetTable extends Component {
   render() {
     const {
-      model: { openModal },
+      model: { openModal, primaryAsset = [] },
       widths,
     } = this.props;
     const tableProps = {
@@ -16,7 +17,7 @@ class PrimaryAssetTable extends Component {
         [
           {
             title: '名称',
-            dataIndex: 'data1',
+            dataIndex: 'name',
             render: value => (
               <div className={styles.miniLogo}>
                 <img src={miniLogo} alt="miniLogo" />
@@ -26,27 +27,27 @@ class PrimaryAssetTable extends Component {
           },
           {
             title: '简称',
-            dataIndex: 'data2',
+            dataIndex: 'name',
           },
           {
             title: '可用余额',
-            dataIndex: 'data3',
+            dataIndex: 'freeShow',
           },
           {
             title: '投票冻结',
-            dataIndex: 'data4',
+            dataIndex: 'reservedStakingShow',
           },
           {
             title: '赎回冻结',
-            dataIndex: 'data5',
+            dataIndex: 'reservedStakingRevocationShow',
           },
           {
             title: '交易冻结',
-            dataIndex: 'data6',
+            dataIndex: 'reservedDexSpotShow',
           },
           {
             title: '总余额',
-            dataIndex: 'data7',
+            dataIndex: 'totalShow',
           },
           {
             title: '',
@@ -79,17 +80,7 @@ class PrimaryAssetTable extends Component {
         ],
         widths
       ),
-      dataSource: [
-        {
-          data1: 'Polkadot ChainX',
-          data2: 'PCX',
-          data3: '24,000.240',
-          data4: '10,000.000',
-          data5: '0.000',
-          data6: '0.000',
-          data7: '14,000.240',
-        },
-      ],
+      dataSource: primaryAsset,
     };
     return <Table {...tableProps} />;
   }

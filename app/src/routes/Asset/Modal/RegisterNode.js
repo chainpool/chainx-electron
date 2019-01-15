@@ -64,7 +64,11 @@ class RegisterNode extends Component {
     const {
       model: { dispatch, openModal },
       accountStore: { accounts },
+      globalStore: {
+        modal: { data: { certName } = {} },
+      },
     } = this.props;
+
     return (
       <Modal
         title="注册节点"
@@ -90,7 +94,7 @@ class RegisterNode extends Component {
                           signer,
                           intention: address.address,
                           acceleration,
-                          certName: 'genesis_cert',
+                          certName,
                           name,
                           url: website,
                           shareCount: amount,

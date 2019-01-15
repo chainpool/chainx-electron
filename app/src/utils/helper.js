@@ -5,6 +5,7 @@ import { forkJoin, from, of, Subject } from 'rxjs';
 import { map, race, retry, catchError, tap, take, share, debounceTime, takeWhile } from 'rxjs/operators';
 
 export const lodash_helper = {
+  sum: _.sum,
   invert: _.invert,
   findIndex: _.findIndex,
   isInteger: _.isInteger,
@@ -86,7 +87,7 @@ export const localSave = {
 
 export const moment_helper = {
   format: (time = Date.now(), format = 'YYYY-MM-DD') => {
-    return moment(time).format(format);
+    return moment.utc(time).format(format);
   },
   formatHMS: (time = Date.now()) => {
     return moment(time).format('HH:mm:ss');

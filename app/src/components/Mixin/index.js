@@ -15,6 +15,19 @@ class Mixin extends React.Component {
     this._isMounted = false;
   }
 
+  componentDidUpdate(prevProps) {
+    const {
+      location: { search: searchPrev },
+    } = prevProps;
+    const {
+      location: { search },
+    } = this.props;
+
+    if (!_.isEqual(searchPrev, search) && search) {
+      _.isFunction(this.startInit) && this.startInit();
+    }
+  }
+
   changeState = (payload = {}, callback) => {
     if (this._isMounted) {
       this.setState(payload, () => {

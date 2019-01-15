@@ -1,6 +1,6 @@
 import { lodash_helper, moment_helper } from './helper';
 import { default as queryString } from 'query-string';
-import { observer, inject } from 'mobx-react';
+import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
 import { default as Chainx } from 'chainx.js';
@@ -17,9 +17,11 @@ export { toJS, observable, action, runInAction } from 'mobx';
 
 export const Inject = func => {
   return c => {
-    return inject(func)(observer(c));
+    return inject(func)(observerable(c));
   };
 };
+
+export const observer = observerable;
 
 export const setColumnsWidth = (table = [], widths = []) => {
   return table.map((item, index) => ({
@@ -28,7 +30,8 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
-export const ChainX = new Chainx('ws://192.168.1.252:9944');
+export const ChainX = new Chainx('ws://192.168.1.252:8087');
+// 9944
 
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
@@ -122,4 +125,14 @@ export const parseQueryString = payload => {
 export const RegEx = {
   number: /^[0-9]*$/,
   decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
+};
+
+const isEmpty = value => {
+  return _.isUndefined(value) || _.isNull(value) || _.isNaN(value);
+};
+export const formatNumber = {
+  localString: value => {
+    if (isEmpty(value)) return '';
+    return Number(value).toLocaleString();
+  },
 };
