@@ -5,6 +5,7 @@ import { default as TradeStore } from './Trade';
 import { default as AccountStore } from './Account';
 import { default as Configure } from './Configure';
 import { default as Trust } from './Trust';
+import Chain from './Chain';
 
 class RootStore {
   constructor() {
@@ -15,6 +16,7 @@ class RootStore {
     this.accountStore = new AccountStore(this);
     this.configureStore = new Configure(this);
     this.trustStore = new Trust(this);
+    this.chainStore = new Chain(this);
   }
 }
 

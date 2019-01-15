@@ -1,16 +1,36 @@
 import React, { Component } from 'react';
-import { Input, Icon } from '../../../../components';
-import { classNames } from '../../../../utils';
+import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
+import { classNames, Inject } from '@utils/index';
 
+@Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
+  async componentDidMount() {
+    const {
+      chainStore: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'subscribeBlockNumber' });
+  }
+
+  componentWillUnmount() {
+    const {
+      chainStore: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'unsubscribe' });
+  }
+
   render() {
-    const {} = this.props;
+    const {
+      chainStore: { normalizedBlockNumber },
+    } = this.props;
+
     return (
       <div className={styles.node}>
         <div>
           <span>2019/01/09 16:27:23</span>
-          <span>最新高度:5,000,000</span>
+          <span>最新高度:{normalizedBlockNumber}</span>
         </div>
         <ul>
           <li>
