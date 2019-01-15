@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
-import { Input, Icon } from '../../../../components';
+import { Icon, Input } from '../../../../components';
 import { classNames } from '../../../../utils';
 import * as styles from './index.less';
+import { ChainX } from '@utils/index';
 
 class Node extends Component {
+  async componentDidMount() {
+    const observable = await ChainX.chain.getBlockNumberObservable();
+    this.unsubscribe = observable.subscribe(blockNumber => {
+      // TODO: add blockNumber to store
+      this.setState({ blockNumber: parseInt(blockNumber) });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
   render() {
-    const {} = this.props;
+    const blockNumber = (this.state && this.state.blockNumber && this.state.blockNumber.toLocaleString()) || '';
+
     return (
       <div className={styles.node}>
         <div>
           <span>2019/01/09 16:27:23</span>
-          <span>最新高度:5,000,000</span>
+          <span>最新高度:{blockNumber}</span>
         </div>
         <ul>
           <li>
