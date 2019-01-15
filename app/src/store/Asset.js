@@ -11,10 +11,8 @@ export default class Asset extends ModelExtend {
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = await ChainX.stake.getCertByAccount(currenAccount.address);
-    if (res) {
-      this.changeModel('certs', res);
-    }
+    const res = (await ChainX.stake.getCertByAccount(currenAccount.address)) || [];
+    this.changeModel('certs', res);
   };
 
   getAssets = async () => {

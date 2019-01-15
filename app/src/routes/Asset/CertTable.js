@@ -16,10 +16,9 @@ class CertTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, certs },
+      model: { openModal, certs = [] },
       widths,
     } = this.props;
-    console.log(toJS(certs), '====');
 
     const tableProps = {
       className: styles.tableContainer,
@@ -27,19 +26,19 @@ class CertTable extends Mixin {
         [
           {
             title: '名称',
-            dataIndex: 'data1',
+            dataIndex: 'name',
           },
           {
             title: '证书发放日期',
-            dataIndex: 'data2',
+            dataIndex: 'issued_at',
           },
           {
             title: '抵押锁定期',
-            dataIndex: 'data3',
+            dataIndex: 'frozen_duration',
           },
           {
             title: '剩余节点额度',
-            dataIndex: 'data4',
+            dataIndex: 'remaining_shares',
           },
           {
             title: '',
@@ -58,12 +57,7 @@ class CertTable extends Mixin {
         ],
         widths
       ),
-      dataSource: new Array(1).fill({}).map(() => ({
-        data1: 'zhengshu',
-        data2: '2018-10-31',
-        data3: '30天',
-        data4: '45',
-      })),
+      dataSource: certs,
     };
     return <Table {...tableProps} />;
   }
