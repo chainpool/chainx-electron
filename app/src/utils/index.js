@@ -1,6 +1,6 @@
 import { lodash_helper, moment_helper } from './helper';
 import { default as queryString } from 'query-string';
-import { observer, inject } from 'mobx-react';
+import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
 import { default as Chainx } from 'chainx.js';
@@ -17,9 +17,11 @@ export { toJS, observable, action, runInAction } from 'mobx';
 
 export const Inject = func => {
   return c => {
-    return inject(func)(observer(c));
+    return inject(func)(observerable(c));
   };
 };
+
+export const observer = observerable;
 
 export const setColumnsWidth = (table = [], widths = []) => {
   return table.map((item, index) => ({

@@ -18,15 +18,6 @@ import * as styles from './index.less';
 class Asset extends Mixin {
   state = {};
 
-  startInit = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-    // dispatch({
-    //   type:'getAssetsByAccount'
-    // })
-  };
-
   render() {
     const {
       globalStore: {

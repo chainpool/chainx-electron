@@ -7,11 +7,20 @@ export default class Asset extends ModelExtend {
   }
 
   @observable name = 'asset';
+  @observable certs = []; // 我的证书
 
-  getAssetsByAccount = () => {
+  getCert = async () => {
     const currenAccount = this.getCurrentAccount();
-    console.log(currenAccount.address);
-    ChainX.asset.getAssetsByAccount(currenAccount.address).then(res => console.log(res, '===='));
+    const res = await ChainX.stake.getCertByAccount(currenAccount.address);
+    if (res) {
+      this.changeModel('certs', res);
+    }
+  };
+
+  getAssets = async () => {
+    const currenAccount = this.getCurrentAccount();
+    const res = ChainX.asset.getAssetsByAccount(currenAccount.address);
+    console.log(res);
   };
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {

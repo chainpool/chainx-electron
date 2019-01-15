@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
-import { setColumnsWidth } from '../../utils';
+import { setColumnsWidth, toJS, observer } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button } from '../../components';
+import { Mixin, Table, Button } from '../../components';
 
-class CertTable extends Component {
+@observer
+class CertTable extends Mixin {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getCert',
+    });
+  };
+
   render() {
     const {
-      model: { openModal },
+      model: { openModal, certs },
       widths,
     } = this.props;
+    console.log(toJS(certs), '====');
 
     const tableProps = {
       className: styles.tableContainer,
