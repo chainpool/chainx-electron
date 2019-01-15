@@ -74,6 +74,12 @@ export const Patterns = {
       return Number(inputValue) > Number(baseValue) ? errMsg : '';
     }
   },
+  characterLength: (inputValue = '', minLength, maxLength) => {
+    let result = '';
+    result = inputValue.length > minLength ? '' : `最少${minLength}个字符`;
+    result = inputValue.length > maxLength ? `最多${maxLength}个字符` : result;
+    return result;
+  },
   precision: (inputValue, precision, errMsg = '小数位数') => {
     if (inputValue && !_.isNaN(precision)) {
       inputValue = parseFloat(inputValue);
@@ -124,6 +130,7 @@ export const parseQueryString = payload => {
 export const RegEx = {
   number: /^[0-9]*$/,
   decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
+  website: /^[0-9a-zA-Z\.]*$/,
 };
 
 const isEmpty = value => {

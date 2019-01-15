@@ -32,7 +32,7 @@ class RegisterNode extends Component {
     },
     checkWebsite: () => {
       const { website } = this.state;
-      const errMsg = Patterns.check('required')(website);
+      const errMsg = Patterns.check('required')(website) || Patterns.check('characterLength')(website, 4, 12);
       this.setState({ websiteErrMsg: errMsg });
       return errMsg;
     },
@@ -65,7 +65,7 @@ class RegisterNode extends Component {
       model: { dispatch, openModal },
       accountStore: { accounts },
       globalStore: {
-        modal: { data: { certName } = {} },
+        modal: { data: { certName, remainingShares } = {} },
       },
     } = this.props;
 
@@ -86,6 +86,7 @@ class RegisterNode extends Component {
                       { name: '名称', value: name },
                       { name: '网站', value: website },
                       { name: '分配额度', value: amount },
+                      { name: '备注', value: remark },
                     ],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
@@ -138,7 +139,11 @@ class RegisterNode extends Component {
                 placeholder="www.chainx.org"
                 value={website}
                 errMsg={websiteErrMsg}
-                onChange={value => this.setState({ website: value })}
+                onChange={value => {
+                  if (RegEx.website.test(value)) {
+                    this.setState({ website: value });
+                  }
+                }}
                 onBlur={checkAll.checkWebsite}
               />
             }
@@ -157,7 +162,7 @@ class RegisterNode extends Component {
                 onBlur={checkAll.checkAmount}
               />
             }
-            right={<FreeBalance label="剩余额度" value={'40'} />}
+            right={<FreeBalance label="剩余额度" value={remainingShares} />}
           />
           <Input.Text
             isTextArea

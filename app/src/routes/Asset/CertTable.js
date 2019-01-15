@@ -50,6 +50,7 @@ class CertTable extends Mixin {
                     name: 'RegisterNode',
                     data: {
                       certName: item.name,
+                      remainingShares: item.remainingShares,
                     },
                   });
                 }}>
