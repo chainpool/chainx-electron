@@ -1,41 +1,54 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, ButtonGroup, Button } from '../../components';
+import { observer } from '../../utils';
+import { toJS } from '@utils';
 
+@observer
 class NodeTable extends Component {
   render() {
     const {
-      model: { openModal },
+      activeIndex,
+      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [] },
     } = this.props;
+    console.log(activeIndex, toJS(waitingIntentions), '-------------------------------');
+
+    const dataSources = {
+      0: trustIntentions,
+      1: validatorIntentions,
+      2: waitingIntentions,
+      3: [],
+    };
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '排名',
           width: 50,
-          dataIndex: 'data1',
+          dataIndex: 'name',
+          render: (value, record, index) => index + 1,
         },
         {
           title: '名称',
-          dataIndex: 'data2',
+          dataIndex: 'name',
         },
         {
           title: '账户地址',
           ellipse: true,
-          dataIndex: 'data3',
+          dataIndex: 'address',
         },
         {
           title: '自投票数',
           ellipse: true,
-          dataIndex: 'data4',
+          dataIndex: 'selfVote',
         },
         {
           title: '总得票数',
-          dataIndex: 'data5',
+          dataIndex: 'totalNomination',
         },
         {
           title: '奖池金额',
-          dataIndex: 'data6',
+          dataIndex: 'jackpot',
         },
         {
           title: '我的投票',
@@ -53,16 +66,21 @@ class NodeTable extends Component {
           title: '',
           width: 210,
           dataIndex: '_action',
-          render: () => (
+          render: (value, item) => (
             <ButtonGroup>
-              <Button
-                onClick={() => {
-                  openModal({
-                    name: 'VoteModal',
-                  });
-                }}>
-                投票
-              </Button>
+              {item.isActive ? null : (
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'VoteModal',
+                      data: {
+                        target: item.address,
+                      },
+                    });
+                  }}>
+                  投票
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   openModal({
@@ -76,19 +94,7 @@ class NodeTable extends Component {
           ),
         },
       ],
-      dataSource: [
-        {
-          data1: '1',
-          data2: 'name1name1na',
-          data3: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data4: '132,783',
-          data5: '12.64937460',
-          data6: '30,000',
-          data7: '32,783',
-          data8: '32,783',
-          data9: '32,783',
-        },
-      ],
+      dataSource: dataSources[activeIndex],
     };
     return <Table {...tableProps} />;
   }

@@ -1,5 +1,6 @@
-import { ChainX, observable } from '../utils';
+import { ChainX, observable, moment_helper } from '../utils';
 import ModelExtend from './ModelExtend';
+import { getIntentions, nominate } from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -7,21 +8,36 @@ export default class Election extends ModelExtend {
   }
 
   @observable name = 'election';
+  @observable intentions = []; //所有节点
+  @observable validatorIntentions = []; //结算节点
+  @observable trustIntentions = []; //信托节点
+  @observable waitingIntentions = []; //候补节点
+
+  getIntentions = async () => {
+    let res = await getIntentions();
+    let validatorIntentions = [];
+    // let trustIntentions = [];
+    let waitingIntentions = [];
+    if (res) {
+      res = res.map((item = []) => {
+        return {
+          address: item[0],
+          time: moment_helper.format(item[1]),
+          ...item[2],
+        };
+      });
+      validatorIntentions = res.filter(item => item.isValidator);
+      waitingIntentions = res.filter(item => !item.isValidator);
+    }
+    this.changeModel('intentions', res, []);
+    this.changeModel('validatorIntentions', validatorIntentions, []);
+    this.changeModel('waitingIntentions', waitingIntentions, []);
+  };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
-    ChainX.stake.nominate(signer, acceleration, target, amount, remark, (err, result) => {
+    nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
       console.log(result);
     });
-    // ChainX.stake.nominate(
-    //   ChainX.account.from('Alice'),
-    //   1,
-    //   ChainX.account.from('Bob').address(),
-    //   1,
-    //   '投票',
-    //   (err, result) => {
-    //     console.log(result);
-    //   }
-    // );
   };
 
   unnominate = () => {

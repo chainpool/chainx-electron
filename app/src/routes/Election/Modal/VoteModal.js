@@ -29,7 +29,11 @@ class VoteModal extends Component {
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
       model: { dispatch, openModal },
+      globalStore: {
+        modal: { data: { target } = {} },
+      },
     } = this.props;
+
     return (
       <Modal
         title="投票"
@@ -49,7 +53,7 @@ class VoteModal extends Component {
                         payload: {
                           signer,
                           acceleration,
-                          target: '5E6mpGr3ZTDB5suD53hvAwms4KWtTqoaLeuXLW7aAKZnf81x',
+                          target,
                           amount,
                           remark,
                         },

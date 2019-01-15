@@ -18,11 +18,14 @@ class Election extends Mixin {
 
   startInit = () => {
     const {
-      model: { openModal, dispatch },
+      model: { dispatch, openModal },
     } = this.props;
+    dispatch({
+      type: 'getIntentions',
+    });
     // openModal({
-    //   name:'VoteModal'
-    // })
+    //   name: 'VoteModal',
+    // });
   };
 
   render() {
@@ -35,6 +38,7 @@ class Election extends Mixin {
         modal: { name },
       },
     } = this.props;
+
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
@@ -73,7 +77,11 @@ class Election extends Mixin {
             </>
           )}
         </div>
-        {activeIndex === 4 ? <DepositMineTable {...this.props} /> : <NodeTable {...this.props} />}
+        {activeIndex === 4 ? (
+          <DepositMineTable {...this.props} />
+        ) : (
+          <NodeTable activeIndex={activeIndex} {...this.props} />
+        )}
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
