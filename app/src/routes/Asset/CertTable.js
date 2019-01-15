@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { setColumnsWidth, toJS, observer } from '../../utils';
+import { setColumnsWidth, toJS, observer, moment_helper } from '../../utils';
 import * as styles from './index.less';
 import { Mixin, Table, Button } from '../../components';
 
@@ -19,6 +19,7 @@ class CertTable extends Mixin {
       model: { openModal, certs = [] },
       widths,
     } = this.props;
+    console.log(toJS(certs));
 
     const tableProps = {
       className: styles.tableContainer,
@@ -30,15 +31,15 @@ class CertTable extends Mixin {
           },
           {
             title: '证书发放日期',
-            dataIndex: 'issued_at',
+            dataIndex: 'issuedAt',
           },
           {
             title: '抵押锁定期',
-            dataIndex: 'frozen_duration',
+            dataIndex: 'frozenDuration',
           },
           {
             title: '剩余节点额度',
-            dataIndex: 'remaining_shares',
+            dataIndex: 'remainingShares',
           },
           {
             title: '',

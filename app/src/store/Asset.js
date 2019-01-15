@@ -1,4 +1,4 @@
-import { observable, ChainX } from '../utils';
+import { observable, moment_helper } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getCert, getAsset, register, transfer } from '../services';
 
@@ -12,8 +12,11 @@ export default class Asset extends ModelExtend {
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = (await getCert(currenAccount.address)) || [];
-    this.changeModel('certs', res);
+    const res = await getCert(currenAccount.address);
+    if (res) {
+      res.map(item => (item.issuedAt = moment_helper.format(item.issuedAt)));
+    }
+    this.changeModel('certs', res, []);
   };
 
   getAssets = async () => {
@@ -23,7 +26,6 @@ export default class Asset extends ModelExtend {
   };
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
-    console.log(signer, acceleration, certName, intention, name, url, shareCount, remark, '=====');
     register(
       signer,
       Number(acceleration),

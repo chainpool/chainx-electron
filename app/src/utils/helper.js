@@ -86,7 +86,7 @@ export const localSave = {
 
 export const moment_helper = {
   format: (time = Date.now(), format = 'YYYY-MM-DD') => {
-    return moment(time).format(format);
+    return moment.utc(time).format(format);
   },
   formatHMS: (time = Date.now()) => {
     return moment(time).format('HH:mm:ss');

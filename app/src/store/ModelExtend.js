@@ -7,10 +7,10 @@ export default class ModelExtend {
   }
 
   @action
-  changeModel = (k, v) => {
+  changeModel = (k, v, defaultValue) => {
     if (k) {
       this[`${k}_prev`] = this[k];
-      _.set(this, `${k}`, v);
+      _.set(this, `${k}`, v || defaultValue);
     } else {
       console.error('changeModel参数的k是必须参数');
     }
