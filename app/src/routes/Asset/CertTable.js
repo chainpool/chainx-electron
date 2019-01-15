@@ -43,11 +43,14 @@ class CertTable extends Mixin {
           {
             title: '',
             dataIndex: '_action',
-            render: () => (
+            render: (value, item = {}) => (
               <Button
                 onClick={() => {
                   openModal({
                     name: 'RegisterNode',
+                    data: {
+                      certName: item.name,
+                    },
                   });
                 }}>
                 注册

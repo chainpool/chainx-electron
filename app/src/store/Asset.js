@@ -1,6 +1,6 @@
 import { observable, ChainX } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getCert, getAsset } from '../services';
+import { getCert, getAsset, register, transfer } from '../services';
 
 export default class Asset extends ModelExtend {
   constructor(rootStore) {
@@ -23,7 +23,8 @@ export default class Asset extends ModelExtend {
   };
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
-    ChainX.stake.register(
+    console.log(signer, acceleration, certName, intention, name, url, shareCount, remark, '=====');
+    register(
       signer,
       Number(acceleration),
       certName,
@@ -39,7 +40,7 @@ export default class Asset extends ModelExtend {
   };
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
-    ChainX.asset.transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
+    transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
       console.log(result);
     });
   };
