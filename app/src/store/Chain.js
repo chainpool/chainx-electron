@@ -1,5 +1,5 @@
 import ModelExtend from './ModelExtend';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { ChainX } from '@utils/index';
 
 let unsubscribeFn;
@@ -10,6 +10,10 @@ class Chain extends ModelExtend {
   }
 
   @observable blockNumber;
+
+  @computed get normalizedBlockNumber() {
+    return this.blockNumber && this.blockNumber.toLocaleString();
+  }
 
   setBlockNumber(blockNumber) {
     this.changeModel('blockNumber', blockNumber);

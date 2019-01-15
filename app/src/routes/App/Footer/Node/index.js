@@ -23,14 +23,14 @@ class Node extends Component {
 
   render() {
     const {
-      chainStore: { blockNumber },
+      chainStore: { normalizedBlockNumber },
     } = this.props;
 
     return (
       <div className={styles.node}>
         <div>
           <span>2019/01/09 16:27:23</span>
-          <span>最新高度:{blockNumber && blockNumber.toLocaleString()}</span>
+          <span>最新高度:{normalizedBlockNumber}</span>
         </div>
         <ul>
           <li>
