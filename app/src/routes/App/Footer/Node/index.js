@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
-import { classNames, Inject, ChainX } from '@utils/index';
+import { classNames, Inject } from '@utils/index';
 
 @Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
@@ -10,16 +10,15 @@ class Node extends Component {
       chainStore: { dispatch },
     } = this.props;
 
-    const observable = await ChainX.chain.getBlockNumberObservable();
-    this.unsubscribe = observable.subscribe(blockNumber => {
-      dispatch({ type: 'setBlockNumber', payload: parseInt(blockNumber) });
-    });
+    dispatch({ type: 'subscribeBlockNumber' });
   }
 
   componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    const {
+      chainStore: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'unsubscribe' });
   }
 
   render() {
