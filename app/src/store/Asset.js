@@ -1,5 +1,6 @@
 import { observable, ChainX } from '../utils';
 import ModelExtend from './ModelExtend';
+import { getCert, getAsset } from '../services';
 
 export default class Asset extends ModelExtend {
   constructor(rootStore) {
@@ -11,13 +12,13 @@ export default class Asset extends ModelExtend {
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = (await ChainX.stake.getCertByAccount(currenAccount.address)) || [];
+    const res = (await getCert(currenAccount.address)) || [];
     this.changeModel('certs', res);
   };
 
   getAssets = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = ChainX.asset.getAssetsByAccount(currenAccount.address);
+    const res = await getAsset(currenAccount.address);
     console.log(res);
   };
 
