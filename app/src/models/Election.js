@@ -8,17 +8,20 @@ export default class Election extends ModelExtend {
 
   @observable name = 'election';
 
-  nominate = () => {
-    ChainX.stake.nominate(
-      ChainX.account.from('Alice'),
-      1,
-      ChainX.account.from('Bob').address(),
-      1,
-      '投票',
-      (err, result) => {
-        console.log(result);
-      }
-    );
+  nominate = ({ signer, acceleration, target, amount, remark }) => {
+    ChainX.stake.nominate(signer, acceleration, target, amount, remark, (err, result) => {
+      console.log(result);
+    });
+    // ChainX.stake.nominate(
+    //   ChainX.account.from('Alice'),
+    //   1,
+    //   ChainX.account.from('Bob').address(),
+    //   1,
+    //   '投票',
+    //   (err, result) => {
+    //     console.log(result);
+    //   }
+    // );
   };
 
   unnominate = () => {

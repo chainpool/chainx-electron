@@ -6,7 +6,7 @@ import * as styles from './VoteModal.less';
 
 class VoteModal extends Component {
   state = {
-    action: 'add',
+    action: 'vote',
     amount: '',
     amountErrMsg: '',
     remark: '',
@@ -28,7 +28,7 @@ class VoteModal extends Component {
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
-      model: { closeModal },
+      model: { dispatch, openModal },
     } = this.props;
     return (
       <Modal
@@ -39,7 +39,24 @@ class VoteModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '投票' }, { name: '备注', value: remark }],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'nominate',
+                        payload: {
+                          signer,
+                          acceleration,
+                          target: '5E6mpGr3ZTDB5suD53hvAwms4KWtTqoaLeuXLW7aAKZnf81x',
+                          amount,
+                          remark,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             确定
@@ -71,7 +88,7 @@ class VoteModal extends Component {
           </Input.Text>
           <Input.Text
             isTextArea
-            rows={4}
+            rows={1}
             label="备注"
             placeholder={PlaceHolder.setTextAreaLength}
             value={remark}

@@ -8,6 +8,12 @@ export default class Asset extends ModelExtend {
 
   @observable name = 'asset';
 
+  getAssetsByAccount = () => {
+    const currenAccount = this.getCurrentAccount();
+    console.log(currenAccount.address);
+    ChainX.asset.getAssetsByAccount(currenAccount.address).then(res => console.log(res, '===='));
+  };
+
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
     ChainX.stake.register(
       signer,

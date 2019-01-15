@@ -21,11 +21,8 @@ class Election extends Mixin {
       model: { openModal, dispatch },
     } = this.props;
     // openModal({
-    //   name:'UpdateNodeModal'
+    //   name:'VoteModal'
     // })
-    // dispatch({
-    //   type: 'unfreeze',
-    // });
   };
 
   render() {
