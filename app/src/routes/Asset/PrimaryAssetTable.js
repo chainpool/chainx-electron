@@ -52,7 +52,7 @@ class PrimaryAssetTable extends Component {
           {
             title: '',
             dataIndex: '_action',
-            render: () => (
+            render: (value, item) => (
               <ButtonGroup>
                 <Button
                   type="warn"
@@ -68,7 +68,9 @@ class PrimaryAssetTable extends Component {
                     openModal({
                       name: 'TransferModal',
                       data: {
-                        token: 'PCX',
+                        token: item.name,
+                        freeShow: item.freeShow,
+                        free: item.free,
                       },
                     });
                   }}>

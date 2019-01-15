@@ -53,7 +53,7 @@ class CrossChainAssetTable extends Component {
           {
             title: '',
             dataIndex: '_action',
-            render: () => (
+            render: (value, item) => (
               <ButtonGroup>
                 <Button
                   type="warn"
@@ -84,6 +84,11 @@ class CrossChainAssetTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'TransferModal',
+                      data: {
+                        token: item.name,
+                        freeShow: item.freeShow,
+                        free: item.free,
+                      },
                     });
                   }}>
                   转账

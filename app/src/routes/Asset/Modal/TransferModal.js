@@ -22,7 +22,10 @@ class TransferModal extends Component {
     },
     checkAmount: () => {
       const { amount } = this.state;
-      const errMsg = Patterns.check('required')(amount);
+      const {
+        globalStore: { modal: { data: { free } = {} } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, free);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -36,7 +39,7 @@ class TransferModal extends Component {
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
       model: { dispatch, openModal },
-      globalStore: { modal: { data: { token } = {} } = {} },
+      globalStore: { modal: { data: { token, freeShow } = {} } = {} },
       accountStore: { accounts },
     } = this.props;
     return (
@@ -92,7 +95,7 @@ class TransferModal extends Component {
           <InputHorizotalList
             left={
               <Input.Text
-                suffix="PCX"
+                suffix={token}
                 label="转账数量"
                 value={amount}
                 errMsg={amountErrMsg}
@@ -104,7 +107,7 @@ class TransferModal extends Component {
                 onBlur={checkAll.checkAmount}
               />
             }
-            right={<FreeBalance value={'200.000'} unit={'PCX'} />}
+            right={<FreeBalance value={freeShow} unit={token} />}
           />
           <Input.Text
             isTextArea

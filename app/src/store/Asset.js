@@ -1,4 +1,4 @@
-import { _, observable, moment_helper, formatNumber } from '../utils';
+import { _, observable, moment_helper, formatNumber, ChainX } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getCert, getAsset, register, transfer } from '../services';
 
