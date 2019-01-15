@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { Icon, Input } from '../../../../components';
-import { classNames } from '../../../../utils';
 import * as styles from './index.less';
-import { ChainX } from '@utils/index';
+import { classNames, Inject, ChainX } from '@utils/index';
 
+@Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
   async componentDidMount() {
+    const {
+      chainStore: { dispatch },
+    } = this.props;
+
     const observable = await ChainX.chain.getBlockNumberObservable();
     this.unsubscribe = observable.subscribe(blockNumber => {
-      // TODO: add blockNumber to store
-      this.setState({ blockNumber: parseInt(blockNumber) });
+      dispatch({ type: 'setBlockNumber', payload: parseInt(blockNumber) });
     });
   }
 
@@ -20,13 +23,15 @@ class Node extends Component {
   }
 
   render() {
-    const blockNumber = (this.state && this.state.blockNumber && this.state.blockNumber.toLocaleString()) || '';
+    const {
+      chainStore: { blockNumber },
+    } = this.props;
 
     return (
       <div className={styles.node}>
         <div>
           <span>2019/01/09 16:27:23</span>
-          <span>最新高度:{blockNumber}</span>
+          <span>最新高度:{blockNumber && blockNumber.toLocaleString()}</span>
         </div>
         <ul>
           <li>
