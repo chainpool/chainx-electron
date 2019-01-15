@@ -30,8 +30,7 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
-export const ChainX = new Chainx('ws://192.168.1.252:8087');
-// 9944
+export const ChainX = new Chainx(process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944');
 
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
