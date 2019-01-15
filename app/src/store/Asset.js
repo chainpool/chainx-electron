@@ -30,8 +30,14 @@ export default class Asset extends ModelExtend {
       return res
         .filter(item => item.isNative === isNative)
         .map(item => {
-          const { Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot } = item.details;
-          const total = _.sum([Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot]);
+          const {
+            Free,
+            ReservedStaking,
+            ReservedStakingRevocation,
+            ReservedDexSpot,
+            ReservedWithdrawal,
+          } = item.details;
+          const total = _.sum([Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot, ReservedWithdrawal]);
           return {
             ...item,
             freeShow: formatNumber.localString(Free),
@@ -42,6 +48,8 @@ export default class Asset extends ModelExtend {
             reservedStakingRevocation: ReservedStakingRevocation,
             reservedDexSpotShow: formatNumber.localString(ReservedDexSpot),
             reservedDexSpot: ReservedDexSpot,
+            reservedWithdrawalShow: formatNumber.localString(ReservedWithdrawal),
+            reservedWithdrawal: ReservedWithdrawal,
             totalShow: formatNumber.localString(total),
             total,
           };

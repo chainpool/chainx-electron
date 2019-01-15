@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, setColumnsWidth, toJS } from '../../utils';
+import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
