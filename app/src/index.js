@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import { configure } from 'mobx';
 import App from '@routes/App';
-import { default as store } from './models';
+import { default as store } from './store';
 import './index.less';
 
 // 不允许在动作外部修改状态
