@@ -2,7 +2,7 @@ const path = require('path');
 module.exports = {
   alias: {
     '@routes': path.resolve(__dirname, '../src/routes'),
-    '@models': path.resolve(__dirname, '../src/models'),
+    '@models': path.resolve(__dirname, '../src/store'),
     '@services': path.resolve(__dirname, '../src/services'),
     '@components': path.resolve(__dirname, '../src/components'),
     '@utils': path.resolve(__dirname, '../src/utils'),
