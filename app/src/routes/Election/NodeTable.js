@@ -74,7 +74,7 @@ class NodeTable extends Component {
                     openModal({
                       name: 'VoteModal',
                       data: {
-                        target: item.address,
+                        target: item.account,
                       },
                     });
                   }}>

@@ -50,9 +50,17 @@ export default class Election extends ModelExtend {
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
-    nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
-      console.log(result);
-    });
+    console.log(signer, acceleration, target, Number(amount), remark, '====');
+    nominate(
+      signer,
+      acceleration,
+      '5EQ66T9WvTLAiQmMZJekiLdRjFpH3QBoTQrQDKiwNjKFSBtB',
+      Number(amount),
+      remark,
+      (err, result) => {
+        console.log(result);
+      }
+    );
   };
 
   unnominate = () => {
