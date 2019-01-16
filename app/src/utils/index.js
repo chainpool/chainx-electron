@@ -32,8 +32,6 @@ export const setColumnsWidth = (table = [], widths = []) => {
 
 export const ChainX = new Chainx(process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944');
 
-console.log(ChainX, '====');
-
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
     try {

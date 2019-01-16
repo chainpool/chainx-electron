@@ -19,9 +19,10 @@ export default class Election extends ModelExtend {
     // let trustIntentions = [];
     let waitingIntentions = [];
     if (res) {
+      console.log(res, '================');
       res = res.map((item = []) => {
         return {
-          address: item[0],
+          account: item.account,
           time: moment_helper.format(item[1]),
           ...item[2],
         };

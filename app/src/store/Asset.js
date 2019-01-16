@@ -23,39 +23,33 @@ export default class Asset extends ModelExtend {
 
   getAssets = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = await getAsset(currenAccount.address);
+    const res = await getAsset(currenAccount.address, 0, 3);
     let primaryAsset = [];
     let crossChainAsset = [];
     const format = isNative => {
-      return res
+      return res.data
         .filter(item => item.isNative === isNative)
         .map(item => {
           const {
-            Free,
-            ReservedStaking,
-            ReservedStakingRevocation,
-            ReservedDexSpot,
-            ReservedWithdrawal,
+            free,
+            reservedStaking,
+            reservedStakingRevocation,
+            reservedDexSpot,
+            reservedWithdrawal,
           } = item.details;
-          const total = _.sum([Free, ReservedStaking, ReservedStakingRevocation, ReservedDexSpot, ReservedWithdrawal]);
+          const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           return {
             ...item,
-            freeShow: formatNumber.localString(Free),
-            free: Free,
-            reservedStakingShow: formatNumber.localString(ReservedStaking),
-            reservedStaking: ReservedStaking,
-            reservedStakingRevocationShow: formatNumber.localString(ReservedStakingRevocation),
-            reservedStakingRevocation: ReservedStakingRevocation,
-            reservedDexSpotShow: formatNumber.localString(ReservedDexSpot),
-            reservedDexSpot: ReservedDexSpot,
-            reservedWithdrawalShow: formatNumber.localString(ReservedWithdrawal),
-            reservedWithdrawal: ReservedWithdrawal,
+            freeShow: formatNumber.localString(free),
+            reservedStakingShow: formatNumber.localString(reservedStaking),
+            reservedStakingRevocationShow: formatNumber.localString(reservedStakingRevocation),
+            reservedDexSpotShow: formatNumber.localString(reservedDexSpot),
+            reservedWithdrawalShow: formatNumber.localString(reservedWithdrawal),
             totalShow: formatNumber.localString(total),
-            total,
           };
         });
     };
-    if (res) {
+    if (res && res.data) {
       primaryAsset = format(true);
       crossChainAsset = format(false);
     }

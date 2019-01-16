@@ -35,7 +35,7 @@ class NodeTable extends Component {
         {
           title: '账户地址',
           ellipse: true,
-          dataIndex: 'address',
+          dataIndex: 'account',
         },
         {
           title: '自投票数',
