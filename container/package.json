@@ -14,6 +14,8 @@
   "author": "myapp",
   "license": "MIT",
   "dependencies": {
+    "app-root-dir": "^1.0.2",
+    "electron-is-dev": "^1.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.0.6",
     "mkdirp": "^0.5.1",
