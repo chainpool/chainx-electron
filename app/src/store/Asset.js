@@ -1,4 +1,4 @@
-import { _, observable, moment_helper, formatNumber, ChainX } from '../utils';
+import { _, observable, moment_helper, formatNumber, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getCert, getAsset, register, transfer } from '../services';
 
@@ -11,6 +11,11 @@ export default class Asset extends ModelExtend {
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 原生资产
+
+  reload = () => {
+    this.getCert();
+    this.getAssets();
+  };
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
@@ -68,14 +73,14 @@ export default class Asset extends ModelExtend {
       Number(shareCount),
       remark,
       (err, result) => {
-        console.log(result);
+        resOk(result) && this.reload();
       }
     );
   };
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
-      console.log(result);
+      resOk(result) && this.reload();
     });
   };
 }
