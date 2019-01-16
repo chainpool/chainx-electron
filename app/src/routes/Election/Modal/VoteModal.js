@@ -54,7 +54,7 @@ class VoteModal extends Component {
                     description: [{ name: '操作', value: '投票' }, { name: '备注', value: remark }],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
-                        type: 'nominate',
+                        type: action !== 'add' ? 'unnominate' : 'nominate',
                         payload: {
                           signer,
                           acceleration,

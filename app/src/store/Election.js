@@ -1,6 +1,6 @@
-import { ChainX, observable, formatNumber, Rx, resOk } from '../utils';
+import { _, ChainX, observable, formatNumber, Rx, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getIntentions, nominate, getNominationRecords, refresh } from '../services';
+import { getIntentions, nominate, getNominationRecords, refresh, unnominate } from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -24,11 +24,12 @@ export default class Election extends ModelExtend {
       let validatorIntentions = [];
       // let trustIntentions = [];
       let waitingIntentions = [];
-      console.log(data1, data2, '==============');
+      // console.log(data1, data2, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
           item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
+          item.revocationsTotal = item.revocations ? _.sum(item.revocations[0]) : '';
           return {
             ...item,
             account: ChainX.account.encodeAddress(item.account),
@@ -36,6 +37,7 @@ export default class Election extends ModelExtend {
             jackpotShow: formatNumber.localString(item.jackpot),
             selfVoteShow: formatNumber.localString(item.selfVote),
             totalNominationShow: formatNumber.localString(item.totalNomination),
+            revocationsTotalShow: formatNumber.localString(item.revocationsTotal),
           };
         });
         validatorIntentions = res.filter(item => item.isValidator);
@@ -58,17 +60,10 @@ export default class Election extends ModelExtend {
     });
   };
 
-  unnominate = () => {
-    ChainX.stake.unnominate(
-      ChainX.account.from('Alice'),
-      1,
-      ChainX.account.from('Bob').address(),
-      1,
-      '取消投票',
-      (err, result) => {
-        console.log(result);
-      }
-    );
+  unnominate = ({ signer, acceleration, target, amount, remark }) => {
+    unnominate(signer, acceleration, target, amount, remark, (err, result) => {
+      resOk(result) && this.reload();
+    });
   };
 
   /*更新节点*/

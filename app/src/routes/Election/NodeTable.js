@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, ButtonGroup, Button } from '../../components';
-import { observer } from '../../utils';
+import { Inject } from '../../utils';
 import { toJS } from '@utils';
 
-@observer
+@Inject(({ accountStore }) => ({ accountStore }))
 class NodeTable extends Component {
   render() {
     const {
       activeIndex,
       model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [] },
+      accountStore: { currentAccount = {} },
     } = this.props;
     console.log(activeIndex, toJS(waitingIntentions), '-------------------------------');
 
@@ -36,6 +37,7 @@ class NodeTable extends Component {
           title: '账户地址',
           ellipse: true,
           dataIndex: 'account',
+          render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
           title: '自投票数',
@@ -56,7 +58,7 @@ class NodeTable extends Component {
         },
         {
           title: '赎回冻结',
-          dataIndex: 'data8',
+          dataIndex: 'revocationsTotalShow',
         },
         {
           title: '待领利息',
