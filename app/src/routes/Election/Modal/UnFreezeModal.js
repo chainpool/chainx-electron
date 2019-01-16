@@ -1,23 +1,37 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Modal, Table } from '../../../components';
 import * as styles from './UnFreezeModal.less';
+import { Inject, moment_helper, toJS } from '../../../utils';
 
+@Inject(({ chainStore }) => ({ chainStore }))
 class UnFreezeModal extends Component {
   render() {
+    const {
+      model: { intentions },
+      chainStore: { blockNumber },
+      globalStore: {
+        modal: { data: { account = '' } = {} },
+      },
+    } = this.props;
+    const node = intentions.filter(item => item.account === account)[0] || {};
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '冻结金额',
-          dataIndex: 'data1',
+          dataIndex: '1',
         },
         {
-          title: (
+          title: () => (
             <span>
               到期时间<span className={styles.desc}>(预估)</span>
             </span>
           ),
-          dataIndex: 'data2',
+          dataIndex: '0',
+          render: v => {
+            return moment_helper.formatHMS(Date.now() + (Number(blockNumber) - Number(v)) * 2000);
+          },
         },
 
         {
@@ -30,18 +44,7 @@ class UnFreezeModal extends Component {
           ),
         },
       ],
-      dataSource: [
-        {
-          data1: '1,000,000',
-          data2: '2018-12-25 16:27:36',
-          data3: '3000,0',
-        },
-        {
-          data1: '1,000,000',
-          data2: '2018-12-25 16:27:36',
-          data3: '3000,0',
-        },
-      ],
+      dataSource: node.revocations || [],
     };
 
     return (

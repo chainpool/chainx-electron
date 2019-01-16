@@ -1,6 +1,6 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
-import { ChainX } from '@utils/index';
+import { _, ChainX } from '@utils/index';
 
 let unsubscribeFn;
 
@@ -29,7 +29,7 @@ class Chain extends ModelExtend {
 
   unsubscribe() {
     if (unsubscribeFn) {
-      unsubscribeFn();
+      _.isFunction(unsubscribeFn) && unsubscribeFn();
     }
   }
 }

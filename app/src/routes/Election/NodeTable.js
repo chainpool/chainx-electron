@@ -83,14 +83,19 @@ class NodeTable extends Component {
                   投票
                 </Button>
               )}
-              <Button
-                onClick={() => {
-                  openModal({
-                    name: 'UnFreezeModal',
-                  });
-                }}>
-                解冻
-              </Button>
+              {item.revocationsTotal ? (
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'UnFreezeModal',
+                      data: {
+                        account: item.account,
+                      },
+                    });
+                  }}>
+                  解冻
+                </Button>
+              ) : null}
               <Button>提息</Button>
             </ButtonGroup>
           ),
