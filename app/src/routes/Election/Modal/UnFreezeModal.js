@@ -7,7 +7,7 @@ import { Inject, moment_helper, toJS } from '../../../utils';
 class UnFreezeModal extends Component {
   render() {
     const {
-      model: { intentions },
+      model: { dispatch, intentions, openModal },
       chainStore: { blockNumber },
       globalStore: {
         modal: { data: { account = '' } = {} },
@@ -37,9 +37,31 @@ class UnFreezeModal extends Component {
         {
           title: '',
           dataIndex: '_action',
-          render: () => (
+          render: (value, item, index) => (
             <ButtonGroup>
-              <Button type="primary">解冻</Button>
+              <Button
+                type="primary"
+                onClick={() => {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [{ name: '操作', value: '解冻' }],
+                      callback: ({ signer, acceleration }) => {
+                        dispatch({
+                          type: 'unfreeze',
+                          payload: {
+                            signer,
+                            acceleration,
+                            target: node.account,
+                            revocationIndex: index,
+                          },
+                        });
+                      },
+                    },
+                  });
+                }}>
+                解冻
+              </Button>
             </ButtonGroup>
           ),
         },

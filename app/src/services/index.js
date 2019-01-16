@@ -18,3 +18,5 @@ export const getNominationRecords = (...payload) => stake.getNominationRecords(.
 export const refresh = (...payload) => stake.refresh(...payload);
 
 export const unnominate = (...payload) => stake.unnominate(...payload);
+
+export const unfreeze = (...payload) => stake.unfreeze(...payload);

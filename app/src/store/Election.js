@@ -1,6 +1,6 @@
 import { _, ChainX, observable, formatNumber, Rx, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getIntentions, nominate, getNominationRecords, refresh, unnominate } from '../services';
+import { getIntentions, nominate, getNominationRecords, refresh, unnominate, unfreeze } from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -65,6 +65,13 @@ export default class Election extends ModelExtend {
     });
   };
 
+  /*解冻 */
+  unfreeze = ({ signer, acceleration, target, revocationIndex }) => {
+    unfreeze(signer, acceleration, target, revocationIndex, (err, result) => {
+      resOk(result) && this.reload();
+    });
+  };
+
   unnominate = ({ signer, acceleration, target, amount, remark }) => {
     unnominate(signer, acceleration, target, amount, remark, (err, result) => {
       resOk(result) && this.reload();
@@ -85,13 +92,6 @@ export default class Election extends ModelExtend {
   /*提息*/
   claim = () => {
     ChainX.stake.claim(ChainX.account.from('Alice'), 1, ChainX.account.from('Bob').address(), (err, result) => {
-      console.log(result);
-    });
-  };
-
-  /*解冻 */
-  unfreeze = () => {
-    ChainX.stake.unfreeze(ChainX.account.from('Alice'), 1, ChainX.account.from('Bob').address(), 0, (err, result) => {
       console.log(result);
     });
   };
