@@ -1,6 +1,6 @@
-import { _, observable, moment_helper, formatNumber, ChainX } from '../utils';
+import { _, formatNumber, moment_helper, observable } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getCert, getAsset, register, transfer } from '../services';
+import { getAsset, getCert, register, transfer } from '../services';
 
 export default class Asset extends ModelExtend {
   constructor(rootStore) {
@@ -16,7 +16,7 @@ export default class Asset extends ModelExtend {
     const currenAccount = this.getCurrentAccount();
     const res = await getCert(currenAccount.address);
     if (res) {
-      res.map(item => (item.issuedAt = moment_helper.format(item.issuedAt)));
+      res.map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
     }
     this.changeModel('certs', res, []);
   };
