@@ -1,18 +1,27 @@
 const EventEmitter = require('events');
 const { spawn } = require('child_process');
+const appRootDir = require('app-root-dir');
+const os = require('os');
+const path = require('path');
+const isDev = require('electron-is-dev');
 
 class ChainxNodeManager extends EventEmitter {
-  constructor(nodeBinPath = 'resources/app.asar.unpacked/third-party/chainx') {
+  constructor() {
     super()
-    this.nodeBinPath = nodeBinPath
+
+    const rootDir = appRootDir.get();
+
+    if (isDev) {
+      this.nodeBinPath = path.join(rootDir, 'third-party', 'chainx-bin', `chainx-${os.platform()}`);
+    } else {
+      this.nodeBinPath = path.join(rootDir, '..', 'third-party', 'chainx-bin', `chainx-${os.platform()}`)
+    }
   }
 
   startNode() {
     // TODO: 根据APP的配置构造args
     const args = [
-      '--chainspec=dev',
-      '--key=Alice',
-      'validator'
+      '--dev',
     ]
 
     this._process = spawn(this.nodeBinPath, args);

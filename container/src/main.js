@@ -1,4 +1,4 @@
-require("./modules/Sql");
+// require("./modules/Sql");
 
 const startApp = require("./modules/App");
 startApp();
