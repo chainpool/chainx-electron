@@ -1,6 +1,6 @@
-import { ChainX, observable, formatNumber, Rx } from '../utils';
+import { ChainX, observable, formatNumber, Rx, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getIntentions, nominate, getNominationRecords } from '../services';
+import { getIntentions, nominate, getNominationRecords, refresh } from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -13,6 +13,10 @@ export default class Election extends ModelExtend {
   @observable trustIntentions = []; //信托节点
   @observable waitingIntentions = []; //候补节点
 
+  reload = () => {
+    this.getIntentions();
+  };
+
   getIntentions = async () => {
     const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords());
     intentions$.subscribe(([data1, data2]) => {
@@ -20,12 +24,14 @@ export default class Election extends ModelExtend {
       let validatorIntentions = [];
       // let trustIntentions = [];
       let waitingIntentions = [];
+      console.log(data1, data2, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
           item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
           return {
             ...item,
+            account: ChainX.account.encodeAddress(item.account),
             nominationShow: formatNumber.localString(item.nomination),
             jackpotShow: formatNumber.localString(item.jackpot),
             selfVoteShow: formatNumber.localString(item.selfVote),
@@ -44,22 +50,12 @@ export default class Election extends ModelExtend {
   getNominationRecords = async () => {
     const currenAccount = this.getCurrentAccount();
     return await getNominationRecords(currenAccount.address);
-
-    // console.log(res, '---------------');
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
-    console.log(signer, acceleration, target, Number(amount), remark, '====');
-    nominate(
-      signer,
-      acceleration,
-      target, // '5EQ66T9WvTLAiQmMZJekiLdRjFpH3QBoTQrQDKiwNjKFSBtB',
-      Number(amount),
-      remark,
-      (err, result) => {
-        console.log(result);
-      }
-    );
+    nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
+      resOk(result) && this.reload();
+    });
   };
 
   unnominate = () => {
@@ -76,8 +72,9 @@ export default class Election extends ModelExtend {
   };
 
   /*更新节点*/
-  refresh = ({}) => {
-    ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {
+  refresh = ({ signer, acceleration, url, participating }) => {
+    console.log(signer, acceleration, url, participating, '==========');
+    refresh(signer, acceleration, url, participating, (err, result) => {
       console.log(result);
     });
     // ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {

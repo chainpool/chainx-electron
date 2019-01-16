@@ -20,7 +20,7 @@ class VoteModal extends Component {
           modal: { data: { nomination = 0 } = {} },
         },
       } = this.props;
-      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, Number(nomination));
+      const errMsg = Patterns.check('required')(amount);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },

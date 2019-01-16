@@ -14,3 +14,5 @@ export const getIntentions = (...payload) => stake.getIntentions(...payload);
 export const nominate = (...payload) => stake.nominate(...payload);
 
 export const getNominationRecords = (...payload) => stake.getNominationRecords(...payload);
+
+export const refresh = (...payload) => stake.refresh(...payload);
