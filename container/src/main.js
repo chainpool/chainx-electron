@@ -2,4 +2,3 @@
 
 const startApp = require("./modules/App");
 startApp();
-

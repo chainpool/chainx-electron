@@ -1,8 +1,8 @@
 const Window = require("./Window");
 const { app, Menu } = require("electron");
-const ChainxNodeManager = require('../ChainxNodeManager')
-const KeystoreManager = require('../keystoreManager')
-const initIpc = require('../initIpc');
+const ChainxNodeManager = require("../ChainxNodeManager");
+const KeystoreManager = require("../keystoreManager");
+const initIpc = require("../initIpc");
 
 class App {
   constructor() {
