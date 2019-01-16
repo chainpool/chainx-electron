@@ -23,7 +23,7 @@ export default class Asset extends ModelExtend {
 
   getAssets = async () => {
     const currenAccount = this.getCurrentAccount();
-    const res = await getAsset(currenAccount.address, 0, 3);
+    const res = await getAsset(currenAccount.address, 0, 100);
     let primaryAsset = [];
     let crossChainAsset = [];
     const format = isNative => {

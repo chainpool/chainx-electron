@@ -20,11 +20,9 @@ export default class Election extends ModelExtend {
     let waitingIntentions = [];
     if (res) {
       console.log(res, '================');
-      res = res.map((item = []) => {
+      res = res.map((item = {}) => {
         return {
-          account: item.account,
-          time: moment_helper.format(item[1]),
-          ...item[2],
+          ...item,
         };
       });
       validatorIntentions = res.filter(item => item.isValidator);
