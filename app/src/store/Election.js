@@ -12,6 +12,7 @@ export default class Election extends ModelExtend {
   @observable validatorIntentions = []; //结算节点
   @observable trustIntentions = []; //信托节点
   @observable waitingIntentions = []; //候补节点
+  @observable myIntentions = []; //我的节点
 
   reload = () => {
     this.getIntentions();
@@ -24,12 +25,14 @@ export default class Election extends ModelExtend {
       let validatorIntentions = [];
       // let trustIntentions = [];
       let waitingIntentions = [];
-      // console.log(data1, data2, '==============');
+      let myIntentions = [];
+      console.log(data1, data2, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
           item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
-          item.revocationsTotal = item.revocations ? _.sum(item.revocations[0]) : '';
+          item.revocationsTotal =
+            item.revocations && item.revocations.length ? _.sumBy(item.revocations, (item = []) => item[1]) : undefined;
           return {
             ...item,
             account: ChainX.account.encodeAddress(item.account),
@@ -41,10 +44,12 @@ export default class Election extends ModelExtend {
           };
         });
         validatorIntentions = res.filter(item => item.isValidator);
-        waitingIntentions = res.filter(item => !item.isValidator);
+        myIntentions = res.filter(item => !item.isValidator && (item.nomination || item.revocationsTotal));
+        waitingIntentions = res.filter(item => !item.isValidator && !item.nomination && !item.revocationsTotal);
       }
       this.changeModel('intentions', res, []);
       this.changeModel('validatorIntentions', validatorIntentions, []);
+      this.changeModel('myIntentions', myIntentions, []);
       this.changeModel('waitingIntentions', waitingIntentions, []);
     });
   };

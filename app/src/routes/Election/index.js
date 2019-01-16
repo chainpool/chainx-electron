@@ -43,6 +43,8 @@ class Election extends Mixin {
       },
     } = this.props;
 
+    console.log(activeIndex, toJS(intentions), '-------------------------------');
+
     const isNode = intentions.filter((item = {}) => item.account === currentAccount.address)[0];
     return (
       <div className={styles.election}>

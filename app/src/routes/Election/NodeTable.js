@@ -9,16 +9,14 @@ class NodeTable extends Component {
   render() {
     const {
       activeIndex,
-      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [] },
+      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [], myIntentions = [] },
       accountStore: { currentAccount = {} },
     } = this.props;
-    console.log(activeIndex, toJS(waitingIntentions), '-------------------------------');
-
     const dataSources = {
       0: trustIntentions,
       1: validatorIntentions,
       2: waitingIntentions,
-      3: [],
+      3: myIntentions,
     };
     const tableProps = {
       className: styles.tableContainer,

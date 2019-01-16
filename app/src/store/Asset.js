@@ -31,11 +31,11 @@ export default class Asset extends ModelExtend {
         .filter(item => item.isNative === isNative)
         .map(item => {
           const {
-            free,
-            reservedStaking,
-            reservedStakingRevocation,
-            reservedDexSpot,
-            reservedWithdrawal,
+            Free: free,
+            ReservedStaking: reservedStaking,
+            ReservedStakingRevocation: reservedStakingRevocation,
+            ReservedDexSpot: reservedDexSpot,
+            ReservedWithdrawal: reservedWithdrawal,
           } = item.details;
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           return {
