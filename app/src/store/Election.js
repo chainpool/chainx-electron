@@ -38,22 +38,34 @@ export default class Election extends ModelExtend {
       // let trustIntentions = [];
       let waitingIntentions = [];
       let myIntentions = [];
-      console.log(data1, data2, chainHeight, '==============');
+      // console.log(data1, data2, chainHeight, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
-          item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
-          item.revocationsTotal =
-            item.revocations && item.revocations.length ? _.sumBy(item.revocations, (item = []) => item[1]) : undefined;
-          // item.interest = (chainHeight - item.lastTotalVoteWeightUpdate) * item.nomination + item.lastTotalVoteWeight;
+          const newItem = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
+          newItem.revocationsTotal =
+            newItem.revocations && newItem.revocations.length
+              ? _.sumBy(newItem.revocations, (one = []) => one[1])
+              : undefined; // 总的撤回投票记录
+
+          const userVoteWeight =
+            (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
+          const nodeVoteWeight =
+            (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
+
+          newItem.interest = (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
+
           return {
-            ...item,
-            account: ChainX.account.encodeAddress(item.account),
-            nominationShow: formatNumber.localString(item.nomination),
-            jackpotShow: formatNumber.localString(item.jackpot),
-            selfVoteShow: formatNumber.localString(item.selfVote),
-            totalNominationShow: formatNumber.localString(item.totalNomination),
-            revocationsTotalShow: formatNumber.localString(item.revocationsTotal),
+            ...newItem,
+            revocations: newItem.revocations,
+            lastVoteWeight: newItem.lastVoteWeight,
+            lastVoteWeightUpdate: newItem.lastVoteWeightUpdate,
+            account: ChainX.account.encodeAddress(newItem.account),
+            nominationShow: formatNumber.localString(newItem.nomination),
+            jackpotShow: formatNumber.localString(newItem.jackpot),
+            selfVoteShow: formatNumber.localString(newItem.selfVote),
+            totalNominationShow: formatNumber.localString(newItem.totalNomination),
+            revocationsTotalShow: formatNumber.localString(newItem.revocationsTotal),
           };
         });
         validatorIntentions = res.filter(item => item.isValidator);

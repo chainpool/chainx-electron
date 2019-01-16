@@ -60,7 +60,7 @@ class NodeTable extends Component {
         },
         {
           title: '待领利息',
-          dataIndex: 'data9',
+          dataIndex: 'interest',
         },
         {
           title: '',
