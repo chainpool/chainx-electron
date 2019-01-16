@@ -75,6 +75,8 @@ class NodeTable extends Component {
                       name: 'VoteModal',
                       data: {
                         target: item.account,
+                        nomination: item.nomination,
+                        nominationShow: item.nominationShow,
                       },
                     });
                   }}>

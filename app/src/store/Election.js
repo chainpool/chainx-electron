@@ -16,7 +16,6 @@ export default class Election extends ModelExtend {
   getIntentions = async () => {
     const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords());
     intentions$.subscribe(([data1, data2]) => {
-      console.log([data1, data2], '======');
       let res = data1;
       let validatorIntentions = [];
       // let trustIntentions = [];
@@ -54,7 +53,7 @@ export default class Election extends ModelExtend {
     nominate(
       signer,
       acceleration,
-      '5EQ66T9WvTLAiQmMZJekiLdRjFpH3QBoTQrQDKiwNjKFSBtB',
+      target, // '5EQ66T9WvTLAiQmMZJekiLdRjFpH3QBoTQrQDKiwNjKFSBtB',
       Number(amount),
       remark,
       (err, result) => {

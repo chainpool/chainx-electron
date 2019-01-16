@@ -6,7 +6,7 @@ import * as styles from './VoteModal.less';
 
 class VoteModal extends Component {
   state = {
-    action: 'vote',
+    action: 'add',
     amount: '',
     amountErrMsg: '',
     remark: '',
@@ -15,7 +15,12 @@ class VoteModal extends Component {
   checkAll = {
     checkAmount: () => {
       const { amount } = this.state;
-      const errMsg = Patterns.check('required')(amount);
+      const {
+        globalStore: {
+          modal: { data: { nomination = 0 } = {} },
+        },
+      } = this.props;
+      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, Number(nomination));
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -30,7 +35,7 @@ class VoteModal extends Component {
     const {
       model: { dispatch, openModal },
       globalStore: {
-        modal: { data: { target } = {} },
+        modal: { data: { target, nomination = 0 } = {} },
       },
     } = this.props;
 
@@ -67,7 +72,7 @@ class VoteModal extends Component {
           </Button>
         }>
         <div className={styles.voteModal}>
-          {action === 'vote' ? null : (
+          {!nomination ? null : (
             <RadioGroup>
               {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map(item => (
                 <Input.Radio
@@ -83,12 +88,12 @@ class VoteModal extends Component {
           )}
 
           <Input.Text
-            label={`${action === 'vote' ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
+            label={`${!nomination ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
             value={amount}
             errMsg={amountErrMsg}
             onChange={value => this.setState({ amount: value })}
             onBlur={checkAll.checkAmount}>
-            <span>修改后投票数：3000</span>
+            <span>修改后投票数：{action === 'add' ? nomination + Number(amount) : nomination - Number(amount)}</span>
           </Input.Text>
           <Input.Text
             isTextArea
