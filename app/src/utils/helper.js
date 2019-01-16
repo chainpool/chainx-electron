@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import store from 'store';
-import { forkJoin, from, of, Subject } from 'rxjs';
+import { forkJoin, from, of, Subject, combineLatest } from 'rxjs';
 import { map, race, retry, catchError, tap, take, share, debounceTime, takeWhile } from 'rxjs/operators';
 
 export const lodash_helper = {
@@ -51,7 +51,8 @@ export const lodash_helper = {
   shuffle: _.shuffle,
 };
 
-export const Rxjs_helper = {
+export const Rx = {
+  combineLatest,
   takeWhile,
   debounceTime,
   take,

@@ -40,19 +40,19 @@ class NodeTable extends Component {
         {
           title: '自投票数',
           ellipse: true,
-          dataIndex: 'selfVote',
+          dataIndex: 'selfVoteShow',
         },
         {
           title: '总得票数',
-          dataIndex: 'totalNomination',
+          dataIndex: 'totalNominationShow',
         },
         {
           title: '奖池金额',
-          dataIndex: 'jackpot',
+          dataIndex: 'jackpotShow',
         },
         {
           title: '我的投票',
-          dataIndex: 'data7',
+          dataIndex: 'nominationShow',
         },
         {
           title: '赎回冻结',

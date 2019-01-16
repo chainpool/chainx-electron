@@ -23,6 +23,9 @@ class Election extends Mixin {
     dispatch({
       type: 'getIntentions',
     });
+    // dispatch({
+    //   type: 'getNominationRecords',
+    // });
     // openModal({
     //   name: 'VoteModal',
     // });

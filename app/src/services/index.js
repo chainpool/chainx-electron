@@ -12,3 +12,5 @@ export const transfer = (...payload) => asset.transfer(...payload);
 export const getIntentions = (...payload) => stake.getIntentions(...payload);
 
 export const nominate = (...payload) => stake.nominate(...payload);
+
+export const getNominationRecords = (...payload) => stake.getNominationRecords(...payload);

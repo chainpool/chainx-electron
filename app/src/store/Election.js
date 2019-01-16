@@ -1,6 +1,6 @@
-import { ChainX, observable, moment_helper } from '../utils';
+import { ChainX, observable, formatNumber, Rx } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getIntentions, nominate } from '../services';
+import { getIntentions, nominate, getNominationRecords } from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -14,23 +14,39 @@ export default class Election extends ModelExtend {
   @observable waitingIntentions = []; //候补节点
 
   getIntentions = async () => {
-    let res = await getIntentions();
-    let validatorIntentions = [];
-    // let trustIntentions = [];
-    let waitingIntentions = [];
-    if (res) {
-      console.log(res, '================');
-      res = res.map((item = {}) => {
-        return {
-          ...item,
-        };
-      });
-      validatorIntentions = res.filter(item => item.isValidator);
-      waitingIntentions = res.filter(item => !item.isValidator);
-    }
-    this.changeModel('intentions', res, []);
-    this.changeModel('validatorIntentions', validatorIntentions, []);
-    this.changeModel('waitingIntentions', waitingIntentions, []);
+    const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords());
+    intentions$.subscribe(([data1, data2]) => {
+      console.log([data1, data2], '======');
+      let res = data1;
+      let validatorIntentions = [];
+      // let trustIntentions = [];
+      let waitingIntentions = [];
+      if (res) {
+        res = res.map((item = {}) => {
+          const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
+          item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
+          return {
+            ...item,
+            nominationShow: formatNumber.localString(item.nomination),
+            jackpotShow: formatNumber.localString(item.jackpot),
+            selfVoteShow: formatNumber.localString(item.selfVote),
+            totalNominationShow: formatNumber.localString(item.totalNomination),
+          };
+        });
+        validatorIntentions = res.filter(item => item.isValidator);
+        waitingIntentions = res.filter(item => !item.isValidator);
+      }
+      this.changeModel('intentions', res, []);
+      this.changeModel('validatorIntentions', validatorIntentions, []);
+      this.changeModel('waitingIntentions', waitingIntentions, []);
+    });
+  };
+
+  getNominationRecords = async () => {
+    const currenAccount = this.getCurrentAccount();
+    return await getNominationRecords(currenAccount.address);
+
+    // console.log(res, '---------------');
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {

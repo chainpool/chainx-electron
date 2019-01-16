@@ -9,7 +9,7 @@ import { default as Chainx } from 'chainx.js';
 export { request } from './request';
 export const _ = lodash_helper;
 export const moment = moment_helper;
-export { localSave, moment_helper } from './helper';
+export { localSave, moment_helper, Rx } from './helper';
 export { default as classNames } from 'classnames';
 
 // ----------------------------项目适用
