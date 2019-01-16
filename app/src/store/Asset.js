@@ -27,12 +27,20 @@ export default class Asset extends ModelExtend {
   };
 
   getAssets = async () => {
-    const currenAccount = this.getCurrentAccount();
-    const res = await getAsset(currenAccount.address, 0, 100);
-    let primaryAsset = [];
-    let crossChainAsset = [];
+    const currentAccount = this.getCurrentAccount();
+    const data = [];
+    let page = 0;
+    let pageTotal;
+    do {
+      const res = await getAsset(currentAccount.address, page, 100);
+      pageTotal = res.pageTotal;
+      data.push(...res.data);
+
+      page++;
+    } while (page < pageTotal);
+
     const format = isNative => {
-      return res.data
+      return data
         .filter(item => item.isNative === isNative)
         .map(item => {
           const {
@@ -54,10 +62,9 @@ export default class Asset extends ModelExtend {
           };
         });
     };
-    if (res && res.data) {
-      primaryAsset = format(true);
-      crossChainAsset = format(false);
-    }
+
+    let primaryAsset = format(true);
+    let crossChainAsset = format(false);
     this.changeModel('primaryAsset', primaryAsset, []);
     this.changeModel('crossChainAsset', crossChainAsset, []);
   };
