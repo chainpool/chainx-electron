@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, ButtonGroup, Button } from '../../components';
-import { observer } from '../../utils';
+import { Inject } from '../../utils';
 import { toJS } from '@utils';
 
-@observer
+@Inject(({ accountStore }) => ({ accountStore }))
 class NodeTable extends Component {
   render() {
     const {
       activeIndex,
-      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [] },
+      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [], myIntentions = [] },
+      accountStore: { currentAccount = {} },
     } = this.props;
-    console.log(activeIndex, toJS(waitingIntentions), '-------------------------------');
-
     const dataSources = {
       0: trustIntentions,
       1: validatorIntentions,
       2: waitingIntentions,
-      3: [],
+      3: myIntentions,
     };
     const tableProps = {
       className: styles.tableContainer,
@@ -36,6 +35,7 @@ class NodeTable extends Component {
           title: '账户地址',
           ellipse: true,
           dataIndex: 'account',
+          render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
           title: '自投票数',
@@ -56,7 +56,7 @@ class NodeTable extends Component {
         },
         {
           title: '赎回冻结',
-          dataIndex: 'data8',
+          dataIndex: 'revocationsTotalShow',
         },
         {
           title: '待领利息',
@@ -74,7 +74,9 @@ class NodeTable extends Component {
                     openModal({
                       name: 'VoteModal',
                       data: {
-                        target: item.address,
+                        target: item.account,
+                        nomination: item.nomination,
+                        nominationShow: item.nominationShow,
                       },
                     });
                   }}>

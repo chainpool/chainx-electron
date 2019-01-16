@@ -5,9 +5,9 @@ import * as styles from './UpdateNodeModal.less';
 
 class UpdateNodeModal extends Component {
   state = {
-    address: '5CNaUfw2GXfzhBwd7puFEpRHQB8PtcuHgBEs3Zkazp9YRKuH',
+    address: '暂无',
     addressErrMsg: '',
-    website: 'www.baidu.com',
+    website: 'baidu.com',
     websiteErrMsg: '',
     participating: true,
   };
@@ -35,7 +35,7 @@ class UpdateNodeModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, website, websiteErrMsg, participating } = this.state;
     const {
-      model: { closeModal, dispatch, openModal },
+      model: { dispatch, openModal },
     } = this.props;
     return (
       <Modal
@@ -52,14 +52,12 @@ class UpdateNodeModal extends Component {
                     description: [{ name: '操作', value: '转账' }, { name: '网站', value: website }],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
-                        type: 'register',
+                        type: 'refresh',
                         payload: {
                           signer,
-                          intention: address.address,
                           acceleration,
-                          certName: 'genesis_cert',
                           url: website,
-                          // shareCount: amount,
+                          participating,
                         },
                       });
                     },

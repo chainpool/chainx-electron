@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable } from '../utils';
+import { _, formatNumber, moment_helper, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getAsset, getCert, register, transfer } from '../services';
 
@@ -11,6 +11,11 @@ export default class Asset extends ModelExtend {
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 原生资产
+
+  reload = () => {
+    this.getCert();
+    this.getAssets();
+  };
 
   getCert = async () => {
     const currenAccount = this.getCurrentAccount();
@@ -31,11 +36,11 @@ export default class Asset extends ModelExtend {
         .filter(item => item.isNative === isNative)
         .map(item => {
           const {
-            free,
-            reservedStaking,
-            reservedStakingRevocation,
-            reservedDexSpot,
-            reservedWithdrawal,
+            Free: free,
+            ReservedStaking: reservedStaking,
+            ReservedStakingRevocation: reservedStakingRevocation,
+            ReservedDexSpot: reservedDexSpot,
+            ReservedWithdrawal: reservedWithdrawal,
           } = item.details;
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           return {
@@ -68,14 +73,14 @@ export default class Asset extends ModelExtend {
       Number(shareCount),
       remark,
       (err, result) => {
-        console.log(result);
+        resOk(result) && this.reload();
       }
     );
   };
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
-      console.log(result);
+      resOk(result) && this.reload();
     });
   };
 }

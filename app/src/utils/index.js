@@ -15,6 +15,11 @@ export { default as classNames } from 'classnames';
 // ----------------------------项目适用
 export { toJS, observable, action, runInAction } from 'mobx';
 
+export const resOk = result => {
+  console.log(result);
+  return result && result.result === 'ExtrinsicSuccess';
+};
+
 export const Inject = func => {
   return c => {
     return inject(func)(observerable(c));

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin, RouterGo } from '../../../../components';
-import { classNames, Inject, Device, parseQueryString } from '../../../../utils';
+import { classNames, Inject, Device, parseQueryString, localSave } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
@@ -25,7 +25,7 @@ class Account extends Mixin {
     dispatch({
       type: 'switchAccount',
       payload: {
-        address: parseQueryString(search).address,
+        address: parseQueryString(search).address || localSave.get('currentSelect'),
       },
     });
   };

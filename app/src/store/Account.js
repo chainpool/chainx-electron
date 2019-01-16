@@ -60,5 +60,6 @@ export default class Store extends ModelExtend {
 
   switchAccount({ address }) {
     this.setCurrentAccount(address);
+    address && localSave.set('currentSelect', address);
   }
 }
