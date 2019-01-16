@@ -1,8 +1,20 @@
 import _ from 'lodash';
 import moment from 'moment';
 import store from 'store';
-import { forkJoin, from, of, Subject, combineLatest } from 'rxjs';
-import { map, race, retry, catchError, tap, take, share, debounceTime, takeWhile } from 'rxjs/operators';
+import { forkJoin, from, of, Subject, combineLatest, interval } from 'rxjs';
+import {
+  mergeMap,
+  mergeAll,
+  map,
+  race,
+  retry,
+  catchError,
+  tap,
+  take,
+  share,
+  debounceTime,
+  takeWhile,
+} from 'rxjs/operators';
 
 export const lodash_helper = {
   sum: _.sum,
@@ -52,6 +64,7 @@ export const lodash_helper = {
 };
 
 export const Rx = {
+  interval,
   combineLatest,
   takeWhile,
   debounceTime,
@@ -61,6 +74,8 @@ export const Rx = {
   catchError,
   race,
   map,
+  mergeMap,
+  mergeAll,
   retry,
   tap,
   of,

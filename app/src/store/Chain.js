@@ -25,6 +25,8 @@ class Chain extends ModelExtend {
     unsubscribeFn = observable.subscribe(blockNumber => {
       this.setBlockNumber(parseInt(blockNumber));
     });
+
+    return observable;
   }
 
   unsubscribe() {

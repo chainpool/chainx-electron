@@ -1,6 +1,14 @@
 import { _, ChainX, observable, formatNumber, Rx, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getIntentions, nominate, getNominationRecords, refresh, unnominate, unfreeze } from '../services';
+import {
+  getIntentions,
+  nominate,
+  getNominationRecords,
+  refresh,
+  unnominate,
+  unfreeze,
+  getBlockNumberObservable,
+} from '../services';
 
 export default class Election extends ModelExtend {
   constructor(rootStore) {
@@ -19,20 +27,32 @@ export default class Election extends ModelExtend {
   };
 
   getIntentions = async () => {
-    const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords());
-    intentions$.subscribe(([data1, data2]) => {
+    const intentions$ = Rx.combineLatest(
+      getIntentions(),
+      this.getNominationRecords(),
+      await getBlockNumberObservable()
+    );
+    const subscribe$ = intentions$.subscribe(([data1, data2, data3]) => {
       let res = data1;
       let validatorIntentions = [];
       // let trustIntentions = [];
       let waitingIntentions = [];
       let myIntentions = [];
-      console.log(data1, data2, '==============');
+      console.log(data1, data2, data3, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
           item = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
           item.revocationsTotal =
             item.revocations && item.revocations.length ? _.sumBy(item.revocations, (item = []) => item[1]) : undefined;
+          // const interest = targetAccountNominations.reduce((result, nomination) => {
+          //   const voteWeight =
+          //     (chainHeightNum - nomination['last_vote_weight_update']) * nomination['nomination'] +
+          //     nomination['last_vote_weight'];
+          //
+          //   return result + (voteWeight / nodeLatestVoteWeight) * profile.jackpot;
+          // }, 0);
+          //item.interest=
           return {
             ...item,
             account: ChainX.account.encodeAddress(item.account),
@@ -52,6 +72,7 @@ export default class Election extends ModelExtend {
       this.changeModel('myIntentions', myIntentions, []);
       this.changeModel('waitingIntentions', waitingIntentions, []);
     });
+    return subscribe$;
   };
 
   getNominationRecords = async () => {

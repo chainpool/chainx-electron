@@ -13,6 +13,7 @@ class Mixin extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
   }
 
   componentDidUpdate(prevProps) {
@@ -25,6 +26,7 @@ class Mixin extends React.Component {
 
     if (!_.isEqual(searchPrev, search) && search) {
       _.isFunction(this.startInit) && this.startInit();
+      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
   }
 

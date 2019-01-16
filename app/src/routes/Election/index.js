@@ -22,7 +22,10 @@ class Election extends Mixin {
     } = this.props;
     dispatch({
       type: 'getIntentions',
+    }).then(res => {
+      this.getIntentions$ = res;
     });
+
     // dispatch({
     //   type: 'getNominationRecords',
     // });
@@ -30,6 +33,10 @@ class Election extends Mixin {
     //   name: 'VoteModal',
     // });
   };
+
+  componentWillUnsubscribe() {
+    this.getIntentions$ && this.getIntentions$.unsubscribe();
+  }
 
   render() {
     const { activeIndex } = this.state;
