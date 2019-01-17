@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable, resOk } from '../utils';
+import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getAsset, getCert, register, transfer, getWithdrawalListByAccount, getDepositRecords } from '../services';
 import { computed } from 'mobx';
@@ -49,7 +49,6 @@ export default class Asset extends ModelExtend {
   };
 
   getCert = async () => {
-    const allAssets = await this.getAllAssets();
     const currenAccount = this.getCurrentAccount();
     const res = await getCert(currenAccount.address);
     if (res) {
@@ -77,7 +76,7 @@ export default class Asset extends ModelExtend {
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           return {
             ...item,
-            freeShow: formatNumber.localString(free),
+            freeShow: this.setPrecision(free, item.name), //formatNumber.localString(this.setPrecision(free, item.name)),
             reservedStakingShow: formatNumber.localString(reservedStaking),
             reservedStakingRevocationShow: formatNumber.localString(reservedStakingRevocation),
             reservedDexSpotShow: formatNumber.localString(reservedDexSpot),

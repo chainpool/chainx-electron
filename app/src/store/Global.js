@@ -34,7 +34,7 @@ export default class Global extends ModelExtend {
     let res = await getAssets(0, 100);
     const result = res.data.map((item = {}) => {
       return {
-        name: item.name,
+        ...item,
         ...(item.details ? item.details : {}),
       };
     });

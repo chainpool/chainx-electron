@@ -1,4 +1,5 @@
 import { lodash_helper, moment_helper } from './helper';
+import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
@@ -145,5 +146,15 @@ export const formatNumber = {
   localString: value => {
     if (isEmpty(value)) return '';
     return Number(value).toLocaleString();
+  },
+  toFixed: (value, precision = 0) => {
+    if (isEmpty(value)) return '';
+    return new BigNumber(Number(value)).toFixed(Number(precision));
+  },
+  toPrecision: (value, precision = 0, multiplication = false) => {
+    precision = Number(precision);
+    if (isEmpty(value) || isEmpty(precision) || isNaN(value)) return '';
+    if (multiplication) return new BigNumber(value).multipliedBy(Math.pow(10, precision)).toFixed(0);
+    return new BigNumber(value).dividedBy(Math.pow(10, precision)).toFixed(precision);
   },
 };

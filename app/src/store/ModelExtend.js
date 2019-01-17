@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, toJS } from '../utils';
+import { _, toJS, formatNumber } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -76,5 +76,12 @@ export default class ModelExtend {
 
   getAllAssets = () => {
     return this.rootStore.globalStore.getAllAssets();
+  };
+
+  setPrecision = (value, token) => {
+    const assets = this.rootStore.globalStore.assets;
+    const findOne = assets.filter((item = {}) => item.name === token)[0] || {};
+    console.log(value, token, formatNumber.toPrecision(value, findOne.precision));
+    return formatNumber.toPrecision(value, findOne.precision);
   };
 }

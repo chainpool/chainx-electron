@@ -34,7 +34,6 @@ export default class Election extends ModelExtend {
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
     return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
-      // console.log(pseduIntentions, pseduIntentionsRecord, '+++++++++++++++++++++++++');
       res = pseduIntentions.map((item = {}) => {
         const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
         item = { ...item, ...findOne };

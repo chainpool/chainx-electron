@@ -4,7 +4,7 @@ import ModelExtend from './ModelExtend';
 
 export default class Store extends ModelExtend {
   @observable accounts = localSave.get('accounts') || [];
-  @observable currentAccount = {};
+  @observable currentAccount = localSave.get('currentSelect') || {};
 
   setCurrentAccount(address = '') {
     let newCurrentAccount = this.accounts.filter(item => item.address === this.currentAccount.address)[0];
@@ -18,6 +18,7 @@ export default class Store extends ModelExtend {
       newCurrentAccount = {};
     }
     this.changeModel('currentAccount', newCurrentAccount);
+    localSave.set('currentSelect', newCurrentAccount);
     localSave.set('accounts', this.accounts);
   }
 
@@ -60,6 +61,5 @@ export default class Store extends ModelExtend {
 
   switchAccount({ address }) {
     this.setCurrentAccount(address);
-    address && localSave.set('currentSelect', address);
   }
 }

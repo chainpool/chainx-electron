@@ -22,12 +22,15 @@ class Account extends Mixin {
       model: { dispatch },
       location: { search },
     } = this.props;
-    dispatch({
-      type: 'switchAccount',
-      payload: {
-        address: parseQueryString(search).address || localSave.get('currentSelect'),
-      },
-    });
+    const address = parseQueryString(search).address;
+    if (address) {
+      dispatch({
+        type: 'switchAccount',
+        payload: {
+          address,
+        },
+      });
+    }
   };
 
   render() {
