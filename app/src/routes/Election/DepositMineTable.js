@@ -1,30 +1,46 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table, ButtonGroup, Button } from '../../components';
+import { Table, ButtonGroup, Button, Mixin } from '../../components';
+import { observer, toJS } from '../../utils';
 
-class DepositMineTable extends Component {
+@observer
+class DepositMineTable extends Mixin {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({
+      type: 'getPseduIntentions',
+    });
+  };
   render() {
+    const {
+      model: { pseduIntentions = [] },
+    } = this.props;
+    console.log(toJS(pseduIntentions), '=========');
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '排名',
           width: 50,
-          dataIndex: 'data1',
+          dataIndex: 'id',
+          render: (value, item, index) => index + 1,
         },
         {
           title: '资产种类',
-          dataIndex: 'data2',
+          dataIndex: 'id',
         },
         {
           title: '最新总余额',
           ellipse: true,
-          dataIndex: 'data3',
+          dataIndex: 'circulationShow',
         },
         {
           title: '移动平均价(PCX)',
           ellipse: true,
-          dataIndex: 'data4',
+          dataIndex: 'priceShow',
         },
         {
           title: '折合投票数',
@@ -32,11 +48,11 @@ class DepositMineTable extends Component {
         },
         {
           title: '奖池金额',
-          dataIndex: 'data6',
+          dataIndex: 'jackpotShow',
         },
         {
           title: '我的总余额',
-          dataIndex: 'data7',
+          dataIndex: 'balanceShow',
         },
         {
           title: '待领利息',
@@ -52,19 +68,7 @@ class DepositMineTable extends Component {
           ),
         },
       ],
-      dataSource: [
-        {
-          data1: '1',
-          data2: 'BTC',
-          data3: '3000,0',
-          data4: '132,783',
-          data5: '12.64937460',
-          data6: '30,000',
-          data7: '32,783',
-          data8: '32,783',
-          data9: '32,783',
-        },
-      ],
+      dataSource: pseduIntentions,
     };
     return <Table {...tableProps} />;
   }

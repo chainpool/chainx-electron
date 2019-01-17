@@ -9,6 +9,8 @@ import {
   unfreeze,
   getBlockNumberObservable,
   claim,
+  getPseduIntentions,
+  getPseduNominationRecords,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -22,9 +24,41 @@ export default class Election extends ModelExtend {
   @observable trustIntentions = []; //信托节点
   @observable waitingIntentions = []; //候补节点
   @observable myIntentions = []; //我的节点
+  @observable pseduIntentions = []; //充值挖矿列表
 
   reload = () => {
     this.getIntentions();
+  };
+
+  getPseduIntentions = async () => {
+    const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
+    let res = [];
+    getPseduIntentions$.subscribe(([pseduIntentions = [], PseduIntentionsRecord = []]) => {
+      // console.log(pseduIntentions, PseduIntentionsRecord, '==============');
+      res = pseduIntentions.map((item = {}) => {
+        const findOne = PseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
+        item = { ...item, ...findOne };
+        return {
+          ...item,
+          balanceShow: formatNumber.localString(item.balance),
+          circulationShow: formatNumber.localString(item.circulation),
+          priceShow: formatNumber.localString(item.price),
+          jackpotShow: formatNumber.localString(item.jackpot),
+        };
+      });
+      console.log(res, '=====================');
+      this.changeModel(
+        {
+          pseduIntentions: res,
+        },
+        []
+      );
+    });
+  };
+
+  getPseduNominationRecords = async () => {
+    const currenAccount = this.getCurrentAccount();
+    return await getPseduNominationRecords(currenAccount.address);
   };
 
   getInterest = (chainHeight, newItem = {}) => {
@@ -35,13 +69,9 @@ export default class Election extends ModelExtend {
   };
 
   getIntentions = async () => {
-    const intentions$ = Rx.combineLatest(
-      getIntentions(),
-      this.getNominationRecords(),
-      await getBlockNumberObservable()
-    );
-    return intentions$.subscribe(([data1, data2, chainHeight]) => {
-      let res = data1;
+    const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords(), getBlockNumberObservable());
+    return intentions$.subscribe(([intentions = [], nominationRecords = [], chainHeight]) => {
+      let res = intentions;
       let validatorIntentions = [];
       // let trustIntentions = [];
       let waitingIntentions = [];
@@ -49,7 +79,7 @@ export default class Election extends ModelExtend {
       // console.log(data1, data2, chainHeight, '==============');
       if (res) {
         res = res.map((item = {}) => {
-          const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
+          const findVotes = nominationRecords.filter((one = []) => one[0] === item.account)[0] || [];
           const newItem = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
           newItem.revocationsTotal = _.get(newItem, 'revocations.length')
             ? _.sumBy(newItem.revocations, (one = []) => one[1])

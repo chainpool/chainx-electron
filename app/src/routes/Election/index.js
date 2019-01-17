@@ -13,12 +13,12 @@ import { Inject, toJS } from '../../utils';
 @Inject(({ electionStore: model, accountStore }) => ({ model, accountStore }))
 class Election extends Mixin {
   state = {
-    activeIndex: 3,
+    activeIndex: 4,
   };
 
   startInit = () => {
     const {
-      model: { dispatch, openModal },
+      model: { dispatch },
     } = this.props;
     dispatch({
       type: 'getIntentions',
