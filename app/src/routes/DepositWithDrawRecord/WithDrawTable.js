@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as styles from './index.less';
-import { Table } from '../../components';
+import { Mixin, Table } from '../../components';
 
-class WithDrawTable extends Component {
+class WithDrawTable extends Mixin {
+  startInit() {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getWithdrawalList' });
+  }
+
   render() {
     const {
       model: { normalizedWithdrawList },

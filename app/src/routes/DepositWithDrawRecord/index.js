@@ -12,23 +12,7 @@ class DepositWithDrawRecord extends Mixin {
     activeIndex: 0,
   };
 
-  startInit = this.loadData;
-
-  loadData() {
-    const {
-      model: { dispatch },
-    } = this.props;
-
-    if (this.state.activeIndex === 0) {
-      dispatch({ type: 'getDepositRecords' });
-    } else {
-      dispatch({ type: 'getWithdrawalList' });
-    }
-  }
-
-  componentDidUpdate() {
-    this.loadData();
-  }
+  startInit = () => {};
 
   render() {
     const { activeIndex } = this.state;
