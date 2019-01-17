@@ -1,4 +1,4 @@
-import { observable } from '@utils';
+import { localSave, observable } from '@utils';
 import ModelExtend from './ModelExtend';
 import { getAssets } from '../services';
 
@@ -13,7 +13,7 @@ export default class Global extends ModelExtend {
     data: '',
   };
 
-  @observable assets = [];
+  @observable assets = localSave.get('asset');
 
   openModal = (payload = {}) => {
     this.changeModel('modal', {
@@ -41,6 +41,7 @@ export default class Global extends ModelExtend {
     this.changeModel({
       assets: result,
     });
+    localSave.set('asset', result);
     return result;
   };
 }

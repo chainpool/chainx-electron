@@ -10,13 +10,9 @@ class Mixin extends React.Component {
   async componentDidMount() {
     const { globalStore: { dispatch } = {} } = this.props;
     if (dispatch) {
-      const assets = await dispatch({ type: 'getAllAssets' });
-      if (assets) {
-        _.isFunction(this.startInit) && this.startInit();
-      }
-    } else {
-      _.isFunction(this.startInit) && this.startInit();
+      await dispatch({ type: 'getAllAssets' });
     }
+    _.isFunction(this.startInit) && this.startInit();
   }
 
   componentWillUnmount() {
