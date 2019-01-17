@@ -8,7 +8,13 @@ import { Tab } from '../components';
 class OrderPair extends SwitchPair {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getOrderPairs' });
+  };
 
   render() {
     const tableProps = {
