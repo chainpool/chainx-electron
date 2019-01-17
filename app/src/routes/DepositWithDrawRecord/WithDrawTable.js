@@ -4,52 +4,46 @@ import { Table } from '../../components';
 
 class WithDrawTable extends Component {
   render() {
+    const {
+      model: { normalizedWithdrawList },
+    } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '申请时间',
-          dataIndex: 'data1',
+          dataIndex: 'date',
         },
         {
           title: '原链交易ID',
           ellipse: true,
-          dataIndex: 'data2',
+          dataIndex: 'originChainTxId',
         },
         {
           title: '币种',
-          dataIndex: 'data3',
+          dataIndex: 'token',
         },
         {
           title: '地址',
           ellipse: true,
-          dataIndex: 'data4',
+          dataIndex: 'addr',
         },
         {
           title: '数量',
-          dataIndex: 'data5',
+          dataIndex: 'balance',
         },
         {
           title: '手续费',
-          dataIndex: 'data6',
+          dataIndex: 'fee',
         },
         {
           title: '状态',
           width: 100,
-          dataIndex: '_action',
-          render: () => '已确认',
+          dataIndex: 'state',
         },
       ],
-      dataSource: [
-        {
-          data1: '2018-04-13 16:56:34',
-          data2: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data3: 'BTC',
-          data4: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data5: '12.64937460',
-          data6: '0.001',
-        },
-      ],
+      dataSource: normalizedWithdrawList,
     };
     return <Table {...tableProps} />;
   }
