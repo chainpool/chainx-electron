@@ -9,7 +9,14 @@ class NodeTable extends Component {
   render() {
     const {
       activeIndex,
-      model: { openModal, trustIntentions = [], validatorIntentions = [], waitingIntentions = [], myIntentions = [] },
+      model: {
+        dispatch,
+        openModal,
+        trustIntentions = [],
+        validatorIntentions = [],
+        waitingIntentions = [],
+        myIntentions = [],
+      },
       accountStore: { currentAccount = {} },
     } = this.props;
     const dataSources = {
@@ -96,7 +103,29 @@ class NodeTable extends Component {
                   解冻
                 </Button>
               ) : null}
-              <Button>提息</Button>
+              {item.interest ? (
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'SignModal',
+                      data: {
+                        description: [{ name: '操作', value: '提息' }],
+                        callback: ({ signer, acceleration }) => {
+                          dispatch({
+                            type: 'claim',
+                            payload: {
+                              signer,
+                              acceleration,
+                              target: item.account,
+                            },
+                          });
+                        },
+                      },
+                    });
+                  }}>
+                  提息
+                </Button>
+              ) : null}
             </ButtonGroup>
           ),
         },

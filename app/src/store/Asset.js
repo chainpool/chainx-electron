@@ -58,8 +58,13 @@ export default class Asset extends ModelExtend {
       primaryAsset = format(true);
       crossChainAsset = format(false);
     }
-    this.changeModel('primaryAsset', primaryAsset, []);
-    this.changeModel('crossChainAsset', crossChainAsset, []);
+    this.changeModel(
+      {
+        primaryAsset,
+        crossChainAsset,
+      },
+      []
+    );
   };
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {

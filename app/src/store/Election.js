@@ -8,6 +8,7 @@ import {
   unnominate,
   unfreeze,
   getBlockNumberObservable,
+  claim,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -48,18 +49,10 @@ export default class Election extends ModelExtend {
               ? _.sumBy(newItem.revocations, (one = []) => one[1])
               : undefined; // 总的撤回投票记录
 
-          const userVoteWeight =
-            (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
-          const nodeVoteWeight =
-            (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
-
-          newItem.interest = (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
+          newItem.interest = this.getInterest(chainHeight, newItem); // 待领利息
 
           return {
             ...newItem,
-            revocations: newItem.revocations,
-            lastVoteWeight: newItem.lastVoteWeight,
-            lastVoteWeightUpdate: newItem.lastVoteWeightUpdate,
             account: ChainX.account.encodeAddress(newItem.account),
             nominationShow: formatNumber.localString(newItem.nomination),
             jackpotShow: formatNumber.localString(newItem.jackpot),
@@ -72,11 +65,23 @@ export default class Election extends ModelExtend {
         myIntentions = res.filter(item => !item.isValidator && (item.nomination || item.revocationsTotal));
         waitingIntentions = res.filter(item => !item.isValidator && !item.nomination && !item.revocationsTotal);
       }
-      this.changeModel('intentions', res, []);
-      this.changeModel('validatorIntentions', validatorIntentions, []);
-      this.changeModel('myIntentions', myIntentions, []);
-      this.changeModel('waitingIntentions', waitingIntentions, []);
+      this.changeModel(
+        {
+          intentions: res,
+          validatorIntentions,
+          myIntentions,
+          waitingIntentions,
+        },
+        []
+      );
     });
+  };
+
+  getInterest = (chainHeight, newItem = {}) => {
+    const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
+    const nodeVoteWeight =
+      (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
+    return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
   };
 
   getNominationRecords = async () => {
@@ -115,9 +120,9 @@ export default class Election extends ModelExtend {
   };
 
   /*提息*/
-  claim = () => {
-    ChainX.stake.claim(ChainX.account.from('Alice'), 1, ChainX.account.from('Bob').address(), (err, result) => {
-      console.log(result);
+  claim = ({ signer, acceleration, target }) => {
+    claim(signer, acceleration, target, (err, result) => {
+      resOk(result) && this.reload();
     });
   };
 }

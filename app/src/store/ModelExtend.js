@@ -8,11 +8,22 @@ export default class ModelExtend {
 
   @action
   changeModel = (k, v, defaultValue) => {
-    if (k) {
-      this[`${k}_prev`] = this[k];
-      _.set(this, `${k}`, v || defaultValue);
+    const change = (k, v, defaultValue) => {
+      if (k) {
+        this[`${k}_prev`] = this[k];
+        _.set(this, `${k}`, v || defaultValue);
+      } else {
+        console.error('changeModel参数的k是必须参数');
+      }
+    };
+    if (_.isObject(k)) {
+      for (let i in k) {
+        if (k.hasOwnProperty(i)) {
+          change(i, k[i], defaultValue);
+        }
+      }
     } else {
-      console.error('changeModel参数的k是必须参数');
+      change(k, v, defaultValue);
     }
   };
 
