@@ -83,4 +83,10 @@ export default class ModelExtend {
     const findOne = assets.filter((item = {}) => item.name === token)[0] || {};
     return formatNumber.toPrecision(value, findOne.precision);
   };
+
+  setDefaultPrecision = value => {
+    const assets = this.rootStore.globalStore.assets;
+    const findOne = assets.filter((item = {}) => item.name === 'PCX')[0] || {};
+    return formatNumber.toPrecision(value, findOne.precision);
+  };
 }

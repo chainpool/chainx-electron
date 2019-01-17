@@ -35,17 +35,18 @@ export default class Election extends ModelExtend {
     let res = [];
     return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
       res = pseduIntentions.map((item = {}) => {
+        const token = item.id;
         const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
         item = { ...item, ...findOne };
         item.discountVote = item.price * item.circulation * 1;
         // item.intervest=
         return {
           ...item,
-          discountVoteShow: formatNumber.localString(item.discountVote),
-          balanceShow: formatNumber.localString(item.balance),
-          circulationShow: formatNumber.localString(item.circulation),
-          priceShow: formatNumber.localString(item.price),
-          jackpotShow: formatNumber.localString(item.jackpot),
+          discountVoteShow: this.setPrecision(item.discountVote, token),
+          balanceShow: this.setPrecision(item.balance, token),
+          circulationShow: this.setPrecision(item.circulation, token),
+          priceShow: this.setPrecision(item.price, token),
+          jackpotShow: this.setPrecision(item.jackpot, token),
         };
       });
       this.changeModel(
@@ -92,11 +93,11 @@ export default class Election extends ModelExtend {
             ...newItem,
             interestShow: formatNumber.localString(newItem.interest),
             account: ChainX.account.encodeAddress(newItem.account),
-            nominationShow: formatNumber.localString(newItem.nomination),
-            jackpotShow: formatNumber.localString(newItem.jackpot),
-            selfVoteShow: formatNumber.localString(newItem.selfVote),
-            totalNominationShow: formatNumber.localString(newItem.totalNomination),
-            revocationsTotalShow: formatNumber.localString(newItem.revocationsTotal),
+            nominationShow: this.setDefaultPrecision(newItem.nomination),
+            jackpotShow: this.setDefaultPrecision(newItem.jackpot),
+            selfVoteShow: this.setDefaultPrecision(newItem.selfVote),
+            totalNominationShow: this.setDefaultPrecision(newItem.totalNomination),
+            revocationsTotalShow: this.setDefaultPrecision(newItem.revocationsTotal),
           };
         });
         validatorIntentions = res.filter(item => item.isValidator);
