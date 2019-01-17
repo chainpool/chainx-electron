@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as styles from './index.less';
-import { Table } from '../../components';
+import { Mixin, Table } from '../../components';
 
-class DepositTable extends Component {
+class DepositTable extends Mixin {
+  startInit() {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getDepositRecords' });
+  }
+
   render() {
     const tableProps = {
       className: styles.tableContainer,

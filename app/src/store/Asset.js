@@ -1,6 +1,8 @@
 import { _, formatNumber, moment_helper, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getAsset, getCert, register, transfer } from '../services';
+import { getAsset, getCert, register, transfer, getWithdrawalListByAccount, getDepositRecords } from '../services';
+import { computed } from 'mobx';
+import { moment } from '@utils/index';
 
 export default class Asset extends ModelExtend {
   constructor(rootStore) {
@@ -11,6 +13,35 @@ export default class Asset extends ModelExtend {
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 原生资产
+  @observable onChainWithdrawList = []; // 提现记录
+  @observable depositRecords = []; // 充值记录
+
+  @computed get normalizedWithdrawList() {
+    return this.onChainWithdrawList.map(withdraw => {
+      let state = '';
+      switch (withdraw.state) {
+        case 'applying':
+          state = '申请中';
+          break;
+        case 'signing':
+          state = '签名中';
+          break;
+        case 'unknown':
+        default:
+          state = '未知错误';
+      }
+
+      return {
+        date: moment.formatHMS(withdraw.time * 1000), // 申请时间
+        balance: withdraw.balance, // 数量
+        token: withdraw.token, // 币种
+        addr: withdraw.addr, // 地址
+        fee: 0.001, // 手续费，目前写死
+        state, // 状态
+        originChainTxId: undefined, // TODO: 目前通过rpc返回均为正在进行中的提现，无法获取原链交易ID
+      };
+    });
+  }
 
   reload = () => {
     this.getCert();
@@ -67,6 +98,23 @@ export default class Asset extends ModelExtend {
       []
     );
   };
+
+  async getWithdrawalList() {
+    const account = this.getCurrentAccount();
+    const withdrawList = await getWithdrawalListByAccount(account.address, 0, 100);
+
+    this.changeModel('onChainWithdrawList', withdrawList.data);
+  }
+
+  async getDepositRecords() {
+    const account = this.getCurrentAccount();
+    const records = await getDepositRecords(account.address);
+
+    // TODO: 该rpc马上回变动，暂时不对充值记录进行处理
+    if (records) {
+      this.changeModel('depositRecords', records.data);
+    }
+  }
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
     register(
