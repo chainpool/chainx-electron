@@ -16,22 +16,13 @@ class Election extends Mixin {
     activeIndex: 4,
   };
 
-  startInit = () => {
+  startInit = async () => {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({
+    this.getIntentions$ = await dispatch({
       type: 'getIntentions',
-    }).then(res => {
-      this.getIntentions$ = res;
     });
-
-    // dispatch({
-    //   type: 'getNominationRecords',
-    // });
-    // openModal({
-    //   name: 'VoteModal',
-    // });
   };
 
   componentWillUnsubscribe() {

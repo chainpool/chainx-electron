@@ -5,15 +5,19 @@ import { observer, toJS } from '../../utils';
 
 @observer
 class DepositMineTable extends Mixin {
-  startInit = () => {
+  startInit = async () => {
     const {
       model: { dispatch },
     } = this.props;
 
-    dispatch({
+    this.getPseduIntentions$ = await dispatch({
       type: 'getPseduIntentions',
     });
   };
+
+  componentWillUnsubscribe() {
+    this.getPseduIntentions$.unsubscribe();
+  }
   render() {
     const {
       model: { pseduIntentions = [] },
