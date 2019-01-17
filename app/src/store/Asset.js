@@ -73,15 +73,16 @@ export default class Asset extends ModelExtend {
             ReservedDexSpot: reservedDexSpot,
             ReservedWithdrawal: reservedWithdrawal,
           } = item.details;
+          const token = item.name;
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           return {
             ...item,
-            freeShow: this.setPrecision(free, item.name), //formatNumber.localString(this.setPrecision(free, item.name)),
-            reservedStakingShow: formatNumber.localString(reservedStaking),
-            reservedStakingRevocationShow: formatNumber.localString(reservedStakingRevocation),
-            reservedDexSpotShow: formatNumber.localString(reservedDexSpot),
-            reservedWithdrawalShow: formatNumber.localString(reservedWithdrawal),
-            totalShow: formatNumber.localString(total),
+            freeShow: this.setPrecision(free, token),
+            reservedStakingShow: this.setPrecision(reservedStaking, token),
+            reservedStakingRevocationShow: this.setPrecision(reservedStakingRevocation, token),
+            reservedDexSpotShow: this.setPrecision(reservedDexSpot, token),
+            reservedWithdrawalShow: this.setPrecision(reservedWithdrawal, token),
+            totalShow: this.setPrecision(total, token),
           };
         });
     };
