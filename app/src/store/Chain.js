@@ -1,6 +1,7 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
 import { _, ChainX } from '@utils/index';
+import { getBlockNumberObservable } from '../services';
 
 let unsubscribeFn;
 
@@ -20,7 +21,7 @@ class Chain extends ModelExtend {
   }
 
   async subscribeBlockNumber() {
-    const observable = await ChainX.chain.getBlockNumberObservable();
+    const observable = getBlockNumberObservable();
 
     unsubscribeFn = observable.subscribe(blockNumber => {
       this.setBlockNumber(parseInt(blockNumber));

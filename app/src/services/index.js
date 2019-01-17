@@ -1,7 +1,5 @@
 import { ChainX } from '../utils';
-
 const { stake, asset, chain } = ChainX;
-
 export const getCert = (...payload) => stake.getCertByAccount(...payload);
 
 export const getAsset = (...payload) => asset.getAssetsByAccount(...payload);
@@ -22,7 +20,7 @@ export const unnominate = (...payload) => stake.unnominate(...payload);
 
 export const unfreeze = (...payload) => stake.unfreeze(...payload);
 
-export const getBlockNumberObservable = (...payload) => chain.getBlockNumberObservable(...payload);
+export const getBlockNumberObservable = (...payload) => chain.bestNumber(...payload);
 
 export const claim = (...payload) => chain.claim(...payload);
 
