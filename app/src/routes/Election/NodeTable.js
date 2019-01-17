@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, ButtonGroup, Button } from '../../components';
-import { Inject } from '../../utils';
-import { toJS } from '@utils';
+import { Inject, isEmpty, toJS } from '../../utils';
 
 @Inject(({ accountStore }) => ({ accountStore }))
 class NodeTable extends Component {
@@ -60,14 +59,17 @@ class NodeTable extends Component {
         {
           title: '我的投票',
           dataIndex: 'nominationShow',
+          render: value => (isEmpty(value) ? '--' : value),
         },
         {
           title: '赎回冻结',
           dataIndex: 'revocationsTotalShow',
+          render: value => (isEmpty(value) ? '--' : value),
         },
         {
           title: '待领利息',
-          dataIndex: 'interest',
+          dataIndex: 'interestShow',
+          render: value => (isEmpty(value) ? '--' : value),
         },
         {
           title: '',

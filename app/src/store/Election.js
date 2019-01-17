@@ -27,6 +27,13 @@ export default class Election extends ModelExtend {
     this.getIntentions();
   };
 
+  getInterest = (chainHeight, newItem = {}) => {
+    const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
+    const nodeVoteWeight =
+      (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
+    return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
+  };
+
   getIntentions = async () => {
     const intentions$ = Rx.combineLatest(
       getIntentions(),
@@ -44,15 +51,15 @@ export default class Election extends ModelExtend {
         res = res.map((item = {}) => {
           const findVotes = data2.filter((one = []) => one[0] === item.account)[0] || [];
           const newItem = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
-          newItem.revocationsTotal =
-            newItem.revocations && newItem.revocations.length
-              ? _.sumBy(newItem.revocations, (one = []) => one[1])
-              : undefined; // 总的撤回投票记录
+          newItem.revocationsTotal = _.get(newItem, 'revocations.length')
+            ? _.sumBy(newItem.revocations, (one = []) => one[1])
+            : undefined; // 总的撤回投票记录
 
           newItem.interest = this.getInterest(chainHeight, newItem); // 待领利息
 
           return {
             ...newItem,
+            interestShow: formatNumber.localString(newItem.interest),
             account: ChainX.account.encodeAddress(newItem.account),
             nominationShow: formatNumber.localString(newItem.nomination),
             jackpotShow: formatNumber.localString(newItem.jackpot),
@@ -75,13 +82,6 @@ export default class Election extends ModelExtend {
         []
       );
     });
-  };
-
-  getInterest = (chainHeight, newItem = {}) => {
-    const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
-    const nodeVoteWeight =
-      (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
-    return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
   };
 
   getNominationRecords = async () => {

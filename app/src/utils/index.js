@@ -138,8 +138,8 @@ export const RegEx = {
   website: /^[0-9a-zA-Z\.]*$/,
 };
 
-const isEmpty = value => {
-  return _.isUndefined(value) || _.isNull(value) || _.isNaN(value);
+export const isEmpty = value => {
+  return _.isUndefined(value) || _.isNull(value) || _.isNaN(value) || value === '';
 };
 export const formatNumber = {
   localString: value => {
