@@ -20,9 +20,8 @@ class DepositMineTable extends Mixin {
   }
   render() {
     const {
-      model: { pseduIntentions = [] },
+      model: { openModal, dispatch, pseduIntentions = [] },
     } = this.props;
-    console.log(toJS(pseduIntentions), '=========');
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -48,7 +47,7 @@ class DepositMineTable extends Mixin {
         },
         {
           title: '折合投票数',
-          dataIndex: 'data5',
+          dataIndex: 'discountVoteShow',
         },
         {
           title: '奖池金额',
@@ -67,7 +66,27 @@ class DepositMineTable extends Mixin {
           dataIndex: '_action',
           render: () => (
             <ButtonGroup>
-              <Button>提息</Button>
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [{ name: '操作', value: '提息' }],
+                      callback: ({ signer, acceleration }) => {
+                        dispatch({
+                          type: 'claim',
+                          payload: {
+                            signer,
+                            acceleration,
+                            // target: item.account,
+                          },
+                        });
+                      },
+                    },
+                  });
+                }}>
+                提息
+              </Button>
             </ButtonGroup>
           ),
         },

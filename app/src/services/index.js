@@ -1,5 +1,5 @@
 import { ChainX } from '../utils';
-const { stake, asset, chain } = ChainX;
+const { stake, asset, chain, chainx } = ChainX;
 
 export const getCert = (...payload) => stake.getCertByAccount(...payload);
 
@@ -28,3 +28,5 @@ export const claim = (...payload) => chain.claim(...payload);
 export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
 
 export const getPseduNominationRecords = (...payload) => stake.getPseduNominationRecords(...payload);
+
+export const getAssets = (...payload) => asset.getAssets(...payload);

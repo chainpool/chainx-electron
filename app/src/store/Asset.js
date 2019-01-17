@@ -18,6 +18,7 @@ export default class Asset extends ModelExtend {
   };
 
   getCert = async () => {
+    const allAssets = await this.getAllAssets();
     const currenAccount = this.getCurrentAccount();
     const res = await getCert(currenAccount.address);
     if (res) {

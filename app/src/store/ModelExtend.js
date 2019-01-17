@@ -73,4 +73,8 @@ export default class ModelExtend {
   getCurrentAccount = () => {
     return this.rootStore.accountStore.currentAccount;
   };
+
+  getAllAssets = () => {
+    return this.rootStore.globalStore.getAllAssets();
+  };
 }

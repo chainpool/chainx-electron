@@ -33,20 +33,22 @@ export default class Election extends ModelExtend {
   getPseduIntentions = async () => {
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
-    return getPseduIntentions$.subscribe(([pseduIntentions = [], PseduIntentionsRecord = []]) => {
-      // console.log(pseduIntentions, PseduIntentionsRecord, '==============');
+    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
+      // console.log(pseduIntentions, pseduIntentionsRecord, '+++++++++++++++++++++++++');
       res = pseduIntentions.map((item = {}) => {
-        const findOne = PseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
+        const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
         item = { ...item, ...findOne };
+        item.discountVote = item.price * item.circulation * 1;
+        // item.intervest=
         return {
           ...item,
+          discountVoteShow: formatNumber.localString(item.discountVote),
           balanceShow: formatNumber.localString(item.balance),
           circulationShow: formatNumber.localString(item.circulation),
           priceShow: formatNumber.localString(item.price),
           jackpotShow: formatNumber.localString(item.jackpot),
         };
       });
-      console.log(res, '=====================');
       this.changeModel(
         {
           pseduIntentions: res,
@@ -61,7 +63,7 @@ export default class Election extends ModelExtend {
     return await getPseduNominationRecords(currenAccount.address);
   };
 
-  getInterest = (chainHeight, newItem = {}) => {
+  getInterest = (chainHeight, newItem) => {
     const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
     const nodeVoteWeight =
       (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
