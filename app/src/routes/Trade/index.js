@@ -26,6 +26,12 @@ class Trade extends SwitchPair {
         </div>
       );
     }, 1000);
+
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getOrderPairs' });
   };
 
   render() {
