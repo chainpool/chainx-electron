@@ -13,7 +13,7 @@ import { Inject, toJS } from '../../utils';
 @Inject(({ electionStore: model, accountStore }) => ({ model, accountStore }))
 class Election extends Mixin {
   state = {
-    activeIndex: 3,
+    activeIndex: 2,
   };
 
   startInit = async () => {
