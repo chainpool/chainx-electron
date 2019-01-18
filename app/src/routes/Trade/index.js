@@ -8,7 +8,7 @@ import Kline from './Kline';
 import PutOrder from './PutOrder';
 import PersonalOrder from './PersonalOrder';
 
-import { Inject } from '../../utils';
+import { Inject, parseQueryString } from '../../utils';
 import * as styles from './index.less';
 
 @Inject(({ tradeStore: model }) => ({ model }))
@@ -16,16 +16,27 @@ class Trade extends SwitchPair {
   state = {};
 
   startInit = () => {
-    setTimeout(() => {
-      Toast.success(
-        '挂单已完成',
-        <div>
-          交易对 PCX/BTC; 方向 买入；报价 0.00043527
-          <br />
-          数量 3.74638923
-        </div>
-      );
-    }, 1000);
+    const {
+      model: { dispatch },
+      location: { search },
+    } = this.props;
+    const id = parseQueryString(search).id;
+    dispatch({
+      type: 'switchPair',
+      payload: {
+        id,
+      },
+    });
+    // setTimeout(() => {
+    //   Toast.success(
+    //     '挂单已完成',
+    //     <div>
+    //       交易对 PCX/BTC; 方向 买入；报价 0.00043527
+    //       <br />
+    //       数量 3.74638923
+    //     </div>
+    //   );
+    // }, 1000);
   };
 
   render() {

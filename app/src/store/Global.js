@@ -13,7 +13,7 @@ export default class Global extends ModelExtend {
     data: '',
   };
 
-  @observable assets = localSave.get('asset');
+  @observable assets = localSave.get('asset') || [];
 
   openModal = (payload = {}) => {
     this.changeModel('modal', {
