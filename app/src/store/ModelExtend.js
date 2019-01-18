@@ -36,7 +36,7 @@ export default class ModelExtend {
     };
 
     if (!type || !this[type]) {
-      console.error('dispatch参数的type是必须参数,并且必须存在这个方法');
+      console.error(`dispatch参数的type是必须参数,并且必须存在${type}这个方法`);
       return Promise.reject(new Error('dispatch参数的type是必须参数,并且必须存在这个方法'));
     }
 

@@ -1,4 +1,4 @@
-import { observable } from '../utils';
+import { observable, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs } from '../services';
 
@@ -13,9 +13,11 @@ export default class Trade extends ModelExtend {
 
   getOrderPairs = async () => {
     const orderPairs = await getOrderPairs();
-    console.log(orderPairs, '-----');
     this.changeModel('orderPairs', orderPairs, []);
+    return orderPairs;
   };
 
-  switchPair = id => {};
+  switchPair = async id => {
+    // const assets = await this.getAllAssets();
+  };
 }
