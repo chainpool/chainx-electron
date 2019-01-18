@@ -49,8 +49,8 @@ export default class Asset extends ModelExtend {
   };
 
   getCert = async () => {
-    const currenAccount = this.getCurrentAccount();
-    const res = await getCert(currenAccount.address);
+    const currentAccount = this.getCurrentAccount();
+    const res = await getCert(currentAccount.address);
     if (res) {
       res.map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
     }
@@ -58,8 +58,8 @@ export default class Asset extends ModelExtend {
   };
 
   getAssets = async () => {
-    const currenAccount = this.getCurrentAccount();
-    const res = await getAsset(currenAccount.address, 0, 100);
+    const currentAccount = this.getCurrentAccount();
+    const res = await getAsset(currentAccount.address, 0, 100);
     let primaryAsset = [];
     let crossChainAsset = [];
     const format = isNative => {

@@ -59,8 +59,8 @@ export default class Election extends ModelExtend {
   };
 
   getPseduNominationRecords = async () => {
-    const currenAccount = this.getCurrentAccount();
-    return await getPseduNominationRecords(currenAccount.address);
+    const currentAccount = this.getCurrentAccount();
+    return await getPseduNominationRecords(currentAccount.address);
   };
 
   getInterest = (chainHeight, newItem) => {
@@ -117,8 +117,8 @@ export default class Election extends ModelExtend {
   };
 
   getNominationRecords = async () => {
-    const currenAccount = this.getCurrentAccount();
-    return await getNominationRecords(currenAccount.address);
+    const currentAccount = this.getCurrentAccount();
+    return await getNominationRecords(currentAccount.address);
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
