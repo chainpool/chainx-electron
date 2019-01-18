@@ -177,6 +177,7 @@ export default class TableComponent extends Component {
       noDataTip,
       pagination: { total: totalPage } = {},
       showHead = true,
+      activeTrIndex,
     } = this.props;
 
     let { scroll = {}, scroll: { tr } = {}, tableHeight = [] } = this.props;
@@ -249,7 +250,10 @@ export default class TableComponent extends Component {
                         <React.Fragment key={index}>
                           <Tr
                             style={{ height: tableHeight[1] }}
-                            className={classNames(index % 2 === 0 ? 'even' : 'odd')}
+                            className={classNames(
+                              index % 2 === 0 ? 'even' : 'odd',
+                              activeTrIndex === index ? 'activeTr' : null
+                            )}
                             onClick={e => {
                               _.isFunction(onClickRow) && onClickRow(item, e);
                             }}>
