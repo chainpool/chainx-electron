@@ -136,6 +136,7 @@ export default class Election extends ModelExtend {
   };
 
   unnominate = ({ signer, acceleration, target, amount, remark }) => {
+    amount = this.setDefaultPrecision(amount, true);
     unnominate(signer, acceleration, target, amount, remark, (err, result) => {
       resOk(result) && this.reload();
     });
