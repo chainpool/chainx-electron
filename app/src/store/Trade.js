@@ -10,10 +10,35 @@ export default class Trade extends ModelExtend {
   @observable name = 'trade';
   @observable currentPair = {};
   @observable orderPairs = [];
+  @observable buyList = [];
+  @observable sellList = [];
 
   getQuotations = async () => {
-    const quotations = await getQuotations(this.currentPair.id, 1);
-    console.log(quotations);
+    const res = await getQuotations(this.currentPair.id, 1);
+    const formatList = list => {
+      return list.map((item = []) => ({
+        price: item[0],
+        amount: item[1],
+        id: item.id,
+        piece: item.piece,
+      }));
+    };
+    if (res) {
+      let { buy: buyList = [], sell: sellList = [] } = res;
+      buyList = formatList(buyList);
+      sellList = formatList(sellList);
+      console.log(buyList, '-----------');
+      this.changeModel(
+        {
+          buyList,
+          sellList,
+        },
+        []
+      );
+    }
+    // this.changeModel('quotations', res, {});
+
+    console.log(res);
   };
 
   getOrderPairs = async () => {
