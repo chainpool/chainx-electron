@@ -1,6 +1,6 @@
 import { observable, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs } from '../services';
+import { getOrderPairs, getQuotations } from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -11,14 +11,18 @@ export default class Trade extends ModelExtend {
   @observable currentPair = {};
   @observable orderPairs = [];
 
+  getQuotations = async () => {
+    const quotations = await getQuotations(this.currentPair.id, 1);
+    console.log(quotations);
+  };
+
   getOrderPairs = async () => {
     const orderPairs = await getOrderPairs();
     this.changeModel('orderPairs', orderPairs, []);
-    // console.log(orderPairs, '====');
     return orderPairs;
   };
 
-  switchPair = async ({ id }) => {
+  switchPair = ({ id }) => {
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
     if (findOne) {
@@ -27,5 +31,6 @@ export default class Trade extends ModelExtend {
       currentPair = this.orderPairs[0];
     }
     this.changeModel('currentPair', currentPair, {});
+    return currentPair;
   };
 }

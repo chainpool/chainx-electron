@@ -74,6 +74,10 @@ export default class ModelExtend {
     return this.rootStore.accountStore.currentAccount;
   };
 
+  switchAccount({ address }) {
+    this.rootStore.accountStore.setCurrentAccount(address);
+  }
+
   getAllAssets = () => {
     return this.rootStore.globalStore.getAllAssets();
   };

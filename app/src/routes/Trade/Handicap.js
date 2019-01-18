@@ -3,11 +3,20 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './Handicap.less';
 import { Table } from '../../components';
+import { observer } from '../../utils';
 
+@observer
 class Handicap extends SwitchPair {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getQuotations',
+    });
+  };
 
   render() {
     const setTableProps = color => ({

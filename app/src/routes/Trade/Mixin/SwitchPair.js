@@ -14,6 +14,7 @@ class SwitchPair extends Mixin {
     const { model: { dispatch } = {} } = this.props;
     if (dispatch) {
       await dispatch({ type: 'getOrderPairs' });
+      await dispatch({ type: 'switchPair' });
     }
     this.startInit = init;
     _.isFunction(this.startInit) && this.startInit();
