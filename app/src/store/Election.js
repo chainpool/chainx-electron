@@ -122,6 +122,7 @@ export default class Election extends ModelExtend {
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
+    amount = this.setDefaultPrecision(amount, true);
     nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
       resOk(result) && this.reload();
     });
