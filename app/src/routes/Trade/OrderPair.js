@@ -4,27 +4,35 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
+import { _, observer } from '../../utils';
 
+@observer
 class OrderPair extends SwitchPair {
-  state = {};
-
-  startInit = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-
-    dispatch({ type: 'getOrderPairs' });
+  state = {
+    activeIndex: 0,
+    activeTrIndex: 0,
   };
 
   render() {
+    const { activeIndex } = this.state;
+    const {
+      model: { orderPairs = [], currentPair = {} },
+      history,
+    } = this.props;
+    const groupPairs = _.groupBy(orderPairs, 'currency') || {};
+    const dataSource = groupPairs[_.keys(groupPairs)[activeIndex]] || [];
     const tableProps = {
+      activeTrIndex: _.findIndex(dataSource, (item = {}) => currentPair.id === item.id),
       tableHeight: [36, 40],
       className: styles.tableContainer,
+      onClickRow: item => {
+        history.push({ search: `?id=${item.id}` });
+      },
       columns: [
         {
           width: '40%',
           title: '币种',
-          dataIndex: 'data1',
+          dataIndex: 'assets',
         },
         {
           title: '价格',
@@ -32,20 +40,26 @@ class OrderPair extends SwitchPair {
         },
         {
           title: '涨幅',
-          dataIndex: 'data3',
+          dataIndex: 'assets',
+          render: () => '--',
         },
       ],
-      dataSource: new Array(3).fill({}).map(() => ({
-        data1: 'PCX',
-        data2: '7,836,000',
-        data3: '12.00%',
-      })),
+      dataSource,
     };
 
     return (
       <div className={styles.orderPair}>
         <div className={styles.title}>
-          <Tab tabs={['BTC']} className={styles.tab} />
+          <Tab
+            tabs={_.keys(groupPairs)}
+            className={styles.tab}
+            activeIndex={activeIndex}
+            onClick={(item, index) => {
+              this.setState({
+                activeIndex: index,
+              });
+            }}
+          />
         </div>
         <Table {...tableProps} />
       </div>

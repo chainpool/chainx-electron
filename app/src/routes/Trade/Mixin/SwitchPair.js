@@ -15,7 +15,8 @@ class SwitchPair extends Mixin {
     if (dispatch) {
       await dispatch({ type: 'getOrderPairs' });
     }
-    _.isFunction(init) && init();
+    this.startInit = init;
+    _.isFunction(this.startInit) && this.startInit();
   }
 }
 
