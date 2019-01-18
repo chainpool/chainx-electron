@@ -8,10 +8,14 @@ export default class Trade extends ModelExtend {
   }
 
   @observable name = 'trade';
+  @observable currentPair = {};
   @observable orderPairs = [];
 
-  async getOrderPairs() {
+  getOrderPairs = async () => {
     const orderPairs = await getOrderPairs();
-    this.changeModel('orderPairs', orderPairs);
-  }
+    console.log(orderPairs, '-----');
+    this.changeModel('orderPairs', orderPairs, []);
+  };
+
+  switchPair = id => {};
 }
