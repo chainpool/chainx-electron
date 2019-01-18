@@ -78,15 +78,15 @@ export default class ModelExtend {
     return this.rootStore.globalStore.getAllAssets();
   };
 
-  setPrecision = (value, token) => {
+  setPrecision = (value, token, multiplication = false) => {
     const assets = this.rootStore.globalStore.assets;
     const findOne = assets.filter((item = {}) => item.name === token)[0] || {};
-    return formatNumber.toPrecision(value, findOne.precision);
+    return formatNumber.toPrecision(value, findOne.precision, multiplication);
   };
 
-  setDefaultPrecision = value => {
+  setDefaultPrecision = (value, multiplication = false) => {
     const assets = this.rootStore.globalStore.assets;
     const findOne = assets.filter((item = {}) => item.name === 'PCX')[0] || {};
-    return formatNumber.toPrecision(value, findOne.precision);
+    return formatNumber.toPrecision(value, findOne.precision, multiplication);
   };
 }

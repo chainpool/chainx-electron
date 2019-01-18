@@ -6,7 +6,11 @@ class SwitchPair extends Mixin {
     super(props);
   }
 
-  componentDidUpdate(prevProps) {}
+  async componentDidMount(p) {
+    super.componentDidMount();
+    console.log('haha');
+    // super.componentDidUpdate(prevProps);
+  }
 }
 
 export default SwitchPair;

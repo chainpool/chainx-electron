@@ -133,6 +133,7 @@ export default class Asset extends ModelExtend {
   };
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
+    amount = this.setPrecision(amount, token, true);
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
       resOk(result) && this.reload();
     });
