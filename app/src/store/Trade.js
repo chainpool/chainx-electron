@@ -8,17 +8,22 @@ export default class Trade extends ModelExtend {
   }
 
   @observable name = 'trade';
-  @observable currentPair = {};
+  @observable currentPair = {
+    assets: '',
+    currency: '',
+    precision: '',
+  };
   @observable orderPairs = [];
   @observable buyList = [];
   @observable sellList = [];
 
   getQuotations = async () => {
-    const res = await getQuotations(this.currentPair.id, 1);
+    const currentPair = this.currentPair;
+    const res = await getQuotations(currentPair.id, 1);
     const formatList = list => {
       return list.map((item = []) => ({
-        price: item[0],
-        amount: item[1],
+        price: this.setPrecision(item[0], currentPair.precision),
+        amount: this.setPrecision(item[1], currentPair.assets),
         id: item.id,
         piece: item.piece,
       }));
@@ -27,7 +32,6 @@ export default class Trade extends ModelExtend {
       let { buy: buyList = [], sell: sellList = [] } = res;
       buyList = formatList(buyList);
       sellList = formatList(sellList);
-      console.log(buyList, '-----------');
       this.changeModel(
         {
           buyList,
@@ -56,6 +60,6 @@ export default class Trade extends ModelExtend {
       currentPair = this.orderPairs[0];
     }
     this.changeModel('currentPair', currentPair, {});
-    return currentPair;
+    // console.log(toJS(currentPair));
   };
 }

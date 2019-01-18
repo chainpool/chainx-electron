@@ -83,6 +83,10 @@ export default class ModelExtend {
   };
 
   setPrecision = (value, token, multiplication = false) => {
+    if (_.isNumber(token)) {
+      /*直接提供数字设置精度，限币币交易页面pair交易对使用*/
+      return formatNumber.toPrecision(value, token, multiplication);
+    }
     const assets = this.rootStore.globalStore.assets;
     const findOne = assets.filter((item = {}) => item.name === token)[0] || {};
     return formatNumber.toPrecision(value, findOne.precision, multiplication);

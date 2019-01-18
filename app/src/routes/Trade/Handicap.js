@@ -20,7 +20,7 @@ class Handicap extends SwitchPair {
 
   render() {
     const {
-      model: { buyList = [], sellList = [] },
+      model: { buyList = [], sellList = [], currentPair = {} },
     } = this.props;
     const setTableProps = color => ({
       tableHeight: [36, 22.3, 1, 0, 0],
@@ -30,15 +30,15 @@ class Handicap extends SwitchPair {
         {
           width: '40%',
           className: color,
-          title: '价格(BTC)',
+          title: `(价格${currentPair.currency})`,
           dataIndex: 'price',
         },
         {
-          title: '数量(PCX)',
+          title: `(数量${currentPair.assets})`,
           dataIndex: 'amount',
         },
         {
-          title: '累计(PCX)',
+          title: `累计(${currentPair.currency})`,
           dataIndex: 'data3',
         },
       ],
