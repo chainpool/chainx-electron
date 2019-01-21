@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
+import { Button, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { Patterns } from '../../../utils';
+import { Inject, Patterns } from '../../../utils';
 
+@Inject(({ globalStore }) => ({ globalStore }))
 class AddAddressModal extends Component {
   state = {
     chain: '',
@@ -37,12 +38,17 @@ class AddAddressModal extends Component {
       return ['checkChain', 'checkAddress', 'checkLabel'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const { chain, chainErrMsg, address, addressErrMsg, label, labelErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch },
+      globalStore: { chainNames = [] },
     } = this.props;
+
+    const options = chainNames.map(name => ({ label: name, value: name }));
+
     return (
       <Modal
         title="添加地址"
@@ -52,6 +58,14 @@ class AddAddressModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'addAddress',
+                  payload: {
+                    label: this.state.label,
+                    chain: this.state.chain.value,
+                    address: this.state.address,
+                  },
+                });
                 closeModal();
               }
             }}>
@@ -65,7 +79,7 @@ class AddAddressModal extends Component {
                 label="选择链"
                 value={chain}
                 errMsg={chainErrMsg}
-                options={[{ label: 'ChainX', value: 'ChainX' }]}
+                options={options}
                 onChange={value => this.setState({ chain: value })}
                 onBlur={checkAll.checkChain}
               />

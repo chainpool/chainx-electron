@@ -1,6 +1,7 @@
 import { localSave, observable } from '@utils';
 import ModelExtend from './ModelExtend';
 import { getAssets } from '../services';
+import { computed } from 'mobx';
 
 export default class Global extends ModelExtend {
   constructor(rootStore) {
@@ -14,6 +15,10 @@ export default class Global extends ModelExtend {
   };
 
   @observable assets = localSave.get('asset') || [];
+
+  @computed get chainNames() {
+    return this.assets.map(asset => asset.chain);
+  }
 
   openModal = (payload = {}) => {
     this.changeModel('modal', {

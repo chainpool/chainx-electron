@@ -5,34 +5,38 @@ import { Table, Clipboard, Button, ButtonGroup } from '../../components';
 class AddressTable extends Component {
   render() {
     const {
-      model: { openModal },
+      model: { openModal, dispatch, addresses = [] },
     } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '标签',
-          dataIndex: 'data1',
+          dataIndex: 'label',
           render: value => <span className="blue">{value}</span>,
         },
         {
           title: '链',
-          dataIndex: 'data2',
+          dataIndex: 'chain',
         },
         {
           title: '地址',
-          dataIndex: 'data3',
+          dataIndex: 'address',
           render: value => <Clipboard width={200}>{value}</Clipboard>,
         },
         {
           title: '',
           dataIndex: '_action',
-          render: () => (
+          render: (value, column, index) => (
             <ButtonGroup>
               <Button
                 onClick={() => {
                   openModal({
                     name: 'EditLabelModal',
+                    data: {
+                      index,
+                    },
                   });
                 }}>
                 修改标签
@@ -43,7 +47,12 @@ class AddressTable extends Component {
                     name: 'ConfirmAndCancelModal',
                     data: {
                       title: '删除地址',
-                      callback: () => {},
+                      callback: () => {
+                        dispatch({
+                          type: 'removeAddress',
+                          payload: index,
+                        });
+                      },
                     },
                   });
                 }}>
@@ -53,13 +62,7 @@ class AddressTable extends Component {
           ),
         },
       ],
-      dataSource: [
-        {
-          data1: 'name1',
-          data2: 'ChainX',
-          data3: '5E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u5E3ZkEB6b5zHxKSAVkEB',
-        },
-      ],
+      dataSource: addresses,
     };
     return <Table {...tableProps} />;
   }
