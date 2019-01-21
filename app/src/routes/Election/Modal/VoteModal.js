@@ -33,7 +33,7 @@ class VoteModal extends Component {
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
-      model: { dispatch, openModal },
+      model: { dispatch, openModal, setDefaultPrecision },
       globalStore: {
         modal: { data: { target, nomination = 0 } = {} },
       },
@@ -93,7 +93,12 @@ class VoteModal extends Component {
             errMsg={amountErrMsg}
             onChange={value => this.setState({ amount: value })}
             onBlur={checkAll.checkAmount}>
-            <span>修改后投票数：{action === 'add' ? nomination + Number(amount) : nomination - Number(amount)}</span>
+            <span>
+              修改后投票数：
+              {action === 'add'
+                ? setDefaultPrecision(nomination + Number(setDefaultPrecision(amount, true)))
+                : setDefaultPrecision(nomination - Number(setDefaultPrecision(amount, true)))}
+            </span>
           </Input.Text>
           <Input.Text
             isTextArea

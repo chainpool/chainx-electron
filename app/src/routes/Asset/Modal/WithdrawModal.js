@@ -6,7 +6,7 @@ import { PlaceHolder } from '../../../constants';
 
 class WithdrawModal extends Component {
   state = {
-    address: '',
+    address: { label: '', value: '' },
     addressErrMsg: '',
     amount: '',
     amountErrMsg: '',
@@ -14,10 +14,10 @@ class WithdrawModal extends Component {
   };
   checkAll = {
     checkAddress: () => {
-      const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
-      this.setState({ addressErrMsg: errMsg });
-      return errMsg;
+      // const { address } = this.state;
+      // const errMsg = Patterns.check('required')(address);
+      // this.setState({ addressErrMsg: errMsg });
+      // return errMsg;
     },
     checkAmount: () => {
       const { amount } = this.state;
@@ -57,7 +57,7 @@ class WithdrawModal extends Component {
             label="收款地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[{ label: 1, value: 1 }]}
+            options={[{ label: 222, value: 333 }]}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
