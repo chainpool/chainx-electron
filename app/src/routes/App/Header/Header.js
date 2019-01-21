@@ -30,6 +30,19 @@ class Header extends Component {
       ) : null;
     });
 
+    const txRecord = (
+      <AuthorityComponent>
+        <li>
+          <RouterGo
+            go={{ pathname: PATH.tradeRecord }}
+            className={pathname === PATH.tradeRecord ? styles.active : null}>
+            <Icon name="icon-caozuojilu" />
+            <span style={{ marginLeft: 9 }}>交易记录</span>
+          </RouterGo>
+        </li>
+      </AuthorityComponent>
+    );
+
     return (
       <header className={className}>
         <div>
@@ -64,16 +77,9 @@ class Header extends Component {
           <div className={styles.right}>
             <div>
               <ul>
-                <AuthorityComponent>
-                  <li>
-                    <RouterGo
-                      go={{ pathname: PATH.tradeRecord }}
-                      className={pathname === PATH.tradeRecord ? styles.active : null}>
-                      <Icon name="icon-caozuojilu" />
-                      <span style={{ marginLeft: 9 }}>交易记录</span>
-                    </RouterGo>
-                  </li>
-                </AuthorityComponent>
+                {/*TODO: 没有API服务器，暂时隐藏交易记录*/}
+                {false && txRecord}
+
                 <li>
                   <Account {...this.props} />
                 </li>
