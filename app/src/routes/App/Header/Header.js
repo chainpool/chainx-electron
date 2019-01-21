@@ -15,6 +15,21 @@ class Header extends Component {
       className,
       globalStore: { isLogin },
     } = this.props;
+
+    const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
+      return item === 0 ? (
+        <li key={index}>
+          <RouterGo go={{ pathname: PATH.configure }} className={pathname === PATH.configure ? styles.active : null}>
+            <Icon name="icon-shezhi" />
+          </RouterGo>
+        </li>
+      ) : item === 1 ? (
+        <li key={index}>
+          <Account {...this.props} />
+        </li>
+      ) : null;
+    });
+
     return (
       <header className={className}>
         <div>
@@ -59,21 +74,11 @@ class Header extends Component {
                     </RouterGo>
                   </li>
                 </AuthorityComponent>
-                {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
-                  return item === 0 ? (
-                    <li key={index}>
-                      <RouterGo
-                        go={{ pathname: PATH.configure }}
-                        className={pathname === PATH.configure ? styles.active : null}>
-                        <Icon name="icon-shezhi" />
-                      </RouterGo>
-                    </li>
-                  ) : item === 1 ? (
-                    <li key={index}>
-                      <Account {...this.props} />
-                    </li>
-                  ) : null;
-                })}
+                <li>
+                  <Account {...this.props} />
+                </li>
+                {/* TODO: 暂时隐藏APP设置*/}
+                {/*{accountAndSetting}*/}
               </ul>
             </div>
           </div>
