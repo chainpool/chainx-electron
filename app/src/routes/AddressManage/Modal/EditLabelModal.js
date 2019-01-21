@@ -20,12 +20,19 @@ class EditLabelModal extends Component {
       return ['checkLabel'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const { label, labelErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch },
+      globalStore: {
+        modal: {
+          data: { index },
+        },
+      },
     } = this.props;
+
     return (
       <Modal
         title="修改标签"
@@ -35,6 +42,13 @@ class EditLabelModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'updateLabel',
+                  payload: {
+                    index,
+                    label: this.state.label,
+                  },
+                });
                 closeModal();
               }
             }}>
