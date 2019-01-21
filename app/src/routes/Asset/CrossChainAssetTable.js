@@ -32,7 +32,7 @@ class CrossChainAssetTable extends Component {
           },
           {
             title: '原链',
-            dataIndex: 'data3',
+            dataIndex: 'chain',
           },
           {
             title: '可用余额',

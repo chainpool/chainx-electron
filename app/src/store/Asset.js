@@ -59,6 +59,7 @@ export default class Asset extends ModelExtend {
 
   getAssets = async () => {
     const currentAccount = this.getCurrentAccount();
+    const allAssets = await this.getAllAssets();
     if (!currentAccount.address) return false;
     const res = await getAsset(currentAccount.address, 0, 100);
     let primaryAsset = [];
@@ -76,6 +77,7 @@ export default class Asset extends ModelExtend {
           } = item.details;
           const token = item.name;
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
+          const findOne = allAssets.filter((one = {}) => one.name === item.name)[0] || {};
           return {
             ...item,
             freeShow: this.setPrecision(free, token),
@@ -84,6 +86,7 @@ export default class Asset extends ModelExtend {
             reservedDexSpotShow: this.setPrecision(reservedDexSpot, token),
             reservedWithdrawalShow: this.setPrecision(reservedWithdrawal, token),
             totalShow: this.setPrecision(total, token),
+            chain: findOne.chain,
           };
         });
     };
