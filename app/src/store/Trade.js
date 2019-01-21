@@ -1,6 +1,6 @@
-import { observable, toJS } from '../utils';
+import { moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs, getQuotations } from '../services';
+import { getOrderPairs, getQuotations, putOrder, getOrders } from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -16,6 +16,42 @@ export default class Trade extends ModelExtend {
   @observable orderPairs = [];
   @observable buyList = [];
   @observable sellList = [];
+  @observable currentOrderList = [];
+
+  reload = () => {
+    this.getQuotations();
+    this.getAccountAssets();
+    this.getAccountOrder();
+  };
+
+  getAccountOrder = async () => {
+    const currentPair = this.currentPair;
+    const account = this.getCurrentAccount();
+    if (account.address) {
+      const res = await getOrders(account.address, 0, 100);
+      console.log(res.data, '-------');
+      if (res && res.data) {
+        this.changeModel(
+          {
+            currentOrderList: res.data.map((item = {}) => {
+              return {
+                ...item,
+                createTime: moment_helper.formatHMS(item.createTime * 1000),
+                price: this.setPrecision(item.price, currentPair.precision),
+                amount: this.setPrecision(item.amount, currentPair.assets),
+                hasfillAmount: this.setPrecision(item.hasfillAmount, currentPair.assets),
+                reserveLast: this.setPrecision(
+                  item.price,
+                  item.direction === 'Buy' ? currentPair.precision : currentPair.assets
+                ),
+              };
+            }),
+          },
+          []
+        );
+      }
+    }
+  };
 
   getQuotations = async () => {
     const currentPair = this.currentPair;
@@ -40,9 +76,7 @@ export default class Trade extends ModelExtend {
         []
       );
     }
-    // this.changeModel('quotations', res, {});
-
-    console.log(res);
+    // console.log(res);
   };
 
   getOrderPairs = async () => {
@@ -62,5 +96,12 @@ export default class Trade extends ModelExtend {
     }
     this.changeModel('currentPair', currentPair, {});
     // console.log(toJS(currentPair));
+  };
+
+  putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
+    // console.log(signer, acceleration, pairId, orderType, direction, amount, price, '====');
+    putOrder(signer, acceleration, pairId, orderType, direction, amount, price, (err, result) => {
+      resOk(result) && this.reload();
+    });
   };
 }

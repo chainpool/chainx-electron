@@ -49,7 +49,7 @@ class Handicap extends SwitchPair {
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>挂单列表</div>
-        <Table {...setTableProps('red')} dataSource={dataSourceSell} />
+        <Table {...setTableProps('red')} dataSource={dataSourceBuy} />
         <div className={styles.latestprice}>0.00046372</div>
         <Table {...setTableProps('green')} dataSource={dataSourceSell} showHead={false} />
       </div>

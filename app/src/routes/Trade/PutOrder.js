@@ -64,17 +64,18 @@ class PutOrder extends SwitchPair {
     };
 
     const {
-      model: { currentPair },
-      assetStore: { crossChainAsset = [] },
+      model: { openModal, dispatch, currentPair },
+      assetStore: { crossChainAsset = [], primaryAsset = [] },
     } = this.props;
-    const currentAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
+    const currentCrossAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
+    const currentPrimaryAsset = primaryAsset.filter((item = {}) => item.name === currentPair.assets)[0] || {};
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
           可用余额:{' '}
           <span>
-            {currentAsset.freeShow}
-            <span>BTC</span>
+            {action === 'buy' ? currentCrossAsset.freeShow || '-' : currentPrimaryAsset.freeShow || '-'}
+            <span>{action === 'buy' ? currentPair.currency : currentPair.assets}</span>
           </span>
         </div>
         <div className={styles.userprice}>
@@ -85,7 +86,7 @@ class PutOrder extends SwitchPair {
               onChange={value => {
                 changeBS(action, { price: value });
               }}
-              suffix="BTC"
+              suffix={currentPair.currency}
             />
           </div>
         </div>
@@ -97,7 +98,7 @@ class PutOrder extends SwitchPair {
               onChange={value => {
                 changeBS(action, { amount: value });
               }}
-              suffix="PCX"
+              suffix={currentPair.assets}
             />
           </div>
         </div>
@@ -105,17 +106,43 @@ class PutOrder extends SwitchPair {
           <Slider {...sliderProps} />
           <div>
             <span>
-              0<span>PCX</span>
+              0<span>{currentPair.assets}</span>
             </span>
             <span>
-              3000<span>PCX</span>
+              3000<span>{currentPair.assets}</span>
             </span>
           </div>
         </div>
-        <div className={styles.totalPrice}>交易额 0.00000000 BTC</div>
+        <div className={styles.totalPrice}>交易额 0.00000000 {currentPair.currency}</div>
         {isLogin() ? (
           <div className={styles.submit}>
-            <button className={styles[action]}>买入PCX</button>
+            <button
+              className={styles[action]}
+              onClick={() => {
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '交易' }],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'putOrder',
+                        payload: {
+                          signer,
+                          acceleration,
+                          pairId: currentPair.id,
+                          orderType: 'Limit',
+                          action: action === 'buy' ? 'Buy' : 'Sell',
+                          price,
+                          amount,
+                        },
+                      });
+                    },
+                  },
+                });
+              }}>
+              {label}
+              {currentPair.assets}
+            </button>
           </div>
         ) : null}
       </div>
