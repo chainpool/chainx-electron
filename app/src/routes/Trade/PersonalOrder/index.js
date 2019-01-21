@@ -10,10 +10,17 @@ import HistoryOrderTable from './HistoryOrderTable';
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 1,
+    activeIndex: 0,
   };
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getAccountOrder',
+    });
+  };
 
   render() {
     const { activeIndex } = this.state;

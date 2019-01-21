@@ -39,3 +39,7 @@ export const getDepositRecords = (...payload) => asset.getDepositRecords(...payl
 export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
 
 export const getQuotations = (...payload) => trade.getQuotations(...payload);
+
+export const putOrder = (...payload) => trade.putOrder(...payload);
+
+export const getOrders = (...payload) => trade.getOrders(...payload);
