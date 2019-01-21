@@ -107,7 +107,7 @@ class InputSelect extends React.Component {
       onCreateOption,
       options = [],
       getOptionLabel = (item = {}) => item.label,
-      getOptionValue = (item = {}) => item.value,
+      getOptionValue = (item = {}) => String(item.value),
       prefix = '',
     } = this.props;
     return (
@@ -127,7 +127,7 @@ class InputSelect extends React.Component {
               getOptionLabel={getOptionLabel}
               getOptionValue={getOptionValue}
               isClearable={false}
-              value={value}
+              // value={value}
               className={styles.selectContainer}
               onChange={value => {
                 this.setState({ errMsg: '' });

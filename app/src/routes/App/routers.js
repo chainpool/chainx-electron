@@ -38,6 +38,7 @@ export default [
     show: false,
     path: PATH.addressManage,
     component: AddressManage,
+    authority: [1],
   },
   {
     title: '信托',

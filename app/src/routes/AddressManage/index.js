@@ -7,7 +7,7 @@ import EditLabelModal from './Modal/EditLabelModal';
 import * as styles from './index.less';
 import { Inject } from '../../utils';
 
-@Inject(({ assetStore: model }) => ({ model }))
+@Inject(({ addressManageStore: model }) => ({ model }))
 class AddressManage extends Mixin {
   state = {
     activeIndex: 0,
