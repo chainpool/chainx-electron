@@ -85,7 +85,7 @@ class CrossChainAssetTable extends Component {
                     openModal({
                       name: 'TransferModal',
                       data: {
-                        token: item.name,
+                        // token: item.name,
                         freeShow: item.freeShow,
                         free: item.free,
                       },
