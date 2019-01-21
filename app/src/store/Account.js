@@ -6,6 +6,13 @@ export default class Store extends ModelExtend {
   @observable accounts = localSave.get('accounts') || [];
   @observable currentAccount = localSave.get('currentSelect') || {};
 
+  @computed get accountsList() {
+    return this.accounts.map((item = {}) => ({
+      label: item.tag,
+      value: item.address,
+    }));
+  }
+
   setCurrentAccount(address = '') {
     let newCurrentAccount = this.accounts.filter(item => item.address === this.currentAccount.address)[0];
     const findAccount = _.find(this.accounts, (item = {}) => item.address === address);

@@ -76,6 +76,11 @@ class CrossChainAssetTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'WithdrawModal',
+                      data: {
+                        token: item.name,
+                        freeShow: item.freeShow,
+                        free: item.free,
+                      },
                     });
                   }}>
                   提现

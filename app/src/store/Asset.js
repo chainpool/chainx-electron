@@ -1,6 +1,14 @@
 import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getAsset, getCert, register, transfer, getWithdrawalListByAccount, getDepositRecords } from '../services';
+import {
+  getAsset,
+  getCert,
+  register,
+  transfer,
+  withdraw,
+  getWithdrawalListByAccount,
+  getDepositRecords,
+} from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
 
@@ -139,6 +147,13 @@ export default class Asset extends ModelExtend {
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
     amount = this.setPrecision(amount, token, true);
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
+      resOk(result) && this.reload();
+    });
+  };
+
+  withdraw = ({ signer, acceleration, token, amount, dest, remark }) => {
+    amount = this.setPrecision(amount, token, true);
+    withdraw(signer, Number(acceleration), token, Number(amount), dest, remark, (err, result) => {
       resOk(result) && this.reload();
     });
   };

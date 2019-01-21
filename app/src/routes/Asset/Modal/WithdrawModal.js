@@ -6,7 +6,7 @@ import { PlaceHolder } from '../../../constants';
 
 class WithdrawModal extends Component {
   state = {
-    address: { label: '', value: '' },
+    address: '',
     addressErrMsg: '',
     amount: '',
     amountErrMsg: '',
@@ -14,10 +14,13 @@ class WithdrawModal extends Component {
   };
   checkAll = {
     checkAddress: () => {
-      // const { address } = this.state;
-      // const errMsg = Patterns.check('required')(address);
-      // this.setState({ addressErrMsg: errMsg });
-      // return errMsg;
+      const { address } = this.state;
+      const {
+        globalStore: { modal: { data: { token } = {} } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(address) || Patterns.check('isVerifyAddress', token, address.value);
+      this.setState({ addressErrMsg: errMsg });
+      return errMsg;
     },
     checkAmount: () => {
       const { amount } = this.state;
@@ -34,7 +37,8 @@ class WithdrawModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
-      model: { closeModal },
+      model: { openModal, dispatch },
+      globalStore: { modal: { data: { token, freeShow } = {} } = {} },
     } = this.props;
     return (
       <Modal
@@ -45,7 +49,25 @@ class WithdrawModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '提现' }],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'withdraw',
+                        payload: {
+                          signer,
+                          dest: address.value,
+                          acceleration,
+                          token,
+                          amount,
+                          remark,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             确定
@@ -57,7 +79,7 @@ class WithdrawModal extends Component {
             label="收款地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[{ label: 222, value: 333 }]}
+            options={[]}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
@@ -72,7 +94,7 @@ class WithdrawModal extends Component {
                 onBlur={checkAll.checkAmount}
               />
             }
-            right={<FreeBalance value={'78'} unit={'BTC'} />}
+            right={<FreeBalance value={freeShow} unit={token} />}
           />
           <Input.Text
             isTextArea
