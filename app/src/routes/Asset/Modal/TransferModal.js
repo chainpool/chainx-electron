@@ -100,7 +100,7 @@ class TransferModal extends Component {
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => {
-                  if (RegEx.decimalNumber.test(value)) {
+                  if (RegEx.decimalNumber.test(value) || value === '') {
                     this.setState({ amount: value });
                   }
                 }}
