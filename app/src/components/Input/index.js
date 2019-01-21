@@ -1,7 +1,7 @@
 import React from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Clipboard, Mixin } from '../../components';
-import { _, classNames } from '../../utils';
+import { _, classNames, isEmpty } from '../../utils';
 import * as styles from './index.less';
 
 class InputRadio extends React.Component {
@@ -98,7 +98,6 @@ class InputSelect extends React.Component {
       className,
       size = 'middle',
       type = 'primary',
-      value = '',
       onChange,
       onBlur,
       disabled = false,
@@ -107,9 +106,10 @@ class InputSelect extends React.Component {
       onCreateOption,
       options = [],
       getOptionLabel = (item = {}) => item.label,
-      getOptionValue = (item = {}) => String(item.value),
+      getOptionValue = (item = {}) => item.value,
       prefix = '',
     } = this.props;
+    let { value } = this.props;
     return (
       <div className={classNames(styles.inputcontainer, className)}>
         {label ? <div className={styles.label}>{label}</div> : null}
@@ -127,7 +127,7 @@ class InputSelect extends React.Component {
               getOptionLabel={getOptionLabel}
               getOptionValue={getOptionValue}
               isClearable={false}
-              // value={value}
+              value={value}
               className={styles.selectContainer}
               onChange={value => {
                 this.setState({ errMsg: '' });

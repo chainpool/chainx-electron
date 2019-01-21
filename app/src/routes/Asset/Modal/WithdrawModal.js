@@ -6,7 +6,7 @@ import { PlaceHolder } from '../../../constants';
 
 class WithdrawModal extends Component {
   state = {
-    address: {},
+    address: { label: '', value: '' },
     addressErrMsg: '',
     amount: '',
     amountErrMsg: '',
@@ -57,7 +57,7 @@ class WithdrawModal extends Component {
             label="收款地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[{ label: '22222', value: 'wee' }]}
+            options={[{ label: 222, value: 333 }]}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />

@@ -7,7 +7,7 @@ import { PlaceHolder } from '../../../constants';
 @Inject(({ accountStore }) => ({ accountStore }))
 class TransferModal extends Component {
   state = {
-    address: '',
+    address: { label: '', value: '' },
     addressErrMsg: '',
     amount: '',
     amountErrMsg: '',
@@ -86,9 +86,12 @@ class TransferModal extends Component {
             label="接收人地址"
             value={address}
             errMsg={addressErrMsg}
-            getOptionLabel={item => item.tag}
-            getOptionValue={item => item.address}
-            options={accounts}
+            // getOptionLabel={item => item.tag}
+            // getOptionValue={item => item.address}
+            options={accounts.map(item => ({
+              label: item.tag,
+              value: item.address,
+            }))}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
