@@ -78,7 +78,7 @@ class Header extends Component {
                   <Account {...this.props} />
                 </li>
                 {/* TODO: 暂时隐藏APP设置*/}
-                {/*{accountAndSetting}*/}
+                {false && accountAndSetting}
               </ul>
             </div>
           </div>
