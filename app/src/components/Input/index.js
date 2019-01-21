@@ -102,6 +102,7 @@ class InputSelect extends React.Component {
       onBlur,
       disabled = false,
       label = '',
+      value,
       onInputChange,
       onCreateOption,
       options = [],
@@ -109,7 +110,6 @@ class InputSelect extends React.Component {
       getOptionValue = (item = {}) => item.value,
       prefix = '',
     } = this.props;
-    let { value } = this.props;
     return (
       <div className={classNames(styles.inputcontainer, className)}>
         {label ? <div className={styles.label}>{label}</div> : null}

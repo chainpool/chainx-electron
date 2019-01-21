@@ -63,6 +63,14 @@ export const Patterns = {
       return errMsg;
     }
   },
+  isVerifyAddress: (token, value, errMsg = '地址格式错误') => {
+    try {
+      ChainX.asset.getVerifyAddress(token, value, '');
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
+  },
   required: (value, errMsg = '必填') => {
     return !value ? errMsg : '';
   },
@@ -158,3 +166,5 @@ export const formatNumber = {
     return new BigNumber(value).dividedBy(Math.pow(10, precision)).toFixed(precision);
   },
 };
+
+// console.log(ChainX.asset.getVerifyAddress('BTC', 'mjKE11gjVN4JaC9U8qL6ZB5vuEBgmwik7b', 'ddd'), '-----');
