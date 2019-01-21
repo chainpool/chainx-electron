@@ -59,34 +59,36 @@ class DepositMineTable extends Mixin {
         },
         {
           title: '待领利息',
-          dataIndex: 'data8',
+          dataIndex: 'interestShow',
         },
         {
           title: '',
           dataIndex: '_action',
-          render: () => (
+          render: (value, item) => (
             <ButtonGroup>
-              <Button
-                onClick={() => {
-                  openModal({
-                    name: 'SignModal',
-                    data: {
-                      description: [{ name: '操作', value: '提息' }],
-                      callback: ({ signer, acceleration }) => {
-                        dispatch({
-                          type: 'claim',
-                          payload: {
-                            signer,
-                            acceleration,
-                            // target: item.account,
-                          },
-                        });
+              {item.interest ? (
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'SignModal',
+                      data: {
+                        description: [{ name: '操作', value: '提息' }],
+                        callback: ({ signer, acceleration }) => {
+                          dispatch({
+                            type: 'claim',
+                            payload: {
+                              signer,
+                              acceleration,
+                              // target: item.account,
+                            },
+                          });
+                        },
                       },
-                    },
-                  });
-                }}>
-                提息
-              </Button>
+                    });
+                  }}>
+                  提息
+                </Button>
+              ) : null}
             </ButtonGroup>
           ),
         },

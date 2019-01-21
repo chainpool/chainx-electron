@@ -31,17 +31,35 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
-    const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
+    const getPseduIntentions$ = Rx.combineLatest(
+      getPseduIntentions(),
+      this.getPseduNominationRecords(),
+      getBlockNumberObservable()
+    );
     let res = [];
-    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
+    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = [], chainHeight]) => {
       res = pseduIntentions.map((item = {}) => {
         const token = item.id;
         const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
-        item = { ...item, ...findOne };
-        item.discountVote = item.price * item.circulation * 1;
-        // item.intervest=
+        item = {
+          ...item,
+          ...findOne,
+          lastDepositWeigh: findOne.lastTotalDepositWeight,
+          lastDepositWeightUpdate: findOne.lastTotalDepositWeightUpdate,
+        };
+        item.discountVote = this.setPrecision(item.price * item.circulation * 0.5, token);
+        item.interest = this.getInterest(chainHeight, {
+          lastWeightUpdate: item.lastDepositWeightUpdate,
+          amount: item.balance,
+          lastWeight: item.lastDepositWeigh,
+          lastTotalWeightUpdate: item.lastTotalDepositWeightUpdate,
+          totalAmount: item.circulation,
+          lastTotalWeight: item.lastTotalDepositWeight,
+          jackpot: item.jackpot,
+        });
         return {
           ...item,
+          interestShow: this.setPrecision(item.interest, token),
           discountVoteShow: this.setPrecision(item.discountVote, token),
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
@@ -65,13 +83,6 @@ export default class Election extends ModelExtend {
     }
   };
 
-  getInterest = (chainHeight, newItem) => {
-    const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
-    const nodeVoteWeight =
-      (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
-    return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
-  };
-
   getIntentions = async () => {
     const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords(), getBlockNumberObservable());
     return intentions$.subscribe(([intentions = [], nominationRecords = [], chainHeight]) => {
@@ -80,7 +91,6 @@ export default class Election extends ModelExtend {
       // let trustIntentions = [];
       let waitingIntentions = [];
       let myIntentions = [];
-      // console.log(data1, data2, chainHeight, '==============');
       if (res) {
         res = res.map((item = {}) => {
           const findVotes = nominationRecords.filter((one = []) => one[0] === item.account)[0] || [];
@@ -89,11 +99,19 @@ export default class Election extends ModelExtend {
             ? _.sumBy(newItem.revocations, (one = []) => one[1])
             : undefined; // 总的撤回投票记录
 
-          newItem.interest = this.getInterest(chainHeight, newItem); // 待领利息
+          newItem.interest = this.getInterest(chainHeight, {
+            lastWeightUpdate: newItem.lastVoteWeightUpdate,
+            amount: newItem.nomination,
+            lastWeight: newItem.lastVoteWeight,
+            lastTotalWeightUpdate: newItem.lastTotalVoteWeightUpdate,
+            totalAmount: newItem.totalNomination,
+            lastTotalWeight: newItem.lastTotalVoteWeight,
+            jackpot: newItem.jackpot,
+          }); // 待领利息
 
           return {
             ...newItem,
-            interestShow: formatNumber.localString(newItem.interest),
+            interestShow: this.setDefaultPrecision(item.interest),
             account: ChainX.account.encodeAddress(newItem.account),
             nominationShow: this.setDefaultPrecision(newItem.nomination),
             jackpotShow: this.setDefaultPrecision(newItem.jackpot),
@@ -123,6 +141,19 @@ export default class Election extends ModelExtend {
     if (currentAccount.address) {
       return await getNominationRecords(currentAccount.address);
     }
+  };
+
+  getInterest = (
+    chainHeight,
+    { lastWeightUpdate, amount, lastWeight, lastTotalWeightUpdate, totalAmount, lastTotalWeight, jackpot }
+  ) => {
+    const userVoteWeight = (chainHeight - lastWeightUpdate) * amount + lastWeight;
+    const nodeVoteWeight = (chainHeight - lastTotalWeightUpdate) * totalAmount + lastTotalWeight;
+    return (userVoteWeight / nodeVoteWeight) * jackpot;
+    // const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
+    // const nodeVoteWeight =
+    //   (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
+    // return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
