@@ -46,6 +46,7 @@ export default class Trade extends ModelExtend {
   };
 
   getOrderPairs = async () => {
+    if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
     const orderPairs = await getOrderPairs();
     this.changeModel('orderPairs', orderPairs, []);
     return orderPairs;

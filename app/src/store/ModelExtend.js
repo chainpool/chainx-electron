@@ -74,12 +74,12 @@ export default class ModelExtend {
     return this.rootStore.accountStore.currentAccount;
   };
 
-  switchAccount({ address }) {
-    this.rootStore.accountStore.setCurrentAccount(address);
-  }
-
   getAllAssets = () => {
     return this.rootStore.globalStore.getAllAssets();
+  };
+
+  getAccountAssets = () => {
+    return this.rootStore.assetStore.getAssets();
   };
 
   setPrecision = (value, token, multiplication = false) => {

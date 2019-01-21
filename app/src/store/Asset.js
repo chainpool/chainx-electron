@@ -12,7 +12,7 @@ export default class Asset extends ModelExtend {
   @observable name = 'asset';
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
-  @observable crossChainAsset = []; // 原生资产
+  @observable crossChainAsset = []; // 跨链资产
   @observable onChainWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
 
@@ -59,6 +59,7 @@ export default class Asset extends ModelExtend {
 
   getAssets = async () => {
     const currentAccount = this.getCurrentAccount();
+    if (!currentAccount.address) return false;
     const res = await getAsset(currentAccount.address, 0, 100);
     let primaryAsset = [];
     let crossChainAsset = [];

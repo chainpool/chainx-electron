@@ -1,9 +1,10 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider } from '../../components';
-
+import { Inject, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
+@Inject(({ assetStore }) => ({ assetStore }))
 class PutOrder extends SwitchPair {
   state = {
     buy: {
@@ -18,7 +19,14 @@ class PutOrder extends SwitchPair {
     },
   };
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getAccountAssets',
+    });
+  };
 
   changeBS = (action = 'buy', payload = {}) => {
     this.setState({
@@ -29,7 +37,7 @@ class PutOrder extends SwitchPair {
     });
   };
 
-  renderArea = ({ direction: { price, amount, action } = {} }) => {
+  renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS } = this;
     const {
       model: { isLogin },
@@ -55,16 +63,22 @@ class PutOrder extends SwitchPair {
       disabled: false,
     };
 
+    const {
+      model: { currentPair },
+      assetStore: { crossChainAsset = [] },
+    } = this.props;
+    const currentAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
-          可用余额:
+          可用余额:{' '}
           <span>
-            0.3<span>BTC</span>
+            {currentAsset.freeShow}
+            <span>BTC</span>
           </span>
         </div>
         <div className={styles.userprice}>
-          <div className={styles.pricelabel}>买入价</div>
+          <div className={styles.pricelabel}>{label}价</div>
           <div className={styles.input}>
             <Input.Text
               value={price}
@@ -76,7 +90,7 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.useramount}>
-          <div className={styles.amountlabel}>买入量</div>
+          <div className={styles.amountlabel}>{label}量</div>
           <div className={styles.input}>
             <Input.Text
               value={amount}
@@ -112,16 +126,16 @@ class PutOrder extends SwitchPair {
     const { renderArea } = this;
     const { buy, sell } = this.state;
     const {
-      model: { openModal },
-    } = this.props;
-    const {
-      model: { isLogin },
+      model: { openModal, isLogin, currentPair },
+      assetStore: { crossChainAsset = [] },
     } = this.props;
     const buyConfig = {
       direction: buy,
+      label: '买入',
     };
     const sellConfig = {
       direction: sell,
+      label: '卖出',
     };
     return (
       <div className={styles.putOrder}>

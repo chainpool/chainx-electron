@@ -12,7 +12,6 @@ class Mixin extends React.Component {
     let assets = [];
     if (dispatch) {
       assets = await dispatch({ type: 'getAllAssets' });
-      await dispatch({ type: 'switchAccount' });
     }
     _.isFunction(this.startInit) && this.startInit();
     return assets;

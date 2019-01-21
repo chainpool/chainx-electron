@@ -29,6 +29,9 @@ class Account extends Mixin {
         address,
       },
     });
+    dispatch({
+      type: 'getAccountAssets',
+    });
   };
 
   render() {
