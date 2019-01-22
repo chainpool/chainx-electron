@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { Button, ButtonGroup, Input, Slider } from '../../components';
+import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
 import { Inject, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
@@ -9,8 +9,8 @@ class PutOrder extends SwitchPair {
   state = {
     buy: {
       action: 'buy',
-      price: '',
-      amount: '',
+      price: '0.00001',
+      amount: '0.001',
     },
     sell: {
       action: 'sell',
@@ -135,6 +135,18 @@ class PutOrder extends SwitchPair {
                           price,
                           amount,
                         },
+                      }).then(res => {
+                        if (res) {
+                          Toast.success(
+                            '挂单已完成',
+                            <div>
+                              交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
+                              {action === 'buy' ? '买入' : '卖出'}；报价 {price}
+                              <br />
+                              数量 {amount}
+                            </div>
+                          );
+                        }
                       });
                     },
                   },

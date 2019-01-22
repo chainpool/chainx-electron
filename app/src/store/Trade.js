@@ -1,6 +1,6 @@
 import { moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs, getQuotations, putOrder, getOrders } from '../services';
+import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -102,7 +102,19 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     price = this.setPrecision(price, currentPair.precision, true);
     amount = this.setPrecision(amount, currentPair.assets, true);
-    putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
+    return new Promise(resolve => {
+      putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
+        if (resOk(result)) {
+          this.reload();
+          resolve(result);
+        }
+      });
+    });
+  };
+
+  cancelOrder = ({ signer, acceleration, pairId, index }) => {
+    console.log(signer, acceleration, pairId, index, '======');
+    cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
     });
   };
