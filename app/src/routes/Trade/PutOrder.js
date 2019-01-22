@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { Inject, toJS } from '../../utils';
+import { Inject, Patterns, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -10,12 +10,48 @@ class PutOrder extends SwitchPair {
     buy: {
       action: 'buy',
       price: '0.00001',
+      priceErrMsg: '',
       amount: '0.001',
+      amountErrMsg: '',
     },
     sell: {
       action: 'sell',
       price: '',
+      priceErrMsg: '',
       amount: '',
+      amountErrMsg: '',
+    },
+  };
+
+  checkAll = {
+    checkPrice: action => {
+      const { price } = this.state[action];
+      const {
+        model: { currentPair },
+      } = this.props;
+      // console.log(
+      //   Patterns.check('precision')(price, currentPair.precision),
+      //   price,
+      //   currentPair.precision,
+      //   '============='
+      // );
+      const errMsg = Patterns.check('required')(price) || Patterns.check('precision')(price, currentPair.precision);
+      this.changeBS(action, { priceErrMsg: errMsg });
+      return errMsg;
+    },
+    checkAmount: action => {
+      const { amount } = this.state[action];
+      const {
+        model: { currentPair, getPrecision },
+      } = this.props;
+      const errMsg =
+        Patterns.check('required')(amount) || Patterns.check('precision')(amount, getPrecision(currentPair.assets));
+      this.changeBS(action, { amountErrMsg: errMsg });
+      return errMsg;
+    },
+
+    confirm: () => {
+      return ['checkPrice', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
 
@@ -38,7 +74,7 @@ class PutOrder extends SwitchPair {
   };
 
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
-    const { changeBS } = this;
+    const { changeBS, checkAll } = this;
     const {
       model: { isLogin },
     } = this.props;
@@ -67,6 +103,7 @@ class PutOrder extends SwitchPair {
       model: { openModal, dispatch, currentPair },
       assetStore: { crossChainAsset = [], primaryAsset = [] },
     } = this.props;
+    const { priceErrMsg, amountErrMsg } = this.state[action];
     const currentCrossAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
     const currentPrimaryAsset = primaryAsset.filter((item = {}) => item.name === currentPair.assets)[0] || {};
     return (
@@ -82,9 +119,13 @@ class PutOrder extends SwitchPair {
           <div className={styles.pricelabel}>{label}价</div>
           <div className={styles.input}>
             <Input.Text
+              errMsg={priceErrMsg}
               value={price}
               onChange={value => {
                 changeBS(action, { price: value });
+              }}
+              onBlur={() => {
+                checkAll.checkPrice(action);
               }}
               suffix={currentPair.currency}
             />
@@ -94,9 +135,13 @@ class PutOrder extends SwitchPair {
           <div className={styles.amountlabel}>{label}量</div>
           <div className={styles.input}>
             <Input.Text
+              errMsg={amountErrMsg}
               value={amount}
               onChange={value => {
                 changeBS(action, { amount: value });
+              }}
+              onBlur={() => {
+                checkAll.checkAmount(action);
               }}
               suffix={currentPair.assets}
             />
