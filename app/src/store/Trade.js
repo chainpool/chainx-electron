@@ -29,7 +29,7 @@ export default class Trade extends ModelExtend {
     const account = this.getCurrentAccount();
     if (account.address) {
       const res = await getOrders(account.address, 0, 100);
-      console.log(res.data, '-------');
+      // console.log(res.data, '-------');
       if (res && res.data) {
         this.changeModel(
           {
@@ -55,7 +55,8 @@ export default class Trade extends ModelExtend {
 
   getQuotations = async () => {
     const currentPair = this.currentPair;
-    const res = await getQuotations(currentPair.id, 1);
+    const res = await getQuotations(currentPair.id, 10);
+    console.log(res, '-----------');
     const formatList = list => {
       return list.map((item = []) => ({
         price: this.setPrecision(item[0], currentPair.precision),

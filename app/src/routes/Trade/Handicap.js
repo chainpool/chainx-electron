@@ -44,7 +44,10 @@ class Handicap extends SwitchPair {
       ],
       dataSource: [],
     });
-    const dataSourceSell = sellList;
+
+    const dataSourceSell = new Array(14 - sellList.length > 0 ? 14 - sellList.length : 0)
+      .fill()
+      .concat(sellList.slice(Math.max(sellList.length - 14, 0), sellList.length));
     const dataSourceBuy = buyList;
     return (
       <div className={styles.handicap}>
