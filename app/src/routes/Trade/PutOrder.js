@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { Inject, Patterns, getDecimalLength, toJS } from '../../utils';
+import { Inject, Patterns, getDecimalLength, toJS, formatNumber } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -40,6 +40,7 @@ class PutOrder extends SwitchPair {
       this.setState({
         tradeErrMsg: err,
       });
+      return err;
     },
     checkPrice: action => {
       const { price } = this.state[action];
@@ -67,8 +68,7 @@ class PutOrder extends SwitchPair {
       return errMsg;
     },
 
-    confirm: () => {
-      const { action } = this.state;
+    confirm: action => {
       return ['checkPrice', 'checkAmount'].every(item => !this.checkAll[item](action));
     },
   };
@@ -180,7 +180,8 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.totalPrice}>
-          交易额 0.00000000 {currentPair.currency}{' '}
+          交易额 {formatNumber.toFixed(price * amount, Math.max(currentPair.precision, currentPair.assetsPrecision))}{' '}
+          {currentPair.currency}{' '}
           {!priceErrMsg && !amountErrMsg && tradeErrMsg ? (
             <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
           ) : null}
@@ -190,7 +191,7 @@ class PutOrder extends SwitchPair {
             <button
               className={styles[action]}
               onClick={() => {
-                if (checkAll.confirm() && !tradeErrMsg) {
+                if (checkAll.confirm(action) && !tradeErrMsg) {
                   openModal({
                     name: 'SignModal',
                     data: {
