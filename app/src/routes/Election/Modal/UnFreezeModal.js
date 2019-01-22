@@ -46,6 +46,7 @@ class UnFreezeModal extends Component {
           dataIndex: '_action',
           render: (value, item, index) => (
             <ButtonGroup>
+              {/*TODO: 调整button样式*/}
               <Button
                 type={item.canUnFreeze ? 'primary' : 'disabled'}
                 onClick={() => {
