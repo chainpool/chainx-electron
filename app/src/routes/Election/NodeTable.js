@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table, ButtonGroup, Button } from '../../components';
-import { Inject, isEmpty, toJS } from '../../utils';
+import { Button, ButtonGroup, Table } from '../../components';
+import { Inject, isEmpty, formatNumber } from '../../utils';
 
-@Inject(({ accountStore }) => ({ accountStore }))
+@Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {
   render() {
     const {
@@ -12,18 +12,21 @@ class NodeTable extends Component {
         dispatch,
         openModal,
         trustIntentions = [],
-        validatorIntentions = [],
-        waitingIntentions = [],
-        myIntentions = [],
+        activeValidators = [],
+        backupValidators = [],
+        validatorsWithMyNomination = [],
       },
       accountStore: { currentAccount = {} },
+      globalStore: { nativeAssetPrecision = 0 },
     } = this.props;
+
     const dataSources = {
       0: trustIntentions,
-      1: validatorIntentions,
-      2: waitingIntentions,
-      3: myIntentions,
+      1: activeValidators,
+      2: backupValidators,
+      3: validatorsWithMyNomination,
     };
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -40,36 +43,39 @@ class NodeTable extends Component {
         {
           title: '账户地址',
           ellipse: true,
-          dataIndex: 'account',
+          dataIndex: 'address',
           render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
           title: '自投票数',
           ellipse: true,
-          dataIndex: 'selfVoteShow',
+          dataIndex: 'selfVote',
+          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '总得票数',
-          dataIndex: 'totalNominationShow',
+          dataIndex: 'totalNomination',
+          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '奖池金额',
-          dataIndex: 'jackpotShow',
+          dataIndex: 'jackpot',
+          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '我的投票',
-          dataIndex: 'nominationShow',
-          render: value => (isEmpty(value) ? '--' : value),
+          dataIndex: 'myTotalVote',
+          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
         },
         {
           title: '赎回冻结',
-          dataIndex: 'revocationsTotalShow',
-          render: value => (isEmpty(value) ? '--' : value),
+          dataIndex: 'myRevocation',
+          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
         },
         {
           title: '待领利息',
-          dataIndex: 'interestShow',
-          render: value => (isEmpty(value) ? '--' : value),
+          dataIndex: 'myInterest',
+          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
         },
         {
           title: '',
@@ -84,15 +90,14 @@ class NodeTable extends Component {
                       name: 'VoteModal',
                       data: {
                         target: item.account,
-                        nomination: item.nomination,
-                        nominationShow: item.nominationShow,
+                        myTotalVote: item.myTotalVote,
                       },
                     });
                   }}>
                   投票
                 </Button>
               )}
-              {item.revocationsTotal ? (
+              {item.myRevocation ? (
                 <Button
                   onClick={() => {
                     openModal({

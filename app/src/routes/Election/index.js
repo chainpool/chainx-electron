@@ -8,7 +8,7 @@ import DepositMineTable from './DepositMineTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
-import { Inject, toJS } from '../../utils';
+import { Inject } from '../../utils';
 
 @Inject(({ electionStore: model, accountStore }) => ({ model, accountStore }))
 class Election extends Mixin {
@@ -20,20 +20,15 @@ class Election extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
-    this.getIntentions$ = await dispatch({
-      type: 'getIntentions',
-    });
-  };
 
-  componentWillUnsubscribe() {
-    this.getIntentions$ && this.getIntentions$.unsubscribe();
-  }
+    dispatch({ type: 'getIntentions' });
+  };
 
   render() {
     const { activeIndex } = this.state;
     const {
-      model: { openModal, intentions },
-      accountStore: { currentAccount = {} },
+      model: { openModal },
+      accountStore: { isValidator },
     } = this.props;
     const {
       globalStore: {
@@ -41,9 +36,6 @@ class Election extends Mixin {
       },
     } = this.props;
 
-    // console.log(activeIndex, toJS(intentions), '-------------------------------');
-
-    const isNode = intentions.filter((item = {}) => item.account === currentAccount.address)[0];
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
@@ -65,7 +57,7 @@ class Election extends Mixin {
               <div>全网总投票数 878,837,000，年化利息约为 4%</div>
               <TableTitle className={styles.tableTitle}>
                 <ul>
-                  {isNode ? (
+                  {isValidator ? (
                     <li>
                       <Button
                         type="blank"

@@ -29,13 +29,14 @@ class VoteModal extends Component {
       return ['checkAmount'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
       model: { dispatch, openModal, setDefaultPrecision },
       globalStore: {
-        modal: { data: { target, nomination = 0 } = {} },
+        modal: { data: { target, myTotalVote = 0 } = {} },
       },
     } = this.props;
 
@@ -72,7 +73,7 @@ class VoteModal extends Component {
           </Button>
         }>
         <div className={styles.voteModal}>
-          {!nomination ? null : (
+          {myTotalVote && (
             <RadioGroup>
               {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map(item => (
                 <Input.Radio
@@ -88,7 +89,7 @@ class VoteModal extends Component {
           )}
 
           <Input.Text
-            label={`${!nomination ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
+            label={`${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
             value={amount}
             errMsg={amountErrMsg}
             onChange={value => this.setState({ amount: value })}
@@ -96,8 +97,8 @@ class VoteModal extends Component {
             <span>
               修改后投票数：
               {action === 'add'
-                ? setDefaultPrecision(nomination + Number(setDefaultPrecision(amount, true)))
-                : setDefaultPrecision(nomination - Number(setDefaultPrecision(amount, true)))}
+                ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
+                : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
             </span>
           </Input.Text>
           <Input.Text

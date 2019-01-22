@@ -1,30 +1,87 @@
-import { _, ChainX, observable, formatNumber, Rx, resOk } from '../utils';
+import { _, ChainX, observable, resOk, Rx } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  getIntentions,
-  nominate,
-  getNominationRecords,
-  refresh,
-  unnominate,
-  unfreeze,
-  getBlockNumberObservable,
   claim,
+  getBlockNumberObservable,
+  getIntentions,
+  getNominationRecords,
   getPseduIntentions,
   getPseduNominationRecords,
+  nominate,
+  refresh,
+  unfreeze,
+  unnominate,
 } from '../services';
+import { computed } from 'mobx';
 
 export default class Election extends ModelExtend {
-  constructor(rootStore) {
-    super(rootStore);
-  }
-
   @observable name = 'election';
+  @observable originIntentions = []; // intensions rpc返回数据
+  @observable originNominationRecords = []; // 投票记录rpc返回数据
   @observable intentions = []; //所有节点
   @observable validatorIntentions = []; //结算节点
   @observable trustIntentions = []; //信托节点
   @observable waitingIntentions = []; //候补节点
   @observable myIntentions = []; //我的节点
   @observable pseduIntentions = []; //充值挖矿列表
+
+  @computed get validatorsWithAddress() {
+    return this.originIntentions.map(intention => {
+      return Object.assign({}, intention, { address: ChainX.account.encodeAddress(intention.account) });
+    });
+  }
+
+  @computed get validatorsWithRecords() {
+    const blockNumber = this.rootStore.chainStore.blockNumber;
+    if (typeof blockNumber === 'undefined') {
+      return [];
+    }
+
+    const calcRecordsForIntention = intention => {
+      const myRecord = this.originNominationRecords.find(record => record[0] === intention.account);
+      if (!myRecord) {
+        return {
+          myTotalVote: 0,
+          myRevocation: 0,
+          myInterest: 0,
+        };
+      }
+
+      const record = myRecord[1];
+      const myTotalVote = record.nomination;
+      const myRevocation = record.revocations.length > 0 ? record.revocations[1] : 0;
+
+      // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
+      const myWeight = (blockNumber - record.lastVoteWeightUpdate) * myTotalVote + record.lastVoteWeight;
+      // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
+      const nodeVoteWeight =
+        (blockNumber - intention.lastTotalVoteWeightUpdate) * intention.totalNomination + intention.lastTotalVoteWeight;
+      // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
+      const myInterest = (myWeight / nodeVoteWeight) * intention.jackpot;
+
+      return {
+        myTotalVote,
+        myRevocation,
+        myInterest,
+      };
+    };
+
+    return this.validatorsWithAddress.map(intention => {
+      return Object.assign({}, intention, calcRecordsForIntention(intention));
+    });
+  }
+
+  @computed get activeValidators() {
+    return this.validatorsWithRecords.filter(intention => intention.isValidator);
+  }
+
+  @computed get backupValidators() {
+    return this.validatorsWithRecords.filter(intention => !intention.isValidator);
+  }
+
+  @computed get validatorsWithMyNomination() {
+    return this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0);
+  }
 
   reload = () => {
     this.getIntentions();
@@ -84,56 +141,9 @@ export default class Election extends ModelExtend {
   };
 
   getIntentions = async () => {
-    const intentions$ = Rx.combineLatest(getIntentions(), this.getNominationRecords(), getBlockNumberObservable());
-    return intentions$.subscribe(([intentions = [], nominationRecords = [], chainHeight]) => {
-      let res = intentions;
-      let validatorIntentions = [];
-      // let trustIntentions = [];
-      let waitingIntentions = [];
-      let myIntentions = [];
-      if (res) {
-        res = res.map((item = {}) => {
-          const findVotes = nominationRecords.filter((one = []) => one[0] === item.account)[0] || [];
-          const newItem = { ...item, ...(findVotes.length ? findVotes[1] : {}) };
-          newItem.revocationsTotal = _.get(newItem, 'revocations.length')
-            ? _.sumBy(newItem.revocations, (one = []) => one[1])
-            : undefined; // 总的撤回投票记录
-
-          newItem.interest = this.getInterest(chainHeight, {
-            lastWeightUpdate: newItem.lastVoteWeightUpdate,
-            amount: newItem.nomination,
-            lastWeight: newItem.lastVoteWeight,
-            lastTotalWeightUpdate: newItem.lastTotalVoteWeightUpdate,
-            totalAmount: newItem.totalNomination,
-            lastTotalWeight: newItem.lastTotalVoteWeight,
-            jackpot: newItem.jackpot,
-          }); // 待领利息
-
-          return {
-            ...newItem,
-            interestShow: this.setDefaultPrecision(item.interest),
-            account: ChainX.account.encodeAddress(newItem.account),
-            nominationShow: this.setDefaultPrecision(newItem.nomination),
-            jackpotShow: this.setDefaultPrecision(newItem.jackpot),
-            selfVoteShow: this.setDefaultPrecision(newItem.selfVote),
-            totalNominationShow: this.setDefaultPrecision(newItem.totalNomination),
-            revocationsTotalShow: this.setDefaultPrecision(newItem.revocationsTotal),
-          };
-        });
-        validatorIntentions = res.filter(item => item.isValidator);
-        myIntentions = res.filter(item => !item.isValidator && (item.nomination || item.revocationsTotal));
-        waitingIntentions = res.filter(item => !item.isValidator && !item.nomination && !item.revocationsTotal);
-      }
-      this.changeModel(
-        {
-          intentions: res,
-          validatorIntentions,
-          myIntentions,
-          waitingIntentions,
-        },
-        []
-      );
-    });
+    const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
+    this.changeModel('originIntentions', intentions);
+    this.changeModel('originNominationRecords', records);
   };
 
   getNominationRecords = async () => {
