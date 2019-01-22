@@ -12,6 +12,7 @@ export default class Trade extends ModelExtend {
     assets: '',
     currency: '',
     precision: '',
+    assetsPrecision: '',
   };
   @observable orderPairs = [];
   @observable buyList = [];
@@ -95,7 +96,14 @@ export default class Trade extends ModelExtend {
     } else {
       currentPair = this.orderPairs[0];
     }
-    this.changeModel('currentPair', currentPair, {});
+    this.changeModel(
+      'currentPair',
+      {
+        ...currentPair,
+        assetsPrecision: this.getPrecision(currentPair.assets),
+      },
+      {}
+    );
     // console.log(toJS(currentPair));
   };
 

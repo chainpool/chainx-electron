@@ -96,9 +96,9 @@ export const Patterns = {
   },
   precision: (inputValue, precision, errMsg = '小数位数') => {
     if (inputValue && !_.isNaN(precision)) {
-      inputValue = new BigNumber(parseFloat(inputValue)).toString();
+      inputValue = inputValue.replace(/(\.\d+?)0*$/, '$1'); //parseFloat(inputValue);
       const length = _.get(String(inputValue).split('.')[1] || 0, 'length');
-      console.log(inputValue, length, Number(precision), '+++++++++++++++++++++++++++++++++++');
+      // console.log(inputValue, length, Number(precision), '+++++++++++++++++++++++++++++++++++');
       return length > Number(precision) ? `小数位数最大${precision}位` : '';
     }
   },
@@ -111,6 +111,13 @@ export const Patterns = {
       return Patterns[value](...params);
     };
   },
+};
+
+export const getDecimalLength = value => {
+  if (value) {
+    value = String(value).replace(/0*$/, '');
+    return _.get(String(value).split('.')[1] || '', 'length');
+  }
 };
 
 export const Device = (() => {
