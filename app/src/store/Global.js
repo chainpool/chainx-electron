@@ -1,12 +1,17 @@
 import { localSave, observable } from '@utils';
 import ModelExtend from './ModelExtend';
 import { getAssets } from '../services';
-import { computed } from 'mobx';
+import { autorun, computed } from 'mobx';
 
 export default class Global extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
+
+    autorun(() => {
+      localSave.set('asset', this.assets);
+    });
   }
+
   @observable
   modal = {
     status: false,
@@ -20,12 +25,21 @@ export default class Global extends ModelExtend {
     return this.assets.map(asset => asset.chain);
   }
 
+  @computed get nativeAsset() {
+    return this.assets.find(asset => asset.isNative);
+  }
+
+  @computed get nativeAssetPrecision() {
+    return this.nativeAsset.precision;
+  }
+
   openModal = (payload = {}) => {
     this.changeModel('modal', {
       status: true,
       ...payload,
     });
   };
+
   closeModal = () => {
     this.changeModel('modal', {
       status: false,
@@ -37,7 +51,6 @@ export default class Global extends ModelExtend {
   getAllAssets = async () => {
     if (this.assets.length) return Promise.resolve(this.assets);
     let res = await getAssets(0, 100);
-    // console.log(res, '----');
     const result = res.data.map((item = {}) => {
       return {
         ...item,
@@ -47,7 +60,6 @@ export default class Global extends ModelExtend {
     this.changeModel({
       assets: result,
     });
-    localSave.set('asset', result);
     return result;
   };
 }

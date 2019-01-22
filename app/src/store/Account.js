@@ -13,6 +13,12 @@ export default class Store extends ModelExtend {
     }));
   }
 
+  @computed get isValidator() {
+    const intentions = this.rootStore.electionStore.validatorsWithAddress || [];
+    const targetIntention = intentions.find(intention => intention.address === this.currentAccount.address);
+    return !!targetIntention;
+  }
+
   setCurrentAccount(address = '') {
     let newCurrentAccount = this.accounts.filter(item => item.address === this.currentAccount.address)[0];
     const findAccount = _.find(this.accounts, (item = {}) => item.address === address);

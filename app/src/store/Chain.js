@@ -1,6 +1,6 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
-import { _, ChainX } from '@utils/index';
+import { _ } from '@utils/index';
 import { getBlockNumberObservable } from '../services';
 
 let unsubscribeFn;
