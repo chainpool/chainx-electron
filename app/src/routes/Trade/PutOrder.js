@@ -124,7 +124,6 @@ class PutOrder extends SwitchPair {
                   data: {
                     description: [{ name: '操作', value: '交易' }],
                     callback: ({ signer, acceleration }) => {
-                      console.log(price, amount, '------------');
                       dispatch({
                         type: 'putOrder',
                         payload: {

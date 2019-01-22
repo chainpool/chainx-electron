@@ -41,7 +41,7 @@ export default class Trade extends ModelExtend {
                 amount: this.setPrecision(item.amount, currentPair.assets),
                 hasfillAmount: this.setPrecision(item.hasfillAmount, currentPair.assets),
                 reserveLast: this.setPrecision(
-                  item.price,
+                  item.reserveLast,
                   item.direction === 'Buy' ? currentPair.precision : currentPair.assets
                 ),
               };
