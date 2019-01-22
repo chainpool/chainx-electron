@@ -37,6 +37,7 @@ export default class Global extends ModelExtend {
   getAllAssets = async () => {
     if (this.assets.length) return Promise.resolve(this.assets);
     let res = await getAssets(0, 100);
+    // console.log(res, '----');
     const result = res.data.map((item = {}) => {
       return {
         ...item,

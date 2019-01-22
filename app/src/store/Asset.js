@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
+import { _, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAsset,
@@ -86,6 +86,7 @@ export default class Asset extends ModelExtend {
           const token = item.name;
           const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
           const findOne = allAssets.filter((one = {}) => one.name === item.name)[0] || {};
+          //console.log(toJS(allAssets), '----');
           return {
             ...item,
             freeShow: this.setPrecision(free, token),
@@ -95,6 +96,7 @@ export default class Asset extends ModelExtend {
             reservedWithdrawalShow: this.setPrecision(reservedWithdrawal, token),
             totalShow: this.setPrecision(total, token),
             chain: findOne.chain,
+            trusteeAddr: findOne.trusteeAddr,
           };
         });
     };
@@ -145,6 +147,7 @@ export default class Asset extends ModelExtend {
   };
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
+    console.log(signer, acceleration, dest, token, amount, remark);
     amount = this.setPrecision(amount, token, true);
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
       resOk(result) && this.reload();

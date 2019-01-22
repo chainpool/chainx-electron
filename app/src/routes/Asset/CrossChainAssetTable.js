@@ -68,6 +68,9 @@ class CrossChainAssetTable extends Component {
                   onClick={() => {
                     openModal({
                       name: 'DepositModal',
+                      data: {
+                        trusteeAddr: item.trusteeAddr,
+                      },
                     });
                   }}>
                   充值
