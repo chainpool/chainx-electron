@@ -99,8 +99,10 @@ export default class Trade extends ModelExtend {
   };
 
   putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
-    // console.log(signer, acceleration, pairId, orderType, direction, amount, price, '====');
-    putOrder(signer, acceleration, pairId, orderType, direction, amount, price, (err, result) => {
+    const currentPair = this.currentPair;
+    price = this.setPrecision(price, currentPair.precision, true);
+    amount = this.setPrecision(amount, currentPair.assets, true);
+    putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
       resOk(result) && this.reload();
     });
   };
