@@ -49,7 +49,7 @@ export default class Election extends ModelExtend {
 
       const record = myRecord[1];
       const myTotalVote = record.nomination;
-      const myRevocation = record.revocations.length > 0 ? record.revocations[1] : 0;
+      const myRevocation = record.revocations.length > 0 ? record.revocations[0][1] : 0;
 
       // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
       const myWeight = (blockNumber - record.lastVoteWeightUpdate) * myTotalVote + record.lastVoteWeight;
