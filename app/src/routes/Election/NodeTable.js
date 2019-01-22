@@ -104,6 +104,7 @@ class NodeTable extends Component {
                       name: 'UnFreezeModal',
                       data: {
                         account: item.account,
+                        myRevocations: item.myRevocations,
                       },
                     });
                   }}>

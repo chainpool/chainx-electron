@@ -1,26 +1,33 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Modal, Table } from '../../../components';
 import * as styles from './UnFreezeModal.less';
-import { Inject, moment_helper, toJS } from '../../../utils';
+import { formatNumber, Inject, moment_helper } from '../../../utils';
 
 @Inject(({ chainStore }) => ({ chainStore }))
 class UnFreezeModal extends Component {
   render() {
     const {
-      model: { dispatch, intentions, openModal },
-      chainStore: { blockNumber },
+      model: { dispatch, openModal },
+      chainStore: { blockNumber, blockDuration },
       globalStore: {
-        modal: { data: { account = '' } = {} },
+        modal: { data: { account = '', myRevocations = [] } = {} },
       },
     } = this.props;
-    const node = intentions.filter(item => item.account === account)[0] || {};
+
+    const normalizedRevocations = myRevocations.map(revocation => {
+      return {
+        canUnFreeze: revocation.revocationHeight <= blockNumber,
+        amount: formatNumber.localString(revocation.amount),
+        time: Date.now() + (revocation.revocationHeight - blockNumber) * blockDuration,
+      };
+    });
 
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '冻结金额',
-          dataIndex: '1',
+          dataIndex: 'amount',
         },
         {
           title: () => (
@@ -28,9 +35,9 @@ class UnFreezeModal extends Component {
               到期时间<span className={styles.desc}>(预估)</span>
             </span>
           ),
-          dataIndex: '0',
+          dataIndex: 'time',
           render: v => {
-            return moment_helper.formatHMS(Date.now() + (Number(blockNumber) - Number(v)) * 2000);
+            return moment_helper.formatHMS(v);
           },
         },
 
@@ -40,7 +47,7 @@ class UnFreezeModal extends Component {
           render: (value, item, index) => (
             <ButtonGroup>
               <Button
-                type="primary"
+                type={item.canUnFreeze ? 'primary' : 'disabled'}
                 onClick={() => {
                   openModal({
                     name: 'SignModal',
@@ -52,7 +59,7 @@ class UnFreezeModal extends Component {
                           payload: {
                             signer,
                             acceleration,
-                            target: node.account,
+                            target: account,
                             revocationIndex: index,
                           },
                         });
@@ -66,7 +73,7 @@ class UnFreezeModal extends Component {
           ),
         },
       ],
-      dataSource: node.revocations || [],
+      dataSource: normalizedRevocations,
     };
 
     return (
