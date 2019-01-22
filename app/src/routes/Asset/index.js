@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Mixin, Button, RouterGo } from '../../components';
+import { Button, Icon, Mixin, RouterGo } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';
 import CertTable from './CertTable';

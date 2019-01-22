@@ -1,13 +1,13 @@
-import { _, moment_helper, observable, resOk, toJS } from '../utils';
+import { _, moment_helper, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAsset,
   getCert,
+  getDepositRecords,
+  getWithdrawalListByAccount,
   register,
   transfer,
   withdraw,
-  getWithdrawalListByAccount,
-  getDepositRecords,
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
@@ -59,9 +59,7 @@ export default class Asset extends ModelExtend {
   getCert = async () => {
     const currentAccount = this.getCurrentAccount();
     const res = await getCert(currentAccount.address);
-    if (res) {
-      res.map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
-    }
+    (res || []).map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
     this.changeModel('certs', res, []);
   };
 

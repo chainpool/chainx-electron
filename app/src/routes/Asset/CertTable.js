@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { setColumnsWidth, observer } from '../../utils';
+import React from 'react';
+import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Mixin, Table, Button } from '../../components';
+import { Button, Mixin, Table } from '../../components';
 
 @observer
 class CertTable extends Mixin {
@@ -9,6 +9,7 @@ class CertTable extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
+
     dispatch({
       type: 'getCert',
     });
