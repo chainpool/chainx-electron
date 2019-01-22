@@ -96,7 +96,7 @@ export const Patterns = {
   },
   precision: (inputValue, precision, errMsg = '小数位数') => {
     if (inputValue && !_.isNaN(precision)) {
-      inputValue = inputValue.replace(/(\.\d+?)0*$/, '$1'); //parseFloat(inputValue);
+      inputValue = String(inputValue).replace(/(\.\d+?)0*$/, '$1'); //parseFloat(inputValue);
       const length = _.get(String(inputValue).split('.')[1] || 0, 'length');
       // console.log(inputValue, length, Number(precision), '+++++++++++++++++++++++++++++++++++');
       return length > Number(precision) ? `小数位数最大${precision}位` : '';

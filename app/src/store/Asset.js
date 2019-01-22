@@ -86,6 +86,7 @@ export default class Asset extends ModelExtend {
           const findOne = allAssets.filter((one = {}) => one.name === item.name)[0] || {};
           //console.log(toJS(allAssets), '----');
           return {
+            ...item.details,
             ...item,
             freeShow: this.setPrecision(free, token),
             reservedStakingShow: this.setPrecision(reservedStaking, token),
