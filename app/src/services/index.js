@@ -44,4 +44,6 @@ export const getQuotations = (...payload) => trade.getQuotations(...payload);
 
 export const putOrder = (...payload) => trade.putOrder(...payload);
 
+export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
+
 export const getOrders = (...payload) => trade.getOrders(...payload);

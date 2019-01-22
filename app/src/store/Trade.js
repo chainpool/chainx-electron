@@ -1,6 +1,6 @@
 import { moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs, getQuotations, putOrder, getOrders } from '../services';
+import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -41,7 +41,7 @@ export default class Trade extends ModelExtend {
                 amount: this.setPrecision(item.amount, currentPair.assets),
                 hasfillAmount: this.setPrecision(item.hasfillAmount, currentPair.assets),
                 reserveLast: this.setPrecision(
-                  item.price,
+                  item.reserveLast,
                   item.direction === 'Buy' ? currentPair.precision : currentPair.assets
                 ),
               };
@@ -99,8 +99,22 @@ export default class Trade extends ModelExtend {
   };
 
   putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
-    // console.log(signer, acceleration, pairId, orderType, direction, amount, price, '====');
-    putOrder(signer, acceleration, pairId, orderType, direction, amount, price, (err, result) => {
+    const currentPair = this.currentPair;
+    price = this.setPrecision(price, currentPair.precision, true);
+    amount = this.setPrecision(amount, currentPair.assets, true);
+    return new Promise(resolve => {
+      putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
+        if (resOk(result)) {
+          this.reload();
+          resolve(result);
+        }
+      });
+    });
+  };
+
+  cancelOrder = ({ signer, acceleration, pairId, index }) => {
+    console.log(signer, acceleration, pairId, index, '======');
+    cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
     });
   };

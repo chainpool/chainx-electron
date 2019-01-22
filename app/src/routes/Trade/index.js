@@ -27,16 +27,6 @@ class Trade extends SwitchPair {
         id,
       },
     });
-    // setTimeout(() => {
-    //   Toast.success(
-    //     '挂单已完成',
-    //     <div>
-    //       交易对 PCX/BTC; 方向 买入；报价 0.00043527
-    //       <br />
-    //       数量 3.74638923
-    //     </div>
-    //   );
-    // }, 1000);
   };
 
   render() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '../../../components';
+import { Table, Button } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
 import { observer, moment_helper } from '../../../utils';
@@ -12,7 +12,7 @@ class CurrentOrderTable extends SwitchPair {
 
   render() {
     const {
-      model: { currentOrderList = [], currentPair = {} },
+      model: { openModal, dispatch, currentOrderList = [], currentPair = {} },
     } = this.props;
     const tableProps = {
       tableHeight: [36, 40],
@@ -57,7 +57,30 @@ class CurrentOrderTable extends SwitchPair {
           width: 50,
           title: '',
           dataIndex: '_action',
-          render: () => <span className="blue">撤销</span>,
+          render: (value, item) => (
+            <Button
+              onClick={() => {
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '撤单' }],
+                    callback: ({ signer, acceleration }) => {
+                      dispatch({
+                        type: 'cancelOrder',
+                        payload: {
+                          signer,
+                          acceleration,
+                          pairId: currentPair.id,
+                          index: item.index,
+                        },
+                      });
+                    },
+                  },
+                });
+              }}>
+              撤销
+            </Button>
+          ),
         },
       ],
       dataSource: currentOrderList,

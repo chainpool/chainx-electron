@@ -28,13 +28,13 @@ class Handicap extends SwitchPair {
       className: styles.tableContainer,
       columns: [
         {
-          width: '40%',
+          width: '38%',
           className: color,
-          title: `(价格${currentPair.currency})`,
+          title: `价格(${currentPair.currency})`,
           dataIndex: 'price',
         },
         {
-          title: `(数量${currentPair.assets})`,
+          title: `数量(${currentPair.assets})`,
           dataIndex: 'amount',
         },
         {
@@ -49,9 +49,9 @@ class Handicap extends SwitchPair {
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>挂单列表</div>
-        <Table {...setTableProps('red')} dataSource={dataSourceBuy} />
+        <Table {...setTableProps('red')} dataSource={dataSourceSell} />
         <div className={styles.latestprice}>0.00046372</div>
-        <Table {...setTableProps('green')} dataSource={dataSourceSell} showHead={false} />
+        <Table {...setTableProps('green')} dataSource={dataSourceBuy} showHead={false} />
       </div>
     );
   }
