@@ -9,7 +9,7 @@ import btcIcon from '../../resource/btc.png';
 class CrossChainAssetTable extends Component {
   render() {
     const {
-      model: { openModal, crossChainAccountAssets },
+      model: { openModal, crossChainAccountAssetsWithZero },
       widths,
     } = this.props;
 
@@ -112,7 +112,7 @@ class CrossChainAssetTable extends Component {
         ],
         widths
       ),
-      dataSource: crossChainAccountAssets,
+      dataSource: crossChainAccountAssetsWithZero,
     };
     return <Table {...tableProps} />;
   }

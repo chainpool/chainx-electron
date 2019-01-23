@@ -68,6 +68,36 @@ export default class Asset extends ModelExtend {
     return this.normalizedAccountAssets.filter(asset => !asset.isNative);
   }
 
+  @computed get crossChainAccountAssetsWithZero() {
+    const assetsInfo = this.rootStore.globalStore.crossChainAssets; // 获取资产基本信息
+    if (!assetsInfo) {
+      return [];
+    }
+
+    const tokensWithValue = this.crossChainAccountAssets.map(asset => asset.name);
+
+    const zeroAssets = assetsInfo
+      .filter(info => !tokensWithValue.includes(info.name))
+      .map(info => {
+        return {
+          free: 0,
+          reservedStaking: 0,
+          reservedStakingRevocation: 0,
+          reservedDexSpot: 0,
+          reservedWithdrawal: 0,
+          total: 0,
+          isNative: info.isNative,
+          name: info.name,
+          tokenName: info.tokenName,
+          chain: info.chain,
+          precision: info.precision,
+          trusteeAddr: info.trusteeAddr,
+        };
+      });
+
+    return [...this.crossChainAccountAssets, ...zeroAssets];
+  }
+
   @computed get normalizedWithdrawList() {
     return this.onChainWithdrawList.map(withdraw => {
       let state = '';

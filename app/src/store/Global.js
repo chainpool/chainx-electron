@@ -25,6 +25,10 @@ export default class Global extends ModelExtend {
     return this.assets.map(asset => asset.chain);
   }
 
+  @computed get crossChainAssets() {
+    return this.assets.filter(asset => !asset.isNative);
+  }
+
   @computed get nativeAsset() {
     return this.assets.find(asset => asset.isNative);
   }
