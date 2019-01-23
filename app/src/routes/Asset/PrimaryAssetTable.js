@@ -71,6 +71,7 @@ class PrimaryAssetTable extends Component {
                   领币
                 </Button>
                 <Button
+                  type={item.free > 0 ? 'primary' : 'disabled'}
                   onClick={() => {
                     openModal({
                       name: 'TransferModal',
