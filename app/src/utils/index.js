@@ -163,9 +163,9 @@ export const formatNumber = {
     if (isEmpty(value)) return '';
     return Number(value).toLocaleString();
   },
-  toFixed: (value, precision = 0) => {
+  toFixed: (value, precision) => {
     if (isEmpty(value)) return '';
-    return new BigNumber(Number(value)).toFixed(Number(precision));
+    return new BigNumber(Number(value)).toFixed(Number(precision || 0));
   },
   toPrecision: (value, precision = 0, multiplication = false) => {
     precision = Number(precision);

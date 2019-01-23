@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { Inject, Patterns, formatNumber } from '../../utils';
+import { Inject, Patterns, formatNumber, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -29,12 +29,9 @@ class PutOrder extends SwitchPair {
     checkTotal: action => {
       const { price, amount } = this.state[action];
       const {
-        model: { currentPair, setPrecision },
+        model: { setPrecision },
       } = this.props;
-      const errMsg = Patterns.check('smaller')(
-        setPrecision(1, Math.max(currentPair.precision, currentPair.assetsPrecision)),
-        price * amount
-      );
+      const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
       const err = errMsg ? '交易额太小' : '';
       this.changeBS(action, { tradeErrMsg: err });
       return err;
@@ -105,10 +102,18 @@ class PutOrder extends SwitchPair {
       : setPrecision(currentPrimaryAssetFree, currentPair.assets);
   };
 
+  getMaxTradePrecision = () => {
+    const {
+      model: { currentPair, getPrecision },
+    } = this.props;
+    // 交易额的精度要用资产自身的精度
+    return Math.max(getPrecision(currentPair.currency), currentPair.assetsPrecision);
+  };
+
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
     const {
-      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision, getPrecision },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
@@ -197,8 +202,7 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.totalPrice}>
-          交易额 {formatNumber.toFixed(price * amount, Math.max(currentPair.precision, currentPair.assetsPrecision))}{' '}
-          {currentPair.currency}{' '}
+          交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
           {!priceErrMsg && !amountErrMsg && tradeErrMsg ? (
             <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
           ) : null}
