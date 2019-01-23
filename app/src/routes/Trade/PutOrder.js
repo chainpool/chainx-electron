@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
 import { _, Inject, Patterns, formatNumber, toJS, RegEx } from '../../utils';
 import * as styles from './PutOrder.less';
 
-@Inject(({ assetStore }) => ({ assetStore }))
+@Inject(({ assetStore, accountStore }) => ({ assetStore, accountStore }))
 class PutOrder extends SwitchPair {
   state = {
     buy: {
@@ -31,7 +31,7 @@ class PutOrder extends SwitchPair {
       const {
         model: { setPrecision },
       } = this.props;
-      if (price && amount) {
+      if (amount !== '' && price) {
         const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
         const err = errMsg ? '交易额太小' : '';
         this.changeBS(action, { tradeErrMsg: err });
@@ -125,8 +125,10 @@ class PutOrder extends SwitchPair {
 
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
+
     const {
       model: { isLogin, openModal, dispatch, currentPair, setPrecision },
+      accountStore: { currentAccount },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
@@ -142,6 +144,9 @@ class PutOrder extends SwitchPair {
     const sliderProps = {
       value: Number(amount),
       onChange: value => {
+        checkAll.checkAmount(action, () => {
+          checkAll.checkTotal(action);
+        });
         changeBS(action, { amount: value });
       },
       marks: marks,
@@ -218,9 +223,7 @@ class PutOrder extends SwitchPair {
         </div>
         <div className={styles.totalPrice}>
           交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
-          {!priceErrMsg && !amountErrMsg && price && amount && tradeErrMsg ? (
-            <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
-          ) : null}
+          {tradeErrMsg ? <div className={styles.tradeErrMsg}>{tradeErrMsg}</div> : null}
         </div>
         {isLogin() ? (
           <div className={styles.submit}>
@@ -231,7 +234,13 @@ class PutOrder extends SwitchPair {
                   openModal({
                     name: 'SignModal',
                     data: {
-                      description: [{ name: '操作', value: '交易' }],
+                      description: [
+                        { name: '操作', value: '交易' },
+                        { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
+                        { name: '方向', value: action === 'buy' ? '买入' : '卖出' },
+                        { name: '报价', value: price },
+                        { name: '账户', value: currentAccount.address },
+                      ],
                       callback: ({ signer, acceleration }) => {
                         dispatch({
                           type: 'putOrder',
