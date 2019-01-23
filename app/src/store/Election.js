@@ -16,7 +16,7 @@ import { computed } from 'mobx';
 
 export default class Election extends ModelExtend {
   @observable name = 'election';
-  @observable originIntentions = []; // intensions rpc返回数据
+  @observable originIntentions = []; // intentions rpc返回数据
   @observable originNominationRecords = []; // 投票记录rpc返回数据
   @observable intentions = []; //所有节点
   @observable validatorIntentions = []; //结算节点
@@ -87,15 +87,23 @@ export default class Election extends ModelExtend {
   }
 
   @computed get validators() {
-    return this.validatorsWithRecords.filter(intention => intention.isValidator);
+    return [...this.validatorsWithRecords.filter(intention => intention.isValidator)].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   @computed get backupValidators() {
-    return this.validatorsWithRecords.filter(intention => !intention.isValidator);
+    return [...this.validatorsWithRecords.filter(intention => !intention.isValidator)].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   @computed get validatorsWithMyNomination() {
-    return this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0);
+    return [
+      ...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0),
+    ].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   reload = () => {
