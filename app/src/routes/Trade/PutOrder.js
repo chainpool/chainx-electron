@@ -1,13 +1,12 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { Inject, Patterns, getDecimalLength, toJS, formatNumber } from '../../utils';
+import { Inject, Patterns, formatNumber } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class PutOrder extends SwitchPair {
   state = {
-    tradeErrMsg: '',
     buy: {
       action: 'buy',
       price: '0.00001',
@@ -30,12 +29,11 @@ class PutOrder extends SwitchPair {
     checkTotal: action => {
       const { price, amount } = this.state[action];
       const {
-        model: { currentPair },
+        model: { currentPair, setPrecision },
       } = this.props;
-      const [priceLength, amountLength] = [getDecimalLength(price), getDecimalLength(amount)];
       const errMsg = Patterns.check('smaller')(
-        priceLength + amountLength,
-        Math.max(currentPair.precision, currentPair.assetsPrecision)
+        setPrecision(1, Math.max(currentPair.precision, currentPair.assetsPrecision)),
+        price * amount
       );
       const err = errMsg ? '交易额太小' : '';
       this.changeBS(action, { tradeErrMsg: err });
@@ -58,7 +56,7 @@ class PutOrder extends SwitchPair {
       const errMsg =
         Patterns.check('required')(amount) ||
         Patterns.check('precision')(amount, currentPair.assetsPrecision) ||
-        Patterns.check('smaller')(amount, this.getMaxAmount(price), '数量不足');
+        Patterns.check('smaller')(amount, this.getMaxAmount(action, price), '数量不足');
       this.changeBS(action, { amountErrMsg: errMsg });
       return errMsg;
     },
@@ -85,30 +83,36 @@ class PutOrder extends SwitchPair {
       },
     });
   };
-  getMaxAmount = price => {
+
+  getCurrentAssetFree = () => {
     const {
-      model: { currentPair, setPrecision },
-      assetStore: { crossChainAsset = [] },
+      model: { currentPair },
+      assetStore: { crossChainAsset = [], primaryAsset = [] },
     } = this.props;
     const currentCrossAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
-    return formatNumber.toFixed(
-      setPrecision(currentCrossAsset.Free, currentPair.currency) / price,
-      currentPair.assetsPrecision
-    );
+    const currentPrimaryAsset = primaryAsset.filter((item = {}) => item.name === currentPair.assets)[0] || {};
+    return [currentCrossAsset.Free, currentPrimaryAsset.Free];
+  };
+
+  getMaxAmount = (action, price) => {
+    price = price > 0 ? price : 1;
+    const {
+      model: { currentPair, setPrecision },
+    } = this.props;
+    const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
+    return action === 'buy'
+      ? setPrecision(currentCrossAssetFree / price, currentPair.currency)
+      : setPrecision(currentPrimaryAssetFree, currentPair.assets);
   };
 
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
-
     const {
-      model: { isLogin, openModal, dispatch, currentPair },
-      assetStore: { crossChainAsset = [], primaryAsset = [] },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
-    //const { tradeErrMsg } = this.state;
-    const currentCrossAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
-    const currentPrimaryAsset = primaryAsset.filter((item = {}) => item.name === currentPair.assets)[0] || {};
-    const max = +this.getMaxAmount(price);
+    const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
+    const max = +this.getMaxAmount(action, price);
     const marks = {
       0: '',
       [max * 0.25]: '',
@@ -125,7 +129,7 @@ class PutOrder extends SwitchPair {
       marks: marks,
       max: max,
       defaultValue: 0,
-      step: +formatNumber.toFixed(1 / Math.pow(10, currentPair.assetsPrecision), currentPair.assetsPrecision),
+      step: +setPrecision(1, currentPair.assets),
       disabled: false,
     };
 
@@ -134,7 +138,9 @@ class PutOrder extends SwitchPair {
         <div className={styles.freebalance}>
           可用余额:{' '}
           <span>
-            {action === 'buy' ? currentCrossAsset.freeShow || '-' : currentPrimaryAsset.freeShow || '-'}
+            {action === 'buy'
+              ? setPrecision(currentCrossAssetFree, currentPair.currency) || '-'
+              : setPrecision(currentPrimaryAssetFree, currentPair.assets) || '-'}
             <span>{action === 'buy' ? currentPair.currency : currentPair.assets}</span>
           </span>
         </div>
@@ -142,6 +148,7 @@ class PutOrder extends SwitchPair {
           <div className={styles.pricelabel}>{label}价</div>
           <div className={styles.input}>
             <Input.Text
+              type="decimal"
               errMsg={priceErrMsg}
               value={price}
               onChange={value => {
@@ -161,6 +168,7 @@ class PutOrder extends SwitchPair {
           <div className={styles.amountlabel}>{label}量</div>
           <div className={styles.input}>
             <Input.Text
+              type="decimal"
               errMsg={amountErrMsg}
               value={amount}
               onChange={value => {
@@ -200,7 +208,7 @@ class PutOrder extends SwitchPair {
             <button
               className={styles[action]}
               onClick={() => {
-                if (checkAll.confirm(action) && !tradeErrMsg) {
+                if ((checkAll.confirm(action) && !tradeErrMsg) || true) {
                   openModal({
                     name: 'SignModal',
                     data: {
