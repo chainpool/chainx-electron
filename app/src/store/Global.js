@@ -30,7 +30,7 @@ export default class Global extends ModelExtend {
   }
 
   @computed get nativeAssetPrecision() {
-    return this.nativeAsset.precision;
+    return (this.nativeAsset && this.nativeAsset.precision) || 0;
   }
 
   openModal = (payload = {}) => {

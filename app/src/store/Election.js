@@ -44,7 +44,7 @@ export default class Election extends ModelExtend {
     }
 
     const calcRecordsForIntention = intention => {
-      const myRecord = this.originNominationRecords.find(record => record[0] === intention.account);
+      const myRecord = (this.originNominationRecords || []).find(record => record[0] === intention.account);
       if (!myRecord) {
         return {
           myTotalVote: 0,

@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { observer, setColumnsWidth } from '../../utils';
+import { formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button, ButtonGroup } from '../../components';
+import { Button, ButtonGroup, Table } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 
-@observer
+@Inject(({ globalStore }) => ({ globalStore }))
 class PrimaryAssetTable extends Component {
   render() {
     const {
-      model: { openModal, primaryAsset = [] },
+      model: { openModal, nativeAccountAssets = [] },
+      globalStore: { nativeAssetPrecision },
       widths,
     } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: setColumnsWidth(
@@ -31,23 +33,28 @@ class PrimaryAssetTable extends Component {
           },
           {
             title: '可用余额',
-            dataIndex: 'freeShow',
+            dataIndex: 'free',
+            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
           },
           {
             title: '投票冻结',
-            dataIndex: 'reservedStakingShow',
+            dataIndex: 'reservedStaking',
+            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
           },
           {
             title: '赎回冻结',
-            dataIndex: 'reservedStakingRevocationShow',
+            dataIndex: 'reservedStakingRevocation',
+            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
           },
           {
             title: '交易冻结',
-            dataIndex: 'reservedDexSpotShow',
+            dataIndex: 'reservedDexSpot',
+            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
           },
           {
             title: '总余额',
-            dataIndex: 'totalShow',
+            dataIndex: 'total',
+            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
           },
           {
             title: '',
@@ -69,7 +76,7 @@ class PrimaryAssetTable extends Component {
                       name: 'TransferModal',
                       data: {
                         token: item.name,
-                        freeShow: item.freeShow,
+                        freeShow: formatNumber.toPrecision(item.free, nativeAssetPrecision),
                         free: item.free,
                       },
                     });
@@ -82,7 +89,7 @@ class PrimaryAssetTable extends Component {
         ],
         widths
       ),
-      dataSource: primaryAsset,
+      dataSource: nativeAccountAssets,
     };
     return <Table {...tableProps} />;
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, setColumnsWidth } from '../../utils';
+import { formatNumber, observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
@@ -9,7 +9,7 @@ import btcIcon from '../../resource/btc.png';
 class CrossChainAssetTable extends Component {
   render() {
     const {
-      model: { openModal, crossChainAsset = [] },
+      model: { openModal, crossChainAccountAssets },
       widths,
     } = this.props;
 
@@ -37,19 +37,23 @@ class CrossChainAssetTable extends Component {
           },
           {
             title: '可用余额',
-            dataIndex: 'freeShow',
+            dataIndex: 'free',
+            render: (value, item) => formatNumber.toPrecision(value, item.precision),
           },
           {
             title: '提现冻结',
-            dataIndex: 'reservedWithdrawalShow',
+            dataIndex: 'reservedWithdrawal',
+            render: (value, item) => formatNumber.toPrecision(value, item.precision),
           },
           {
             title: '交易冻结',
-            dataIndex: 'reservedDexSpotShow',
+            dataIndex: 'reservedDexSpot',
+            render: (value, item) => formatNumber.toPrecision(value, item.precision),
           },
           {
             title: '总余额',
-            dataIndex: 'totalShow',
+            dataIndex: 'total',
+            render: (value, item) => formatNumber.toPrecision(value, item.precision),
           },
           {
             title: '',
@@ -82,7 +86,7 @@ class CrossChainAssetTable extends Component {
                       name: 'WithdrawModal',
                       data: {
                         token: item.name,
-                        freeShow: item.freeShow,
+                        freeShow: formatNumber.toPrecision(item.free, item.precision),
                         free: item.free,
                       },
                     });
@@ -95,7 +99,7 @@ class CrossChainAssetTable extends Component {
                       name: 'TransferModal',
                       data: {
                         token: item.name,
-                        freeShow: item.freeShow,
+                        freeShow: formatNumber.toPrecision(item.free, item.precision),
                         free: item.free,
                       },
                     });
@@ -108,7 +112,7 @@ class CrossChainAssetTable extends Component {
         ],
         widths
       ),
-      dataSource: crossChainAsset,
+      dataSource: crossChainAccountAssets,
     };
     return <Table {...tableProps} />;
   }
