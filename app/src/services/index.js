@@ -26,7 +26,7 @@ export const unfreeze = (...payload) => stake.unfreeze(...payload);
 
 export const getBlockNumberObservable = (...payload) => chain.bestNumber(...payload);
 
-export const claim = (...payload) => chain.claim(...payload);
+export const claim = (...payload) => stake.claim(...payload);
 
 export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
 
