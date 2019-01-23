@@ -19,7 +19,7 @@ class PrimaryAssetTable extends Component {
         [
           {
             title: '名称',
-            dataIndex: 'name',
+            dataIndex: 'tokenName',
             render: value => (
               <div className={styles.miniLogo}>
                 <img src={miniLogo} alt="miniLogo" />

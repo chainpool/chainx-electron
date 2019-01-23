@@ -5,16 +5,6 @@ import { Button, Mixin, Table } from '../../components';
 
 @observer
 class CertTable extends Mixin {
-  startInit = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-
-    dispatch({
-      type: 'getCert',
-    });
-  };
-
   render() {
     const {
       model: { openModal, certs = [] },
