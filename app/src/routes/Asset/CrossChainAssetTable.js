@@ -3,6 +3,7 @@ import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
+import btcIcon from '../../resource/btc.png';
 
 @observer
 class CrossChainAssetTable extends Component {
@@ -19,9 +20,9 @@ class CrossChainAssetTable extends Component {
           {
             title: '名称',
             dataIndex: 'name',
-            render: value => (
+            render: (value, asset) => (
               <div className={styles.miniLogo}>
-                <img src={miniLogo} alt="miniLogo" />
+                <img src={asset.name === 'BTC' ? btcIcon : miniLogo} alt="miniLogo" />
                 <span>{value}</span>
               </div>
             ),
