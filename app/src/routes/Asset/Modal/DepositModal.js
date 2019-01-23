@@ -7,7 +7,7 @@ class DepositModal extends Component {
   render() {
     const {
       model: { openModal },
-      globalStore: { modal: { data: { trusteeAdd } = {} } = {} },
+      globalStore: { modal: { data: { trusteeAddr } = {} } = {} },
     } = this.props;
     return (
       <Modal title="跨链充值">
@@ -35,7 +35,7 @@ class DepositModal extends Component {
             <div className={styles.title}>公共多签托管地址</div>
             <div className={styles.address}>
               <span className={styles.token}>Bitcoin:</span>
-              <Clipboard>{trusteeAdd}</Clipboard>
+              <Clipboard>{trusteeAddr}</Clipboard>
             </div>
             <Warn>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</Warn>
           </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { formatNumber, Inject, observer, setColumnsWidth } from '../../utils';
+import { formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button, ButtonGroup } from '../../components';
+import { Button, ButtonGroup, Table } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 import btcIcon from '../../resource/btc.png';
 
@@ -13,6 +13,8 @@ class CrossChainAssetTable extends Component {
       globalStore: { isTestNet },
       widths,
     } = this.props;
+
+    console.log(crossChainAccountAssetsWithZero);
 
     const tableProps = {
       className: styles.tableContainer,
