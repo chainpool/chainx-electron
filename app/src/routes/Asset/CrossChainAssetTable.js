@@ -81,6 +81,7 @@ class CrossChainAssetTable extends Component {
                   充值
                 </Button>
                 <Button
+                  type={item.free > 0 ? 'primary' : 'disabled'}
                   onClick={() => {
                     openModal({
                       name: 'WithdrawModal',
@@ -94,6 +95,7 @@ class CrossChainAssetTable extends Component {
                   提现
                 </Button>
                 <Button
+                  type={item.free > 0 ? 'primary' : 'disabled'}
                   onClick={() => {
                     openModal({
                       name: 'TransferModal',
