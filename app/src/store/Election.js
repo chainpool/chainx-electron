@@ -86,7 +86,7 @@ export default class Election extends ModelExtend {
     });
   }
 
-  @computed get activeValidators() {
+  @computed get validators() {
     return this.validatorsWithRecords.filter(intention => intention.isValidator);
   }
 
