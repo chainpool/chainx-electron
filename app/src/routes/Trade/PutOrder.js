@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, toJS } from '../../utils';
+import { _, Inject, Patterns, formatNumber, toJS, RegEx } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -124,7 +124,7 @@ class PutOrder extends SwitchPair {
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
     const {
-      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision, getPrecision },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
@@ -168,7 +168,9 @@ class PutOrder extends SwitchPair {
               errMsg={priceErrMsg}
               value={price}
               onChange={value => {
-                changeBS(action, { price: value });
+                if (RegEx.setDecimalNumber(currentPair.precision).test(value) || value === '') {
+                  changeBS(action, { price: value });
+                }
               }}
               onBlur={() => {
                 checkAll.checkPrice(action, () => {
@@ -187,7 +189,9 @@ class PutOrder extends SwitchPair {
               errMsg={amountErrMsg}
               value={amount}
               onChange={value => {
-                changeBS(action, { amount: value });
+                if (RegEx.setDecimalNumber(currentPair.assetsPrecision).test(value) || value === '') {
+                  changeBS(action, { amount: value });
+                }
               }}
               onBlur={() => {
                 checkAll.checkAmount(action, () => {
@@ -212,7 +216,7 @@ class PutOrder extends SwitchPair {
         </div>
         <div className={styles.totalPrice}>
           交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
-          {!priceErrMsg && !amountErrMsg && tradeErrMsg ? (
+          {!priceErrMsg && !amountErrMsg && price && amount && tradeErrMsg ? (
             <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
           ) : null}
         </div>
