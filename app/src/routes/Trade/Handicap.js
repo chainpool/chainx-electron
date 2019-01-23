@@ -38,7 +38,7 @@ class Handicap extends SwitchPair {
           dataIndex: 'amountShow',
         },
         {
-          title: `累计(${currentPair.currency})`,
+          title: `累计(${currentPair.assets})`,
           dataIndex: 'data3',
         },
       ],

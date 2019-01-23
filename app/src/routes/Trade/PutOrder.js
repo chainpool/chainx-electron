@@ -9,17 +9,17 @@ class PutOrder extends SwitchPair {
   state = {
     buy: {
       action: 'buy',
-      price: '0.00001',
+      price: '',
       priceErrMsg: '',
-      amount: '0.001',
+      amount: '',
       amountErrMsg: '',
       tradeErrMsg: '',
     },
     sell: {
       action: 'sell',
-      price: '0.00001',
+      price: '',
       priceErrMsg: '',
-      amount: '0.001',
+      amount: '',
       amountErrMsg: '',
       tradeErrMsg: '',
     },
@@ -65,10 +65,16 @@ class PutOrder extends SwitchPair {
 
   startInit = () => {
     const {
-      model: { dispatch },
+      model: { dispatch, currentPair, setPrecision },
     } = this.props;
     dispatch({
       type: 'getAccountAssets',
+    });
+    this.changeBS('buy', {
+      price: setPrecision(currentPair.lastPrice, currentPair.precision),
+    });
+    this.changeBS('sell', {
+      price: setPrecision(currentPair.lastPrice, currentPair.precision),
     });
   };
 
