@@ -31,7 +31,7 @@ export default class Trade extends ModelExtend {
     const account = this.getCurrentAccount();
     if (account.address) {
       const res = await getOrders(account.address, 0, 100);
-      // console.log(res.data, '-------');
+      console.log(res.data, '-------委托列表 ');
       if (res && res.data) {
         this.changeModel(
           {

@@ -31,16 +31,16 @@ class LatestOrder extends SwitchPair {
           dataIndex: 'data3',
         },
       ],
-      dataSource: new Array(28).fill({}).map(() => ({
-        data1: '0.00046372',
-        data2: '7,836,000',
-        data3: '7,836,000',
-      })),
+      dataSource: [],
     };
     return (
       <div className={styles.latestOrder}>
         <div className={styles.title}>最新成交</div>
-        <Table {...tableProps} />
+        <Table {...tableProps}>
+          <div className={styles.moreApi}>
+            查看更多，选择<span>API</span>
+          </div>
+        </Table>
       </div>
     );
   }

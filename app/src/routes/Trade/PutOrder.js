@@ -126,7 +126,7 @@ class PutOrder extends SwitchPair {
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
     const {
-      model: { isLogin, openModal, dispatch, currentPair, setPrecision, getPrecision },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
@@ -219,11 +219,7 @@ class PutOrder extends SwitchPair {
         <div className={styles.totalPrice}>
           交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
           {!priceErrMsg && !amountErrMsg && price && amount && tradeErrMsg ? (
-            <div className={styles.tradeErrMsg}>
-              {tradeErrMsg}
-              {/*{'price' + price}*/}
-              {/*{'amount' + amount}*/}
-            </div>
+            <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
           ) : null}
         </div>
         {isLogin() ? (
@@ -231,7 +227,7 @@ class PutOrder extends SwitchPair {
             <button
               className={styles[action]}
               onClick={() => {
-                if ((checkAll.confirm(action) && !tradeErrMsg) || true) {
+                if (checkAll.confirm(action) && !tradeErrMsg) {
                   openModal({
                     name: 'SignModal',
                     data: {

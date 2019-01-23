@@ -178,6 +178,7 @@ export default class TableComponent extends Component {
       pagination: { total: totalPage } = {},
       showHead = true,
       activeTrIndex,
+      children,
     } = this.props;
 
     let { scroll = {}, scroll: { tr } = {}, tableHeight = [] } = this.props;
@@ -244,6 +245,7 @@ export default class TableComponent extends Component {
             <div className={styles._scrollerTableContainer}>
               <div className={styles._scrollerTable}>
                 <Scroller {...scrollerConfig}>
+                  {children}
                   <Tbody>
                     {dataSource.map((item = {}, index) => {
                       return (
