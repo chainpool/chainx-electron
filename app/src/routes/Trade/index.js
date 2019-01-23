@@ -1,5 +1,4 @@
 import React from 'react';
-import { Toast } from '../../components';
 import SwitchPair from './Mixin/SwitchPair';
 import Handicap from './Handicap';
 import OrderPair from './OrderPair';

@@ -37,11 +37,11 @@ export default class Trade extends ModelExtend {
             currentOrderList: res.data.map((item = {}) => {
               return {
                 ...item,
-                createTime: moment_helper.formatHMS(item.createTime * 1000),
-                price: this.setPrecision(item.price, currentPair.precision),
-                amount: this.setPrecision(item.amount, currentPair.assets),
-                hasfillAmount: this.setPrecision(item.hasfillAmount, currentPair.assets),
-                reserveLast: this.setPrecision(
+                createTimeShow: moment_helper.formatHMS(item.createTime * 1000),
+                priceShow: this.setPrecision(item.price, currentPair.precision),
+                amountShow: this.setPrecision(item.amount, currentPair.assets),
+                hasfillAmountShow: this.setPrecision(item.hasfillAmount, currentPair.assets),
+                reserveLastShow: this.setPrecision(
                   item.reserveLast,
                   item.direction === 'Buy' ? currentPair.precision : currentPair.assets
                 ),
@@ -56,12 +56,12 @@ export default class Trade extends ModelExtend {
 
   getQuotations = async () => {
     const currentPair = this.currentPair;
-    const res = await getQuotations(currentPair.id, 10);
-    console.log(res, '-----------');
+    const res = await getQuotations(currentPair.id, [0, 10]);
+    console.log(res, '-----------盘口列表');
     const formatList = list => {
       return list.map((item = []) => ({
-        price: this.setPrecision(item[0], currentPair.precision),
-        amount: this.setPrecision(item[1], currentPair.assets),
+        priceShow: this.setPrecision(item[0], currentPair.precision),
+        amountShow: this.setPrecision(item[1], currentPair.assets),
         id: item.id,
         piece: item.piece,
       }));
@@ -78,14 +78,18 @@ export default class Trade extends ModelExtend {
         []
       );
     }
-    // console.log(res);
   };
 
   getOrderPairs = async () => {
     if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
-    const orderPairs = await getOrderPairs();
-    this.changeModel('orderPairs', orderPairs, []);
-    return orderPairs;
+    let res = await getOrderPairs();
+    const currentPair = this.currentPair;
+    res = res.map(item => ({
+      ...item,
+      lastPriceShow: this.setPrecision(item.lastPrice, currentPair.precision),
+    }));
+    this.changeModel('orderPairs', res, []);
+    return res;
   };
 
   switchPair = ({ id }) => {
@@ -104,7 +108,6 @@ export default class Trade extends ModelExtend {
       },
       {}
     );
-    // console.log(toJS(currentPair));
   };
 
   putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
@@ -122,7 +125,6 @@ export default class Trade extends ModelExtend {
   };
 
   cancelOrder = ({ signer, acceleration, pairId, index }) => {
-    console.log(signer, acceleration, pairId, index, '======');
     cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
     });

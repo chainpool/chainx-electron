@@ -20,7 +20,7 @@ class CurrentOrderTable extends SwitchPair {
       columns: [
         {
           title: '时间',
-          dataIndex: 'createTime',
+          dataIndex: 'createTimeShow',
         },
         {
           title: '交易ID/编号',
@@ -29,7 +29,7 @@ class CurrentOrderTable extends SwitchPair {
         },
         {
           title: '交易对',
-          dataIndex: 'createTime',
+          dataIndex: 'createTimeShow',
           render: () => `${currentPair.assets}/${currentPair.currency}`,
         },
         {
@@ -39,19 +39,21 @@ class CurrentOrderTable extends SwitchPair {
         },
         {
           title: `委托价格(${currentPair.currency})`,
-          dataIndex: 'price',
+          dataIndex: 'priceShow',
         },
         {
           title: `委托数量(${currentPair.assets})`,
-          dataIndex: 'amount',
+          dataIndex: 'amountShow',
         },
         {
           title: `冻结金额`,
-          dataIndex: 'reserveLast',
+          dataIndex: 'reserveLastShow',
+          render: (value, item) =>
+            `${value}${' '}${item.direction === 'Buy' ? currentPair.currency : currentPair.assets}`,
         },
         {
           title: `实际成交/成交率`,
-          dataIndex: 'hasfillAmount',
+          dataIndex: 'hasfillAmountShow',
         },
         {
           width: 50,

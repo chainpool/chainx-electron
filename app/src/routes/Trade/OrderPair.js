@@ -36,7 +36,7 @@ class OrderPair extends SwitchPair {
         },
         {
           title: '价格',
-          dataIndex: 'data2',
+          dataIndex: 'lastPriceShow',
         },
         {
           title: '涨幅',
