@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { formatNumber, observer, setColumnsWidth } from '../../utils';
+import { formatNumber, Inject, observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 import btcIcon from '../../resource/btc.png';
 
-@observer
+@Inject(({ globalStore }) => ({ globalStore }))
 class CrossChainAssetTable extends Component {
   render() {
     const {
       model: { openModal, crossChainAccountAssetsWithZero },
+      globalStore: { isTestNet },
       widths,
     } = this.props;
 
@@ -60,15 +61,17 @@ class CrossChainAssetTable extends Component {
             dataIndex: '_action',
             render: (value, item) => (
               <ButtonGroup>
-                <Button
-                  type="warn"
-                  onClick={() => {
-                    openModal({
-                      name: 'GetCollarModal',
-                    });
-                  }}>
-                  领币
-                </Button>
+                {isTestNet && (
+                  <Button
+                    type="warn"
+                    onClick={() => {
+                      openModal({
+                        name: 'GetCollarModal',
+                      });
+                    }}>
+                    领币
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     openModal({

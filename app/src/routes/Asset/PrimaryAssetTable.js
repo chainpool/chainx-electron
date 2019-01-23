@@ -9,7 +9,7 @@ class PrimaryAssetTable extends Component {
   render() {
     const {
       model: { openModal, nativeAccountAssets = [] },
-      globalStore: { nativeAssetPrecision },
+      globalStore: { nativeAssetPrecision, isTestNet },
       widths,
     } = this.props;
 
@@ -61,15 +61,17 @@ class PrimaryAssetTable extends Component {
             dataIndex: '_action',
             render: (value, item) => (
               <ButtonGroup>
-                <Button
-                  type="warn"
-                  onClick={() => {
-                    openModal({
-                      name: 'GetCollarModal',
-                    });
-                  }}>
-                  领币
-                </Button>
+                {isTestNet && (
+                  <Button
+                    type="warn"
+                    onClick={() => {
+                      openModal({
+                        name: 'GetCollarModal',
+                      });
+                    }}>
+                    领币
+                  </Button>
+                )}
                 <Button
                   type={item.free > 0 ? 'primary' : 'disabled'}
                   onClick={() => {

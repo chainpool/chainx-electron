@@ -13,7 +13,7 @@ class Header extends Component {
     const {
       location: { pathname } = {},
       className,
-      globalStore: { isLogin },
+      globalStore: { isLogin, isTestNet },
     } = this.props;
 
     const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
@@ -51,7 +51,7 @@ class Header extends Component {
               <img src={logo} alt="logo" />
             </RouterGo>
 
-            <div className={styles.net}>测试网</div>
+            {isTestNet && <div className={styles.net}>测试网</div>}
             <ul>
               {routers
                 .filter(item => item.show !== false)

@@ -12,6 +12,8 @@ export default class Global extends ModelExtend {
     });
   }
 
+  @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
+
   @observable
   modal = {
     status: false,
