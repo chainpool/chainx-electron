@@ -35,6 +35,7 @@ class SignModal extends Component {
         closeModal,
         modal: {
           data: {
+            token: targetToken,
             callback,
             description = [
               { name: '操作', value: '挂单' },
@@ -48,7 +49,7 @@ class SignModal extends Component {
       },
       model: { currentAccount },
     } = this.props;
-    const token = 'PCX';
+    const token = targetToken || 'PCX';
     return (
       <Modal
         title="交易签名"

@@ -22,8 +22,9 @@ class Asset extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
+
     dispatch({
-      type: 'getAssets',
+      type: 'getAccountAssets',
     });
   };
 

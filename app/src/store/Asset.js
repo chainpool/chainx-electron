@@ -23,6 +23,49 @@ export default class Asset extends ModelExtend {
   @observable crossChainAsset = []; // 跨链资产
   @observable onChainWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
+  @observable accountAssets = []; // 现账户资产
+
+  @computed get normalizedAccountAssets() {
+    const assetsInfo = this.rootStore.globalStore.assets; // 获取资产基本信息
+    if (!assetsInfo) {
+      return [];
+    }
+
+    return this.accountAssets.map(asset => {
+      const {
+        Free: free,
+        ReservedStaking: reservedStaking,
+        ReservedStakingRevocation: reservedStakingRevocation,
+        ReservedDexSpot: reservedDexSpot,
+        ReservedWithdrawal: reservedWithdrawal,
+      } = asset.details;
+      const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
+
+      const info = assetsInfo.find(info => info.name === asset.name);
+
+      return {
+        free,
+        reservedStaking,
+        reservedStakingRevocation,
+        reservedDexSpot,
+        reservedWithdrawal,
+        total,
+        isNative: asset.isNative,
+        name: asset.name,
+        chain: info.chain,
+        precision: info.precision,
+        trusteeAddr: info.trusteeAddr,
+      };
+    });
+  }
+
+  @computed get nativeAccountAssets() {
+    return this.normalizedAccountAssets.filter(asset => asset.isNative);
+  }
+
+  @computed get crossChainAccountAssets() {
+    return this.normalizedAccountAssets.filter(asset => !asset.isNative);
+  }
 
   @computed get normalizedWithdrawList() {
     return this.onChainWithdrawList.map(withdraw => {
@@ -53,6 +96,7 @@ export default class Asset extends ModelExtend {
 
   reload = () => {
     this.getCert();
+    this.getAccountAssets();
     this.getAssets();
   };
 
@@ -61,6 +105,12 @@ export default class Asset extends ModelExtend {
     const res = await getCert(currentAccount.address);
     (res || []).map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
     this.changeModel('certs', res, []);
+  };
+
+  getAccountAssets = async () => {
+    const currentAccount = this.getCurrentAccount();
+    const accountAssetsResp = await getAsset(currentAccount.address, 0, 100);
+    this.changeModel('accountAssets', accountAssetsResp.data);
   };
 
   getAssets = async () => {
