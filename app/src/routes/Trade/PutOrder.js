@@ -31,10 +31,12 @@ class PutOrder extends SwitchPair {
       const {
         model: { setPrecision },
       } = this.props;
-      const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
-      const err = errMsg ? '交易额太小' : '';
-      this.changeBS(action, { tradeErrMsg: err });
-      return err;
+      if (price && amount) {
+        const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
+        const err = errMsg ? '交易额太小' : '';
+        this.changeBS(action, { tradeErrMsg: err });
+        return err;
+      }
     },
     checkPrice: (action, callback) => {
       const { price } = this.state[action];
@@ -217,7 +219,11 @@ class PutOrder extends SwitchPair {
         <div className={styles.totalPrice}>
           交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
           {!priceErrMsg && !amountErrMsg && price && amount && tradeErrMsg ? (
-            <div className={styles.tradeErrMsg}>{tradeErrMsg}</div>
+            <div className={styles.tradeErrMsg}>
+              {tradeErrMsg}
+              {/*{'price' + price}*/}
+              {/*{'amount' + amount}*/}
+            </div>
           ) : null}
         </div>
         {isLogin() ? (
