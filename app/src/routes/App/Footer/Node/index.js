@@ -3,8 +3,6 @@ import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
 import { classNames, Inject, moment_helper } from '@utils/index';
 
-let intervalId;
-
 @Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
   constructor(props) {
@@ -17,11 +15,7 @@ class Node extends Component {
       chainStore: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'subscribeBlockNumber' });
-
-    intervalId = window.setInterval(() => {
-      this.setState({ date: new Date() });
-    }, 1000);
+    dispatch({ type: 'subscribeNewHead' });
   }
 
   componentWillUnmount() {
@@ -29,13 +23,12 @@ class Node extends Component {
       chainStore: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'unsubscribe' });
-    window.clearInterval(intervalId);
+    dispatch({ type: 'unSubscribeNewHead' });
   }
 
   render() {
     const {
-      chainStore: { normalizedBlockNumber },
+      chainStore: { normalizedBlockNumber, blockTime },
     } = this.props;
 
     // eslint-disable-next-line no-used-vars
@@ -96,7 +89,7 @@ class Node extends Component {
     return (
       <div className={styles.node}>
         <div>
-          <span>{moment_helper.formatHMS(this.date)}</span>
+          <span>{moment_helper.formatHMS(blockTime)}</span>
           <span>最新高度:{normalizedBlockNumber}</span>
         </div>
         {/*TODO: 暂时隐藏节点及api选择*/}
