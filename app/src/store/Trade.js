@@ -1,4 +1,4 @@
-import { moment_helper, observable, resOk, toJS } from '../utils';
+import { formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -42,6 +42,7 @@ export default class Trade extends ModelExtend {
                 priceShow: this.setPrecision(item.price, currentPair.precision),
                 amountShow: this.setPrecision(item.amount, currentPair.assets),
                 hasfillAmountShow: this.setPrecision(item.hasfillAmount, currentPair.assets),
+                hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
                 reserveLastShow: this.setPrecision(
                   item.reserveLast,
                   item.direction === 'Buy' ? currentPair.currency : currentPair.assets

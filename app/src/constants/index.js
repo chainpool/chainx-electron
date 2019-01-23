@@ -41,3 +41,7 @@ export const NetWork = [
     ip: '192.168.1.2',
   },
 ];
+
+export const API = {
+  status: 'API即将开放',
+};

@@ -6,11 +6,12 @@ import * as styles from './index.less';
 import { Tab } from '../../components';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
+import { API } from '@constants';
 
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 1,
+    activeIndex: 0,
   };
 
   startInit = () => {
@@ -27,7 +28,14 @@ class PersonalOrder extends SwitchPair {
     const props = {
       ...this.props,
       noDataTip: () => {
-        return <div className={styles.nodata}>暂无当前委托</div>;
+        return (
+          <div style={{ position: 'relative' }}>
+            <div className={styles.nodata} style={{ top: 20 }}>
+              暂无当前委托
+            </div>
+            <div className={styles.moreApi}>{API.status}</div>
+          </div>
+        );
       },
     };
     return (

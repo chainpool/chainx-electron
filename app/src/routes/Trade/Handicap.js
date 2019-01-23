@@ -3,6 +3,7 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './Handicap.less';
 import { Table } from '../../components';
+import { API } from '../../constants';
 import { classNames, observer } from '../../utils';
 
 @observer
@@ -53,12 +54,12 @@ class Handicap extends SwitchPair {
       <div className={styles.handicap}>
         <div className={styles.title}>挂单列表</div>
         <Table {...setTableProps('red')} dataSource={dataSourceSell}>
-          <div className={styles.moreApi}>API未开发</div>
+          <div className={styles.moreApi}>{API.status}</div>
         </Table>
         <div className={styles.latestprice}>{currentPair.lastPriceShow}</div>
         <Table {...setTableProps('green')} dataSource={dataSourceBuy} showHead={false}>
           <div className={classNames(styles.moreApi, styles.buyMoreApi)} style={{ bottom: 0 }}>
-            API未开发
+            {API.status}
           </div>
         </Table>
       </div>

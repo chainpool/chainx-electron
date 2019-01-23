@@ -1,5 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
+import { API } from '../../constants';
 
 import * as styles from './LatestOrder.less';
 import { Table } from '../../components';
@@ -37,7 +38,7 @@ class LatestOrder extends SwitchPair {
       <div className={styles.latestOrder}>
         <div className={styles.title}>最新成交</div>
         <Table {...tableProps}>
-          <div className={styles.moreApi}>API未开发</div>
+          <div className={styles.moreApi}>{API.status}</div>
         </Table>
       </div>
     );
