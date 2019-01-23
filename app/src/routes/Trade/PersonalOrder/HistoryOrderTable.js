@@ -59,17 +59,8 @@ class HistoryOrderTable extends SwitchPair {
           render: () => <span className="blue">撤销</span>,
         },
       ],
-      dataSource: new Array(3).fill({}).map(() => ({
-        data1: '2018-08-16 16:23:56',
-        data2: '0x1234567890abcdef',
-        data3: '买入',
-        data4: '0.00046321',
-        data5: '3,234,000',
-        data6: '1,234,000',
-        data7: '0.50000000',
-        expandIsOpen: true,
-        expand: new Array(1).fill({}),
-      })),
+      dataSource: [],
+      noDataTip: this.props.noDataTip,
       expandedRowRender: item => {
         const props = {
           tableHeight: [36, 36],

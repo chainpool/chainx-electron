@@ -51,10 +51,9 @@ class Election extends Mixin {
         </div>
         <div className={styles.titledesc}>
           {activeIndex === 4 ? (
-            <div>按照持有资产兑PCX市值的 50%折合成投票，自动参与充值挖矿获取利息</div>
+            <div className={styles.desc}>按照持有资产兑PCX市值的 50%折合成投票，自动参与充值挖矿获取利息</div>
           ) : (
             <>
-              <div>全网总投票数 878,837,000，年化利息约为 4%</div>
               <TableTitle className={styles.tableTitle}>
                 <ul>
                   {isValidator ? (

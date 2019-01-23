@@ -37,9 +37,7 @@ class LatestOrder extends SwitchPair {
       <div className={styles.latestOrder}>
         <div className={styles.title}>最新成交</div>
         <Table {...tableProps}>
-          <div className={styles.moreApi}>
-            查看更多，选择<span>API</span>
-          </div>
+          <div className={styles.moreApi}>API未开发</div>
         </Table>
       </div>
     );

@@ -10,7 +10,7 @@ import HistoryOrderTable from './HistoryOrderTable';
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 0,
+    activeIndex: 1,
   };
 
   startInit = () => {
@@ -24,6 +24,12 @@ class PersonalOrder extends SwitchPair {
 
   render() {
     const { activeIndex } = this.state;
+    const props = {
+      ...this.props,
+      noDataTip: () => {
+        return <div className={styles.nodata}>暂无当前委托</div>;
+      },
+    };
     return (
       <div className={styles.personalOrder}>
         <div className={styles.title}>
@@ -38,7 +44,7 @@ class PersonalOrder extends SwitchPair {
             className={styles.tab}
           />
         </div>
-        {activeIndex ? <HistoryOrderTable {...this.props} /> : <CurrentOrderTable {...this.props} />}
+        {activeIndex ? <HistoryOrderTable {...props} /> : <CurrentOrderTable {...props} />}
       </div>
     );
   }
