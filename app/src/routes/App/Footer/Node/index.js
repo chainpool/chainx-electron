@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
 import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
-import { classNames, Inject } from '@utils/index';
+import { classNames, Inject, moment_helper } from '@utils/index';
+
+let intervalId;
 
 @Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { date: new Date() };
+  }
+
   async componentDidMount() {
     const {
       chainStore: { dispatch },
     } = this.props;
 
     dispatch({ type: 'subscribeBlockNumber' });
+
+    intervalId = window.setInterval(() => {
+      this.setState({ date: new Date() });
+    }, 1000);
   }
 
   componentWillUnmount() {
@@ -19,6 +30,7 @@ class Node extends Component {
     } = this.props;
 
     dispatch({ type: 'unsubscribe' });
+    window.clearInterval(intervalId);
   }
 
   render() {
@@ -84,7 +96,7 @@ class Node extends Component {
     return (
       <div className={styles.node}>
         <div>
-          <span>2019/01/09 16:27:23</span>
+          <span>{moment_helper.formatHMS(this.date)}</span>
           <span>最新高度:{normalizedBlockNumber}</span>
         </div>
         {/*TODO: 暂时隐藏节点及api选择*/}
