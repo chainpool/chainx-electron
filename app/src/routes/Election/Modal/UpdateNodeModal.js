@@ -1,16 +1,34 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { Patterns } from '../../../utils';
+import { Button, Input, Modal } from '../../../components';
+import { Inject, Patterns } from '../../../utils';
 import * as styles from './UpdateNodeModal.less';
 
+@Inject(({ electionStore, accountStore }) => ({ electionStore, accountStore }))
 class UpdateNodeModal extends Component {
   state = {
-    address: '暂无',
+    address: '',
     addressErrMsg: '',
-    website: 'baidu.com',
+    website: '',
     websiteErrMsg: '',
-    participating: true,
+    willParticipating: true,
+    about: '',
+    aboutErrMsg: '',
   };
+
+  componentDidMount() {
+    const {
+      electionStore: { accountValidator = [] },
+    } = this.props;
+
+    console.log(accountValidator);
+    this.setState({
+      address: accountValidator.address,
+      website: accountValidator.url,
+      about: accountValidator.about,
+      willParticipating: !accountValidator.isActive,
+    });
+  }
+
   checkAll = {
     checkAddress: () => {
       const { address } = this.state;
@@ -27,15 +45,25 @@ class UpdateNodeModal extends Component {
       return errMsg;
     },
 
+    checkAbout: () => {
+      const { about } = this.state;
+      const errMsg =
+        Patterns.check('required')(about) || Patterns.check('smaller')(about.length, 256, '不能超过256个字符');
+      this.setState({ websiteErrMsg: errMsg });
+      return errMsg;
+    },
+
     confirm: () => {
       return ['checkAddress', 'checkWebsite'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, website, websiteErrMsg, participating } = this.state;
+    const { address, addressErrMsg, website, websiteErrMsg, willParticipating, about, aboutErrMsg } = this.state;
     const {
       model: { dispatch, openModal },
+      electionStore: { accountValidator = [] },
     } = this.props;
     return (
       <Modal
@@ -57,7 +85,9 @@ class UpdateNodeModal extends Component {
                           signer,
                           acceleration,
                           url: website,
-                          participating,
+                          participating: willParticipating,
+                          address,
+                          about,
                         },
                       });
                     },
@@ -85,14 +115,22 @@ class UpdateNodeModal extends Component {
             onChange={value => this.setState({ website: value })}
             onBlur={checkAll.checkWebsite}
           />
+          <Input.Text
+            label="简介"
+            placeholder="256个字符以内"
+            value={about}
+            errMsg={aboutErrMsg}
+            onChange={value => this.setState({ about: value })}
+            onBlur={checkAll.checkAbout}
+          />
           <div className={styles.participate}>
             {[{ name: '参选', value: true }, { name: '退选', value: false }].map((item, index) => (
               <button
                 key={index}
-                className={participating === item.value ? styles.active : null}
+                className={willParticipating === item.value ? styles.active : null}
                 onClick={() => {
                   this.setState({
-                    participating: item.value,
+                    willParticipating: item.value,
                   });
                 }}>
                 {item.name}
@@ -100,7 +138,7 @@ class UpdateNodeModal extends Component {
             ))}
           </div>
           <div>
-            {participating
+            {willParticipating
               ? '请确保您的节点已经部署妥当，否则将会受到惩罚'
               : '退选后无法再接受投票，不会再有奖惩和惩罚'}
           </div>

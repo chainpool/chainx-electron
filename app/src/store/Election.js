@@ -31,6 +31,12 @@ export default class Election extends ModelExtend {
     });
   }
 
+  // 当前账户节点
+  @computed get accountValidator() {
+    const account = this.getCurrentAccount();
+    return this.validatorsWithAddress.find(validator => validator.address === account.address);
+  }
+
   @computed get validatorsWithRecords() {
     const blockNumber = this.rootStore.chainStore.blockNumber;
     if (typeof blockNumber === 'undefined') {
@@ -197,14 +203,11 @@ export default class Election extends ModelExtend {
   };
 
   /*更新节点*/
-  refresh = ({ signer, acceleration, url, participating }) => {
-    console.log(signer, acceleration, url, participating, '==========');
-    refresh(signer, acceleration, url, participating, (err, result) => {
+  refresh = ({ signer, acceleration, url, participating, address, about }) => {
+    console.log(signer, acceleration, url, participating, address, about, '==========');
+    refresh(signer, acceleration, url, participating, address, about, (err, result) => {
       console.log(result);
     });
-    // ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {
-    //   console.log(result);
-    // });
   };
 
   /*提息*/
