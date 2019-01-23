@@ -25,7 +25,7 @@ class UpdateNodeModal extends Component {
       address: accountValidator.address,
       website: accountValidator.url,
       about: accountValidator.about,
-      willParticipating: !accountValidator.isActive,
+      willParticipating: accountValidator.isActive,
     });
   }
 
