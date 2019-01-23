@@ -73,7 +73,7 @@ class VoteModal extends Component {
           </Button>
         }>
         <div className={styles.voteModal}>
-          {myTotalVote && (
+          {myTotalVote ? (
             <RadioGroup>
               {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map(item => (
                 <Input.Radio
@@ -86,7 +86,7 @@ class VoteModal extends Component {
                 </Input.Radio>
               ))}
             </RadioGroup>
-          )}
+          ) : null}
 
           <Input.Text
             label={`${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
