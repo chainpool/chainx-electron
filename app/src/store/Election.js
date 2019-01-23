@@ -1,4 +1,4 @@
-import { _, ChainX, observable, resOk, Rx } from '../utils';
+import { ChainX, observable, resOk, Rx } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   claim,

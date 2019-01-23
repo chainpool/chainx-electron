@@ -1,14 +1,26 @@
-import React, { Component } from 'react';
-import { Modal, Clipboard } from '../../../components';
+import React from 'react';
+import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
+import { Inject } from '@utils';
 
-class DepositModal extends Component {
+@Inject(({ assetStore }) => ({ assetStore }))
+class DepositModal extends Mixin {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getAccountBTCAddresses' });
+  };
+
   render() {
     const {
       model: { openModal },
       globalStore: { modal: { data: { trusteeAddr } = {} } = {} },
+      assetStore: { btcAddresses = [] },
     } = this.props;
+
     return (
       <Modal title="跨链充值">
         <div className={styles.bindAddress}>
@@ -24,10 +36,14 @@ class DepositModal extends Component {
             </button>
           </div>
           <ul>
-            <li>
-              <span>Bitcoin:</span>
-              <div>19zdMbaZnD8ze6XUZuVTYtVQ4URTYDFWbRw</div>
-            </li>
+            {btcAddresses.map((address, index) => {
+              return (
+                <li key={index}>
+                  <span>Bitcoin:</span>
+                  <div>{address}</div>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className={styles.publicAddress}>

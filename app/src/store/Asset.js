@@ -8,6 +8,7 @@ import {
   register,
   transfer,
   withdraw,
+  getBTCAddressByAccount,
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
@@ -18,6 +19,7 @@ export default class Asset extends ModelExtend {
   }
 
   @observable name = 'asset';
+  @observable btcAddresses = []; // 账户已绑定BTC地址列表
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 跨链资产
@@ -129,6 +131,12 @@ export default class Asset extends ModelExtend {
     this.getCert();
     this.getAccountAssets();
     this.getAssets();
+  };
+
+  getAccountBTCAddresses = async () => {
+    const currentAccount = this.getCurrentAccount();
+    const addresses = await getBTCAddressByAccount(currentAccount.address);
+    this.changeModel('btcAddresses', addresses);
   };
 
   getCert = async () => {
