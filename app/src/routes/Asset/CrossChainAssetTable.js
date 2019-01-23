@@ -1,18 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table } from '../../components';
+import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 import btcIcon from '../../resource/btc.png';
 
 @Inject(({ configureStore }) => ({ configureStore }))
-class CrossChainAssetTable extends Component {
+class CrossChainAssetTable extends Mixin {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getAccountBTCAddresses' });
+  };
+
   render() {
     const {
-      model: { openModal, crossChainAccountAssetsWithZero },
+      model: { openModal, crossChainAccountAssetsWithZero, btcAddresses },
       configureStore: { isTestNet },
       widths,
     } = this.props;
+
+    const hasBindAddress = btcAddresses.length > 0;
 
     const tableProps = {
       className: styles.tableContainer,
@@ -61,7 +71,7 @@ class CrossChainAssetTable extends Component {
             dataIndex: '_action',
             render: (value, item) => (
               <ButtonGroup>
-                {isTestNet && (
+                {isTestNet ? (
                   <Button
                     type="warn"
                     onClick={() => {
@@ -71,18 +81,27 @@ class CrossChainAssetTable extends Component {
                     }}>
                     领币
                   </Button>
+                ) : null}
+                {hasBindAddress ? (
+                  <Button
+                    onClick={() => {
+                      openModal({
+                        name: 'DepositModal',
+                        data: {
+                          trusteeAddr: item.trusteeAddr,
+                        },
+                      });
+                    }}>
+                    充值
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      alert('开发中');
+                    }}>
+                    绑定
+                  </Button>
                 )}
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'DepositModal',
-                      data: {
-                        trusteeAddr: item.trusteeAddr,
-                      },
-                    });
-                  }}>
-                  充值
-                </Button>
                 <Button
                   type={item.free > 0 ? 'primary' : 'disabled'}
                   onClick={() => {
