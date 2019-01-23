@@ -7,13 +7,13 @@ import logo from '../../../resource/logo.png';
 import Account from './Account';
 import { Inject } from '../../../utils';
 
-@Inject(({ globalStore }) => ({ globalStore }))
+@Inject(({ configureStore }) => ({ configureStore }))
 class Header extends Component {
   render() {
     const {
       location: { pathname } = {},
       className,
-      globalStore: { isLogin, isTestNet },
+      configureStore: { isLogin, isTestNet },
     } = this.props;
 
     const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {

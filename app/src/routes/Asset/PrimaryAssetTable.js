@@ -4,12 +4,13 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 
-@Inject(({ globalStore }) => ({ globalStore }))
+@Inject(({ configureStore }) => ({ configureStore }))
 class PrimaryAssetTable extends Component {
   render() {
     const {
       model: { openModal, nativeAccountAssets = [] },
-      globalStore: { nativeAssetPrecision, isTestNet },
+      globalStore: { nativeAssetPrecision },
+      configureStore: { isTestNet },
       widths,
     } = this.props;
 

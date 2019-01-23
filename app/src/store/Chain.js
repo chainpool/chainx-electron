@@ -6,10 +6,6 @@ import { getBlockNumberObservable } from '../services';
 let unsubscribeFn;
 
 class Chain extends ModelExtend {
-  constructor(rootStore) {
-    super(rootStore);
-  }
-
   @observable blockNumber;
   @observable blockDuration = 3000; // 出块时间3s TODO: 暂时写死，后边从storage去拿
 

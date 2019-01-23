@@ -5,16 +5,14 @@ import { Button, ButtonGroup, Table } from '../../components';
 import miniLogo from '../../resource/miniLogo.png';
 import btcIcon from '../../resource/btc.png';
 
-@Inject(({ globalStore }) => ({ globalStore }))
+@Inject(({ configureStore }) => ({ configureStore }))
 class CrossChainAssetTable extends Component {
   render() {
     const {
       model: { openModal, crossChainAccountAssetsWithZero },
-      globalStore: { isTestNet },
+      configureStore: { isTestNet },
       widths,
     } = this.props;
-
-    console.log(crossChainAccountAssetsWithZero);
 
     const tableProps = {
       className: styles.tableContainer,
