@@ -16,7 +16,7 @@ import { computed } from 'mobx';
 
 export default class Election extends ModelExtend {
   @observable name = 'election';
-  @observable originIntentions = []; // intensions rpc返回数据
+  @observable originIntentions = []; // intentions rpc返回数据
   @observable originNominationRecords = []; // 投票记录rpc返回数据
   @observable intentions = []; //所有节点
   @observable validatorIntentions = []; //结算节点
@@ -29,6 +29,12 @@ export default class Election extends ModelExtend {
     return this.originIntentions.map(intention => {
       return Object.assign({}, intention, { address: ChainX.account.encodeAddress(intention.account) });
     });
+  }
+
+  // 当前账户节点
+  @computed get accountValidator() {
+    const account = this.getCurrentAccount();
+    return this.validatorsWithAddress.find(validator => validator.address === account.address);
   }
 
   @computed get validatorsWithRecords() {
@@ -80,16 +86,24 @@ export default class Election extends ModelExtend {
     });
   }
 
-  @computed get activeValidators() {
-    return this.validatorsWithRecords.filter(intention => intention.isValidator);
+  @computed get validators() {
+    return [...this.validatorsWithRecords.filter(intention => intention.isValidator)].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   @computed get backupValidators() {
-    return this.validatorsWithRecords.filter(intention => !intention.isValidator);
+    return [...this.validatorsWithRecords.filter(intention => !intention.isValidator)].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   @computed get validatorsWithMyNomination() {
-    return this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0);
+    return [
+      ...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0),
+    ].sort((a, b) => {
+      return b.totalNomination - a.totalNomination;
+    });
   }
 
   reload = () => {
@@ -197,14 +211,11 @@ export default class Election extends ModelExtend {
   };
 
   /*更新节点*/
-  refresh = ({ signer, acceleration, url, participating }) => {
-    console.log(signer, acceleration, url, participating, '==========');
-    refresh(signer, acceleration, url, participating, (err, result) => {
+  refresh = ({ signer, acceleration, url, participating, address, about }) => {
+    console.log(signer, acceleration, url, participating, address, about, '==========');
+    refresh(signer, acceleration, url, participating, address, about, (err, result) => {
       console.log(result);
     });
-    // ChainX.stake.refresh(ChainX.account.from('Bob'), 1, 'www.baidu.com', true, (err, result) => {
-    //   console.log(result);
-    // });
   };
 
   /*提息*/

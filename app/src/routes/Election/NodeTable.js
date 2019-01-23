@@ -12,7 +12,7 @@ class NodeTable extends Component {
         dispatch,
         openModal,
         trustIntentions = [],
-        activeValidators = [],
+        validators = [],
         backupValidators = [],
         validatorsWithMyNomination = [],
       },
@@ -22,7 +22,7 @@ class NodeTable extends Component {
 
     const dataSources = {
       0: trustIntentions,
-      1: activeValidators,
+      1: validators,
       2: backupValidators,
       3: validatorsWithMyNomination,
     };
@@ -32,9 +32,11 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 50,
+          width: 100,
           dataIndex: 'name',
-          render: (value, record, index) => index + 1,
+          render: (value, record, index) => {
+            return `${index + 1}${record.isActive ? '' : '（退选）'}`;
+          },
         },
         {
           title: '名称',
@@ -83,7 +85,7 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {item.isActive ? null : (
+              {!item.isActive ? null : (
                 <Button
                   onClick={() => {
                     openModal({
