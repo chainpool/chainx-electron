@@ -19,7 +19,7 @@ class CrossChainAssetTable extends Component {
         [
           {
             title: '名称',
-            dataIndex: 'name',
+            dataIndex: 'tokenName',
             render: (value, asset) => (
               <div className={styles.miniLogo}>
                 <img src={asset.name === 'BTC' ? btcIcon : miniLogo} alt="miniLogo" />
