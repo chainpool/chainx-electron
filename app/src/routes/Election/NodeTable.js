@@ -113,7 +113,7 @@ class NodeTable extends Component {
                   解冻
                 </Button>
               ) : null}
-              {item.interest ? (
+              {item.myInterest ? (
                 <Button
                   onClick={() => {
                     openModal({
