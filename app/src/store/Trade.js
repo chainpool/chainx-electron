@@ -1,4 +1,4 @@
-import { moment_helper, observable, resOk, toJS } from '../utils';
+import { formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -31,7 +31,7 @@ export default class Trade extends ModelExtend {
     const account = this.getCurrentAccount();
     if (account.address) {
       const res = await getOrders(account.address, 0, 100);
-      // console.log(res.data, '-------');
+      console.log(res.data, '-------委托列表 ');
       if (res && res.data) {
         this.changeModel(
           {
@@ -42,6 +42,7 @@ export default class Trade extends ModelExtend {
                 priceShow: this.setPrecision(item.price, currentPair.precision),
                 amountShow: this.setPrecision(item.amount, currentPair.assets),
                 hasfillAmountShow: this.setPrecision(item.hasfillAmount, currentPair.assets),
+                hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
                 reserveLastShow: this.setPrecision(
                   item.reserveLast,
                   item.direction === 'Buy' ? currentPair.currency : currentPair.assets

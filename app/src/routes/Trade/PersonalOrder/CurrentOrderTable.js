@@ -23,9 +23,9 @@ class CurrentOrderTable extends SwitchPair {
           dataIndex: 'createTimeShow',
         },
         {
-          title: '交易ID/编号',
+          title: '委托编号',
           ellipse: true,
-          dataIndex: 'user',
+          dataIndex: 'index',
         },
         {
           title: '交易对',
@@ -54,6 +54,7 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: `实际成交/成交率`,
           dataIndex: 'hasfillAmountShow',
+          render: (value, item) => `${value}${' '}(${item.hasfillAmountPercent})`,
         },
         {
           width: 50,
