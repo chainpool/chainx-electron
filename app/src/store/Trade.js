@@ -20,6 +20,7 @@ export default class Trade extends ModelExtend {
   @observable currentOrderList = [];
 
   reload = () => {
+    this.getOrderPairs();
     this.getQuotations();
     this.getAccountAssets();
     this.getAccountOrder();
@@ -81,7 +82,7 @@ export default class Trade extends ModelExtend {
   };
 
   getOrderPairs = async () => {
-    if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
+    // if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
     let res = await getOrderPairs();
     const currentPair = this.currentPair;
     res = res.map(item => ({

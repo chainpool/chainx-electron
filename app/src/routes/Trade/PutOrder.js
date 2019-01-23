@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { Inject, Patterns, formatNumber, toJS } from '../../utils';
+import { _, Inject, Patterns, formatNumber, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -36,16 +36,16 @@ class PutOrder extends SwitchPair {
       this.changeBS(action, { tradeErrMsg: err });
       return err;
     },
-    checkPrice: action => {
+    checkPrice: (action, callback) => {
       const { price } = this.state[action];
       const {
         model: { currentPair },
       } = this.props;
       const errMsg = Patterns.check('required')(price) || Patterns.check('precision')(price, currentPair.precision);
-      this.changeBS(action, { priceErrMsg: errMsg });
+      this.changeBS(action, { priceErrMsg: errMsg }, callback);
       return errMsg;
     },
-    checkAmount: action => {
+    checkAmount: (action, callback) => {
       const { amount, price } = this.state[action];
       const {
         model: { currentPair },
@@ -54,7 +54,7 @@ class PutOrder extends SwitchPair {
         Patterns.check('required')(amount) ||
         Patterns.check('precision')(amount, currentPair.assetsPrecision) ||
         Patterns.check('smaller')(amount, this.getMaxAmount(action, price), '数量不足');
-      this.changeBS(action, { amountErrMsg: errMsg });
+      this.changeBS(action, { amountErrMsg: errMsg }, callback);
       return errMsg;
     },
 
@@ -72,13 +72,18 @@ class PutOrder extends SwitchPair {
     });
   };
 
-  changeBS = (action = 'buy', payload = {}) => {
-    this.setState({
-      [action]: {
-        ...this.state[action],
-        ...payload,
+  changeBS = (action = 'buy', payload = {}, callback) => {
+    this.setState(
+      {
+        [action]: {
+          ...this.state[action],
+          ...payload,
+        },
       },
-    });
+      () => {
+        _.isFunction(callback) && callback();
+      }
+    );
   };
 
   getCurrentAssetFree = () => {
@@ -113,7 +118,7 @@ class PutOrder extends SwitchPair {
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
     const {
-      model: { isLogin, openModal, dispatch, currentPair, setPrecision, getPrecision },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
@@ -160,8 +165,7 @@ class PutOrder extends SwitchPair {
                 changeBS(action, { price: value });
               }}
               onBlur={() => {
-                checkAll.checkPrice(action);
-                setTimeout(() => {
+                checkAll.checkPrice(action, () => {
                   checkAll.checkTotal(action);
                 });
               }}
@@ -180,8 +184,7 @@ class PutOrder extends SwitchPair {
                 changeBS(action, { amount: value });
               }}
               onBlur={() => {
-                checkAll.checkAmount(action);
-                setTimeout(() => {
+                checkAll.checkAmount(action, () => {
                   checkAll.checkTotal(action);
                 });
               }}
