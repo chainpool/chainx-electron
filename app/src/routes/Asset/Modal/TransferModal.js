@@ -58,7 +58,7 @@ class TransferModal extends Component {
                     description: [
                       { name: '操作', value: '转账' },
                       { name: '转账数量', value: `${amount}${token}` },
-                      { name: '接收人地址', value: address.address },
+                      { name: '接收人地址', value: address.value },
                     ],
                     callback: ({ signer, acceleration, token }) => {
                       dispatch({
@@ -87,7 +87,9 @@ class TransferModal extends Component {
             value={address}
             errMsg={addressErrMsg}
             options={accountsList}
-            onChange={value => this.setState({ address: value })}
+            onChange={value => {
+              this.setState({ address: value });
+            }}
             onBlur={checkAll.checkAddress}
           />
           <InputHorizotalList
