@@ -8,14 +8,19 @@ import logTest from '../../../resource/logo_test.png';
 import Account from './Account';
 import { Inject } from '../../../utils';
 
-@Inject(({ configureStore }) => ({ configureStore }))
+@Inject(({ configureStore, accountStore }) => ({ configureStore, accountStore }))
 class Header extends Component {
   render() {
     const {
       location: { pathname } = {},
       className,
       configureStore: { isLogin, isTestNet },
+      accountStore: { isValidator },
     } = this.props;
+
+    const showRouters = routers.filter(item => {
+      return item.show !== false && (isValidator || item.path !== PATH.trust);
+    });
 
     const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
       return item === 0 ? (
@@ -53,25 +58,19 @@ class Header extends Component {
             </RouterGo>
 
             <ul>
-              {routers
-                .filter(item => item.show !== false)
-                .map(item => {
-                  const com = (
-                    <RouterGo
-                      key={item.path}
-                      Ele="li"
-                      go={{ pathname: item.path }}
-                      className={pathname === item.path ? styles.active : null}>
-                      {item.title}
-                      {/*{item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}*/}
-                    </RouterGo>
-                  );
-                  return item.path === PATH.asset ? (
-                    <AuthorityComponent key={item.path}>{com}</AuthorityComponent>
-                  ) : (
-                    com
-                  );
-                })}
+              {showRouters.map(item => {
+                const com = (
+                  <RouterGo
+                    key={item.path}
+                    Ele="li"
+                    go={{ pathname: item.path }}
+                    className={pathname === item.path ? styles.active : null}>
+                    {item.title}
+                    {/*{item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}*/}
+                  </RouterGo>
+                );
+                return item.path === PATH.asset ? <AuthorityComponent key={item.path}>{com}</AuthorityComponent> : com;
+              })}
             </ul>
           </div>
           <div className={styles.right}>
