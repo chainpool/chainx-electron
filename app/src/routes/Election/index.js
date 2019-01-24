@@ -66,7 +66,7 @@ class Election extends Mixin {
                           });
                         }}>
                         <Icon name="icon-xiugaipeizhi" />
-                        更新节点
+                        更新我的节点
                       </Button>
                     </li>
                   ) : null}
