@@ -42,9 +42,6 @@ class Trade extends SwitchPair {
             </div>
           </div>
           <div className={styles.center}>
-            <div className={styles.kline}>
-              <Kline {...props} data-desc="K线图" />
-            </div>
             <div className={styles.putOrder}>
               <PutOrder {...props} data-desc="下单" />
             </div>
@@ -52,9 +49,6 @@ class Trade extends SwitchPair {
           <div className={styles.right}>
             <div className={styles.orderPair}>
               <OrderPair {...props} data-desc="货币对" />
-            </div>
-            <div className={styles.latestOrder}>
-              <LatestOrder {...props} data-desc="最新成交" />
             </div>
           </div>
         </div>

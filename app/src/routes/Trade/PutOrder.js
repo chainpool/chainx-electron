@@ -171,6 +171,7 @@ class PutOrder extends SwitchPair {
           <div className={styles.pricelabel}>{label}价</div>
           <div className={styles.input}>
             <Input.Text
+              errMsgSuffix
               type="decimal"
               errMsg={priceErrMsg}
               value={price}
@@ -192,6 +193,7 @@ class PutOrder extends SwitchPair {
           <div className={styles.amountlabel}>{label}量</div>
           <div className={styles.input}>
             <Input.Text
+              errMsgSuffix
               type="decimal"
               errMsg={amountErrMsg}
               value={amount}
