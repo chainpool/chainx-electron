@@ -8,7 +8,7 @@ class UnFreezeModal extends Component {
   render() {
     const {
       model: { dispatch, openModal },
-      chainStore: { blockNumber, blockDuration },
+      chainStore: { blockNumber, blockDuration, blockTime },
       globalStore: {
         modal: { data: { account = '', myRevocations = [] } = {} },
       },
@@ -18,7 +18,7 @@ class UnFreezeModal extends Component {
       return {
         canUnFreeze: revocation.revocationHeight <= blockNumber,
         amount: formatNumber.localString(revocation.amount),
-        time: Date.now() + (revocation.revocationHeight - blockNumber) * blockDuration,
+        time: blockTime.getTime() + (revocation.revocationHeight - blockNumber) * blockDuration,
       };
     });
 
