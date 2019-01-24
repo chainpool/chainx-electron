@@ -67,7 +67,22 @@ class CurrentOrderTable extends SwitchPair {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '撤单' }],
+                    description: [
+                      { name: '操作', value: '撤单' },
+                      { name: '委托编号', value: item.index },
+                      { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
+                      {
+                        name: '方向',
+                        value:
+                          item.direction === 'Buy' ? (
+                            <span className={'green'}>买入</span>
+                          ) : (
+                            <span className={'red'}>卖出</span>
+                          ),
+                      },
+                      { name: '委托价格', value: item.priceShow },
+                      { name: '委托数量', value: item.amountShow },
+                    ],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
                         type: 'cancelOrder',
