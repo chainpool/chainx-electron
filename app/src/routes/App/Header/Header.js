@@ -48,10 +48,9 @@ class Header extends Component {
         <div>
           <div className={styles.nav}>
             <RouterGo isOutSide go={{ pathname: 'https://chainx.org' }}>
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" style={{ height: 28 }} />
             </RouterGo>
 
-            {isTestNet && <div className={styles.net}>测试网</div>}
             <ul>
               {routers
                 .filter(item => item.show !== false)

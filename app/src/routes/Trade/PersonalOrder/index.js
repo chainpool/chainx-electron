@@ -33,7 +33,6 @@ class PersonalOrder extends SwitchPair {
             <div className={styles.nodata} style={{ top: 20 }}>
               暂无当前委托
             </div>
-            <div className={styles.moreApi}>{API.status}</div>
           </div>
         );
       },
@@ -48,7 +47,7 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={['当前委托', '历史委托']}
+            tabs={['当前委托']}
             className={styles.tab}
           />
         </div>

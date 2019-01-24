@@ -213,6 +213,7 @@ class InputText extends Mixin {
       label = '',
       prefix = '',
       suffix = '',
+      errMsgSuffix = false,
       shape = 'round',
       placeholder = '',
       rows = 1,
@@ -292,9 +293,11 @@ class InputText extends Mixin {
               </div>
             ) : null}
           </div>
-          {suffix ? <div className={styles.suffix}>{suffix}</div> : null}
+          {suffix ? (
+            <div className={styles.suffix}>{errMsg && errMsgSuffix ? <span>{errMsg}</span> : suffix}</div>
+          ) : null}
         </div>
-        {errMsg ? <div className={styles.errMsg}>{errMsg}</div> : null}
+        {errMsg && !errMsgSuffix ? <div className={styles.errMsg}>{errMsg}</div> : null}
       </div>
     );
   }

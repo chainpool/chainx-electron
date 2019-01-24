@@ -1,4 +1,4 @@
-import { formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
+import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -60,18 +60,32 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     const res = await getQuotations(currentPair.id, [0, 10]);
     console.log(res, '-----------盘口列表');
-    const formatList = list => {
-      return list.map((item = []) => ({
-        priceShow: this.setPrecision(item[0], currentPair.precision),
-        amountShow: this.setPrecision(item[1], currentPair.assets),
-        id: item.id,
-        piece: item.piece,
-      }));
+    // res.buy = [[100, 100000], [101, 100001], [102, 100002], [103, 100003], [104, 100004]];
+    // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];
+    res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
+    res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
+    const formatList = (list, action) => {
+      return list.map((item = [], index) => {
+        let totalAmount = 0;
+        if (action === 'sell') {
+          totalAmount = list.slice(index, list.length).reduce((sum, item = []) => sum + item[1], 0);
+        } else {
+          totalAmount = list.slice(0, index + 1).reduce((sum, item = []) => sum + item[1], 0);
+        }
+
+        return {
+          priceShow: this.setPrecision(item[0], currentPair.precision),
+          amountShow: this.setPrecision(item[1], currentPair.assets),
+          id: item.id,
+          piece: item.piece,
+          totalAmountShow: this.setPrecision(totalAmount, currentPair.assets),
+        };
+      });
     };
     if (res) {
       let { buy: buyList = [], sell: sellList = [] } = res;
-      buyList = formatList(buyList);
-      sellList = formatList(sellList);
+      buyList = formatList(buyList, 'buy');
+      sellList = formatList(sellList, 'sell');
       this.changeModel(
         {
           buyList,

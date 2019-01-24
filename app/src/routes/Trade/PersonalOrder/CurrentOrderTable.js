@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
-import { observer, moment_helper } from '../../../utils';
+import { observer } from '../../../utils';
 
 @observer
 class CurrentOrderTable extends SwitchPair {
@@ -35,7 +35,8 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: '方向',
           dataIndex: 'direction',
-          render: value => (value === 'Buy' ? '买入' : '卖出'),
+          render: value =>
+            value === 'Buy' ? <span className={'green'}>买入</span> : <span className={'red'}>卖出</span>,
         },
         {
           title: `委托价格(${currentPair.currency})`,
