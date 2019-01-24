@@ -111,7 +111,7 @@ class RegisterNode extends Component {
           </Button>
         }>
         <div>
-          <Input.Select
+          <Input.Address
             getOptionLabel={item => item.tag}
             getOptionValue={item => item.address}
             prefix="ChainX"

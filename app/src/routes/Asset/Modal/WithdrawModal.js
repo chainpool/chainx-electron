@@ -74,7 +74,7 @@ class WithdrawModal extends Component {
           </Button>
         }>
         <div>
-          <Input.Select
+          <Input.Address
             prefix="Bitcoin"
             label="收款地址"
             value={address}

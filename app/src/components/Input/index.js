@@ -344,9 +344,130 @@ class InputSelectPending extends React.Component {
   }
 }
 
+class InputAddress extends React.Component {
+  state = {
+    errMsg: this.props.errMsg,
+    showDropdown: false,
+    address: '',
+  };
+
+  componentDidUpdate() {
+    if (this.state.errMsg === '' && this.props.errMsg && (this.props.value === null || this.props.value === '')) {
+      this.setState({
+        errMsg: this.props.errMsg,
+      });
+    }
+  }
+
+  onChange = event => {
+    const { onChange = x => x } = this.props;
+    onChange(event.target.value);
+  };
+
+  onFocus = event => {
+    const { onFocus = x => x } = this.props;
+    this.setState(
+      {
+        showDropdown: true,
+      },
+      () => {
+        onFocus();
+      }
+    );
+  };
+
+  onBlur = event => {
+    const { onBlur = x => x } = this.props;
+    this.setState(
+      {
+        showDropdown: false,
+      },
+      () => {
+        onBlur();
+      }
+    );
+  };
+
+  selectLabel = (value, label) => {
+    const { onChange = x => x } = this.props;
+    onChange(value, label);
+  };
+
+  render() {
+    const { errMsg = '', showDropdown } = this.state;
+    const {
+      className,
+      size = 'middle',
+      type = 'primary',
+      disabled = false,
+      label = '',
+      value,
+      options = [],
+      getOptionLabel = (item = {}) => item.label,
+      getOptionValue = (item = {}) => item.value,
+      prefix = '',
+      placeholder = '',
+    } = this.props;
+
+    const matchOption = options.find(option => getOptionValue(option) === value);
+
+    return (
+      <div className={classNames(styles.inputcontainer, styles.inputAddress, className)}>
+        {label ? (
+          <div className={styles.label}>
+            <span>
+              {label}
+              {matchOption && <span className={styles.labelName}>（{getOptionLabel(matchOption)}）</span>}
+            </span>
+          </div>
+        ) : null}
+        <div
+          className={classNames(
+            styles.input,
+            styles.selectinput,
+            styles[size],
+            styles[type],
+            disabled ? styles.disabled : null
+          )}>
+          {prefix && <div className={styles.prefix}>{prefix}</div>}
+          <div className={classNames(styles.userinput, styles.dropdownGroup)}>
+            <input
+              onBlur={this.onBlur}
+              onFocus={this.onFocus}
+              type="text"
+              placeholder={placeholder}
+              value={value}
+              disabled={disabled}
+              onChange={this.onChange}
+            />
+
+            <div className={styles.dropdown} style={{ display: showDropdown ? 'block' : 'none' }}>
+              <div className={styles.dropdownBody}>
+                {options.length &&
+                  options.map((option, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={styles.dropdownItem}
+                        onMouseDown={e => this.selectLabel(getOptionValue(option), getOptionLabel(option))}>
+                        {getOptionLabel(option)}
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        </div>
+        {errMsg ? <div className={styles.errMsg}>{errMsg}</div> : null}
+      </div>
+    );
+  }
+}
+
 export default {
   Text: InputText,
   Select: InputSelect,
   Radio: InputRadio,
   Checkbox: CheckBox,
+  Address: InputAddress,
 };

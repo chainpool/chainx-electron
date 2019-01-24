@@ -81,7 +81,7 @@ class TransferModal extends Component {
           </Button>
         }>
         <div>
-          <Input.Select
+          <Input.Address
             prefix="ChainX"
             label="接收人地址"
             value={address}
