@@ -23,8 +23,6 @@ class Chain extends ModelExtend {
       this.setBlockNumber(head.number);
       this.changeModel('blockTime', new Date(head.now * 1000));
     });
-
-    console.log(newHeadSubscription);
   }
 
   unSubscribeNewHead() {

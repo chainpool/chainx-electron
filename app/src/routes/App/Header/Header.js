@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { RouterGo, Icon, AuthorityComponent } from '../../../components';
+import { AuthorityComponent, Icon, RouterGo } from '../../../components';
 import { PATH } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
+import logTest from '../../../resource/logo_test.png';
 import Account from './Account';
 import { Inject } from '../../../utils';
 
@@ -48,7 +49,7 @@ class Header extends Component {
         <div>
           <div className={styles.nav}>
             <RouterGo isOutSide go={{ pathname: 'https://chainx.org' }}>
-              <img src={logo} alt="logo" style={{ height: 28 }} />
+              <img src={isTestNet ? logTest : logo} alt="logo" style={{ height: 28 }} />
             </RouterGo>
 
             <ul>

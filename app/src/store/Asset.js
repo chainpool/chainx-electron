@@ -2,22 +2,18 @@ import { _, moment_helper, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAsset,
+  getBTCAddressByAccount,
   getCert,
   getDepositRecords,
   getWithdrawalListByAccount,
   register,
   transfer,
   withdraw,
-  getBTCAddressByAccount,
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
 
 export default class Asset extends ModelExtend {
-  constructor(rootStore) {
-    super(rootStore);
-  }
-
   @observable name = 'asset';
   @observable btcAddresses = []; // 账户已绑定BTC地址列表
   @observable certs = []; // 我的证书
