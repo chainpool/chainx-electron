@@ -33,6 +33,7 @@ class SignModal extends Component {
     const {
       globalStore: {
         closeModal,
+        nativeAssetName,
         modal: {
           data: {
             token: targetToken,
@@ -49,6 +50,7 @@ class SignModal extends Component {
       },
       model: { currentAccount },
     } = this.props;
+
     const token = targetToken || 'PCX';
     return (
       <Modal
@@ -84,14 +86,13 @@ class SignModal extends Component {
             <span>交易费用</span>
             <div className={styles.speed}>
               <Input.Select
-                getOptionLabel={item => `${item.label}${token}`}
+                getOptionLabel={item => `${item.label}${nativeAssetName}`}
                 options={[{ label: 1, value: 1 }]}
                 value={acceleration}
                 onChange={value => {
                   this.setState({ acceleration: value });
-                }}>
-                ddd
-              </Input.Select>
+                }}
+              />
             </div>
             <span className={styles.feevalue}>
               <span>90%销毁，10%支付给打包节点，费用越高打包速度越快</span>

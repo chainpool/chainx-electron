@@ -33,6 +33,10 @@ export default class Global extends ModelExtend {
     return this.assets.find(asset => asset.isNative);
   }
 
+  @computed get nativeAssetName() {
+    return (this.nativeAsset && this.nativeAsset.name) || '';
+  }
+
   @computed get nativeAssetPrecision() {
     return (this.nativeAsset && this.nativeAsset.precision) || 0;
   }
