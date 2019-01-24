@@ -10,12 +10,12 @@ class WithDrawTable extends Mixin {
       model: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getWithdrawalList' });
+    dispatch({ type: 'getWithdrawalListByAccount' });
   }
 
   render() {
     const {
-      model: { normalizedWithdrawList },
+      model: { normalizedAccountWithdrawList },
     } = this.props;
 
     const tableProps = {
@@ -53,7 +53,7 @@ class WithDrawTable extends Mixin {
           dataIndex: 'state',
         },
       ],
-      dataSource: normalizedWithdrawList,
+      dataSource: normalizedAccountWithdrawList,
     };
     return <Table {...tableProps} />;
   }

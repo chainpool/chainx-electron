@@ -41,6 +41,13 @@ export default class Global extends ModelExtend {
     return (this.nativeAsset && this.nativeAsset.precision) || 0;
   }
 
+  @computed get assetNamePrecisionMap() {
+    return this.assets.reduce((result, asset) => {
+      result.set(result.name, asset.precision);
+      return result;
+    }, new Map());
+  }
+
   openModal = (payload = {}) => {
     this.changeModel('modal', {
       status: true,

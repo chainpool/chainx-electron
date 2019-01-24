@@ -9,7 +9,13 @@ import { Inject } from '@utils';
 class Trust extends Mixin {
   state = {};
 
-  startInit = () => {};
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getAllWithdrawalList' });
+  };
 
   render() {
     return (

@@ -19,7 +19,7 @@ export default class Asset extends ModelExtend {
   @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 跨链资产
-  @observable onChainWithdrawList = []; // 提现记录
+  @observable onChainAccountWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
   @observable accountAssets = []; // 现账户资产
 
@@ -96,8 +96,8 @@ export default class Asset extends ModelExtend {
     return [...this.crossChainAccountAssets, ...zeroAssets];
   }
 
-  @computed get normalizedWithdrawList() {
-    return this.onChainWithdrawList.map(withdraw => {
+  @computed get normalizedAccountWithdrawList() {
+    return this.onChainAccountWithdrawList.map(withdraw => {
       let state = '';
       switch (withdraw.state) {
         case 'applying':
@@ -197,11 +197,11 @@ export default class Asset extends ModelExtend {
     );
   };
 
-  async getWithdrawalList() {
+  async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
     const withdrawList = await getWithdrawalListByAccount(account.address, 0, 100);
 
-    this.changeModel('onChainWithdrawList', withdrawList.data);
+    this.changeModel('onChainAccountWithdrawList', withdrawList.data);
   }
 
   async getDepositRecords() {
