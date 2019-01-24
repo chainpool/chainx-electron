@@ -73,12 +73,7 @@ class CurrentOrderTable extends SwitchPair {
                       { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
                       {
                         name: '方向',
-                        value:
-                          item.direction === 'Buy' ? (
-                            <span className={'green'}>买入</span>
-                          ) : (
-                            <span className={'red'}>卖出</span>
-                          ),
+                        value: item.direction === 'Buy' ? '买入' : '卖出',
                       },
                       { name: '委托价格', value: item.priceShow },
                       { name: '委托数量', value: item.amountShow },

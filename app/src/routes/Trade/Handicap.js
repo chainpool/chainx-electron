@@ -52,7 +52,6 @@ class Handicap extends SwitchPair {
 
     const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
-    console.log(!!isInSell, !!isInBuy);
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>挂单列表</div>
