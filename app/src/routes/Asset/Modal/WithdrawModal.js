@@ -72,10 +72,10 @@ class WithdrawModal extends Component {
                         type: 'withdraw',
                         payload: {
                           signer,
-                          dest: address.value,
                           acceleration,
                           token,
                           amount,
+                          dest: address,
                           remark,
                         },
                       });
