@@ -9,14 +9,20 @@ import { AuthorityRoute } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 
-@Inject(({ globalStore }) => ({ globalStore }))
+@Inject(({ globalStore, electionStore }) => ({ globalStore, electionStore }))
 class Main extends Component {
   state = {
     ready: false,
   };
 
-  componentDidMount() {
-    this.ready();
+  async componentDidMount() {
+    await this.ready();
+
+    const {
+      electionStore: { dispatch },
+    } = this.props;
+    // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
+    dispatch({ type: 'getIntentions' });
   }
 
   ready = async () => {

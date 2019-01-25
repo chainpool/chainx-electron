@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, toJS, formatNumber } from '../utils';
+import { _, formatNumber } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
