@@ -111,6 +111,7 @@ class CrossChainAssetTable extends Mixin {
                         token: item.name,
                         freeShow: formatNumber.toPrecision(item.free, item.precision),
                         free: item.free,
+                        chain: item.chain,
                       },
                     });
                   }}>

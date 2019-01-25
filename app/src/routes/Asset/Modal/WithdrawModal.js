@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Patterns } from '../../../utils';
+import { Inject, Patterns } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
+@Inject(({ addressManageStore }) => ({ addressManageStore }))
 class WithdrawModal extends Component {
   state = {
     address: '',
@@ -33,13 +34,25 @@ class WithdrawModal extends Component {
       return ['checkAddress', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
       model: { openModal, dispatch },
-      globalStore: { modal: { data: { token, freeShow } = {} } = {} },
+      globalStore: { modal: { data: { token, freeShow, chain } = {} } = {} },
+      addressManageStore: { addresses },
     } = this.props;
+
+    const options = addresses
+      .filter(address => address.chain === chain)
+      .map(address => {
+        return {
+          label: address.label,
+          value: address.address,
+        };
+      });
+
     return (
       <Modal
         title="跨链提现"
@@ -75,11 +88,11 @@ class WithdrawModal extends Component {
         }>
         <div>
           <Input.Address
-            prefix="Bitcoin"
+            prefix={chain}
             label="收款地址"
             value={address}
             errMsg={addressErrMsg}
-            options={[]}
+            options={options}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />

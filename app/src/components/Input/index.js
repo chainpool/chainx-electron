@@ -92,6 +92,7 @@ class InputSelect extends React.Component {
       });
     }
   }
+
   render() {
     const { errMsg = '' } = this.state;
     const {
@@ -307,6 +308,7 @@ class InputSelectPending extends React.Component {
   state = {
     expand: false,
   };
+
   componentDidMount() {
     window.onclick = () => {
       const { expand } = this.state;
@@ -315,12 +317,14 @@ class InputSelectPending extends React.Component {
       }
     };
   }
+
   changeExpand = status => {
     const { expand } = this.state;
     this.setState({
       expand: _.isUndefined(status) ? !expand : status,
     });
   };
+
   render() {
     const { expand } = this.state;
     const { changeExpand } = this;
@@ -441,10 +445,10 @@ class InputAddress extends React.Component {
               onChange={this.onChange}
             />
 
-            <div className={styles.dropdown} style={{ display: showDropdown ? 'block' : 'none' }}>
-              <div className={styles.dropdownBody}>
-                {options.length &&
-                  options.map((option, index) => {
+            {showDropdown && options.length > 0 ? (
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownBody}>
+                  {options.map((option, index) => {
                     return (
                       <div
                         key={index}
@@ -454,8 +458,9 @@ class InputAddress extends React.Component {
                       </div>
                     );
                   })}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
         {errMsg ? <div className={styles.errMsg}>{errMsg}</div> : null}
