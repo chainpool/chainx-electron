@@ -94,7 +94,11 @@ class WithdrawModal extends Component {
             value={address}
             errMsg={addressErrMsg}
             options={options}
-            onChange={value => this.setState({ address: value })}
+            onChange={value => {
+              console.log(value);
+              this.setState({ address: value });
+              setTimeout(checkAll.checkAddress, 0);
+            }}
             onBlur={checkAll.checkAddress}
           />
           <InputHorizotalList

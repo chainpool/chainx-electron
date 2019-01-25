@@ -355,14 +355,6 @@ class InputAddress extends React.Component {
     address: '',
   };
 
-  componentDidUpdate() {
-    if (this.state.errMsg === '' && this.props.errMsg && (this.props.value === null || this.props.value === '')) {
-      this.setState({
-        errMsg: this.props.errMsg,
-      });
-    }
-  }
-
   onChange = event => {
     const { onChange = x => x } = this.props;
     onChange(event.target.value);
@@ -398,9 +390,10 @@ class InputAddress extends React.Component {
   };
 
   render() {
-    const { errMsg = '', showDropdown } = this.state;
+    const { showDropdown } = this.state;
     const {
       className,
+      errMsg = '',
       size = 'middle',
       type = 'primary',
       disabled = false,
