@@ -19,7 +19,8 @@ class WithdrawModal extends Component {
       const {
         globalStore: { modal: { data: { token } = {} } = {} },
       } = this.props;
-      const errMsg = Patterns.check('required')(address) || Patterns.check('isVerifyAddress', token, address.value);
+      // TODO: 根据token检查地址格式
+      const errMsg = Patterns.check('required')(address);
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
