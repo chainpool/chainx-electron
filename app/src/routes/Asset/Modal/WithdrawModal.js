@@ -95,7 +95,6 @@ class WithdrawModal extends Component {
             errMsg={addressErrMsg}
             options={options}
             onChange={value => {
-              console.log(value);
               this.setState({ address: value });
               setTimeout(checkAll.checkAddress, 0);
             }}
