@@ -20,7 +20,7 @@ class Trust extends Mixin {
   render() {
     return (
       <div className={styles.trust}>
-        <TableTitle title="信托列表">待签原文：5345773718cb9c8d09aa5345773718cb9c8d09aa5345773718cb9c8d09aa</TableTitle>
+        <TableTitle title="信托列表" />
         <TrustTable {...this.props} />
       </div>
     );
