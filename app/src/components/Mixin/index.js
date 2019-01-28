@@ -1,5 +1,5 @@
 import React from 'react';
-import { _ } from '../../utils';
+import { _, toJS } from '../../utils';
 
 class Mixin extends React.Component {
   constructor(props) {
@@ -33,14 +33,15 @@ class Mixin extends React.Component {
     } = this.props;
 
     if (!_.isEqual(currentAccountPrev, currentAccount)) {
+      console.log(toJS(currentAccountPrev), toJS(currentAccount), _.isFunction(this.startInit), '----');
       _.isFunction(this.startInit) && this.startInit();
       _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
 
-    // if (!_.isEqual(searchPrev, search) && search) {
-    //   _.isFunction(this.startInit) && this.startInit();
-    //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    // }
+    if (!_.isEqual(searchPrev, search) && search) {
+      _.isFunction(this.startInit) && this.startInit();
+      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+    }
   }
 
   changeState = (payload = {}, callback) => {
