@@ -88,6 +88,7 @@ class CrossChainAssetTable extends Mixin {
                       openModal({
                         name: 'DepositModal',
                         data: {
+                          token: item.name,
                           trusteeAddr: item.trusteeAddr,
                         },
                       });
@@ -97,7 +98,13 @@ class CrossChainAssetTable extends Mixin {
                 ) : (
                   <Button
                     onClick={() => {
-                      alert('开发中');
+                      openModal({
+                        name: 'CrossChainBindModal',
+                        data: {
+                          trusteeAddr: item.trusteeAddr,
+                        },
+                      });
+                      // alert('开发中');
                     }}>
                     绑定
                   </Button>
