@@ -15,7 +15,6 @@ class Trade extends SwitchPair {
   state = {};
 
   startInit = () => {
-    console.log('hhhhh');
     const {
       model: { dispatch },
       location: { search },
