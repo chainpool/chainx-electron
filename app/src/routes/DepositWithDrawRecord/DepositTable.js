@@ -1,58 +1,72 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, Table } from '../../components';
+import { Inject, moment, formatNumber } from '@utils';
 
+@Inject(({ assetStore, globalStore }) => ({ assetStore, globalStore }))
 class DepositTable extends Mixin {
   startInit() {
     const {
-      model: { dispatch },
+      assetStore: { dispatch },
     } = this.props;
 
     dispatch({ type: 'getDepositRecords' });
   }
 
   render() {
+    const {
+      assetStore: { depositRecords },
+      globalStore: { assets },
+    } = this.props;
+
+    const records = depositRecords.map(record => {
+      const info = assets.find(asset => asset.name === record.token);
+      if (!info) {
+        throw Error(`can not find record asset ${record.token} definition`);
+      }
+
+      return {
+        address: record.address, //充值地址
+        time: moment.formatHMS(new Date(record.time * 1000)),
+        token: record.token,
+        txid: record.txid,
+        amount: formatNumber.toPrecision(record.balance, info.precision),
+        status: record.totalConfirm > record.confirm ? `(${record.confirm}/${record.totalConfirm})确认中` : '已确认',
+      };
+    });
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '发起时间',
-          dataIndex: 'data1',
+          dataIndex: 'time',
         },
         {
           title: '原链交易ID',
-          dataIndex: 'data2',
+          dataIndex: 'txid',
         },
         {
           title: '币种',
           width: 100,
-          dataIndex: 'data3',
+          dataIndex: 'token',
         },
         {
           title: '地址',
           ellipse: true,
-          dataIndex: 'data4',
+          dataIndex: 'address',
         },
         {
           title: '数量',
-          dataIndex: 'data5',
+          dataIndex: 'amount',
         },
         {
           title: '状态',
           width: 100,
-          dataIndex: '_action',
-          render: () => '已确认',
+          dataIndex: 'status',
         },
       ],
-      dataSource: [
-        {
-          data1: '2018-04-13 16:56:34',
-          data2: 'e345773',
-          data3: 'BTC',
-          data4: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data5: '12.64937460',
-        },
-      ],
+      dataSource: records,
     };
     return <Table {...tableProps} />;
   }

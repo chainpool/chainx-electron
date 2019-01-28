@@ -144,12 +144,9 @@ export default class Asset extends ModelExtend {
 
   async getDepositRecords() {
     const account = this.getCurrentAccount();
-    const records = await getDepositRecords(account.address);
+    const records = await getDepositRecords(account.address, 0, 100);
 
-    // TODO: 该rpc马上回变动，暂时不对充值记录进行处理
-    if (records) {
-      this.changeModel('depositRecords', records.data);
-    }
+    this.changeModel('depositRecords', records.data);
   }
 
   register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
