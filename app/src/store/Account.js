@@ -1,8 +1,17 @@
-import { computed, observable } from 'mobx';
+import { autorun, computed, observable } from 'mobx';
 import { _, localSave } from '../utils';
 import ModelExtend from './ModelExtend';
 
 export default class Store extends ModelExtend {
+  constructor(rootStore) {
+    super(rootStore);
+
+    autorun(() => {
+      localSave.set('currentSelect', this.currentAccount);
+      localSave.set('accounts', this.accounts);
+    });
+  }
+
   @observable accounts = localSave.get('accounts') || [];
   @observable currentAccount = localSave.get('currentSelect') || {};
 
@@ -31,8 +40,6 @@ export default class Store extends ModelExtend {
       newCurrentAccount = {};
     }
     this.changeModel('currentAccount', newCurrentAccount);
-    localSave.set('currentSelect', newCurrentAccount);
-    localSave.set('accounts', this.accounts);
   }
 
   addAccount({ tag, address, encoded }) {
