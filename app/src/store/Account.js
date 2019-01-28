@@ -28,6 +28,10 @@ export default class Store extends ModelExtend {
     return !!targetIntention;
   }
 
+  @computed get currentAddress() {
+    return this.currentAccount && this.currentAccount.address;
+  }
+
   setCurrentAccount(address = '') {
     let newCurrentAccount = this.accounts.filter(item => item.address === this.currentAccount.address)[0];
     const findAccount = _.find(this.accounts, (item = {}) => item.address === address);

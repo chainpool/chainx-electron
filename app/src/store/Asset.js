@@ -137,8 +137,11 @@ export default class Asset extends ModelExtend {
 
   getCert = async () => {
     const currentAccount = this.getCurrentAccount();
+    console.log(currentAccount);
     const res = await getCert(currentAccount.address);
-    (res || []).map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
+    console
+      .log('hello')(res || [])
+      .map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
     this.changeModel('certs', res, []);
   };
 

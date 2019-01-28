@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@polkadot/util": "^0.33.36",
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",
     "bignumber.js": "^8.0.2",
