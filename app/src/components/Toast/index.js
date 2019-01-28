@@ -48,7 +48,11 @@ class Toast {
             status === 'warn' ? styles.warn : null
           )}>
           <div />
-          <i className="iconfont icon-icon-wancheng" />
+          {status === 'success' ? (
+            <i className="iconfont icon-icon-wancheng" />
+          ) : (
+            <i className="iconfont icon-icon-cuowu" />
+          )}
           {title}
         </div>
         {message ? <div className={styles.desc}>{message}</div> : null}
