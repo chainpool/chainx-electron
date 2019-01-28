@@ -2,8 +2,6 @@ import { ChainX } from '../utils';
 
 const { stake, asset, chain, trade } = ChainX;
 
-export const getCert = (...payload) => stake.getCertByAccount(...payload);
-
 export const getAsset = (...payload) => asset.getAssetsByAccount(...payload);
 
 export const register = (...payload) => stake.register(...payload);
