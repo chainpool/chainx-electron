@@ -21,27 +21,27 @@ class Mixin extends React.Component {
     this._isMounted = false;
     _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
   }
-
   componentDidUpdate(prevProps) {
     const {
       accountStore: { currentAccount_prev: currentAccountPrev = {} } = {},
       location: { search: searchPrev },
     } = prevProps;
     const {
-      accountStore: { currentAccount = {} } = {},
+      accountStore: { currentAccount } = {},
       location: { search },
     } = this.props;
 
-    if (!_.isEqual(currentAccountPrev, currentAccount)) {
-      console.log(toJS(currentAccountPrev), toJS(currentAccount), _.isFunction(this.startInit), '----');
-      _.isFunction(this.startInit) && this.startInit();
-      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+    if (!_.isEqual(currentAccountPrev, currentAccount) && currentAccount) {
+      setTimeout(() => {
+        _.isFunction(this.startInit) && this.startInit();
+        _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+      });
     }
-
-    if (!_.isEqual(searchPrev, search) && search) {
-      _.isFunction(this.startInit) && this.startInit();
-      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    }
+    // if (!_.isEqual(searchPrev, search) && search) {
+    //   console.log(this);
+    //   _.isFunction(this.startInit) && this.startInit();
+    //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+    // }
   }
 
   changeState = (payload = {}, callback) => {
