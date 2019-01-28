@@ -73,6 +73,6 @@ export default class Store extends ModelExtend {
   }
 
   switchAccount({ address }) {
-    this.rootStore.accountStore.setCurrentAccount(address);
+    this.setCurrentAccount(address);
   }
 }
