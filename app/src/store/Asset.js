@@ -1,9 +1,8 @@
-import { _, moment_helper, observable, resOk } from '../utils';
+import { _, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAsset,
   getBTCAddressByAccount,
-  getCert,
   getDepositRecords,
   getWithdrawalListByAccount,
   register,
@@ -16,7 +15,6 @@ import { moment } from '@utils/index';
 export default class Asset extends ModelExtend {
   @observable name = 'asset';
   @observable btcAddresses = []; // 账户已绑定BTC地址列表
-  @observable certs = []; // 我的证书
   @observable primaryAsset = []; // 原生资产
   @observable crossChainAsset = []; // 跨链资产
   @observable onChainAccountWithdrawList = []; // 提现记录
@@ -124,7 +122,6 @@ export default class Asset extends ModelExtend {
   }
 
   reload = () => {
-    this.getCert();
     this.getAccountAssets();
     this.getAssets();
   };
@@ -133,16 +130,6 @@ export default class Asset extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const addresses = await getBTCAddressByAccount(currentAccount.address);
     this.changeModel('btcAddresses', addresses);
-  };
-
-  getCert = async () => {
-    const currentAccount = this.getCurrentAccount();
-    console.log(currentAccount);
-    const res = await getCert(currentAccount.address);
-    console
-      .log('hello')(res || [])
-      .map(item => (item.issuedAt = moment_helper.format(item.issuedAt * 1000)));
-    this.changeModel('certs', res, []);
   };
 
   getAccountAssets = async () => {

@@ -26,10 +26,6 @@ class Asset extends Mixin {
     dispatch({
       type: 'getAccountAssets',
     });
-
-    dispatch({
-      type: 'getCert',
-    });
   };
 
   render() {
@@ -37,7 +33,6 @@ class Asset extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { certs = [] },
     } = this.props;
     const props = {
       ...this.props,
@@ -47,12 +42,6 @@ class Asset extends Mixin {
     return (
       <div className={styles.asset}>
         <ul>
-          {certs.length > 0 && (
-            <li>
-              <TableTitle title={'我的证书'} />
-              <CertTable {...props} />
-            </li>
-          )}
           <li>
             <TableTitle title={'原生资产'}>
               <ul>
