@@ -130,8 +130,11 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     price = this.setPrecision(price, currentPair.precision, true);
     amount = this.setPrecision(amount, currentPair.assets, true);
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
+        if (err) {
+          return reject(err);
+        }
         if (resOk(result)) {
           this.reload();
           resolve(result);

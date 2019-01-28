@@ -244,6 +244,14 @@ class PutOrder extends SwitchPair {
                         { name: '账户', value: currentAccount.address },
                       ],
                       callback: ({ signer, acceleration }) => {
+                        const content = (
+                          <div>
+                            交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
+                            {action === 'buy' ? '买入' : '卖出'}；报价 {price}
+                            <br />
+                            数量 {amount}
+                          </div>
+                        );
                         dispatch({
                           type: 'putOrder',
                           payload: {
@@ -255,19 +263,15 @@ class PutOrder extends SwitchPair {
                             price,
                             amount,
                           },
-                        }).then(res => {
-                          if (res) {
-                            Toast.success(
-                              '挂单已完成',
-                              <div>
-                                交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
-                                {action === 'buy' ? '买入' : '卖出'}；报价 {price}
-                                <br />
-                                数量 {amount}
-                              </div>
-                            );
-                          }
-                        });
+                        })
+                          .then(res => {
+                            if (res) {
+                              Toast.success('挂单已完成', content);
+                            }
+                          })
+                          .catch(() => {
+                            Toast.warn('挂单报错', content);
+                          });
                       },
                     },
                   });
