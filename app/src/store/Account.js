@@ -46,7 +46,7 @@ export default class Store extends ModelExtend {
     // address已经存在的不再重复加入
     if (this.accounts.filter(item => item.address === address)[0]) return;
     this.changeModel('accounts', [...this.accounts, { tag, address, encoded }]);
-    this.setCurrentAccount();
+    this.setCurrentAccount(address);
   }
 
   deleteAccount({ address }) {

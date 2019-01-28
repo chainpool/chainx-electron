@@ -9,7 +9,7 @@ import { AuthorityRoute } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 
-@Inject(({ globalStore, accountStore, electionStore }) => ({ globalStore, electionStore }))
+@Inject(({ globalStore, accountStore, electionStore }) => ({ globalStore, accountStore, electionStore }))
 class Main extends Component {
   state = {
     ready: false,
