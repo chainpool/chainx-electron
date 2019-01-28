@@ -79,7 +79,7 @@ export default class ModelExtend {
   };
 
   getAccountAssets = () => {
-    return this.rootStore.assetStore.getAssets();
+    return this.rootStore.assetStore.getAccountAssets();
   };
 
   setPrecision = (value, token, multiplication = false) => {

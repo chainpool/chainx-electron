@@ -138,55 +138,6 @@ export default class Asset extends ModelExtend {
     this.changeModel('accountAssets', accountAssetsResp.data);
   };
 
-  getAssets = async () => {
-    const currentAccount = this.getCurrentAccount();
-    const allAssets = await this.getAllAssets();
-    if (!currentAccount.address) return false;
-    const res = await getAsset(currentAccount.address, 0, 100);
-    let primaryAsset = [];
-    let crossChainAsset = [];
-    const format = isNative => {
-      return res.data
-        .filter(item => item.isNative === isNative)
-        .map(item => {
-          const {
-            Free: free,
-            ReservedStaking: reservedStaking,
-            ReservedStakingRevocation: reservedStakingRevocation,
-            ReservedDexSpot: reservedDexSpot,
-            ReservedWithdrawal: reservedWithdrawal,
-          } = item.details;
-          const token = item.name;
-          const total = _.sum([free, reservedStaking, reservedStakingRevocation, reservedDexSpot, reservedWithdrawal]);
-          const findOne = allAssets.filter((one = {}) => one.name === item.name)[0] || {};
-          //console.log(toJS(allAssets), '----');
-          return {
-            ...item.details,
-            ...item,
-            freeShow: this.setPrecision(free, token),
-            reservedStakingShow: this.setPrecision(reservedStaking, token),
-            reservedStakingRevocationShow: this.setPrecision(reservedStakingRevocation, token),
-            reservedDexSpotShow: this.setPrecision(reservedDexSpot, token),
-            reservedWithdrawalShow: this.setPrecision(reservedWithdrawal, token),
-            totalShow: this.setPrecision(total, token),
-            chain: findOne.chain,
-            trusteeAddr: findOne.trusteeAddr,
-          };
-        });
-    };
-    if (res && res.data) {
-      primaryAsset = format(true);
-      crossChainAsset = format(false);
-    }
-    this.changeModel(
-      {
-        primaryAsset,
-        crossChainAsset,
-      },
-      []
-    );
-  };
-
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
     const withdrawList = await getWithdrawalListByAccount(account.address, 0, 100);

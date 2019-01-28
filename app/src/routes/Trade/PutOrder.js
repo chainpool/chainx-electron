@@ -67,7 +67,8 @@ class PutOrder extends SwitchPair {
 
   startInit = () => {
     const {
-      model: { dispatch, currentPair, setPrecision },
+      model: { currentPair, setPrecision },
+      assetStore: { dispatch },
     } = this.props;
     dispatch({
       type: 'getAccountAssets',
@@ -97,11 +98,12 @@ class PutOrder extends SwitchPair {
   getCurrentAssetFree = () => {
     const {
       model: { currentPair },
-      assetStore: { crossChainAsset = [], primaryAsset = [] },
+      assetStore: { crossChainAccountAssets = [], nativeAccountAssets = [] },
     } = this.props;
-    const currentCrossAsset = crossChainAsset.filter((item = {}) => item.name === currentPair.currency)[0] || {};
-    const currentPrimaryAsset = primaryAsset.filter((item = {}) => item.name === currentPair.assets)[0] || {};
-    return [currentCrossAsset.Free, currentPrimaryAsset.Free];
+    const currentCrossAsset =
+      crossChainAccountAssets.filter((item = {}) => item.name === currentPair.currency)[0] || {};
+    const currentPrimaryAsset = nativeAccountAssets.filter((item = {}) => item.name === currentPair.assets)[0] || {};
+    return [currentCrossAsset.free, currentPrimaryAsset.free];
   };
 
   getMaxAmount = (action, price) => {
