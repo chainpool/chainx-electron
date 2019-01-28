@@ -15,8 +15,6 @@ import { moment } from '@utils/index';
 export default class Asset extends ModelExtend {
   @observable name = 'asset';
   @observable btcAddresses = []; // 账户已绑定BTC地址列表
-  @observable primaryAsset = []; // 原生资产
-  @observable crossChainAsset = []; // 跨链资产
   @observable onChainAccountWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
   @observable accountAssets = []; // 现账户资产
@@ -123,7 +121,6 @@ export default class Asset extends ModelExtend {
 
   reload = () => {
     this.getAccountAssets();
-    this.getAssets();
   };
 
   getAccountBTCAddresses = async () => {
