@@ -31,24 +31,24 @@ class CertTable extends Mixin {
             title: '剩余节点额度',
             dataIndex: 'remainingShares',
           },
-          {
-            title: '',
-            dataIndex: '_action',
-            render: (value, item = {}) => (
-              <Button
-                onClick={() => {
-                  openModal({
-                    name: 'RegisterNode',
-                    data: {
-                      certName: item.name,
-                      remainingShares: item.remainingShares,
-                    },
-                  });
-                }}>
-                注册
-              </Button>
-            ),
-          },
+          // {
+          //   title: '',
+          //   dataIndex: '_action',
+          //   render: (value, item = {}) => (
+          //     <Button
+          //       onClick={() => {
+          //         openModal({
+          //           name: 'RegisterNode',
+          //           data: {
+          //             certName: item.name,
+          //             remainingShares: item.remainingShares,
+          //           },
+          //         });
+          //       }}>
+          //       注册
+          //     </Button>
+          //   ),
+          // },
         ],
         widths
       ),

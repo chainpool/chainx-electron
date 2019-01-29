@@ -150,22 +150,6 @@ export default class Asset extends ModelExtend {
     this.changeModel('depositRecords', records.data);
   }
 
-  register = ({ signer, acceleration, certName, intention, name, url, shareCount, remark }) => {
-    register(
-      signer,
-      Number(acceleration),
-      certName,
-      intention,
-      name,
-      url,
-      Number(shareCount),
-      remark,
-      (err, result) => {
-        resOk(result) && this.reload();
-      }
-    );
-  };
-
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
     console.log(signer, acceleration, dest, token, amount, remark);
     amount = this.setPrecision(amount, token, true);

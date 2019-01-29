@@ -8,6 +8,7 @@ import DepositMineTable from './DepositMineTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
+import RegisterNodeModal from './Modal/RegisterNodeModal';
 import { Inject } from '../../utils';
 
 @Inject(({ electionStore: model }) => ({ model }))
@@ -50,42 +51,36 @@ class Election extends Mixin {
           />
         </div>
         <div className={styles.titledesc}>
-          {activeIndex === 4 ? (
-            <div className={styles.desc}>按照持有资产兑PCX市值的 50%折合成投票，自动参与充值挖矿获取利息</div>
-          ) : (
-            <>
-              <TableTitle className={styles.tableTitle}>
-                <ul>
-                  <li>
-                    <Button
-                      type="blank"
-                      onClick={() => {
-                        openModal({
-                          name: 'UpdateNodeModal',
-                        });
-                      }}>
-                      <Icon name="icon-xiugaipeizhi" />
-                      注册节点
-                    </Button>
-                  </li>
-                  {isValidator ? (
-                    <li>
-                      <Button
-                        type="blank"
-                        onClick={() => {
-                          openModal({
-                            name: 'UpdateNodeModal',
-                          });
-                        }}>
-                        <Icon name="icon-xiugaipeizhi" />
-                        更新节点
-                      </Button>
-                    </li>
-                  ) : null}
-                </ul>
-              </TableTitle>
-            </>
-          )}
+          <TableTitle className={styles.tableTitle}>
+            <ul>
+              <li>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'RegisterNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  注册节点
+                </Button>
+              </li>
+              {isValidator ? (
+                <li>
+                  <Button
+                    type="blank"
+                    onClick={() => {
+                      openModal({
+                        name: 'UpdateNodeModal',
+                      });
+                    }}>
+                    <Icon name="icon-xiugaipeizhi" />
+                    更新节点
+                  </Button>
+                </li>
+              ) : null}
+            </ul>
+          </TableTitle>
         </div>
         {activeIndex === 4 ? (
           <DepositMineTable {...this.props} />
@@ -95,6 +90,7 @@ class Election extends Mixin {
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
+        {name === 'RegisterNodeModal' ? <RegisterNodeModal {...this.props} /> : null}
       </div>
     );
   }

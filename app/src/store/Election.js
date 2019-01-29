@@ -9,6 +9,7 @@ import {
   getPseduNominationRecords,
   nominate,
   refresh,
+  register,
   unfreeze,
   unnominate,
 } from '../services';
@@ -210,9 +211,15 @@ export default class Election extends ModelExtend {
     });
   };
 
+  register = ({ signer, acceleration, name }) => {
+    console.log(signer, acceleration, name, '-----');
+    register(signer, Number(acceleration), name, (err, result) => {
+      resOk(result) && this.reload();
+    });
+  };
+
   /*更新节点*/
   refresh = ({ signer, acceleration, url, participating, address, about }) => {
-    console.log(signer, acceleration, url, participating, address, about, '==========');
     refresh(signer, acceleration, url, participating, address, about, (err, result) => {
       console.log(result);
     });

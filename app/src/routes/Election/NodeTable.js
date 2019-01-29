@@ -81,7 +81,7 @@ class NodeTable extends Component {
         },
         {
           title: '',
-          width: 210,
+          // width: 210,
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>

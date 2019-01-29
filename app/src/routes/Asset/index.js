@@ -8,7 +8,6 @@ import CrossChainAssetTable from './CrossChainAssetTable';
 import DepositModal from './Modal/DepositModal';
 import WithdrawModal from './Modal/WithdrawModal';
 import TransferModal from './Modal/TransferModal';
-import RegisterNode from './Modal/RegisterNode';
 import CrossChainBindModal from './Modal/CrossChainBindModal';
 import GetCollarModal from './Modal/GetCollarModal';
 import { Inject } from '../../utils';
@@ -76,7 +75,6 @@ class Asset extends Mixin {
         {name === 'DepositModal' ? <DepositModal {...this.props} /> : null}
         {name === 'WithdrawModal' ? <WithdrawModal {...this.props} /> : null}
         {name === 'TransferModal' ? <TransferModal {...this.props} /> : null}
-        {name === 'RegisterNode' ? <RegisterNode {...this.props} /> : null}
         {name === 'CrossChainBindModal' ? <CrossChainBindModal {...this.props} /> : null}
         {name === 'GetCollarModal' ? <GetCollarModal {...this.props} /> : null}
       </div>
