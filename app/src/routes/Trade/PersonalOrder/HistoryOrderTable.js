@@ -1,9 +1,11 @@
 import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
+import { observer } from '../../../utils';
 
 import * as styles from './index.less';
 import { Table } from '../../../components';
 
+@observer
 class HistoryOrderTable extends SwitchPair {
   state = {};
 

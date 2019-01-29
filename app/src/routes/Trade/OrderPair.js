@@ -16,7 +16,7 @@ class OrderPair extends SwitchPair {
   render() {
     const { activeIndex } = this.state;
     const {
-      model: { orderPairs = [], currentPair = {} },
+      model: { orderPairs = [], currentPair = {}, dispatch },
       history,
     } = this.props;
     const groupPairs = _.groupBy(orderPairs, 'currency') || {};
@@ -27,6 +27,12 @@ class OrderPair extends SwitchPair {
       className: styles.tableContainer,
       onClickRow: item => {
         history.push({ search: `?id=${item.id}` });
+        dispatch({
+          type: 'switchPair',
+          payload: {
+            id: item.id,
+          },
+        });
       },
       columns: [
         {
