@@ -112,13 +112,9 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
-    const getPseduIntentions$ = Rx.combineLatest(
-      getPseduIntentions(),
-      this.getPseduNominationRecords(),
-      getBlockNumberObservable()
-    );
+    const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
-    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = [], chainHeight]) => {
+    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
       res = pseduIntentions.map((item = {}) => {
         const token = item.id;
         const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
@@ -129,7 +125,7 @@ export default class Election extends ModelExtend {
           lastDepositWeightUpdate: findOne.lastTotalDepositWeightUpdate,
         };
         item.discountVote = this.setPrecision(item.price * item.circulation, token);
-        item.interest = this.getInterest(chainHeight, {
+        item.interest = this.getInterest(this.rootStore.chainStore.blockNumber, {
           lastWeightUpdate: item.lastDepositWeightUpdate,
           amount: item.balance,
           lastWeight: item.lastDepositWeigh,
