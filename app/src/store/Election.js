@@ -128,7 +128,7 @@ export default class Election extends ModelExtend {
           lastDepositWeigh: findOne.lastTotalDepositWeight,
           lastDepositWeightUpdate: findOne.lastTotalDepositWeightUpdate,
         };
-        item.discountVote = this.setPrecision(item.price * item.circulation * 0.5, token);
+        item.discountVote = this.setPrecision(item.price * item.circulation, token);
         item.interest = this.getInterest(chainHeight, {
           lastWeightUpdate: item.lastDepositWeightUpdate,
           amount: item.balance,
@@ -141,10 +141,10 @@ export default class Election extends ModelExtend {
         return {
           ...item,
           interestShow: this.setPrecision(item.interest, token),
-          discountVoteShow: this.setPrecision(item.discountVote, token),
+          discountVoteShow: item.discountVote,
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
-          priceShow: this.setPrecision(item.price, token),
+          priceShow: item.price,
           jackpotShow: this.setPrecision(item.jackpot, token),
         };
       });
