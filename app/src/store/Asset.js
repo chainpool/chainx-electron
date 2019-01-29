@@ -47,6 +47,7 @@ export default class Asset extends ModelExtend {
         isNative: asset.isNative,
         name: asset.name,
         tokenName: info.tokenName,
+        desc: info.desc,
         chain: info.chain,
         precision: info.precision,
         trusteeAddr: info.trusteeAddr,

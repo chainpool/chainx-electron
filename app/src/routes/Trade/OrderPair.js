@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer } from '../../utils';
+import { _, observer, toJS } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {
@@ -61,9 +61,20 @@ class OrderPair extends SwitchPair {
             className={styles.tab}
             activeIndex={activeIndex}
             onClick={(item, index) => {
-              this.setState({
-                activeIndex: index,
-              });
+              this.setState(
+                {
+                  activeIndex: index,
+                }
+                // () => {
+                //   history.push({ search: `?id=${dataSource[0].id}` });
+                //   dispatch({
+                //     type: 'switchPair',
+                //     payload: {
+                //       id: dataSource[0].id,
+                //     },
+                //   });
+                // }
+              );
             }}
           />
         </div>

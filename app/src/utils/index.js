@@ -176,5 +176,3 @@ export const formatNumber = {
   },
   percent: (value, accuracy = 0) => (value * 100).toFixed(accuracy) + '%',
 };
-
-// console.log(ChainX.asset.getVerifyAddress('BTC', 'mjKE11gjVN4JaC9U8qL6ZB5vuEBgmwik7b', 'ddd'), '-----');

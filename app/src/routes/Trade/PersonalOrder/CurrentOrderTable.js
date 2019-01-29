@@ -29,28 +29,32 @@ class CurrentOrderTable extends SwitchPair {
         },
         {
           title: '交易对',
+          width: 100,
           dataIndex: 'createTimeShow',
-          render: () => `${currentPair.assets}/${currentPair.currency}`,
+          render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
         },
         {
           title: '方向',
+          width: 100,
           dataIndex: 'direction',
           render: value =>
             value === 'Buy' ? <span className={'green'}>买入</span> : <span className={'red'}>卖出</span>,
         },
         {
-          title: `委托价格(${currentPair.currency})`,
+          title: `委托价格`,
           dataIndex: 'priceShow',
+          render: (value, item) => `${value}${' '}${item.filterPair.currency}`,
         },
         {
-          title: `委托数量(${currentPair.assets})`,
+          title: `委托数量`,
           dataIndex: 'amountShow',
+          render: (value, item) => `${value}${' '}${item.filterPair.assets}`,
         },
         {
           title: `冻结金额`,
           dataIndex: 'reserveLastShow',
           render: (value, item) =>
-            `${value}${' '}${item.direction === 'Buy' ? currentPair.currency : currentPair.assets}`,
+            `${value}${' '}${item.direction === 'Buy' ? item.filterPair.currency : item.filterPair.assets}`,
         },
         {
           title: `实际成交/成交率`,
@@ -70,7 +74,7 @@ class CurrentOrderTable extends SwitchPair {
                     description: [
                       { name: '操作', value: '撤单' },
                       { name: '委托编号', value: item.index },
-                      { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
+                      { name: '交易对', value: `${item.filterPair.assets}/${item.filterPair.currency}` },
                       {
                         name: '方向',
                         value: item.direction === 'Buy' ? '买入' : '卖出',
@@ -84,7 +88,7 @@ class CurrentOrderTable extends SwitchPair {
                         payload: {
                           signer,
                           acceleration,
-                          pairId: currentPair.id,
+                          pairId: item.filterPair.id,
                           index: item.index,
                         },
                       });

@@ -2,6 +2,14 @@ import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../util
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
+const showUnitPrecision = (precision, unitPrecision) => {
+  return value => {
+    const show = precision - unitPrecision;
+    const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
+    return String(value).replace(reg, '$1');
+  };
+};
+
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
@@ -12,6 +20,7 @@ export default class Trade extends ModelExtend {
     assets: '',
     currency: '',
     precision: '',
+    unitPrecision: '',
     assetsPrecision: '',
   };
   @observable orderPairs = [];
@@ -27,7 +36,6 @@ export default class Trade extends ModelExtend {
   };
 
   getAccountOrder = async () => {
-    const currentPair = this.currentPair;
     const account = this.getCurrentAccount();
     if (account.address) {
       const res = await getOrders(account.address, 0, 100);
@@ -36,17 +44,21 @@ export default class Trade extends ModelExtend {
         this.changeModel(
           {
             currentOrderList: res.data.map((item = {}) => {
+              const filterPair = this.getPair({ id: item.pair });
+
+              const showUnit = showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
                 ...item,
                 createTimeShow: moment_helper.formatHMS(item.createTime * 1000),
-                priceShow: this.setPrecision(item.price, currentPair.precision),
-                amountShow: this.setPrecision(item.amount, currentPair.assets),
-                hasfillAmountShow: this.setPrecision(item.hasfillAmount, currentPair.assets),
+                priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+                amountShow: this.setPrecision(item.amount, filterPair.assets),
+                hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
                 hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
                 reserveLastShow: this.setPrecision(
                   item.reserveLast,
-                  item.direction === 'Buy' ? currentPair.currency : currentPair.assets
+                  item.direction === 'Buy' ? filterPair.currency : filterPair.assets
                 ),
+                filterPair,
               };
             }),
           },
@@ -59,12 +71,13 @@ export default class Trade extends ModelExtend {
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const res = await getQuotations(currentPair.id, [0, 10]);
-    console.log(res, '-----------盘口列表');
+    // console.log(res, '-----------盘口列表');
     // res.buy = [[100, 100000], [101, 100001], [102, 100002], [103, 100003], [104, 100004]];
     // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];
     res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
     res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
     const formatList = (list, action) => {
+      const showUnit = showUnitPrecision(currentPair.precision, currentPair.unitPrecision);
       return list.map((item = [], index) => {
         let totalAmount = 0;
         if (action === 'sell') {
@@ -72,9 +85,8 @@ export default class Trade extends ModelExtend {
         } else {
           totalAmount = list.slice(0, index + 1).reduce((sum, item = []) => sum + item[1], 0);
         }
-
         return {
-          priceShow: this.setPrecision(item[0], currentPair.precision),
+          priceShow: showUnit(this.setPrecision(item[0], currentPair.precision)),
           amountShow: this.setPrecision(item[1], currentPair.assets),
           id: item.id,
           piece: item.piece,
@@ -99,31 +111,36 @@ export default class Trade extends ModelExtend {
   getOrderPairs = async () => {
     // if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
     let res = await getOrderPairs();
-    const currentPair = this.currentPair;
-    res = res.map(item => ({
-      ...item,
-      lastPriceShow: this.setPrecision(item.lastPrice, currentPair.precision),
-    }));
+    res = res.map((item = {}) => {
+      const precision = item.precision;
+      return {
+        ...item,
+        precision,
+        lastPriceShow: showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(item.lastPrice, precision)),
+      };
+    });
     this.changeModel('orderPairs', res, []);
+    console.log(res, '------pair交易对列表');
     return res;
   };
 
-  switchPair = ({ id }) => {
+  getPair = ({ id }) => {
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
+    // console.log(toJS(this.orderPairs), id, toJS(findOne), '--------------------');
     if (findOne) {
       currentPair = findOne;
     } else {
       currentPair = this.orderPairs[0];
     }
-    this.changeModel(
-      'currentPair',
-      {
-        ...currentPair,
-        assetsPrecision: this.getPrecision(currentPair.assets),
-      },
-      {}
-    );
+    return {
+      ...currentPair,
+      assetsPrecision: this.getPrecision(currentPair.assets),
+    };
+  };
+
+  switchPair = ({ id }) => {
+    this.changeModel('currentPair', this.getPair({ id }), {});
   };
 
   putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {

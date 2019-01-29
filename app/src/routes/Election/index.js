@@ -10,10 +10,10 @@ import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
 import { Inject } from '../../utils';
 
-@Inject(({ electionStore: model, accountStore }) => ({ model, accountStore }))
+@Inject(({ electionStore: model }) => ({ model }))
 class Election extends Mixin {
   state = {
-    activeIndex: 3,
+    activeIndex: 0,
   };
 
   startInit = async () => {
@@ -40,7 +40,7 @@ class Election extends Mixin {
       <div className={styles.election}>
         <div className={styles.tabLine}>
           <Tab
-            tabs={['信托节点', '结算节点', '候补节点', '我的选举', '充值挖矿']}
+            tabs={['信托节点', '验证节点', '候补节点', '我的投票', '充值挖矿']}
             activeIndex={activeIndex}
             onClick={(value, index) => {
               this.setState({
@@ -56,6 +56,18 @@ class Election extends Mixin {
             <>
               <TableTitle className={styles.tableTitle}>
                 <ul>
+                  <li>
+                    <Button
+                      type="blank"
+                      onClick={() => {
+                        openModal({
+                          name: 'UpdateNodeModal',
+                        });
+                      }}>
+                      <Icon name="icon-xiugaipeizhi" />
+                      注册节点
+                    </Button>
+                  </li>
                   {isValidator ? (
                     <li>
                       <Button
@@ -66,7 +78,7 @@ class Election extends Mixin {
                           });
                         }}>
                         <Icon name="icon-xiugaipeizhi" />
-                        更新我的节点
+                        更新节点
                       </Button>
                     </li>
                   ) : null}

@@ -30,7 +30,7 @@ class CrossChainAssetTable extends Mixin {
         [
           {
             title: '名称',
-            dataIndex: 'tokenName',
+            dataIndex: 'desc',
             render: (value, asset) => (
               <div className={styles.miniLogo}>
                 <img src={asset.name === 'BTC' ? btcIcon : miniLogo} alt="miniLogo" />
