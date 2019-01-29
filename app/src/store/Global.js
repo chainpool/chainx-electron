@@ -64,17 +64,24 @@ export default class Global extends ModelExtend {
   };
 
   getAllAssets = async () => {
-    if (this.assets.length) return Promise.resolve(this.assets);
-    let res = await getAssets(0, 100);
-    const result = res.data.map((item = {}) => {
-      return {
-        ...item,
-        ...(item.details ? item.details : {}),
-      };
-    });
-    this.changeModel({
-      assets: result,
-    });
-    return result;
+    const update = async () => {
+      let res = await getAssets(0, 100);
+      const result = res.data.map((item = {}) => {
+        return {
+          ...item,
+          ...(item.details ? item.details : {}),
+        };
+      });
+      this.changeModel({
+        assets: result,
+      });
+      return result;
+    };
+    if (this.assets.length) {
+      update();
+      return Promise.resolve(this.assets);
+    } else {
+      return await update();
+    }
   };
 }
