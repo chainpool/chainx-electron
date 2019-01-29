@@ -14,8 +14,8 @@ class AddressTable extends Component {
         {
           title: '标签',
           dataIndex: 'label',
+          render: value => <span>{value}</span>,
           width: 200,
-          render: value => <span className="blue">{value}</span>,
         },
         {
           title: '链',

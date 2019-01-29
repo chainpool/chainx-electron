@@ -2,7 +2,6 @@ import { ChainX, observable, resOk, Rx } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   claim,
-  getBlockNumberObservable,
   getIntentions,
   getNominationRecords,
   getPseduIntentions,
@@ -58,8 +57,8 @@ export default class Election extends ModelExtend {
       const myTotalVote = record.nomination;
       const myRevocations = record.revocations.map(revocation => {
         return {
-          revocationHeight: revocation[0],
-          amount: revocation[1],
+          revocationHeight: revocation.blockNumber,
+          amount: revocation.value,
         };
       });
       const myRevocation = myRevocations.reduce((result, revocation) => {
@@ -112,13 +111,9 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
-    const getPseduIntentions$ = Rx.combineLatest(
-      getPseduIntentions(),
-      this.getPseduNominationRecords(),
-      getBlockNumberObservable()
-    );
+    const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
-    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = [], chainHeight]) => {
+    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
       res = pseduIntentions.map((item = {}) => {
         const token = item.id;
         const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
@@ -128,8 +123,8 @@ export default class Election extends ModelExtend {
           lastDepositWeigh: findOne.lastTotalDepositWeight,
           lastDepositWeightUpdate: findOne.lastTotalDepositWeightUpdate,
         };
-        item.discountVote = this.setPrecision(item.price * item.circulation * 0.5, token);
-        item.interest = this.getInterest(chainHeight, {
+        item.discountVote = this.setPrecision(item.price * item.circulation, token);
+        item.interest = this.getInterest(this.rootStore.chainStore.blockNumber, {
           lastWeightUpdate: item.lastDepositWeightUpdate,
           amount: item.balance,
           lastWeight: item.lastDepositWeigh,
@@ -141,10 +136,10 @@ export default class Election extends ModelExtend {
         return {
           ...item,
           interestShow: this.setPrecision(item.interest, token),
-          discountVoteShow: this.setPrecision(item.discountVote, token),
+          discountVoteShow: item.discountVote,
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
-          priceShow: this.setPrecision(item.price, token),
+          priceShow: item.price,
           jackpotShow: this.setPrecision(item.jackpot, token),
         };
       });

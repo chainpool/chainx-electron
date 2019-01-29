@@ -4,6 +4,7 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
+import xdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
 
 @Inject(({ configureStore }) => ({ configureStore }))
@@ -34,7 +35,10 @@ class CrossChainAssetTable extends Mixin {
             dataIndex: 'tokenName',
             render: (value, asset) => (
               <div className={styles.miniLogo}>
-                <img src={asset.name === 'BTC' ? btcIcon : miniLogo} alt="miniLogo" />
+                <img
+                  src={asset.name === 'BTC' ? btcIcon : asset.name === 'XDOT' ? xdotLogo : miniLogo}
+                  alt="miniLogo"
+                />
                 <span>
                   <HoverTip tip={asset.desc}> {value}</HoverTip>
                 </span>
