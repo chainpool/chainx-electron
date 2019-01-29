@@ -17,19 +17,8 @@ class Mixin extends React.Component {
     return assets;
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-  }
   componentDidUpdate(prevProps) {
-    const {
-      accountStore: { currentAccount_prev: currentAccountPrev = {} } = {},
-      location: { search: searchPrev },
-    } = prevProps;
-    const {
-      accountStore: { currentAccount } = {},
-      location: { search },
-    } = this.props;
+    const { accountStore: { currentAccount = {}, currentAccount_prev: currentAccountPrev = {} } = {} } = this.props;
 
     if (!_.isEqual(currentAccountPrev, currentAccount) && currentAccount) {
       setTimeout(() => {
@@ -42,6 +31,11 @@ class Mixin extends React.Component {
     //   _.isFunction(this.startInit) && this.startInit();
     //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     // }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+    _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
   }
 
   changeState = (payload = {}, callback) => {

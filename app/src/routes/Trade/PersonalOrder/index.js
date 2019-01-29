@@ -15,6 +15,7 @@ class PersonalOrder extends SwitchPair {
   };
 
   startInit = () => {
+    // console.log('person---------------');
     const {
       model: { dispatch },
     } = this.props;

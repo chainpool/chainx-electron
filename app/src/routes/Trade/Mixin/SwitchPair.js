@@ -7,10 +7,10 @@ class SwitchPair extends Mixin {
     super(props);
   }
 
-  async componentDidMount() {
+  async componentDidMount(prevProps) {
     const init = this.startInit;
     this.startInit = null;
-    await super.componentDidMount();
+    await super.componentDidMount(prevProps);
     const { model: { dispatch } = {} } = this.props;
     if (dispatch) {
       await dispatch({ type: 'getOrderPairs' });
@@ -18,6 +18,17 @@ class SwitchPair extends Mixin {
     }
     this.startInit = init;
     _.isFunction(this.startInit) && this.startInit();
+  }
+
+  componentDidUpdate(prevProps) {
+    super.componentDidUpdate(prevProps);
+    const { model: { currentPair = {}, currentPair_prev: currentPairPrev = {} } = {} } = this.props;
+    if (!_.isEqual(currentPairPrev, currentPair) && currentPair) {
+      setTimeout(() => {
+        _.isFunction(this.startInit) && this.startInit();
+        _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+      });
+    }
   }
 }
 

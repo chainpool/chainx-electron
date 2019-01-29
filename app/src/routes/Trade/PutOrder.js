@@ -1,10 +1,10 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, toJS, RegEx } from '../../utils';
+import { _, Inject, Patterns, formatNumber, RegEx } from '../../utils';
 import * as styles from './PutOrder.less';
 
-@Inject(({ assetStore, accountStore }) => ({ assetStore, accountStore }))
+@Inject(({ assetStore }) => ({ assetStore }))
 class PutOrder extends SwitchPair {
   state = {
     buy: {
