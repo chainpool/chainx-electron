@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Clipboard, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject } from '../../../utils';
+import { classNames, observer } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 
-@Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
+@observer
 class CrossChainBindModal extends Component {
   render() {
     const {
-      accountStore: { currentAddress, openModal, closeModal },
+      accountStore: { currentAddress },
       globalStore: {
         modal: {
           data: { token },
@@ -24,45 +24,42 @@ class CrossChainBindModal extends Component {
         <div className={styles.crossChainBind}>
           <div className={styles.desc}>
             <div />
-            使用您的BTC钱包向多签地址发起金额为0的转账交易，并在OP_RETURN中写明您的ChainX地址。目前支持的钱包有：
-            <a className={styles.anchor} href="https://www.ledger.com/" rel="noopener noreferrer" target="_blank">
-              Ledger
-            </a>
-            <a className={styles.anchor} href="https://trezor.io/" rel="noopener noreferrer" target="_blank">
-              Trezor
-            </a>
-            <a
-              onClick={() => {
-                // closeModal();
-                // setTimeout(() => {
-                //   openModal({
-                //     name: 'register',
-                //     data: {
-                //       encodePassword,
-                //     },
-                //   });
-                // });
-              }}
-              className={styles.anchor}>
-              ChainX 跨链注册工具
-            </a>
+            使用支持OP_Return的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
           </div>
           <div className={classNames(styles.grayblock, styles.addressall)}>
             <div>
               <div>
                 <div className={styles.address}>
-                  <span className={styles.label}>多签托管地址:</span>
-                  <Clipboard>3E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u6bA29u6bu6bA29u6bu6bA29u6b</Clipboard>
-                </div>
-                <div className={styles.address}>
-                  <span className={styles.label}>OP_RETURN:</span>
-                  <Clipboard>{opReturnHex}</Clipboard>
+                  <div id="copy">{opReturnHex}</div>
+                  <button>
+                    <Clipboard id="copy" />
+                    <span className={styles.desc}>复制信息</span>
+                  </button>
                 </div>
               </div>
             </div>
-            <div className={styles.right} />
           </div>
-          <Warn>其余钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</Warn>
+          <div className={styles.depositaddress}>
+            <span className={styles.label}>多签托管地址:</span>
+            <Clipboard>3E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u6bA29u6bu6bA29u6bu6bA29u6b</Clipboard>
+          </div>
+          <Warn>
+            <div>
+              <strong>其他钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</strong>
+              <br />
+              目前支持的钱包有:{' '}
+              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+                Trezor
+              </a>
+              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+                ChainX离线绑定工具
+              </a>
+              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+                Coinb.in
+              </a>{' '}
+              等。
+            </div>
+          </Warn>
         </div>
       </Modal>
     );

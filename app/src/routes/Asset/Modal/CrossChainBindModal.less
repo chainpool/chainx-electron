@@ -22,6 +22,17 @@
     }
   }
 
+  .depositaddress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    .label {
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+  }
+
   .grayblock {
     display: flex;
     justify-content: center;
@@ -47,18 +58,26 @@
       }
 
       .address {
+        word-break: break-all;
         display: flex;
-        span.label {
-          margin-right: 3px;
-          word-break: keep-all;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+
+        button {
+          margin-top: 10px;
+          height: 32px;
+          width: 102px;
+          background: #ffffff;
+          border: 1px solid #dce0e2;
+          border-radius: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .desc {
+            margin-left: 5px;
+          }
         }
-      }
-      .right {
-        margin-left: 33px;
-        background: #dce0e2;
-        width: 112px;
-        min-width: 112px;
-        height: 112px;
       }
     }
   }

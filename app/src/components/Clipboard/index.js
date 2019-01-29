@@ -6,7 +6,7 @@ import * as styles from './index.less';
 
 export default class Clipboard extends Component {
   state = {
-    uid: _.uniqueId('clipboard_'),
+    uid: this.props.id || _.uniqueId('clipboard_'),
   };
 
   componentDidMount() {
@@ -22,7 +22,11 @@ export default class Clipboard extends Component {
           {children}
         </span>
         <Tooltip tip="复制成功" type="click">
-          <i className="clipboard iconfont icon-icon-fuzhi" data-clipboard-target={`#${uid}`} />
+          <i
+            className="clipboard iconfont icon-icon-fuzhi"
+            data-clipboard-target={`#${uid}`}
+            style={{ marginLeft: children ? 8 : null }}
+          />
         </Tooltip>
       </span>
     );

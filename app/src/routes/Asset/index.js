@@ -43,13 +43,13 @@ class Asset extends Mixin {
       <div className={styles.asset}>
         <ul>
           <li>
-            <TableTitle title={'原生资产'}>
+            <TableTitle title={'ChainX资产'}>
               <ul>
                 <li>
                   <Button type="blank">
                     <RouterGo go={{ pathname: PATH.addressManage }}>
                       <Icon name="icon-dizhiguanli" />
-                      地址管理
+                      联系人
                     </RouterGo>
                   </Button>
                 </li>
