@@ -14,20 +14,23 @@ class AddressTable extends Component {
         {
           title: '标签',
           dataIndex: 'label',
+          width: 200,
           render: value => <span className="blue">{value}</span>,
         },
         {
           title: '链',
+          width: 200,
           dataIndex: 'chain',
         },
         {
           title: '地址',
           dataIndex: 'address',
-          render: value => <Clipboard width={200}>{value}</Clipboard>,
+          render: value => <Clipboard width={320}>{value}</Clipboard>,
         },
         {
           title: '',
           dataIndex: '_action',
+          width: 200,
           render: (value, column, index) => (
             <ButtonGroup>
               <Button

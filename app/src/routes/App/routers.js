@@ -46,7 +46,7 @@ export default [
     component: Trust,
   },
   {
-    title: '币币交易',
+    title: '交易',
     path: PATH.trade,
     component: Trade,
   },

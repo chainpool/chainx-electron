@@ -2,6 +2,7 @@ import React from 'react';
 import { formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
+import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import btcIcon from '../../resource/btc.png';
 
@@ -30,11 +31,13 @@ class CrossChainAssetTable extends Mixin {
         [
           {
             title: '名称',
-            dataIndex: 'desc',
+            dataIndex: 'tokenName',
             render: (value, asset) => (
               <div className={styles.miniLogo}>
                 <img src={asset.name === 'BTC' ? btcIcon : miniLogo} alt="miniLogo" />
-                <span>{value}</span>
+                <span>
+                  <HoverTip tip={asset.desc}> {value}</HoverTip>
+                </span>
               </div>
             ),
           },
@@ -69,77 +72,83 @@ class CrossChainAssetTable extends Mixin {
           {
             title: '',
             dataIndex: '_action',
-            render: (value, item) => (
-              <ButtonGroup>
-                {isTestNet ? (
+            render: (value, item) => {
+              const isXDOT = item.name === 'XDOT';
+              return (
+                <ButtonGroup>
+                  {isTestNet && !isXDOT ? (
+                    <Button
+                      type="warn"
+                      onClick={() => {
+                        openModal({
+                          name: 'GetCollarModal',
+                        });
+                      }}>
+                      领币
+                    </Button>
+                  ) : null}
+                  {hasBindAddress ? (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'DepositModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
+                        });
+                      }}>
+                      充值
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
+                        });
+                      }}>
+                      绑定
+                    </Button>
+                  )}
+                  {!isXDOT ? (
+                    <Button
+                      type={item.free > 0 ? 'primary' : 'disabled'}
+                      onClick={() => {
+                        openModal({
+                          name: 'WithdrawModal',
+                          data: {
+                            token: item.name,
+                            freeShow: formatNumber.toPrecision(item.free, item.precision),
+                            free: item.free,
+                            chain: item.chain,
+                          },
+                        });
+                      }}>
+                      提现
+                    </Button>
+                  ) : null}
+
                   <Button
-                    type="warn"
+                    type={item.free > 0 ? 'primary' : 'disabled'}
                     onClick={() => {
                       openModal({
-                        name: 'GetCollarModal',
-                      });
-                    }}>
-                    领币
-                  </Button>
-                ) : null}
-                {hasBindAddress ? (
-                  <Button
-                    onClick={() => {
-                      openModal({
-                        name: 'DepositModal',
+                        name: 'TransferModal',
                         data: {
                           token: item.name,
-                          trusteeAddr: item.trusteeAddr,
+                          freeShow: formatNumber.toPrecision(item.free, item.precision),
+                          free: item.free,
                         },
                       });
                     }}>
-                    充值
+                    转账
                   </Button>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      openModal({
-                        name: 'CrossChainBindModal',
-                        data: {
-                          token: item.name,
-                          trusteeAddr: item.trusteeAddr,
-                        },
-                      });
-                    }}>
-                    绑定
-                  </Button>
-                )}
-                <Button
-                  type={item.free > 0 ? 'primary' : 'disabled'}
-                  onClick={() => {
-                    openModal({
-                      name: 'WithdrawModal',
-                      data: {
-                        token: item.name,
-                        freeShow: formatNumber.toPrecision(item.free, item.precision),
-                        free: item.free,
-                        chain: item.chain,
-                      },
-                    });
-                  }}>
-                  提现
-                </Button>
-                <Button
-                  type={item.free > 0 ? 'primary' : 'disabled'}
-                  onClick={() => {
-                    openModal({
-                      name: 'TransferModal',
-                      data: {
-                        token: item.name,
-                        freeShow: formatNumber.toPrecision(item.free, item.precision),
-                        free: item.free,
-                      },
-                    });
-                  }}>
-                  转账
-                </Button>
-              </ButtonGroup>
-            ),
+                </ButtonGroup>
+              );
+            },
           },
         ],
         widths

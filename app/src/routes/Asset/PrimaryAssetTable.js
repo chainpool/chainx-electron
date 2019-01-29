@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
+import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 
 @Inject(({ configureStore }) => ({ configureStore }))
@@ -21,10 +22,12 @@ class PrimaryAssetTable extends Component {
           {
             title: '名称',
             dataIndex: 'tokenName',
-            render: value => (
+            render: (value, item) => (
               <div className={styles.miniLogo}>
                 <img src={miniLogo} alt="miniLogo" />
-                <span>{value}</span>
+                <span>
+                  <HoverTip tip={item.desc}>{value}</HoverTip>
+                </span>
               </div>
             ),
           },
