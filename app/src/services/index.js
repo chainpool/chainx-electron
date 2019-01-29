@@ -1,8 +1,19 @@
-import { ChainX } from '../utils';
+import { ChainX, toJS } from '../utils';
+import { default as store } from '../store';
+const checkLogin = func => {
+  const {
+    accountStore: { currentAccount = {} },
+  } = store || {};
+  if (currentAccount && currentAccount.address) {
+    return func();
+  } else {
+    return Promise.reject('当前无账户,去权限请求');
+  }
+};
 
 const { stake, asset, chain, trade } = ChainX;
 
-export const getAsset = (...payload) => asset.getAssetsByAccount(...payload);
+export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
 export const register = (...payload) => stake.register(...payload);
 
@@ -28,11 +39,12 @@ export const claim = (...payload) => stake.claim(...payload);
 
 export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
 
-export const getPseduNominationRecords = (...payload) => stake.getPseduNominationRecords(...payload);
+export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
 
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
-export const getWithdrawalListByAccount = (...payload) => asset.getWithdrawalListByAccount(...payload);
+export const getWithdrawalListByAccount = (...payload) =>
+  checkLogin(() => asset.getWithdrawalListByAccount(...payload));
 
 export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payload);
 
