@@ -5,19 +5,22 @@ import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 
-@Inject(({ accountStore }) => ({ accountStore }))
+@Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class CrossChainBindModal extends Component {
   render() {
     const {
       accountStore: { currentAddress, openModal, closeModal },
+      globalStore: {
+        modal: {
+          data: { token },
+        },
+      },
     } = this.props;
 
-    console.log(openModal);
-    console.log(closeModal);
     const opReturnHex = u8aToHex(new TextEncoder('utf-8').encode('ChainX:' + currentAddress));
 
     const btcModal = (
-      <Modal title="跨链绑定">
+      <Modal title={`跨链绑定（${token}）`}>
         <div className={styles.crossChainBind}>
           <div className={styles.desc}>
             <div />
@@ -64,7 +67,41 @@ class CrossChainBindModal extends Component {
       </Modal>
     );
 
-    return btcModal;
+    const ethModal = (
+      <Modal title={`跨链绑定（${token}）`}>
+        <div className={styles.crossChainBind}>
+          <div className={styles.desc}>
+            <div />
+            使用您的Ethereum钱包向公共地址发起金额为0的转账交易，并在高级选项的Data中写明您的ChainX地址。
+          </div>
+          <div className={classNames(styles.grayblock, styles.addressall)}>
+            <div>
+              <div>
+                <div className={styles.address}>
+                  <span className={styles.label}>公共地址:</span>
+                  <Clipboard>0x00C5f23c64C9FFb9301834e6A2eC7f16c1624b3f</Clipboard>
+                </div>
+                <div className={styles.address}>
+                  <span className={styles.label}>Data:</span>
+                  <Clipboard>{currentAddress}</Clipboard>
+                </div>
+              </div>
+            </div>
+            <div className={styles.right} />
+          </div>
+        </div>
+      </Modal>
+    );
+
+    switch (token) {
+      case 'BTC':
+        return btcModal;
+      case 'XDOT':
+      case 'DOT':
+        return ethModal;
+      default:
+        throw Error('unknow token');
+    }
   }
 }
 

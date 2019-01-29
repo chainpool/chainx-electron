@@ -101,10 +101,10 @@ class CrossChainAssetTable extends Mixin {
                       openModal({
                         name: 'CrossChainBindModal',
                         data: {
+                          token: item.name,
                           trusteeAddr: item.trusteeAddr,
                         },
                       });
-                      // alert('开发中');
                     }}>
                     绑定
                   </Button>
