@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { InputHorizotalList, FreeBalance } from '../../components';
-import { Inject, Patterns, RegEx } from '../../../utils';
-import { PlaceHolder } from '@constants';
+import { Button, Input, Modal } from '../../../components';
+import { Inject, Patterns } from '../../../utils';
 
 @Inject(({ accountStore }) => ({ accountStore }))
 class RegisterNodeModal extends Component {
@@ -18,31 +16,12 @@ class RegisterNodeModal extends Component {
     remark: '',
   };
   checkAll = {
-    checkAddress: () => {
-      const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
-      this.setState({ addressErrMsg: errMsg });
-      return errMsg;
-    },
     checkName: () => {
       const { name } = this.state;
       const errMsg = Patterns.check('required')(name) || Patterns.check('smaller')(name.length, 12, '不能超过12个字符');
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
-    checkWebsite: () => {
-      const { website } = this.state;
-      const errMsg = Patterns.check('required')(website) || Patterns.check('characterLength')(website, 4, 12);
-      this.setState({ websiteErrMsg: errMsg });
-      return errMsg;
-    },
-    checkAmount: () => {
-      const { amount } = this.state;
-      const errMsg = Patterns.check('required')(amount);
-      this.setState({ amountErrMsg: errMsg });
-      return errMsg;
-    },
-
     confirm: () => {
       return ['checkName'].every(item => !this.checkAll[item]());
     },
@@ -50,23 +29,9 @@ class RegisterNodeModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const {
-      address,
-      addressErrMsg,
-      name,
-      nameErrMsg,
-      website,
-      websiteErrMsg,
-      amount,
-      amountErrMsg,
-      remark,
-    } = this.state;
+    const { name, nameErrMsg } = this.state;
     const {
       model: { dispatch, openModal },
-      accountStore: { accounts },
-      globalStore: {
-        modal: { data: { certName, remainingShares } = {} },
-      },
     } = this.props;
 
     return (
@@ -87,13 +52,8 @@ class RegisterNodeModal extends Component {
                         type: 'register',
                         payload: {
                           signer,
-                          //intention: address.address,
                           acceleration,
-                          // certName,
                           name,
-                          // url: website,
-                          // shareCount: amount,
-                          // remark,
                         },
                       });
                     },

@@ -53,18 +53,6 @@ class Election extends Mixin {
         <div className={styles.titledesc}>
           <TableTitle className={styles.tableTitle}>
             <ul>
-              <li>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({
-                      name: 'RegisterNodeModal',
-                    });
-                  }}>
-                  <Icon name="icon-xiugaipeizhi" />
-                  注册节点
-                </Button>
-              </li>
               {isValidator ? (
                 <li>
                   <Button
@@ -78,7 +66,20 @@ class Election extends Mixin {
                     更新节点
                   </Button>
                 </li>
-              ) : null}
+              ) : (
+                <li>
+                  <Button
+                    type="blank"
+                    onClick={() => {
+                      openModal({
+                        name: 'RegisterNodeModal',
+                      });
+                    }}>
+                    <Icon name="icon-xiugaipeizhi" />
+                    注册节点
+                  </Button>
+                </li>
+              )}
             </ul>
           </TableTitle>
         </div>
