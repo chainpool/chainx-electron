@@ -12,6 +12,8 @@ export default class Global extends ModelExtend {
     });
   }
 
+  @observable history = null;
+
   @observable
   modal = {
     status: false,
@@ -61,6 +63,10 @@ export default class Global extends ModelExtend {
       name: '',
       data: '',
     });
+  };
+
+  setHistory = ({ history }) => {
+    this.changeModel('history', history);
   };
 
   getAllAssets = async () => {

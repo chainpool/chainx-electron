@@ -43,6 +43,9 @@ export default class Store extends ModelExtend {
     } else if (!currentAccount && !this.accounts.length) {
       newCurrentAccount = {};
     }
+
+    const history = this.getHistory();
+    history && history.push({ search: `?address=${newCurrentAccount.address}` });
     this.changeModel('currentAccount', newCurrentAccount);
   }
 

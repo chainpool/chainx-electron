@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, formatNumber } from '../utils';
+import { _, formatNumber, observable } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -64,6 +64,10 @@ export default class ModelExtend {
     setTimeout(() => {
       this.rootStore.globalStore.closeModal(payload);
     });
+  };
+
+  getHistory = () => {
+    return this.rootStore.globalStore.history;
   };
 
   isLogin = () => {

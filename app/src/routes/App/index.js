@@ -11,6 +11,10 @@ import { Inject } from '../../utils';
 
 @Inject(({ globalStore, accountStore, electionStore }) => ({ globalStore, accountStore, electionStore }))
 class Main extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     ready: false,
   };
@@ -20,9 +24,16 @@ class Main extends Component {
 
     const {
       electionStore: { dispatch },
+      globalStore: { dispatch: dispatchGlobal },
     } = this.props;
     // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
     dispatch({ type: 'getIntentions' });
+    dispatchGlobal({
+      type: 'setHistory',
+      payload: {
+        history: this.props.history,
+      },
+    });
   }
 
   ready = async () => {
