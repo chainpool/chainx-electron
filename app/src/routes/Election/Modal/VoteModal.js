@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import { Modal, Input, Button, RadioGroup } from '../../../components';
+import React from 'react';
+import { Button, Input, Mixin, Modal, RadioGroup } from '../../../components';
 import { PlaceHolder } from '../../../constants';
-import { Patterns } from '../../../utils';
+import { Inject, Patterns } from '../../../utils';
 import * as styles from './VoteModal.less';
 
-class VoteModal extends Component {
+@Inject(({ electionStore: model, chainStore }) => ({ model, chainStore }))
+class VoteModal extends Mixin {
   state = {
     action: 'add',
     amount: '',
@@ -12,6 +13,17 @@ class VoteModal extends Component {
     remark: '',
     remarkErrMsg: '',
   };
+
+  startInit = async () => {
+    const {
+      chainStore: { dispatch },
+      electionStore: { dispatch: electionDispatch },
+    } = this.props;
+
+    dispatch({ type: 'getBlockPeriod' });
+    electionDispatch({ type: 'getBondingDuration' });
+  };
+
   checkAll = {
     checkAmount: () => {
       const { amount } = this.state;
@@ -38,7 +50,11 @@ class VoteModal extends Component {
       globalStore: {
         modal: { data: { target, myTotalVote = 0 } = {} },
       },
+      chainStore: { blockDuration },
+      electionStore: { bondingDuration },
     } = this.props;
+
+    const bondingSeconds = (blockDuration * bondingDuration) / 1000;
 
     return (
       <Modal
@@ -82,7 +98,9 @@ class VoteModal extends Component {
                   label={item.label}
                   value={action}
                   onClick={() => this.setState({ action: item.value })}>
-                  {item.value === 'cancel' ? <span className={styles.lockweek}>(锁定期一周)</span> : null}
+                  {item.value === 'cancel' ? (
+                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}秒)`}</span>
+                  ) : null}
                 </Input.Radio>
               ))}
             </RadioGroup>

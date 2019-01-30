@@ -1,5 +1,6 @@
-import { ChainX, toJS } from '../utils';
+import { ChainX } from '../utils';
 import { default as store } from '../store';
+
 const checkLogin = func => {
   const {
     accountStore: { currentAccount = {} },
@@ -62,4 +63,8 @@ export const getBTCAddressByAccount = (...payload) => asset.getBTCAddressByAccou
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
 
-export const getTrusteeAddress = (...payload) => asset.getTrusteeAddress();
+export const getTrusteeAddress = (...payload) => asset.getTrusteeAddress(...payload);
+
+export const getBlockPeriod = (...payload) => chain.getBlockPeriod(...payload);
+
+export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);

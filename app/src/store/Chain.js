@@ -1,14 +1,14 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
 import { _ } from '@utils/index';
-import { subscribeNewHead } from '../services';
+import { subscribeNewHead, getBlockPeriod } from '../services';
 
 let newHeadSubscription;
 
 class Chain extends ModelExtend {
   @observable blockNumber;
   @observable blockTime;
-  @observable blockDuration = 3000; // 出块时间3s TODO: 暂时写死，后边从storage去拿
+  @observable blockDuration = 2000; // 出块时间
 
   @computed get normalizedBlockNumber() {
     return this.blockNumber && this.blockNumber.toLocaleString();
@@ -29,6 +29,11 @@ class Chain extends ModelExtend {
     if (_.isFunction(newHeadSubscription)) {
       newHeadSubscription.unsubscribe();
     }
+  }
+
+  async getBlockPeriod() {
+    const period = await getBlockPeriod();
+    this.changeModel('blockDuration', period * 1000);
   }
 }
 
