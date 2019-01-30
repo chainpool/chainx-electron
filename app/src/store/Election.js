@@ -115,26 +115,27 @@ export default class Election extends ModelExtend {
   getPseduIntentions = async () => {
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
-    return getPseduIntentions$.subscribe(([pseduIntentions = [], pseduIntentionsRecord = []]) => {
+    return getPseduIntentions$.subscribe(([pseduIntentions = [], records = []]) => {
       res = pseduIntentions.map((item = {}) => {
         const token = item.id;
-        const findOne = pseduIntentionsRecord.filter(one => one.id === item.id)[0] || {};
+        const record = records.find(record => record.id === item.id) || {};
         item = {
           ...item,
-          ...findOne,
-          lastDepositWeigh: findOne.lastTotalDepositWeight,
-          lastDepositWeightUpdate: findOne.lastTotalDepositWeightUpdate,
+          ...record,
+          lastDepositWeigh: record.lastTotalDepositWeight,
+          lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
         };
         item.discountVote = this.setPrecision(item.price * item.circulation, token);
-        item.interest = this.getInterest(this.rootStore.chainStore.blockNumber, {
-          lastWeightUpdate: item.lastDepositWeightUpdate,
-          amount: item.balance,
-          lastWeight: item.lastDepositWeigh,
-          lastTotalWeightUpdate: item.lastTotalDepositWeightUpdate,
-          totalAmount: item.circulation,
-          lastTotalWeight: item.lastTotalDepositWeight,
-          jackpot: item.jackpot,
-        });
+
+        const blockNumber = this.rootStore.chainStore.blockNumber;
+        // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
+        const myWeight = (blockNumber - item.lastDepositWeightUpdate) * record.balance + item.lastDepositWeigh;
+        // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
+        const nodeVoteWeight =
+          (blockNumber - item.lastTotalDepositWeightUpdate) * item.circulation + item.lastTotalDepositWeight;
+        // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
+        item.interest = (myWeight / nodeVoteWeight) * item.jackpot;
+
         return {
           ...item,
           interestShow: this.setPrecision(item.interest, token),
@@ -165,6 +166,7 @@ export default class Election extends ModelExtend {
     const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
     this.changeModel('originIntentions', intentions);
     this.changeModel('originNominationRecords', records);
+    console.log('records:', records);
   };
 
   getNominationRecords = async () => {
@@ -172,19 +174,6 @@ export default class Election extends ModelExtend {
     if (currentAccount.address) {
       return await getNominationRecords(currentAccount.address);
     }
-  };
-
-  getInterest = (
-    chainHeight,
-    { lastWeightUpdate, amount, lastWeight, lastTotalWeightUpdate, totalAmount, lastTotalWeight, jackpot }
-  ) => {
-    const userVoteWeight = (chainHeight - lastWeightUpdate) * amount + lastWeight;
-    const nodeVoteWeight = (chainHeight - lastTotalWeightUpdate) * totalAmount + lastTotalWeight;
-    return (userVoteWeight / nodeVoteWeight) * jackpot;
-    // const userVoteWeight = (chainHeight - newItem.lastVoteWeightUpdate) * newItem.nomination + newItem.lastVoteWeight;
-    // const nodeVoteWeight =
-    //   (chainHeight - newItem.lastTotalVoteWeightUpdate) * newItem.totalNomination + newItem.lastTotalVoteWeight;
-    // return (userVoteWeight / nodeVoteWeight) * newItem.jackpot;
   };
 
   nominate = ({ signer, acceleration, target, amount, remark }) => {
