@@ -46,7 +46,7 @@ class WithdrawModal extends Component {
     } = this.props;
 
     const options = addresses
-      .filter(address => address.chain === chain)
+      .filter(address => address.chain === token)
       .map(address => {
         return {
           label: address.label,
