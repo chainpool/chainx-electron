@@ -163,11 +163,6 @@
       ]
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,json,css,md}": [
       "prettier --write",
