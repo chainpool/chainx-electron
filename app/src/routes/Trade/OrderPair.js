@@ -13,12 +13,30 @@ class OrderPair extends SwitchPair {
     activeTrIndex: 0,
   };
 
-  render() {
-    const { activeIndex } = this.state;
+  switchPair = id => {
     const {
-      model: { orderPairs = [], currentPair = {}, dispatch },
+      model: { dispatch },
       history,
     } = this.props;
+    history.push({ search: `?id=${id}` });
+    dispatch({
+      type: 'switchPair',
+      payload: {
+        id,
+      },
+    });
+  };
+
+  render() {
+    const { switchPair } = this;
+    const { activeIndex } = this.state;
+    const {
+      model: { currentPair = {} },
+    } = this.props;
+    let {
+      model: { orderPairs = [] },
+    } = this.props;
+    orderPairs = orderPairs.filter((item = {}) => item.used);
     const groupPairs = _.groupBy(orderPairs, 'currency') || {};
     const dataSource = groupPairs[_.keys(groupPairs)[activeIndex]] || [];
     const tableProps = {
@@ -26,13 +44,7 @@ class OrderPair extends SwitchPair {
       tableHeight: [36, 40],
       className: styles.tableContainer,
       onClickRow: item => {
-        history.push({ search: `?id=${item.id}` });
-        dispatch({
-          type: 'switchPair',
-          payload: {
-            id: item.id,
-          },
-        });
+        switchPair(item.id);
       },
       columns: [
         {
@@ -46,7 +58,7 @@ class OrderPair extends SwitchPair {
         },
         {
           title: '涨幅',
-          dataIndex: 'assets',
+          dataIndex: 'id',
           render: () => '--',
         },
       ],
@@ -64,16 +76,11 @@ class OrderPair extends SwitchPair {
               this.setState(
                 {
                   activeIndex: index,
+                },
+                () => {
+                  const id = groupPairs[item][0].id;
+                  switchPair(id);
                 }
-                // () => {
-                //   history.push({ search: `?id=${dataSource[0].id}` });
-                //   dispatch({
-                //     type: 'switchPair',
-                //     payload: {
-                //       id: dataSource[0].id,
-                //     },
-                //   });
-                // }
               );
             }}
           />
