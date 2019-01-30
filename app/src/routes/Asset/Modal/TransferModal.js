@@ -71,6 +71,7 @@ class TransferModal extends Component {
                       { name: '操作', value: '转账' },
                       { name: '转账数量', value: `${amount}${token}` },
                       { name: '接收人地址', value: address },
+                      { name: '备注', value: remark },
                     ],
                     callback: ({ signer, acceleration, token }) => {
                       dispatch({

@@ -66,7 +66,11 @@ class WithdrawModal extends Component {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '提现' }],
+                    description: [
+                      { name: '操作', value: '提现' },
+                      { name: '收款地址', value: address },
+                      { name: '备注', value: remark },
+                    ],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
                         type: 'withdraw',

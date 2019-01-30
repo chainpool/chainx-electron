@@ -55,6 +55,7 @@ class VoteModal extends Mixin {
     } = this.props;
 
     const bondingSeconds = (blockDuration * bondingDuration) / 1000;
+    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}`;
 
     return (
       <Modal
@@ -68,7 +69,11 @@ class VoteModal extends Mixin {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '投票' }, { name: '备注', value: remark }],
+                    description: [
+                      { name: '操作', value: operation },
+                      { name: `${operation}数量`, value: amount },
+                      { name: '备注', value: remark },
+                    ],
                     callback: ({ signer, acceleration }) => {
                       dispatch({
                         type: action !== 'add' ? 'unnominate' : 'nominate',
@@ -107,7 +112,7 @@ class VoteModal extends Mixin {
           ) : null}
 
           <Input.Text
-            label={`${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}数量`}
+            label={`${operation}数量`}
             value={amount}
             errMsg={amountErrMsg}
             onChange={value => this.setState({ amount: value })}
