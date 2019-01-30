@@ -65,7 +65,7 @@ class TransferModal extends Component {
                         type: 'transfer',
                         payload: {
                           signer,
-                          dest: address.value,
+                          dest: address,
                           acceleration,
                           token,
                           amount,

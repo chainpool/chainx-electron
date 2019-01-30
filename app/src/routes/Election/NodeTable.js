@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
+import { HoverTip } from '../components';
 import { Inject, isEmpty, formatNumber } from '../../utils';
 
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
@@ -32,7 +33,7 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 100,
+          width: 70,
           dataIndex: 'name',
           render: (value, record, index) => {
             return `${index + 1}${record.isActive ? '' : '（退选）'}`;
@@ -41,6 +42,11 @@ class NodeTable extends Component {
         {
           title: '名称',
           dataIndex: 'name',
+          render: value => (
+            <HoverTip tip={'P2P投资市场目前正在经历爆炸式增长。 2017年全球市场规模达到1090亿欧元，且没有放缓的迹象。'}>
+              {value}
+            </HoverTip>
+          ),
         },
         {
           title: '账户地址',
@@ -81,7 +87,7 @@ class NodeTable extends Component {
         },
         {
           title: '',
-          // width: 210,
+          width: 180,
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>

@@ -49,39 +49,35 @@ class Election extends Mixin {
               });
             }}
           />
-        </div>
-        <div className={styles.titledesc}>
-          <TableTitle className={styles.tableTitle}>
-            <ul>
-              {isValidator ? (
-                <li>
-                  <Button
-                    type="blank"
-                    onClick={() => {
-                      openModal({
-                        name: 'UpdateNodeModal',
-                      });
-                    }}>
-                    <Icon name="icon-xiugaipeizhi" />
-                    更新节点
-                  </Button>
-                </li>
-              ) : (
-                <li>
-                  <Button
-                    type="blank"
-                    onClick={() => {
-                      openModal({
-                        name: 'RegisterNodeModal',
-                      });
-                    }}>
-                    <Icon name="icon-xiugaipeizhi" />
-                    注册节点
-                  </Button>
-                </li>
-              )}
-            </ul>
-          </TableTitle>
+          <ul>
+            {isValidator ? (
+              <li>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'UpdateNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  更新节点
+                </Button>
+              </li>
+            ) : (
+              <li>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'RegisterNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  注册节点
+                </Button>
+              </li>
+            )}
+          </ul>
         </div>
         {activeIndex === 4 ? (
           <DepositMineTable {...this.props} />
