@@ -10,6 +10,7 @@ class UnFreezeModal extends Component {
       model: { dispatch, openModal },
       chainStore: { blockNumber, blockDuration, blockTime },
       globalStore: {
+        nativeAssetPrecision,
         modal: { data: { account = '', myRevocations = [] } = {} },
       },
     } = this.props;
@@ -17,7 +18,7 @@ class UnFreezeModal extends Component {
     const normalizedRevocations = myRevocations.map(revocation => {
       return {
         canUnFreeze: revocation.revocationHeight <= blockNumber,
-        amount: formatNumber.localString(revocation.amount),
+        amount: formatNumber.toPrecision(revocation.amount, nativeAssetPrecision),
         time: blockTime.getTime() + (revocation.revocationHeight - blockNumber) * blockDuration,
       };
     });
