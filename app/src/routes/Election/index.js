@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Icon, Mixin } from '../../components';
 import * as styles from './index.less';
 import { Tab } from '../components';
-import TableTitle from '../components/TableTitle';
 import NodeTable from './NodeTable';
 import DepositMineTable from './DepositMineTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';

@@ -27,13 +27,14 @@ class DepositMineTable extends Mixin {
       columns: [
         {
           title: '排名',
-          width: 50,
+          width: 85,
           dataIndex: 'id',
           render: (value, item, index) => index + 1,
         },
         {
           title: '资产种类',
           dataIndex: 'id',
+          width: 120,
         },
         {
           title: '最新总余额',
