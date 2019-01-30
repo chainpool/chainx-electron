@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
 import { _, Inject, Patterns, formatNumber, RegEx, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
-@Inject(({ assetStore }) => ({ assetStore }))
+@Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
 class PutOrder extends SwitchPair {
   state = {
     buy: {
@@ -43,7 +43,9 @@ class PutOrder extends SwitchPair {
       const {
         model: { currentPair },
       } = this.props;
-      const errMsg = Patterns.check('required')(price) || Patterns.check('precision')(price, currentPair.precision);
+      const errMsg =
+        Patterns.check('required')(price) ||
+        Patterns.check('precision')(price, currentPair.precision - currentPair.unitPrecision);
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
       return errMsg;
     },
@@ -67,17 +69,29 @@ class PutOrder extends SwitchPair {
 
   startInit = () => {
     const {
-      model: { currentPair, setPrecision },
-      assetStore: { dispatch },
+      model: { currentPair, setPrecision, dispatch },
+      tradeStore: { showUnitPrecision },
     } = this.props;
     dispatch({
       type: 'getAccountAssets',
     });
+    const prev = {
+      amount: '',
+      priceErrMsg: '',
+      amountErrMsg: '',
+      tradeErrMsg: '',
+    };
     this.changeBS('buy', {
-      price: setPrecision(currentPair.lastPrice, currentPair.precision),
+      price: showUnitPrecision(currentPair.precision, currentPair.unitPrecision)(
+        setPrecision(currentPair.lastPrice, currentPair.precision)
+      ),
+      ...prev,
     });
     this.changeBS('sell', {
-      price: setPrecision(currentPair.lastPrice, currentPair.precision),
+      price: showUnitPrecision(currentPair.precision, currentPair.unitPrecision)(
+        setPrecision(currentPair.lastPrice, currentPair.precision)
+      ),
+      ...prev,
     });
   };
 
@@ -114,7 +128,7 @@ class PutOrder extends SwitchPair {
     } = this.props;
     const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
     return action === 'buy'
-      ? setPrecision(currentCurrencyAssetFree / price, currentPair.currency)
+      ? setPrecision(currentCurrencyAssetFree / price, currentPair.assets)
       : setPrecision(currentAssetsAssetFree, currentPair.assets);
   };
 
@@ -135,7 +149,7 @@ class PutOrder extends SwitchPair {
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
-    const max = +this.getMaxAmount(action, price);
+    const max = this.getMaxAmount(action, price);
     const marks = {
       0: '',
       [max * 0.25]: '',
@@ -153,9 +167,9 @@ class PutOrder extends SwitchPair {
         changeBS(action, { amount: value });
       },
       marks: marks,
-      max: max,
+      max: +max,
       defaultValue: 0,
-      step: +setPrecision(1, currentPair.assets),
+      step: setPrecision(1, currentPair.assets),
       disabled: false,
     };
     return (
@@ -178,7 +192,10 @@ class PutOrder extends SwitchPair {
               errMsg={priceErrMsg}
               value={price}
               onChange={value => {
-                if (RegEx.setDecimalNumber(currentPair.precision).test(value) || value === '') {
+                if (
+                  RegEx.setDecimalNumber(currentPair.precision - currentPair.unitPrecision).test(value) ||
+                  value === ''
+                ) {
                   changeBS(action, { price: value });
                 }
               }}
