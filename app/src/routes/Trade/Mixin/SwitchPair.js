@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mixin } from '../../../components';
-import { _ } from '@utils';
+import { _, toJS } from '@utils';
+import { parseQueryString } from '../../../utils';
 
 class SwitchPair extends Mixin {
   constructor(props) {
@@ -11,10 +12,19 @@ class SwitchPair extends Mixin {
     const init = this.startInit;
     this.startInit = null;
     await super.componentDidMount(prevProps);
-    const { model: { dispatch } = {} } = this.props;
+    const {
+      model: { dispatch } = {},
+      location: { search },
+    } = this.props;
+    const id = parseQueryString(search).id;
     if (dispatch) {
       await dispatch({ type: 'getOrderPairs' });
-      await dispatch({ type: 'switchPair' });
+      await dispatch({
+        type: 'switchPair',
+        payload: {
+          id,
+        },
+      });
     }
     this.startInit = init;
     _.isFunction(this.startInit) && this.startInit();
@@ -30,17 +40,22 @@ class SwitchPair extends Mixin {
       location: { search },
     } = this.props;
 
-    if (!_.isEqual(searchPrev, search) && search) {
-      _.isFunction(this.startInit) && this.startInit();
-      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    }
-    // if (!_.isEqual(currentPairPrev, currentPair)) {
-    //   console.log('kkkkkkkkkk');
-    //   setTimeout(() => {
-    //     _.isFunction(this.startInit) && this.startInit();
-    //     _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    //   });
+    // if (!_.isEqual(searchPrev, search) && search) {
+    //   _.isFunction(this.startInit) && this.startInit();
+    //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     // }
+    if (
+      !_.isEqual(searchPrev, search) &&
+      search &&
+      !_.isEqual(currentPairPrev, currentPair) &&
+      currentPairPrev.assets &&
+      currentPair.assets
+    ) {
+      setTimeout(() => {
+        _.isFunction(this.startInit) && this.startInit();
+        _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+      });
+    }
   }
 }
 

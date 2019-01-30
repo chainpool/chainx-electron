@@ -22,7 +22,6 @@ class Handicap extends SwitchPair {
     const {
       model: { buyList = [], sellList = [], currentPair = {} },
     } = this.props;
-    //console.log(toJS(currentPair), '------------');
     const setTableProps = color => ({
       tableHeight: [36, 23, 1, 0, 0],
       scroll: { tr: 5 },
