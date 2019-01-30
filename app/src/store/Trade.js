@@ -129,7 +129,6 @@ export default class Trade extends ModelExtend {
   getPair = ({ id }) => {
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
-    // console.log(toJS(this.orderPairs), id, toJS(findOne), '--------------------');
     if (findOne) {
       currentPair = findOne;
     } else {

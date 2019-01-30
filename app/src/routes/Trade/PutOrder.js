@@ -1,11 +1,24 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, RegEx, toJS, getDecimalLength } from '../../utils';
+import { _, Inject, Patterns, formatNumber, RegEx, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
 class PutOrder extends SwitchPair {
+  componentUpdate(prevProps) {
+    const {
+      location: { search: searchPrev },
+    } = prevProps;
+    const {
+      location: { search },
+    } = this.props;
+
+    if (!_.isEqual(searchPrev, search) && search) {
+      this.changeBS('buy', { amount: '' });
+      this.changeBS('sell', { amount: '' });
+    }
+  }
   state = {
     buy: {
       action: 'buy',
@@ -161,7 +174,7 @@ class PutOrder extends SwitchPair {
       marks: marks,
       max: +max,
       defaultValue: 0,
-      step: +setPrecision(1, getDecimalLength(max)),
+      step: setPrecision(1, currentPair.assets),
       disabled: false,
     };
     return (
