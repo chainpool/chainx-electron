@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, RegEx, toJS } from '../../utils';
+import { _, Inject, Patterns, formatNumber, RegEx } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))

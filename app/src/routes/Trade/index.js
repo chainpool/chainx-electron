@@ -14,20 +14,6 @@ import * as styles from './index.less';
 class Trade extends SwitchPair {
   state = {};
 
-  startInit = () => {
-    const {
-      model: { dispatch },
-      location: { search },
-    } = this.props;
-    const id = parseQueryString(search).id;
-    dispatch({
-      type: 'switchPair',
-      payload: {
-        id,
-      },
-    });
-  };
-
   render() {
     const props = {
       ...this.props,

@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer, toJS } from '../../utils';
+import { _, observer } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {
@@ -40,7 +40,7 @@ class OrderPair extends SwitchPair {
     const groupPairs = _.groupBy(orderPairs, 'currency') || {};
     const dataSource = groupPairs[_.keys(groupPairs)[activeIndex]] || [];
     const tableProps = {
-      activeTrIndex: _.findIndex(dataSource, (item = {}) => currentPair.id === item.id),
+      activeTrIndex: Math.max(_.findIndex(dataSource, (item = {}) => currentPair.id === item.id), 0),
       tableHeight: [36, 40],
       className: styles.tableContainer,
       onClickRow: item => {
@@ -71,7 +71,7 @@ class OrderPair extends SwitchPair {
           <Tab
             tabs={_.keys(groupPairs)}
             className={styles.tab}
-            activeIndex={activeIndex}
+            activeIndex={Math.max(_.keys(groupPairs).findIndex(value => value === currentPair.currency), 0)}
             onClick={(item, index) => {
               this.setState(
                 {
