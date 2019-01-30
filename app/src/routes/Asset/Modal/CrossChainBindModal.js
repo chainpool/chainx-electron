@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
-import { Clipboard, Modal } from '../../../components';
+import React from 'react';
+import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, observer } from '../../../utils';
+import { classNames, Inject } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 
-@observer
-class CrossChainBindModal extends Component {
+@Inject(({ assetStore }) => ({ assetStore }))
+class CrossChainBindModal extends Mixin {
+  startInit = () => {
+    const {
+      assetStore: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getBTCTrusteeAddress' });
+  };
+
   render() {
     const {
       accountStore: { currentAddress },
+      assetStore: { btcTrusteeAddress },
       globalStore: {
         modal: {
           data: { token },
@@ -41,7 +50,7 @@ class CrossChainBindModal extends Component {
           </div>
           <div className={styles.depositaddress}>
             <span className={styles.label}>多签托管地址:</span>
-            <Clipboard>3E3ZjvzDuMebxjZyYNyzkM9zZrDNeEVA29u6bA29u6bu6bA29u6bu6bA29u6b</Clipboard>
+            <Clipboard>{btcTrusteeAddress}</Clipboard>
           </div>
           <Warn>
             <div>

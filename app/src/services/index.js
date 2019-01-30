@@ -33,8 +33,6 @@ export const unnominate = (...payload) => stake.unnominate(...payload);
 
 export const unfreeze = (...payload) => stake.unfreeze(...payload);
 
-export const getBlockNumberObservable = (...payload) => chain.bestNumber(...payload);
-
 export const claim = (...payload) => stake.claim(...payload);
 
 export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
@@ -63,3 +61,5 @@ export const getOrders = (...payload) => trade.getOrders(...payload);
 export const getBTCAddressByAccount = (...payload) => asset.getBTCAddressByAccount(...payload);
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
+
+export const getTrusteeAddress = (...payload) => asset.getTrusteeAddress();

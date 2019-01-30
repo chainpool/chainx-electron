@@ -5,9 +5,9 @@ import {
   getBTCAddressByAccount,
   getDepositRecords,
   getWithdrawalListByAccount,
-  register,
   transfer,
   withdraw,
+  getTrusteeAddress,
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
@@ -18,6 +18,7 @@ export default class Asset extends ModelExtend {
   @observable onChainAccountWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
   @observable accountAssets = []; // 现账户资产
+  @observable btcTrusteeAddress = ''; // BTC公共多签地址
 
   @computed get normalizedAccountAssets() {
     const assetsInfo = this.rootStore.globalStore.assets; // 获取资产基本信息
@@ -148,6 +149,11 @@ export default class Asset extends ModelExtend {
     const records = await getDepositRecords(account.address, 0, 100);
 
     this.changeModel('depositRecords', records.data);
+  }
+
+  async getBTCTrusteeAddress() {
+    const resp = await getTrusteeAddress();
+    this.changeModel('btcTrusteeAddress', resp.address);
   }
 
   transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
