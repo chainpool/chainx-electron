@@ -21,6 +21,11 @@ export const resOk = result => {
   return result && result.result === 'ExtrinsicSuccess';
 };
 
+export const resFail = result => {
+  console.log(result);
+  return result && result.result === 'ExtrinsicFailed';
+};
+
 export const Inject = func => {
   return c => {
     return inject(func)(observerable(c));

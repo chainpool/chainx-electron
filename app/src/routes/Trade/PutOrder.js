@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, RegEx } from '../../utils';
+import { _, Inject, Patterns, formatNumber, RegEx, toJS } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -100,10 +100,11 @@ class PutOrder extends SwitchPair {
       model: { currentPair },
       assetStore: { crossChainAccountAssets = [], nativeAccountAssets = [] },
     } = this.props;
-    const currentCrossAsset =
-      crossChainAccountAssets.filter((item = {}) => item.name === currentPair.currency)[0] || {};
-    const currentPrimaryAsset = nativeAccountAssets.filter((item = {}) => item.name === currentPair.assets)[0] || {};
-    return [currentCrossAsset.free, currentPrimaryAsset.free];
+
+    const assetsAll = crossChainAccountAssets.concat(nativeAccountAssets);
+    const currentCurrencyAsset = assetsAll.filter((item = {}) => item.name === currentPair.currency)[0] || {};
+    const currentAssetsAsset = assetsAll.filter((item = {}) => item.name === currentPair.assets)[0] || {};
+    return [currentCurrencyAsset.free, currentAssetsAsset.free];
   };
 
   getMaxAmount = (action, price) => {
@@ -111,10 +112,10 @@ class PutOrder extends SwitchPair {
     const {
       model: { currentPair, setPrecision },
     } = this.props;
-    const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
+    const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
     return action === 'buy'
-      ? setPrecision(currentCrossAssetFree / price, currentPair.currency)
-      : setPrecision(currentPrimaryAssetFree, currentPair.assets);
+      ? setPrecision(currentCurrencyAssetFree / price, currentPair.currency)
+      : setPrecision(currentAssetsAssetFree, currentPair.assets);
   };
 
   getMaxTradePrecision = () => {
@@ -133,7 +134,7 @@ class PutOrder extends SwitchPair {
       accountStore: { currentAccount },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
-    const [currentCrossAssetFree, currentPrimaryAssetFree] = this.getCurrentAssetFree();
+    const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
     const max = +this.getMaxAmount(action, price);
     const marks = {
       0: '',
@@ -157,15 +158,14 @@ class PutOrder extends SwitchPair {
       step: +setPrecision(1, currentPair.assets),
       disabled: false,
     };
-
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
           可用余额:{' '}
           <span>
             {action === 'buy'
-              ? setPrecision(currentCrossAssetFree, currentPair.currency) || '-'
-              : setPrecision(currentPrimaryAssetFree, currentPair.assets) || '-'}
+              ? setPrecision(currentCurrencyAssetFree, currentPair.currency) || '-'
+              : setPrecision(currentAssetsAssetFree, currentPair.assets) || '-'}
             <span>{action === 'buy' ? currentPair.currency : currentPair.assets}</span>
           </span>
         </div>
