@@ -1,4 +1,4 @@
-import { ChainX, observable, resOk, Rx } from '../utils';
+import { ChainX, observable, resOk, Rx, formatNumber } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   claim,
@@ -113,6 +113,7 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
+    const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
     return getPseduIntentions$.subscribe(([pseduIntentions = [], records = []]) => {
@@ -126,6 +127,7 @@ export default class Election extends ModelExtend {
           lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
         };
         item.discountVote = this.setPrecision(item.price * item.circulation, token);
+        item.discountVote = formatNumber.toFixed(item.discountVote, nativeAssetPrecision);
 
         const blockNumber = this.rootStore.chainStore.blockNumber;
         // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
@@ -138,12 +140,12 @@ export default class Election extends ModelExtend {
 
         return {
           ...item,
-          interestShow: this.setPrecision(item.interest, token),
+          interestShow: this.setPrecision(item.interest, nativeAssetPrecision),
           discountVoteShow: item.discountVote,
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
           priceShow: item.price,
-          jackpotShow: this.setPrecision(item.jackpot, token),
+          jackpotShow: this.setPrecision(item.jackpot, nativeAssetPrecision),
         };
       });
       this.changeModel(
@@ -166,7 +168,6 @@ export default class Election extends ModelExtend {
     const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
     this.changeModel('originIntentions', intentions);
     this.changeModel('originNominationRecords', records);
-    console.log('records:', records);
   };
 
   getNominationRecords = async () => {
