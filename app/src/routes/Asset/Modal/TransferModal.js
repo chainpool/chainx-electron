@@ -45,14 +45,9 @@ class TransferModal extends Component {
       addressManageStore: { addresses },
     } = this.props;
 
-    let allAccounts = [];
-    if (token === nativeAssetName) {
-      allAccounts = allAccounts.concat(accountsList);
-    }
-
-    allAccounts = allAccounts.concat(
+    const allAccounts = accountsList.concat(
       addresses
-        .filter(address => address.chain === token)
+        .filter(address => address.chain === nativeAssetName)
         .map(address => ({
           label: address.label,
           value: address.address,
