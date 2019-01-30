@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable, resOk, toJS } from '../utils';
+import { _, formatNumber, moment_helper, observable, resOk, resFail, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -155,6 +155,9 @@ export default class Trade extends ModelExtend {
         if (resOk(result)) {
           this.reload();
           resolve(result);
+        }
+        if (resFail(result)) {
+          return reject(err);
         }
       });
     });
