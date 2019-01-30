@@ -41,7 +41,7 @@ class Election extends Mixin {
       <div className={styles.election}>
         <div className={styles.tabLine}>
           <Tab
-            tabs={['信托节点', '验证节点', '候补节点', '我的投票', '充值挖矿']}
+            tabs={['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿']}
             activeIndex={activeIndex}
             onClick={(value, index) => {
               this.setState({

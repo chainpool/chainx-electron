@@ -33,7 +33,7 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 70,
+          width: 85,
           dataIndex: 'name',
           render: (value, record, index) => {
             return `${index + 1}${record.isActive ? '' : '（退选）'}`;
@@ -87,7 +87,7 @@ class NodeTable extends Component {
         },
         {
           title: '',
-          width: 180,
+          width: 170,
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>

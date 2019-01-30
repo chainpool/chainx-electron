@@ -207,7 +207,6 @@ export default class Election extends ModelExtend {
   };
 
   register = ({ signer, acceleration, name }) => {
-    console.log(signer, acceleration, name, '-----');
     register(signer, Number(acceleration), name, (err, result) => {
       resOk(result) && this.reload();
     });
@@ -216,7 +215,7 @@ export default class Election extends ModelExtend {
   /*更新节点*/
   refresh = ({ signer, acceleration, url, participating, address, about }) => {
     refresh(signer, acceleration, url, participating, address, about, (err, result) => {
-      console.log(result);
+      resOk(result) && this.reload();
     });
   };
 
