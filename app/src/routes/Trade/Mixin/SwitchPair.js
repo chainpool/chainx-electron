@@ -34,7 +34,6 @@ class SwitchPair extends Mixin {
       _.isFunction(this.startInit) && this.startInit();
       _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
-    _.isFunction(this.componentUpdate) && this.componentUpdate(prevProps);
     // if (!_.isEqual(currentPairPrev, currentPair)) {
     //   console.log('kkkkkkkkkk');
     //   setTimeout(() => {

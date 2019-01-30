@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatNumber, Inject, setColumnsWidth } from '../../utils';
+import { _, formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import { HoverTip } from '../components';
@@ -157,7 +157,7 @@ class CrossChainAssetTable extends Mixin {
         ],
         widths
       ),
-      dataSource: crossChainAccountAssetsWithZero,
+      dataSource: _.orderBy(crossChainAccountAssetsWithZero, 'chain'),
     };
     return <Table {...tableProps} />;
   }
