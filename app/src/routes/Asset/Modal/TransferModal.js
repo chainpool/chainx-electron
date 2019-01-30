@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { InputHorizotalList, FreeBalance } from '../../components';
+import { Button, Input, Modal } from '../../../components';
+import { FreeBalance, InputHorizotalList } from '../../components';
 import { Inject, Patterns, RegEx } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
-@Inject(({ accountStore }) => ({ accountStore }))
+@Inject(({ accountStore, addressManageStore }) => ({ accountStore, addressManageStore }))
 class TransferModal extends Component {
   state = {
     address: '',
@@ -34,14 +34,31 @@ class TransferModal extends Component {
       return ['checkAddress', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
+
   render() {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
       model: { dispatch, openModal },
-      globalStore: { modal: { data: { token, freeShow } = {} } = {} },
+      globalStore: { modal: { data: { token, freeShow } = {} } = {}, nativeAssetName },
       accountStore: { accountsList = [] },
+      addressManageStore: { addresses },
     } = this.props;
+
+    let allAccounts = [];
+    if (token === nativeAssetName) {
+      allAccounts = allAccounts.concat(accountsList);
+    }
+
+    allAccounts = allAccounts.concat(
+      addresses
+        .filter(address => address.chain === token)
+        .map(address => ({
+          label: address.label,
+          value: address.address,
+        }))
+    );
+
     return (
       <Modal
         title="链内转账"
@@ -86,7 +103,7 @@ class TransferModal extends Component {
             label="接收人地址"
             value={address}
             errMsg={addressErrMsg}
-            options={accountsList}
+            options={allAccounts}
             onChange={value => {
               this.setState({ address: value });
             }}

@@ -44,10 +44,10 @@ class AddAddressModal extends Component {
     const { chain, chainErrMsg, address, addressErrMsg, label, labelErrMsg } = this.state;
     const {
       model: { closeModal, dispatch },
-      globalStore: { chainNames = [] },
+      globalStore: { assets = [] },
     } = this.props;
 
-    const options = chainNames.map(name => ({ label: name, value: name }));
+    const options = assets.map(asset => ({ label: asset.chain, value: asset.name }));
 
     return (
       <Modal
