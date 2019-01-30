@@ -28,7 +28,7 @@ class Handicap extends SwitchPair {
       className: styles.tableContainer,
       columns: [
         {
-          width: '38%',
+          // width: '38%',
           className: color,
           title: `价格(${currentPair.currency})`,
           dataIndex: 'priceShow',

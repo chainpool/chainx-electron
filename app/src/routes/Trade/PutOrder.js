@@ -6,19 +6,6 @@ import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
 class PutOrder extends SwitchPair {
-  componentUpdate(prevProps) {
-    const {
-      location: { search: searchPrev },
-    } = prevProps;
-    const {
-      location: { search },
-    } = this.props;
-
-    if (!_.isEqual(searchPrev, search) && search) {
-      this.changeBS('buy', { amount: '' });
-      this.changeBS('sell', { amount: '' });
-    }
-  }
   state = {
     buy: {
       action: 'buy',
@@ -88,15 +75,23 @@ class PutOrder extends SwitchPair {
     dispatch({
       type: 'getAccountAssets',
     });
+    const prev = {
+      amount: '',
+      priceErrMsg: '',
+      amountErrMsg: '',
+      tradeErrMsg: '',
+    };
     this.changeBS('buy', {
       price: showUnitPrecision(currentPair.precision, currentPair.unitPrecision)(
         setPrecision(currentPair.lastPrice, currentPair.precision)
       ),
+      ...prev,
     });
     this.changeBS('sell', {
       price: showUnitPrecision(currentPair.precision, currentPair.unitPrecision)(
         setPrecision(currentPair.lastPrice, currentPair.precision)
       ),
+      ...prev,
     });
   };
 
