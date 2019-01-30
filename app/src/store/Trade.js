@@ -2,14 +2,6 @@ import { _, formatNumber, moment_helper, observable, resOk, resFail, toJS } from
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
-const showUnitPrecision = (precision, unitPrecision) => {
-  return value => {
-    const show = precision - unitPrecision;
-    const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
-    return String(value).replace(reg, '$1');
-  };
-};
-
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
@@ -35,6 +27,14 @@ export default class Trade extends ModelExtend {
     this.getAccountOrder();
   };
 
+  showUnitPrecision = (precision, unitPrecision) => {
+    return value => {
+      const show = precision - unitPrecision;
+      const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
+      return String(value).replace(reg, '$1');
+    };
+  };
+
   getAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
@@ -46,7 +46,7 @@ export default class Trade extends ModelExtend {
             currentOrderList: res.data.map((item = {}) => {
               const filterPair = this.getPair({ id: item.pair });
 
-              const showUnit = showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+              const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
                 ...item,
                 createTimeShow: moment_helper.formatHMS(item.createTime * 1000),
@@ -77,7 +77,7 @@ export default class Trade extends ModelExtend {
     res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
     res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
     const formatList = (list, action) => {
-      const showUnit = showUnitPrecision(currentPair.precision, currentPair.unitPrecision);
+      const showUnit = this.showUnitPrecision(currentPair.precision, currentPair.unitPrecision);
       return list.map((item = [], index) => {
         let totalAmount = 0;
         if (action === 'sell') {
@@ -116,7 +116,9 @@ export default class Trade extends ModelExtend {
       return {
         ...item,
         precision,
-        lastPriceShow: showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(item.lastPrice, precision)),
+        lastPriceShow: this.showUnitPrecision(precision, item.unitPrecision)(
+          this.setPrecision(item.lastPrice, precision)
+        ),
       };
     });
     this.changeModel('orderPairs', res, []);
