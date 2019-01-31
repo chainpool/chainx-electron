@@ -12,7 +12,7 @@ class NodeTable extends Component {
       model: {
         dispatch,
         openModal,
-        trustIntentions = [],
+        // trustIntentions = [],
         validators = [],
         backupValidators = [],
         validatorsWithMyNomination = [],
