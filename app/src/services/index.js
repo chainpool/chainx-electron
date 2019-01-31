@@ -59,7 +59,7 @@ export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 
 export const getOrders = (...payload) => trade.getOrders(...payload);
 
-export const getBTCAddressByAccount = (...payload) => asset.getBTCAddressByAccount(...payload);
+export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...payload);
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
 

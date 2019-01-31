@@ -1,13 +1,13 @@
 import { _, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
+  getAddressByAccount,
   getAsset,
-  getBTCAddressByAccount,
   getDepositRecords,
+  getTrusteeAddress,
   getWithdrawalListByAccount,
   transfer,
   withdraw,
-  getTrusteeAddress,
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
@@ -46,7 +46,6 @@ export default class Asset extends ModelExtend {
         reservedDexSpot,
         reservedWithdrawal,
         total,
-        isNative: asset.isNative,
         name: asset.name,
         tokenName: info.tokenName,
         desc: info.desc,
@@ -83,7 +82,6 @@ export default class Asset extends ModelExtend {
           reservedDexSpot: 0,
           reservedWithdrawal: 0,
           total: 0,
-          isNative: info.isNative,
           name: info.name,
           tokenName: info.tokenName,
           chain: info.chain,
@@ -128,7 +126,7 @@ export default class Asset extends ModelExtend {
 
   getAccountBTCAddresses = async () => {
     const currentAccount = this.getCurrentAccount();
-    const addresses = await getBTCAddressByAccount(currentAccount.address);
+    const addresses = await getAddressByAccount(currentAccount.address, 'Bitcoin');
     this.changeModel('btcAddresses', addresses);
   };
 
