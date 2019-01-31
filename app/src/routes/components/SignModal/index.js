@@ -7,7 +7,7 @@ import * as styles from './index.less';
 @Inject(({ accountStore: model }) => ({ model }))
 class SignModal extends Component {
   state = {
-    acceleration: { label: 0.0001, value: 10000 },
+    acceleration: { label: 0.0001, value: 1 },
     password: '',
     passwordErrMsg: '',
   };
@@ -94,9 +94,6 @@ class SignModal extends Component {
                 }}
               />
             </div>
-            <span className={styles.feevalue}>
-              <span>10%支付给打包节点，费用越高打包速度越快</span>
-            </span>
           </div>
           <Input.Text
             isPassword
