@@ -67,7 +67,7 @@ export default class ModelExtend {
   };
 
   getHistory = () => {
-    return this.rootStore.globalStore.history;
+    return this.rootStore.globalStore.history || {};
   };
 
   isLogin = () => {

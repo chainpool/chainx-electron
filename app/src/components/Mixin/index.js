@@ -18,19 +18,17 @@ class Mixin extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { accountStore: { currentAccount = {}, currentAccount_prev: currentAccountPrev = {} } = {} } = this.props;
+    const {
+      location: { search: searchPrev },
+    } = prevProps;
+    const {
+      location: { search },
+    } = this.props;
 
-    if (!_.isEqual(currentAccountPrev, currentAccount) && currentAccount) {
-      setTimeout(() => {
-        _.isFunction(this.startInit) && this.startInit();
-        _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-      });
+    if (!_.isEqual(searchPrev, search)) {
+      _.isFunction(this.startInit) && this.startInit();
+      _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
-    // if (!_.isEqual(searchPrev, search) && search) {
-    //   console.log(this);
-    //   _.isFunction(this.startInit) && this.startInit();
-    //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    // }
   }
 
   componentWillUnmount() {

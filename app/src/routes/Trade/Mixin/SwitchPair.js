@@ -32,29 +32,20 @@ class SwitchPair extends Mixin {
 
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
-    const { model: { currentPair = {}, currentPair_prev: currentPairPrev = {} } = {} } = this.props;
     const {
       location: { search: searchPrev },
     } = prevProps;
     const {
       location: { search },
+      model: { dispatch },
     } = this.props;
 
-    // if (!_.isEqual(searchPrev, search) && search) {
-    //   _.isFunction(this.startInit) && this.startInit();
-    //   _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-    // }
-    if (
-      !_.isEqual(searchPrev, search) &&
-      search &&
-      !_.isEqual(currentPairPrev, currentPair) &&
-      currentPairPrev.assets &&
-      currentPair.assets
-    ) {
-      setTimeout(() => {
-        _.isFunction(this.startInit) && this.startInit();
-        _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
-      });
+    if (!_.isEqual(searchPrev, search)) {
+      if (!search) {
+        dispatch({
+          type: 'clearAll',
+        });
+      }
     }
   }
 }

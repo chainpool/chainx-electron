@@ -169,4 +169,13 @@ export default class Trade extends ModelExtend {
       resOk(result) && this.reload();
     });
   };
+
+  clearAll = () => {
+    this.changeModel({
+      currentOrderList: [],
+    });
+    this.rootStore.assetStore.changeModel({
+      accountAssets: [],
+    });
+  };
 }

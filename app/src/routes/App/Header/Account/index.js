@@ -20,15 +20,7 @@ class Account extends Mixin {
   startInit = () => {
     const {
       model: { dispatch },
-      location: { search },
     } = this.props;
-    const address = parseQueryString(search).address;
-    dispatch({
-      type: 'switchAccount',
-      payload: {
-        address,
-      },
-    });
     dispatch({
       type: 'getAccountAssets',
     });

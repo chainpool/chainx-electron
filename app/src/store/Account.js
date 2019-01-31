@@ -1,5 +1,5 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave } from '../utils';
+import { _, localSave, toJS, parseQueryString } from '../utils';
 import ModelExtend from './ModelExtend';
 
 export default class Store extends ModelExtend {
@@ -45,7 +45,13 @@ export default class Store extends ModelExtend {
     }
 
     const history = this.getHistory();
-    history && history.push({ search: `?address=${newCurrentAccount.address}` });
+    const { location: { pathname } = {} } = history;
+    const nextAddress = newCurrentAccount.address;
+    if (nextAddress) {
+      history.push({ search: `?address=${nextAddress}` });
+    } else {
+      history.push({ pathname });
+    }
     this.changeModel('currentAccount', newCurrentAccount);
   }
 

@@ -36,7 +36,7 @@ class OrderPair extends SwitchPair {
     let {
       model: { orderPairs = [] },
     } = this.props;
-    orderPairs = orderPairs.filter((item = {}) => item.onLine);
+    orderPairs = orderPairs.filter((item = {}) => item.online);
     const groupPairs = _.groupBy(orderPairs, 'currency') || {};
     const dataSource = groupPairs[_.keys(groupPairs)[activeIndex]] || [];
     const tableProps = {
