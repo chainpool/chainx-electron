@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Icon, Mixin, RouterGo } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';
-import CertTable from './CertTable';
 import PrimaryAssetTable from './PrimaryAssetTable';
 import CrossChainAssetTable from './CrossChainAssetTable';
 import DepositModal from './Modal/DepositModal';
