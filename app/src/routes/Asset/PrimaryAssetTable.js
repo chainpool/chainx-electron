@@ -5,6 +5,32 @@ import { Button, ButtonGroup, Table } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 
+function drawCandies(address) {
+  if (!address) return;
+  fetch('http://wallet.chainx.org/server-api/faucet', {
+    body: JSON.stringify({
+      address,
+    }),
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    cache: 'no-cache',
+    method: 'POST',
+  })
+    .then(resp => {
+      if (resp.status === 200) {
+        alert('领取成功，等待打包');
+      } else if (resp.status === 429) {
+        alert('请不要重复点击，一分钟后领取');
+      } else {
+        alert('领取失败');
+      }
+    })
+    .catch(() => {
+      alert('领取失败');
+    });
+}
+
 @Inject(({ configureStore }) => ({ configureStore }))
 class PrimaryAssetTable extends Component {
   render() {
@@ -12,6 +38,7 @@ class PrimaryAssetTable extends Component {
       model: { openModal, nativeAccountAssets = [] },
       globalStore: { nativeAssetPrecision },
       configureStore: { isTestNet },
+      accountStore: { currentAddress },
       widths,
     } = this.props;
 
@@ -69,9 +96,7 @@ class PrimaryAssetTable extends Component {
                   <Button
                     type="warn"
                     onClick={() => {
-                      openModal({
-                        name: 'GetCollarModal',
-                      });
+                      drawCandies(currentAddress);
                     }}>
                     领币
                   </Button>
