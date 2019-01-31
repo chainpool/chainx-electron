@@ -21,9 +21,18 @@ class Main extends Component {
 
   async componentDidMount() {
     await this.ready();
-
     const {
       electionStore: { dispatch },
+      history: {
+        location: { search },
+      },
+    } = this.props;
+    // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
+    dispatch({ type: 'getIntentions' });
+  }
+
+  ready = async () => {
+    const {
       globalStore: { dispatch: dispatchGlobal },
       accountStore: { dispatch: dispatchAccount },
       history: {
@@ -31,24 +40,19 @@ class Main extends Component {
       },
     } = this.props;
     const address = parseQueryString(search).address;
-    // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
-    dispatch({ type: 'getIntentions' });
-    dispatchGlobal({
+    await ChainX.isRpcReady();
+    await dispatchGlobal({
       type: 'setHistory',
       payload: {
         history: this.props.history,
       },
     });
-    dispatchAccount({
+    await dispatchAccount({
       type: 'switchAccount',
       payload: {
         address,
       },
     });
-  }
-
-  ready = async () => {
-    await ChainX.isRpcReady();
     this.setState({
       ready: true,
     });

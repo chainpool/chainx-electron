@@ -154,6 +154,10 @@ export const parseQueryString = payload => {
   return queryString.parse(payload);
 };
 
+export const stringifyQueryString = payload => {
+  return queryString.stringify(payload);
+};
+
 export const RegEx = {
   number: /^[0-9]*$/,
   decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
