@@ -7,7 +7,7 @@ import * as styles from './index.less';
 @Inject(({ accountStore: model }) => ({ model }))
 class SignModal extends Component {
   state = {
-    acceleration: { label: 1, value: 1 },
+    acceleration: { label: 0.0001, value: 10000 },
     password: '',
     passwordErrMsg: '',
   };
@@ -87,7 +87,7 @@ class SignModal extends Component {
             <div className={styles.speed}>
               <Input.Select
                 getOptionLabel={item => `${item.label}${nativeAssetName}`}
-                options={[{ label: 1, value: 1 }]}
+                options={[acceleration]}
                 value={acceleration}
                 onChange={value => {
                   this.setState({ acceleration: value });
@@ -95,7 +95,7 @@ class SignModal extends Component {
               />
             </div>
             <span className={styles.feevalue}>
-              <span>90%销毁，10%支付给打包节点，费用越高打包速度越快</span>
+              <span>10%支付给打包节点，费用越高打包速度越快</span>
             </span>
           </div>
           <Input.Text
