@@ -11,6 +11,7 @@ import {
 } from '../services';
 import { computed } from 'mobx';
 import { moment } from '@utils/index';
+import { Chain } from '@constants';
 
 export default class Asset extends ModelExtend {
   @observable name = 'asset';
@@ -57,11 +58,11 @@ export default class Asset extends ModelExtend {
   }
 
   @computed get nativeAccountAssets() {
-    return this.normalizedAccountAssets.filter(asset => asset.isNative);
+    return this.normalizedAccountAssets.filter(asset => asset.chain === Chain.nativeChain);
   }
 
   @computed get crossChainAccountAssets() {
-    return this.normalizedAccountAssets.filter(asset => !asset.isNative);
+    return this.normalizedAccountAssets.filter(asset => asset.chain !== Chain.nativeChain);
   }
 
   @computed get crossChainAccountAssetsWithZero() {

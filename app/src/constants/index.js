@@ -45,3 +45,7 @@ export const NetWork = [
 export const API = {
   status: 'API即将开放',
 };
+
+export const Chain = {
+  nativeChain: 'ChainX',
+};

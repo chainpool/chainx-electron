@@ -2,6 +2,7 @@ import { localSave, observable } from '@utils';
 import ModelExtend from './ModelExtend';
 import { getAssets } from '../services';
 import { autorun, computed } from 'mobx';
+import { Chain } from '@constants';
 
 export default class Global extends ModelExtend {
   constructor(rootStore) {
@@ -28,11 +29,11 @@ export default class Global extends ModelExtend {
   }
 
   @computed get crossChainAssets() {
-    return this.assets.filter(asset => !asset.isNative);
+    return this.assets.filter(asset => asset.chain !== Chain.nativeChain);
   }
 
   @computed get nativeAsset() {
-    return this.assets.find(asset => asset.isNative);
+    return this.assets.find(asset => asset.chain === Chain.nativeChain);
   }
 
   @computed get nativeAssetName() {
