@@ -81,7 +81,7 @@ class Election extends Mixin {
             )}
           </ul>
         </div>
-        {activeIndex === 4 ? (
+        {activeIndex === 3 ? (
           <DepositMineTable {...this.props} />
         ) : (
           <NodeTable activeIndex={activeIndex} {...this.props} />
