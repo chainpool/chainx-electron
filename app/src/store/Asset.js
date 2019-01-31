@@ -135,7 +135,8 @@ export default class Asset extends ModelExtend {
   getAccountAssets = async () => {
     const currentAccount = this.getCurrentAccount();
     const accountAssetsResp = await getAsset(currentAccount.address, 0, 100);
-    this.changeModel('accountAssets', accountAssetsResp.data);
+    const names = this.rootStore.globalStore.onlineChainNames;
+    this.changeModel('accountAssets', accountAssetsResp.data.filter(asset => names.includes(asset.name)));
   };
 
   async getWithdrawalListByAccount() {

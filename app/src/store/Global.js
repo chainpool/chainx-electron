@@ -24,16 +24,20 @@ export default class Global extends ModelExtend {
 
   @observable assets = localSave.get('asset') || [];
 
+  @computed get onlineChainNames() {
+    return this.assets.filter(asset => asset.online);
+  }
+
   @computed get chainNames() {
-    return this.assets.map(asset => asset.chain);
+    return this.onlineChainNames.map(asset => asset.chain);
   }
 
   @computed get crossChainAssets() {
-    return this.assets.filter(asset => asset.chain !== Chain.nativeChain);
+    return this.onlineChainNames.filter(asset => asset.chain !== Chain.nativeChain);
   }
 
   @computed get nativeAsset() {
-    return this.assets.find(asset => asset.chain === Chain.nativeChain);
+    return this.onlineChainNames.find(asset => asset.chain === Chain.nativeChain);
   }
 
   @computed get nativeAssetName() {
