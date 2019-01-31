@@ -58,16 +58,18 @@ class Asset extends Mixin {
           </li>
           <li>
             <TableTitle title={'跨链资产'}>
-              <ul>
-                <li>
-                  <Button type="blank">
-                    <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>
-                      <Icon name="icon-chongtijilu" />
-                      充提记录
-                    </RouterGo>
-                  </Button>
-                </li>
-              </ul>
+              {null && (
+                <ul>
+                  <li>
+                    <Button type="blank">
+                      <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>
+                        <Icon name="icon-chongtijilu" />
+                        充提记录
+                      </RouterGo>
+                    </Button>
+                  </li>
+                </ul>
+              )}
             </TableTitle>
             <CrossChainAssetTable {...props} />
           </li>
