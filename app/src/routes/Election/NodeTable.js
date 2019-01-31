@@ -42,11 +42,7 @@ class NodeTable extends Component {
         {
           title: '名称',
           dataIndex: 'name',
-          render: value => (
-            <HoverTip tip={'P2P投资市场目前正在经历爆炸式增长。 2017年全球市场规模达到1090亿欧元，且没有放缓的迹象。'}>
-              {value}
-            </HoverTip>
-          ),
+          render: (value, item) => <HoverTip tip={item.about + ' '}>{value}</HoverTip>,
         },
         {
           title: '账户地址',
