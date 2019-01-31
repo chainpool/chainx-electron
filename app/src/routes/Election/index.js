@@ -28,7 +28,7 @@ class Election extends Mixin {
     const { activeIndex } = this.state;
     const {
       model: { openModal },
-      accountStore: { isValidator },
+      accountStore: { isValidator, currentAddress },
     } = this.props;
     const {
       globalStore: {
@@ -37,7 +37,9 @@ class Election extends Mixin {
     } = this.props;
 
     // const tabs = ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿'];
-    const tabs = ['验证节点', '候选节点', '我的投票', '充值挖矿'];
+    const tabs = currentAddress
+      ? ['验证节点', '候选节点', '我的投票', '充值挖矿']
+      : ['验证节点', '候选节点', '充值挖矿'];
 
     return (
       <div className={styles.election}>
@@ -81,7 +83,7 @@ class Election extends Mixin {
             )}
           </ul>
         </div>
-        {activeIndex === 3 ? (
+        {(currentAddress && activeIndex === 3) || (!currentAddress && activeIndex === 2) ? (
           <DepositMineTable {...this.props} />
         ) : (
           <NodeTable activeIndex={activeIndex} {...this.props} />
