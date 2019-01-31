@@ -81,7 +81,7 @@ class UpdateNodeModal extends Component {
                       { name: '操作', value: '更新节点' },
                       { name: '出块地址', value: address },
                       { name: '网址', value: website },
-                      { name: '参选状态', value: willParticipating ? '参选' : '推选' },
+                      { name: '参选状态', value: willParticipating ? '参选' : '退选' },
                       { name: '简介', value: about },
                     ],
                     callback: ({ signer, acceleration }) => {
