@@ -17,7 +17,7 @@ class NodeTable extends Component {
         backupValidators = [],
         validatorsWithMyNomination = [],
       },
-      accountStore: { currentAccount = {} },
+      accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetPrecision = 0 },
     } = this.props;
 
@@ -91,7 +91,7 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {!item.isActive ? null : (
+              {currentAddress && item.isActive ? (
                 <Button
                   onClick={() => {
                     openModal({
@@ -104,7 +104,7 @@ class NodeTable extends Component {
                   }}>
                   投票
                 </Button>
-              )}
+              ) : null}
               {item.myRevocation ? (
                 <Button
                   onClick={() => {
