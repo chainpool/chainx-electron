@@ -41,6 +41,38 @@ class Election extends Mixin {
       ? ['验证节点', '候选节点', '我的投票', '充值挖矿']
       : ['验证节点', '候选节点', '充值挖矿'];
 
+    const operations = (
+      <ul>
+        {isValidator ? (
+          <li>
+            <Button
+              type="blank"
+              onClick={() => {
+                openModal({
+                  name: 'UpdateNodeModal',
+                });
+              }}>
+              <Icon name="icon-xiugaipeizhi" />
+              更新节点
+            </Button>
+          </li>
+        ) : (
+          <li>
+            <Button
+              type="blank"
+              onClick={() => {
+                openModal({
+                  name: 'RegisterNodeModal',
+                });
+              }}>
+              <Icon name="icon-xiugaipeizhi" />
+              注册节点
+            </Button>
+          </li>
+        )}
+      </ul>
+    );
+
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
@@ -53,35 +85,7 @@ class Election extends Mixin {
               });
             }}
           />
-          <ul>
-            {isValidator ? (
-              <li>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({
-                      name: 'UpdateNodeModal',
-                    });
-                  }}>
-                  <Icon name="icon-xiugaipeizhi" />
-                  更新节点
-                </Button>
-              </li>
-            ) : (
-              <li>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({
-                      name: 'RegisterNodeModal',
-                    });
-                  }}>
-                  <Icon name="icon-xiugaipeizhi" />
-                  注册节点
-                </Button>
-              </li>
-            )}
-          </ul>
+          {currentAddress ? operations : null}
         </div>
         {(currentAddress && activeIndex === 3) || (!currentAddress && activeIndex === 2) ? (
           <DepositMineTable {...this.props} />
