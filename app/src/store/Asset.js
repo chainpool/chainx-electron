@@ -13,6 +13,22 @@ import { computed } from 'mobx';
 import { moment } from '@utils/index';
 import { Chain } from '@constants';
 
+function getAssetWithZeroBalance(info) {
+  return {
+    free: 0,
+    reservedStaking: 0,
+    reservedStakingRevocation: 0,
+    reservedDexSpot: 0,
+    reservedWithdrawal: 0,
+    total: 0,
+    name: info.name,
+    tokenName: info.tokenName,
+    chain: info.chain,
+    precision: info.precision,
+    trusteeAddr: info.trusteeAddr,
+  };
+}
+
 export default class Asset extends ModelExtend {
   @observable name = 'asset';
   @observable btcAddresses = []; // 账户已绑定BTC地址列表
@@ -57,7 +73,13 @@ export default class Asset extends ModelExtend {
   }
 
   @computed get nativeAccountAssets() {
-    return this.normalizedAccountAssets.filter(asset => asset.chain === Chain.nativeChain);
+    const nativeAsset = this.normalizedAccountAssets.find(asset => asset.chain === Chain.nativeChain);
+    if (nativeAsset) {
+      return [nativeAsset];
+    }
+
+    const info = this.rootStore.globalStore.nativeAsset;
+    return [getAssetWithZeroBalance(info)];
   }
 
   @computed get crossChainAccountAssets() {
@@ -75,19 +97,7 @@ export default class Asset extends ModelExtend {
     const zeroAssets = assetsInfo
       .filter(info => !tokensWithValue.includes(info.name))
       .map(info => {
-        return {
-          free: 0,
-          reservedStaking: 0,
-          reservedStakingRevocation: 0,
-          reservedDexSpot: 0,
-          reservedWithdrawal: 0,
-          total: 0,
-          name: info.name,
-          tokenName: info.tokenName,
-          chain: info.chain,
-          precision: info.precision,
-          trusteeAddr: info.trusteeAddr,
-        };
+        return getAssetWithZeroBalance(info);
       });
 
     return [...this.crossChainAccountAssets, ...zeroAssets];
