@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from '../../../components';
+import { Button, Table } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
 import { observer } from '../../../utils';
@@ -12,11 +12,14 @@ class CurrentOrderTable extends SwitchPair {
 
   render() {
     const {
-      model: { openModal, dispatch, currentOrderList = [], currentPair = {} },
+      model: { openModal, dispatch, currentOrderList = [] },
+      noDataTip,
     } = this.props;
+
     const tableProps = {
       tableHeight: [36, 40],
       className: styles.tableContainer,
+      noDataTip,
       columns: [
         {
           title: '时间',
