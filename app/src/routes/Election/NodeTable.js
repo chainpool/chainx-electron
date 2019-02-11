@@ -4,6 +4,8 @@ import { Button, ButtonGroup, Table } from '../../components';
 import { HoverTip } from '../components';
 import { Inject, isEmpty, formatNumber } from '../../utils';
 
+const zeroPlaceHolder = '-';
+
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {
   render() {
@@ -69,17 +71,26 @@ class NodeTable extends Component {
         {
           title: '我的投票',
           dataIndex: 'myTotalVote',
-          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
+          render: value =>
+            isEmpty(value) || parseFloat(value) <= 0
+              ? zeroPlaceHolder
+              : formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '赎回冻结',
           dataIndex: 'myRevocation',
-          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
+          render: value =>
+            isEmpty(value) || parseFloat(value) <= 0
+              ? zeroPlaceHolder
+              : formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '待领利息',
           dataIndex: 'myInterest',
-          render: value => (isEmpty(value) ? '--' : formatNumber.toPrecision(value, nativeAssetPrecision)),
+          render: value =>
+            isEmpty(value) || parseFloat(value) <= 0
+              ? zeroPlaceHolder
+              : formatNumber.toPrecision(value, nativeAssetPrecision),
         },
         {
           title: '',
