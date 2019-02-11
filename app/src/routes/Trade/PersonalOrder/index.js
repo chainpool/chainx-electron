@@ -6,7 +6,6 @@ import * as styles from './index.less';
 import { Tab } from '../../components';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
-import { API } from '@constants';
 
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
@@ -15,7 +14,6 @@ class PersonalOrder extends SwitchPair {
   };
 
   startInit = () => {
-    // console.log('person---------------');
     const {
       model: { dispatch },
     } = this.props;
