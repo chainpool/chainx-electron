@@ -2,12 +2,10 @@ import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import Handicap from './Handicap';
 import OrderPair from './OrderPair';
-import LatestOrder from './LatestOrder';
-import Kline from './Kline';
 import PutOrder from './PutOrder';
 import PersonalOrder from './PersonalOrder';
 
-import { Inject, parseQueryString } from '../../utils';
+import { Inject } from '../../utils';
 import * as styles from './index.less';
 
 @Inject(({ tradeStore: model }) => ({ model }))
