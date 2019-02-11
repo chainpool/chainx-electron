@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as styles from './index.less';
-import { Table, ButtonGroup, Button, Mixin } from '../../components';
-import { observer, toJS } from '../../utils';
+import { Button, ButtonGroup, Mixin, Table } from '../../components';
+import { observer } from '../../utils';
+import Balance from './components/Balance';
 
 @observer
 class DepositMineTable extends Mixin {
@@ -57,10 +58,12 @@ class DepositMineTable extends Mixin {
         {
           title: '我的总余额',
           dataIndex: 'balanceShow',
+          render: value => <Balance value={value} />,
         },
         {
           title: '待领利息',
           dataIndex: 'interestShow',
+          render: value => <Balance value={value} />,
         },
         {
           title: '',
