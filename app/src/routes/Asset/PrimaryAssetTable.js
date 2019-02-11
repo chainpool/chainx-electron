@@ -4,6 +4,7 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
+import Asset from './components/Asset';
 
 function drawCandies(address) {
   if (!address) return;
@@ -65,27 +66,27 @@ class PrimaryAssetTable extends Component {
           {
             title: '可用余额',
             dataIndex: 'free',
-            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '投票冻结',
             dataIndex: 'reservedStaking',
-            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '赎回冻结',
             dataIndex: 'reservedStakingRevocation',
-            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '交易冻结',
             dataIndex: 'reservedDexSpot',
-            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '总余额',
             dataIndex: 'total',
-            render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '',

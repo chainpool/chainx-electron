@@ -6,6 +6,7 @@ import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import xdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
+import Asset from './components/Asset';
 
 @Inject(({ configureStore }) => ({ configureStore }))
 class CrossChainAssetTable extends Mixin {
@@ -56,22 +57,22 @@ class CrossChainAssetTable extends Mixin {
           {
             title: '可用余额',
             dataIndex: 'free',
-            render: (value, item) => formatNumber.toPrecision(value, item.precision),
+            render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
             title: '提现冻结',
             dataIndex: 'reservedWithdrawal',
-            render: (value, item) => formatNumber.toPrecision(value, item.precision),
+            render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
             title: '交易冻结',
             dataIndex: 'reservedDexSpot',
-            render: (value, item) => formatNumber.toPrecision(value, item.precision),
+            render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
             title: '总余额',
             dataIndex: 'total',
-            render: (value, item) => formatNumber.toPrecision(value, item.precision),
+            render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
             title: '',
