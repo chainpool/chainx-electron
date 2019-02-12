@@ -23,9 +23,9 @@ class TransferModal extends Component {
     checkAmount: () => {
       const { amount } = this.state;
       const {
-        globalStore: { modal: { data: { free } = {} } = {} },
+        globalStore: { modal: { data: { freeShow } = {} } = {} },
       } = this.props;
-      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, free);
+      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
