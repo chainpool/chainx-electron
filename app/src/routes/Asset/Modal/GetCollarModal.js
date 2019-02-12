@@ -22,8 +22,16 @@ class GetCollarModal extends Component {
                 testnet3的钱包和账户地址（目前只支持普通地址，后续支持隔离见证地址）进行测试。
               </div>
               <div>
-                如果您没有测试网钱包，推荐下载https://bitpay.com/wallet，下载后点击Create personal
-                wallet，Coin选择Bitcoin(BTC)，advanced options选择Testnet即可创建一个testnet3地址。
+                如果您没有测试网钱包，推荐下载
+                <RouterGo
+                  isOutSide
+                  go={{
+                    pathname: 'https://bitpay.com/wallet',
+                  }}>
+                  https://bitpay.com/wallet，
+                </RouterGo>
+                下载后点击Create personal wallet，Coin选择Bitcoin(BTC)，advanced
+                options选择Testnet即可创建一个testnet3地址。
               </div>
               <div className={styles.img}>
                 <img src={getcollar_1} alt="getcollar_1" />
