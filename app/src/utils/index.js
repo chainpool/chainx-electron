@@ -54,16 +54,14 @@ export const Patterns = {
   },
   isPrivateKey: (privateKey, errMsg = ErrMsg.privateKeyNotFormat) => {
     try {
-      ChainX.account.fromPrivateKey(privateKey);
-      return '';
+      return /^0x[0-9a-fA-F]{64}$/.test(privateKey) ? '' : errMsg;
     } catch (err) {
       return errMsg;
     }
   },
   isMnemonicValid: (mnemonic, errMsg = ErrMsg.mnemonicNotFormat) => {
     try {
-      ChainX.account.isMnemonicValid(mnemonic);
-      return '';
+      return ChainX.account.isMnemonicValid(mnemonic) ? '' : errMsg;
     } catch (err) {
       return errMsg;
     }

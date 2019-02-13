@@ -14,11 +14,12 @@ class ImportAccountModal extends Component {
   checkAll = {
     checkMnemonicWord: () => {
       const { mnemonicWord } = this.state;
+
       const errMsg = mnemonicWord.some(item => {
         return !!Patterns.check('required')(item);
       })
         ? '请填写完整'
-        : '' || Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
+        : Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
 
       this.setState({ MnemonicWordErrMsg: errMsg });
       return errMsg;
@@ -32,7 +33,13 @@ class ImportAccountModal extends Component {
 
     confirm: () => {
       const { step } = this.state;
-      return [['checkMnemonicWord', 'checkSecretKey'][step - 1]].every(item => !this.checkAll[item]());
+      if (step === 1) {
+        return !this.checkAll.checkMnemonicWord();
+      } else if (step === 2) {
+        return !this.checkAll.checkSecretKey();
+      }
+
+      return true;
     },
   };
   render() {
