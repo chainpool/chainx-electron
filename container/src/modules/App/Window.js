@@ -1,4 +1,8 @@
 const { BrowserWindow, globalShortcut } = require("electron");
+const appRootDir = require("app-root-dir");
+const path = require("path");
+
+const isDev = require("electron-is-dev");
 
 class Window {
   constructor(config = {}) {
@@ -21,7 +25,23 @@ class Window {
     this.window.on("closed", () => {
       this.window = null;
     });
-    this.loadUrl(url);
+
+    const rootDir = appRootDir.get();
+    if (isDev) {
+      const htmlFilePath = path.join(
+        rootDir,
+        "..",
+        "app",
+        "build",
+        "index.html"
+      );
+
+      this.window.loadFile(htmlFilePath);
+    } else {
+      // TODO: 考虑生产环境下如何打包HTML相关文件
+      this.loadUrl(url);
+    }
+
     this.setShortCut();
     this.openDevTools();
   }
