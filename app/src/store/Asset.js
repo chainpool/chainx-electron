@@ -10,7 +10,7 @@ import {
   withdraw,
 } from '../services';
 import { computed } from 'mobx';
-import { moment } from '@utils/index';
+import { moment, formatNumber } from '@utils/index';
 import { Chain } from '@constants';
 
 function getAssetWithZeroBalance(info) {
@@ -80,6 +80,19 @@ export default class Asset extends ModelExtend {
 
     const info = this.rootStore.globalStore.nativeAsset;
     return [getAssetWithZeroBalance(info)];
+  }
+
+  @computed get accountNativeAssetFreeBalance() {
+    return this.nativeAccountAssets[0].free;
+  }
+
+  @computed get normalizedAccountNativeAssetFreeBalance() {
+    const asset = this.nativeAccountAssets[0];
+    if (!asset) {
+      throw new Error('There is at least one native asset');
+    }
+
+    return formatNumber.toPrecision(asset.free, asset.precision);
   }
 
   @computed get crossChainAccountAssets() {

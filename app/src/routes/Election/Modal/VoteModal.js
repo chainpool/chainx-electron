@@ -1,10 +1,12 @@
 import React from 'react';
 import { Button, Input, Mixin, Modal, RadioGroup } from '../../../components';
+import { InputHorizotalList } from '../../components';
 import { PlaceHolder } from '../../../constants';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './VoteModal.less';
+import { FreeBalance } from '@routes/components';
 
-@Inject(({ electionStore: model, chainStore }) => ({ model, chainStore }))
+@Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
 class VoteModal extends Mixin {
   state = {
     action: 'add',
@@ -28,11 +30,10 @@ class VoteModal extends Mixin {
     checkAmount: () => {
       const { amount } = this.state;
       const {
-        globalStore: {
-          modal: { data: { nomination = 0 } = {} },
-        },
+        assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
       } = this.props;
-      const errMsg = Patterns.check('required')(amount);
+
+      const errMsg = Patterns.check('required')(amount) || Patterns.smaller(amount, freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -49,9 +50,11 @@ class VoteModal extends Mixin {
       model: { dispatch, openModal, setDefaultPrecision },
       globalStore: {
         modal: { data: { target, myTotalVote = 0 } = {} },
+        nativeAssetName: token,
       },
       chainStore: { blockDuration },
       electionStore: { bondingDuration },
+      assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
     } = this.props;
 
     const bondingSeconds = (blockDuration * bondingDuration) / 1000;
@@ -111,19 +114,41 @@ class VoteModal extends Mixin {
             </RadioGroup>
           ) : null}
 
-          <Input.Text
-            label={`${operation}数量`}
-            value={amount}
-            errMsg={amountErrMsg}
-            onChange={value => this.setState({ amount: value })}
-            onBlur={checkAll.checkAmount}>
-            <span>
-              修改后投票数：
-              {action === 'add'
-                ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
-                : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
-            </span>
-          </Input.Text>
+          {action === 'add' ? (
+            <InputHorizotalList
+              left={
+                <Input.Text
+                  label={`${operation}数量`}
+                  value={amount}
+                  errMsg={amountErrMsg}
+                  onChange={value => this.setState({ amount: value })}
+                  onBlur={checkAll.checkAmount}>
+                  <span>
+                    修改后投票数：
+                    {action === 'add'
+                      ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
+                      : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+                  </span>
+                </Input.Text>
+              }
+              right={<FreeBalance value={freeShow} unit={token} />}
+            />
+          ) : (
+            <Input.Text
+              label={`${operation}数量`}
+              value={amount}
+              errMsg={amountErrMsg}
+              onChange={value => this.setState({ amount: value })}
+              onBlur={checkAll.checkAmount}>
+              <span>
+                修改后投票数：
+                {action === 'add'
+                  ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
+                  : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+              </span>
+            </Input.Text>
+          )}
+
           <Input.Text
             isTextArea
             rows={1}
