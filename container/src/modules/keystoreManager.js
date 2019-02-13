@@ -29,7 +29,7 @@ class KeystoreManager {
     const finalObj = extendObj ? { ...keystoreObj, ...extendObj } : keystoreObj;
     const filePath = path.join(this.dirPath, fileName);
 
-    const writeFile = util.promisify(fn.writeFile);
+    const writeFile = util.promisify(fs.writeFile);
     return writeFile(filePath, JSON.stringify(finalObj), this._encoding);
   }
 
