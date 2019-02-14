@@ -3,9 +3,17 @@ const mkdirp = require("mkdirp");
 const fs = require("fs");
 const util = require("util");
 
+const homedir = require("os").homedir();
+// TODO: 根据不同系统设置不同的默认路径
+const defaultDir = path.join(
+  homedir,
+  "Library",
+  "Application Support",
+  "Chainx"
+);
+
 class KeystoreManager {
-  constructor(dirPath = "~/Library/Application Support/ChainX/keystore") {
-    // TODO: 根据不同系统设置不同的默认路径
+  constructor(dirPath = defaultDir) {
     this.dirPath = path.join(dirPath, "keystore");
     this._encoding = "utf8";
     this._isReady = this._init();
@@ -21,6 +29,13 @@ class KeystoreManager {
         }
       });
     });
+  }
+
+  async delete(fileName) {
+    const filePath = path.join(this.dirPath, fileName);
+
+    const unlink = util.promisify(fs.unlink);
+    return unlink(filePath);
   }
 
   async save(keystoreObj, fileName, extendObj) {
