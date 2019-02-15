@@ -6,6 +6,12 @@ import { computed } from 'mobx';
 export default class Trust extends ModelExtend {
   @observable name = 'Trust';
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
+  @observable info = {
+    chain: 'Bitcoin',
+    connected: false,
+    hotPubKey: null,
+    coldPubKey: null,
+  };
 
   @computed get normalizedOnChainAllWithdrawList() {
     const assetNamePrecisionMap = this.rootStore.globalStore.assetNamePrecisionMap; // 获取资产 name => precision map数据结构

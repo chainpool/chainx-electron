@@ -4,7 +4,7 @@ import { Table } from '../../components';
 import { Inject } from '@utils';
 
 @Inject(({ trustStore }) => ({ trustStore }))
-class TrustTable extends Component {
+class WithdrawTable extends Component {
   render() {
     const {
       trustStore: { normalizedOnChainAllWithdrawList },
@@ -56,4 +56,4 @@ class TrustTable extends Component {
   }
 }
 
-export default TrustTable;
+export default WithdrawTable;

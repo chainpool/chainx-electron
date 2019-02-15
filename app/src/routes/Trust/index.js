@@ -2,10 +2,10 @@ import React from 'react';
 import { Mixin } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
-import TrustTable from './TrustTable';
 import { Inject } from '@utils';
+import SettingTable from './SettingTable';
 
-@Inject(({ trustStore: model }) => ({ model }))
+@Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
   state = {};
 
@@ -18,10 +18,17 @@ class Trust extends Mixin {
   };
 
   render() {
+    const {
+      accountStore: { isActiveValidator },
+    } = this.props;
+
     return (
       <div className={styles.trust}>
-        <TableTitle title="信托列表" />
-        <TrustTable {...this.props} />
+        <TableTitle title={`信托设置`} className={styles.title}>
+          <span>{`（您当前是：${isActiveValidator ? '验证' : '候选'}节点）`}</span>
+        </TableTitle>
+        {/*<WithdrawTable {...this.props} />*/}
+        <SettingTable {...this.props} />
       </div>
     );
   }
