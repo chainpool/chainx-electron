@@ -71,7 +71,7 @@ export default class Trade extends ModelExtend {
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const res = await getQuotations(currentPair.id, [0, 10]);
-    // console.log(res, '-----------盘口列表');
+    console.log(res, '-----------盘口列表');
     // res.buy = [[100, 100000], [101, 100001], [102, 100002], [103, 100003], [104, 100004]];
     // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];
     res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);

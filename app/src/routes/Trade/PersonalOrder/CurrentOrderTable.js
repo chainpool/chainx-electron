@@ -19,7 +19,6 @@ class CurrentOrderTable extends SwitchPair {
     const tableProps = {
       tableHeight: [36, 40],
       className: styles.tableContainer,
-      noDataTip,
       columns: [
         {
           title: '时间',
