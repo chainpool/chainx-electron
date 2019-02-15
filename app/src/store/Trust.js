@@ -46,7 +46,7 @@ export default class Trust extends ModelExtend {
   }
 
   getAllWithdrawalList = async () => {
-    const withdrawListResp = await getWithdrawalList(0, 100);
+    const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);
     this.changeModel('onChainAllWithdrawList', withdrawListResp.data);
   };
 }
