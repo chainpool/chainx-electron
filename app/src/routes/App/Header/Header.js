@@ -15,11 +15,15 @@ class Header extends Component {
       location: { pathname } = {},
       className,
       configureStore: { isLogin, isTestNet },
-      accountStore: { isValidator },
+      accountStore: { isTrustee },
     } = this.props;
 
     const showRouters = routers.filter(item => {
-      return item.show !== false && (isValidator || item.path !== PATH.trust);
+      if (item.show === false) {
+        return false;
+      }
+
+      return !(item.path === PATH.trust && !isTrustee);
     });
 
     const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {

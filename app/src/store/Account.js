@@ -49,9 +49,17 @@ export default class Store extends ModelExtend {
   }
 
   @computed get isValidator() {
+    // 是否是节点
     const intentions = this.rootStore.electionStore.validatorsWithAddress || [];
     const targetIntention = intentions.find(intention => intention.address === this.currentAccount.address);
     return !!targetIntention;
+  }
+
+  @computed get isTrustee() {
+    // 是否信托节点
+    const intentions = this.rootStore.electionStore.validatorsWithAddress || [];
+    const targetIntention = intentions.find(intention => intention.address === this.currentAccount.address);
+    return !!targetIntention && targetIntention.isTrustee;
   }
 
   @computed get currentAddress() {

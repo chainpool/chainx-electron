@@ -40,11 +40,11 @@ export default [
     component: AddressManage,
     authority: [1],
   },
-  // {
-  //   title: '信托',
-  //   path: PATH.trust,
-  //   component: Trust,
-  // },
+  {
+    title: '信托',
+    path: PATH.trust,
+    component: Trust,
+  },
   {
     title: '交易',
     path: PATH.trade,
