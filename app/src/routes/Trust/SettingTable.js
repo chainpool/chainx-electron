@@ -39,7 +39,7 @@ class SettingTable extends Component {
           render: () => (
             <ButtonGroup>
               <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal' })}>导入热公钥</Button>
-              <Button>设置节点</Button>
+              <Button onClick={() => openModal({ name: 'NodeSettingModal' })}>设置节点</Button>
             </ButtonGroup>
           ),
         },

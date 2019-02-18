@@ -17,7 +17,7 @@ export default class Global extends ModelExtend {
 
   @observable
   modal = {
-    status: false,
+    status: true,
     name: '',
     data: '',
   };

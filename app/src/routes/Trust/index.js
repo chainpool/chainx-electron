@@ -5,6 +5,7 @@ import { TableTitle } from '../components';
 import { Inject } from '@utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
+import NodeSettingModal from './Modal/NodeSettingModal';
 
 @Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
@@ -34,6 +35,7 @@ class Trust extends Mixin {
         {/*<WithdrawTable {...this.props} />*/}
         <SettingTable {...this.props} />
         {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...this.props} /> : null}
+        {name === 'NodeSettingModal' ? <NodeSettingModal {...this.props} /> : null}
       </div>
     );
   }
