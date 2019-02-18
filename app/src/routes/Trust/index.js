@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin } from '../../components';
+import { Mixin, ButtonGroup, Button, Icon } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
 import { Inject } from '@utils';
@@ -34,8 +34,20 @@ class Trust extends Mixin {
           <span>{`（您当前是：${isActiveValidator ? '验证' : '候选'}节点）`}</span>
         </TableTitle>
         <SettingTable {...this.props} />
+
         <div className={styles.withdraw}>
-          <TableTitle title={'提现列表'} className={styles.title} />
+          <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
+            <ButtonGroup>
+              <Button>
+                <Icon name="icon-goujiantixian" />
+                构造多签提现
+              </Button>
+              <Button>
+                <Icon name="icon-xiangyingtixian" />
+                相应多签提现
+              </Button>
+            </ButtonGroup>
+          </TableTitle>
           <WithdrawTable {...this.props} />
         </div>
         {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...this.props} /> : null}
