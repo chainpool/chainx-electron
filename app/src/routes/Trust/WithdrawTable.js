@@ -27,7 +27,7 @@ class WithdrawTable extends Component {
         {
           title: '账户地址',
           ellipse: true,
-          dataIndex: 'applicant',
+          dataIndex: 'address',
         },
         {
           title: '资产',
@@ -43,7 +43,7 @@ class WithdrawTable extends Component {
         },
         {
           title: '备注',
-          dataIndex: 'ext',
+          dataIndex: 'memo',
         },
         {
           title: '状态',
