@@ -7,6 +7,8 @@ import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
+import WithdrawConstructModal from './Modal/WithdrawConstructModal';
+import WithdrawSignModal from './Modal/WithdrawSignModal';
 
 @Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
@@ -22,7 +24,7 @@ class Trust extends Mixin {
 
   render() {
     const {
-      accountStore: { isActiveValidator },
+      accountStore: { isActiveValidator, openModal },
       globalStore: {
         modal: { name },
       },
@@ -38,11 +40,17 @@ class Trust extends Mixin {
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
             <ButtonGroup>
-              <Button>
+              <Button
+                onClick={() => {
+                  openModal({ name: 'WithdrawConstructModal' });
+                }}>
                 <Icon name="icon-goujiantixian" />
                 构造多签提现
               </Button>
-              <Button>
+              <Button
+                onClick={() => {
+                  openModal({ name: 'WithdrawSignModal' });
+                }}>
                 <Icon name="icon-xiangyingtixian" />
                 相应多签提现
               </Button>
@@ -52,6 +60,8 @@ class Trust extends Mixin {
         </div>
         {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...this.props} /> : null}
         {name === 'NodeSettingModal' ? <NodeSettingModal {...this.props} /> : null}
+        {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...this.props} /> : null}
+        {name === 'WithdrawSignModal' ? <WithdrawSignModal {...this.props} /> : null}
       </div>
     );
   }
