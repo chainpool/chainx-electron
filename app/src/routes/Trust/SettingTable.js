@@ -7,7 +7,7 @@ import * as styles from './index.less';
 class SettingTable extends Component {
   render() {
     const {
-      trustStore: { info },
+      trustStore: { info, openModal },
     } = this.props;
 
     const tableProps = {
@@ -38,7 +38,7 @@ class SettingTable extends Component {
           dataIndex: '_action',
           render: () => (
             <ButtonGroup>
-              <Button>导入热公钥</Button>
+              <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal' })}>导入热公钥</Button>
               <Button>设置节点</Button>
             </ButtonGroup>
           ),

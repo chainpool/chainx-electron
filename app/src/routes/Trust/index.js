@@ -4,6 +4,7 @@ import * as styles from './index.less';
 import { TableTitle } from '../components';
 import { Inject } from '@utils';
 import SettingTable from './SettingTable';
+import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 
 @Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
@@ -20,6 +21,9 @@ class Trust extends Mixin {
   render() {
     const {
       accountStore: { isActiveValidator },
+      globalStore: {
+        modal: { name },
+      },
     } = this.props;
 
     return (
@@ -29,6 +33,7 @@ class Trust extends Mixin {
         </TableTitle>
         {/*<WithdrawTable {...this.props} />*/}
         <SettingTable {...this.props} />
+        {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...this.props} /> : null}
       </div>
     );
   }
