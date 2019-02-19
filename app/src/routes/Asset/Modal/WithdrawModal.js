@@ -26,7 +26,7 @@ class WithdrawModal extends Component {
     },
     checkAmount: () => {
       const { amount } = this.state;
-      const errMsg = Patterns.check('required')(amount);
+      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(0, amount, '提现数量必须大于0');
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -120,7 +120,7 @@ class WithdrawModal extends Component {
           />
           <Input.Text
             isTextArea
-            rows={4}
+            rows={1}
             label="备注"
             placeholder={PlaceHolder.setTextAreaLength}
             value={remark}

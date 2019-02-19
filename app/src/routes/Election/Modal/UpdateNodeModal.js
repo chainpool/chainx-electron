@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Input, Modal } from '../../../components';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './UpdateNodeModal.less';
+import { PlaceHolder } from '../../../constants';
 
 @Inject(({ electionStore, accountStore }) => ({ electionStore, accountStore }))
 class UpdateNodeModal extends Component {
@@ -32,7 +33,7 @@ class UpdateNodeModal extends Component {
   checkAll = {
     checkAddress: () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
+      const errMsg = Patterns.check('required')(address) || Patterns.check('isChainXAddress')(address);
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -126,7 +127,7 @@ class UpdateNodeModal extends Component {
             placeholder="256个字符以内"
             value={about}
             errMsg={aboutErrMsg}
-            onChange={value => this.setState({ about: value })}
+            onChange={value => this.setState({ about: value.slice(0, 256) })}
             onBlur={checkAll.checkAbout}
           />
           <div className={styles.participate}>
