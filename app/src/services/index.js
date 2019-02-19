@@ -47,7 +47,7 @@ export const getWithdrawalListByAccount = (...payload) =>
 
 export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payload);
 
-export const getDepositRecords = (...payload) => asset.getDepositRecords(...payload);
+export const getDepositList = (...payload) => asset.getDepositList(...payload);
 
 export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
 

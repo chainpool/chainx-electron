@@ -3,12 +3,13 @@ import ModelExtend from './ModelExtend';
 import {
   getAddressByAccount,
   getAsset,
-  getDepositRecords,
+  getDepositList,
   getTrusteeAddress,
   getWithdrawalListByAccount,
   transfer,
   withdraw,
 } from '../services';
+import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
 import { moment, formatNumber } from '@utils/index';
 import { Chain } from '@constants';
@@ -174,9 +175,13 @@ export default class Asset extends ModelExtend {
 
   async getDepositRecords() {
     const account = this.getCurrentAccount();
-    const records = await getDepositRecords(account.address, 0, 100);
+    // TODO: 暂时写死BTC
+    const records = await getDepositList('Bitcoin', 0, 100);
 
-    this.changeModel('depositRecords', records.data);
+    this.changeModel(
+      'depositRecords',
+      records.data.filter(record => encodeAddress(record.accountid) === account.address)
+    );
   }
 
   async getBTCTrusteeAddress() {

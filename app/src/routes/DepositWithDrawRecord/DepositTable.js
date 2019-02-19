@@ -32,6 +32,7 @@ class DepositTable extends Mixin {
         txid: record.txid,
         amount: formatNumber.toPrecision(record.balance, info.precision),
         status: record.totalConfirm > record.confirm ? `(${record.confirm}/${record.totalConfirm})确认中` : '已确认',
+        memo: record.memo,
       };
     });
 
@@ -59,6 +60,10 @@ class DepositTable extends Mixin {
         {
           title: '数量',
           dataIndex: 'amount',
+        },
+        {
+          title: '备注',
+          dataIndex: 'memo',
         },
         {
           title: '状态',
