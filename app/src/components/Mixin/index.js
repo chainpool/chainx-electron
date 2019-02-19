@@ -8,13 +8,7 @@ class Mixin extends React.Component {
   }
 
   async componentDidMount() {
-    const { globalStore: { dispatch } = {} } = this.props;
-    let assets = [];
-    if (dispatch) {
-      assets = await dispatch({ type: 'getAllAssets' });
-    }
     _.isFunction(this.startInit) && this.startInit();
-    return assets;
   }
 
   componentDidUpdate(prevProps) {
