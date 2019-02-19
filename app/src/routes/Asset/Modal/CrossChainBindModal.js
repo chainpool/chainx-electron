@@ -17,7 +17,7 @@ class CrossChainBindModal extends Mixin {
 
   render() {
     const {
-      accountStore: { currentAddress },
+      accountStore: { currentAddress, openModal },
       assetStore: { btcTrusteeAddress },
       globalStore: {
         modal: {
@@ -60,7 +60,13 @@ class CrossChainBindModal extends Mixin {
               <a className={styles.anchor} href="https://trezor.io/" rel="noopener noreferrer" target="_blank">
                 Trezor
               </a>
-              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+              <a
+                className={styles.anchor}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={() => {
+                  openModal({ name: 'BtcBindModal' });
+                }}>
                 ChainX离线绑定工具
               </a>
               <a className={styles.anchor} href="https://coinb.in/" rel="noopener noreferrer" target="_blank">

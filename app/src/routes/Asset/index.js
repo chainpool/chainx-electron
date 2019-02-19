@@ -9,6 +9,7 @@ import WithdrawModal from './Modal/WithdrawModal';
 import TransferModal from './Modal/TransferModal';
 import CrossChainBindModal from './Modal/CrossChainBindModal';
 import GetCollarModal from './Modal/GetCollarModal';
+import BtcBindModal from './Modal/BtcBindModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -78,6 +79,7 @@ class Asset extends Mixin {
         {name === 'TransferModal' ? <TransferModal {...this.props} /> : null}
         {name === 'CrossChainBindModal' ? <CrossChainBindModal {...this.props} /> : null}
         {name === 'GetCollarModal' ? <GetCollarModal {...this.props} /> : null}
+        {name === 'BtcBindModal' ? <BtcBindModal {...this.props} /> : null}
       </div>
     );
   }
