@@ -4,7 +4,7 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
-import xdotLogo from '../../resource/xdot.png';
+import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
 import Asset from './components/Asset';
 
@@ -36,7 +36,7 @@ class CrossChainAssetTable extends Mixin {
             render: (value, asset) => (
               <div className={styles.miniLogo}>
                 <img
-                  src={asset.name === 'BTC' ? btcIcon : asset.name === 'XDOT' ? xdotLogo : miniLogo}
+                  src={asset.name === 'BTC' ? btcIcon : asset.name === 'SDOT' ? sdotLogo : miniLogo}
                   alt="miniLogo"
                 />
                 <span>
