@@ -25,7 +25,10 @@ class TransferModal extends Component {
       const {
         globalStore: { modal: { data: { freeShow } = {} } = {} },
       } = this.props;
-      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(amount, freeShow);
+      const errMsg =
+        Patterns.check('required')(amount) ||
+        Patterns.check('smaller')(0, amount, '转账数量必须大于0') ||
+        Patterns.check('smaller')(amount, freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
