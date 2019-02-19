@@ -38,8 +38,8 @@ class Election extends Mixin {
 
     // const tabs = ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿'];
     const tabs = currentAddress
-      ? ['验证节点', '候选节点', '我的投票', '充值挖矿']
-      : ['验证节点', '候选节点', '充值挖矿'];
+      ? ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿']
+      : ['信托节点', '验证节点', '候选节点', '充值挖矿'];
 
     const operations = (
       <ul>
@@ -87,7 +87,7 @@ class Election extends Mixin {
           />
           {currentAddress ? operations : null}
         </div>
-        {(currentAddress && activeIndex === 3) || (!currentAddress && activeIndex === 2) ? (
+        {(currentAddress && activeIndex === 4) || (!currentAddress && activeIndex === 3) ? (
           <DepositMineTable {...this.props} />
         ) : (
           <NodeTable activeIndex={activeIndex} {...this.props} />

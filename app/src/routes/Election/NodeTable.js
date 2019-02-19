@@ -14,7 +14,7 @@ class NodeTable extends Component {
       model: {
         dispatch,
         openModal,
-        // trustIntentions = [],
+        trustIntentions = [],
         validators = [],
         backupValidators = [],
         validatorsWithMyNomination = [],
@@ -24,10 +24,10 @@ class NodeTable extends Component {
     } = this.props;
 
     const dataSources = {
-      // 0: trustIntentions,
-      0: validators,
-      1: backupValidators,
-      2: validatorsWithMyNomination,
+      0: trustIntentions,
+      1: validators,
+      2: backupValidators,
+      3: validatorsWithMyNomination,
     };
 
     const tableProps = {

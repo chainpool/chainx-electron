@@ -21,7 +21,6 @@ export default class Election extends ModelExtend {
   @observable originNominationRecords = []; // 投票记录rpc返回数据
   @observable intentions = []; //所有节点
   @observable validatorIntentions = []; //结算节点
-  @observable trustIntentions = []; //信托节点
   @observable waitingIntentions = []; //候补节点
   @observable myIntentions = []; //我的节点
   @observable pseduIntentions = []; //充值挖矿列表
@@ -92,6 +91,11 @@ export default class Election extends ModelExtend {
     return [...this.validatorsWithRecords.filter(intention => intention.isValidator)].sort((a, b) => {
       return b.totalNomination - a.totalNomination;
     });
+  }
+
+  // 信托节点
+  @computed get trustIntentions() {
+    return [...this.validatorsWithRecords].filter(validator => validator.isTrustee);
   }
 
   @computed get backupValidators() {
