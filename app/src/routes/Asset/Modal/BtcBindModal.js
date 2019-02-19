@@ -10,7 +10,6 @@ class CrossChainAssetTable extends Mixin {
       assetStore: { btcTrusteeAddress },
       accountStore: { currentAddress },
     } = this.props;
-    console.log(this.props);
     const registerUrl = process.env.CHAINX_BITCOIN_REGISTER_URL || 'http://wallet.chainx.org/bitcoin-register';
 
     return (
