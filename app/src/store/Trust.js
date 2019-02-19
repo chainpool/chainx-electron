@@ -15,12 +15,12 @@ export default class Trust extends ModelExtend {
 
   @computed get normalizedOnChainAllWithdrawList() {
     const assetNamePrecisionMap = this.rootStore.globalStore.assetNamePrecisionMap; // 获取资产 name => precision map数据结构
-    if (assetNamePrecisionMap.size <= 0) {
+    if (Object.keys(assetNamePrecisionMap).length <= 0) {
       return [];
     }
 
     return this.onChainAllWithdrawList.map(withdraw => {
-      let precision = assetNamePrecisionMap.get(withdraw.token);
+      let precision = assetNamePrecisionMap[withdraw.token];
       if (typeof precision === 'undefined') {
         // TODO: 这种情况出现表明有Error
         throw new Error('无法找到提现列表中资产定义');
