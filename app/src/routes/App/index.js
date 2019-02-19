@@ -53,6 +53,7 @@ class Main extends Component {
         address,
       },
     });
+    await dispatchGlobal({ type: 'getAllAssets' });
     this.setState({
       ready: true,
     });

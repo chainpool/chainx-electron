@@ -5,19 +5,40 @@ import OrderPair from './OrderPair';
 import PutOrder from './PutOrder';
 import PersonalOrder from './PersonalOrder';
 
-import { Inject } from '../../utils';
+import { Inject, parseQueryString } from '../../utils';
 import * as styles from './index.less';
 
 @Inject(({ tradeStore: model }) => ({ model }))
 class Trade extends SwitchPair {
-  state = {};
+  state = {
+    show: false,
+  };
+
+  startInit = async () => {
+    const {
+      model: { dispatch } = {},
+      location: { search },
+    } = this.props;
+    const id = parseQueryString(search).id;
+    await dispatch({ type: 'getOrderPairs' });
+    await dispatch({
+      type: 'switchPair',
+      payload: {
+        id,
+      },
+    });
+    this.setState({
+      show: true,
+    });
+  };
 
   render() {
+    const { show } = this.state;
     const props = {
       ...this.props,
     };
 
-    return (
+    return show ? (
       <div className={styles.trade}>
         <div className={styles.top}>
           <div className={styles.left}>
@@ -42,7 +63,7 @@ class Trade extends SwitchPair {
           </div>
         </div>
       </div>
-    );
+    ) : null;
   }
 }
 
