@@ -7,7 +7,7 @@ import * as styles from './index.less';
 @Inject(({ accountStore: model }) => ({ model }))
 class SignModal extends Component {
   state = {
-    acceleration: { label: 0.0001, value: 1 },
+    acceleration: { label: '0.0001', value: '1' },
     password: '',
     passwordErrMsg: '',
   };
