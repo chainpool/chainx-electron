@@ -77,10 +77,10 @@ class CrossChainAssetTable extends Mixin {
             title: '',
             dataIndex: '_action',
             render: (value, item) => {
-              const isXDOT = item.name === 'XDOT';
+              const isSDOT = item.name === 'SDOT';
               return (
                 <ButtonGroup>
-                  {isTestNet && !isXDOT ? (
+                  {isTestNet && !isSDOT ? (
                     <Button
                       type="warn"
                       onClick={() => {
@@ -118,7 +118,7 @@ class CrossChainAssetTable extends Mixin {
                       绑定
                     </Button>
                   )}
-                  {!isXDOT ? (
+                  {!isSDOT ? (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
