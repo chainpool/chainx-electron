@@ -66,9 +66,12 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isVerifyAddress: (token, value, errMsg = '地址格式错误') => {
+  isChainXAddress: (address, errMsg = '地址格式错误') => {
     try {
-      ChainX.asset.getVerifyAddress(token, value, '');
+      const result = ChainX.account.isAddressValid(address);
+      if (!result) {
+        return errMsg;
+      }
       return '';
     } catch (err) {
       return errMsg;

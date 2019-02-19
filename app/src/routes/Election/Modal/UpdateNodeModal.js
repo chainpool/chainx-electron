@@ -33,7 +33,7 @@ class UpdateNodeModal extends Component {
   checkAll = {
     checkAddress: () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
+      const errMsg = Patterns.check('required')(address) || Patterns.check('isChainXAddress')(address);
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
