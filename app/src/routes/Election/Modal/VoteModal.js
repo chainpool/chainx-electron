@@ -28,12 +28,21 @@ class VoteModal extends Mixin {
 
   checkAll = {
     checkAmount: () => {
-      const { amount } = this.state;
+      const { amount, action } = this.state;
       const {
         assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
+        globalStore: {
+          setDefaultPrecision,
+          modal: { data: { myTotalVote = 0 } = {} },
+        },
       } = this.props;
 
-      const errMsg = Patterns.check('required')(amount) || Patterns.smaller(amount, freeShow);
+      const errMsg =
+        Patterns.check('required')(amount) ||
+        Patterns.smaller(0, amount, '数量太小') ||
+        (action === 'add'
+          ? Patterns.smaller(amount, freeShow)
+          : Patterns.smaller(amount, setDefaultPrecision(myTotalVote), '赎回数量不足'));
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
