@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal } from '../../../components';
 import { FreeBalance, InputHorizotalList } from '../../components';
-import { Inject, Patterns, RegEx } from '../../../utils';
+import { Inject, Patterns } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ accountStore, addressManageStore }) => ({ accountStore, addressManageStore }))
@@ -39,7 +39,7 @@ class TransferModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
-      model: { dispatch, openModal },
+      model: { dispatch, openModal, getPrecision },
       globalStore: { modal: { data: { token, freeShow } = {} } = {}, nativeAssetName },
       accountStore: { accountsList = [] },
       addressManageStore: { addresses },
@@ -109,13 +109,12 @@ class TransferModal extends Component {
             left={
               <Input.Text
                 suffix={token}
+                precision={getPrecision(token)}
                 label="转账数量"
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => {
-                  if (RegEx.decimalNumber.test(value) || value === '') {
-                    this.setState({ amount: value });
-                  }
+                  this.setState({ amount: value });
                 }}
                 onBlur={checkAll.checkAmount}
               />

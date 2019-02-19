@@ -40,7 +40,7 @@ class WithdrawModal extends Component {
     const { checkAll } = this;
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
-      model: { openModal, dispatch },
+      model: { openModal, dispatch, getPrecision },
       globalStore: { modal: { data: { token, freeShow, chain } = {} } = {} },
       addressManageStore: { addresses },
     } = this.props;
@@ -108,6 +108,7 @@ class WithdrawModal extends Component {
             left={
               <Input.Text
                 suffix="BTC"
+                precision={getPrecision('BTC')}
                 label="提现数量"
                 value={amount}
                 errMsg={amountErrMsg}

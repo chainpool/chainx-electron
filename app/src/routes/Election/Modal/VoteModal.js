@@ -47,7 +47,7 @@ class VoteModal extends Mixin {
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
-      model: { dispatch, openModal, setDefaultPrecision },
+      model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision },
       globalStore: {
         modal: { data: { target, myTotalVote = 0 } = {} },
         nativeAssetName: token,
@@ -118,6 +118,7 @@ class VoteModal extends Mixin {
             <InputHorizotalList
               left={
                 <Input.Text
+                  precision={getDefaultPrecision()}
                   label={`${operation}数量`}
                   value={amount}
                   errMsg={amountErrMsg}
@@ -135,6 +136,7 @@ class VoteModal extends Mixin {
             />
           ) : (
             <Input.Text
+              precision={getDefaultPrecision()}
               label={`${operation}数量`}
               value={amount}
               errMsg={amountErrMsg}
