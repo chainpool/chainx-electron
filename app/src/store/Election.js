@@ -114,11 +114,13 @@ export default class Election extends ModelExtend {
 
   getPseduIntentions = async () => {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
+    const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
     let res = [];
     return getPseduIntentions$.subscribe(([pseduIntentions = [], records = []]) => {
       res = pseduIntentions.map((item = {}) => {
         const token = item.id;
+        const precision = precisionMap[token];
         const record = records.find(record => record.id === item.id) || {};
         item = {
           ...item,
@@ -126,8 +128,7 @@ export default class Election extends ModelExtend {
           lastDepositWeigh: record.lastTotalDepositWeight,
           lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
         };
-        item.discountVote = this.setPrecision(item.price * item.circulation, token);
-        item.discountVote = formatNumber.toFixed(item.discountVote, nativeAssetPrecision);
+        item.discountVote = (item.price * item.circulation) / Math.pow(10, precision);
 
         const blockNumber = this.rootStore.chainStore.blockNumber;
         // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
@@ -141,10 +142,10 @@ export default class Election extends ModelExtend {
         return {
           ...item,
           interestShow: this.setPrecision(item.interest, nativeAssetPrecision),
-          discountVoteShow: item.discountVote,
+          discountVoteShow: formatNumber.toPrecision(item.discountVote, nativeAssetPrecision),
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
-          priceShow: item.price,
+          priceShow: formatNumber.toPrecision(item.price, nativeAssetPrecision),
           jackpotShow: this.setPrecision(item.jackpot, nativeAssetPrecision),
         };
       });
