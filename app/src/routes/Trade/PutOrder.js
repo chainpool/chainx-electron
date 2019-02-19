@@ -188,16 +188,11 @@ class PutOrder extends SwitchPair {
           <div className={styles.input}>
             <Input.Text
               errMsgSuffix
-              type="decimal"
               errMsg={priceErrMsg}
               value={price}
+              precision={currentPair.precision - currentPair.unitPrecision}
               onChange={value => {
-                if (
-                  RegEx.setDecimalNumber(currentPair.precision - currentPair.unitPrecision).test(value) ||
-                  value === ''
-                ) {
-                  changeBS(action, { price: value });
-                }
+                changeBS(action, { price: value });
               }}
               onBlur={() => {
                 checkAll.checkPrice(action, () => {
@@ -213,13 +208,11 @@ class PutOrder extends SwitchPair {
           <div className={styles.input}>
             <Input.Text
               errMsgSuffix
-              type="decimal"
               errMsg={amountErrMsg}
               value={amount}
+              precision={currentPair.assetsPrecision}
               onChange={value => {
-                if (RegEx.setDecimalNumber(currentPair.assetsPrecision).test(value) || value === '') {
-                  changeBS(action, { amount: value });
-                }
+                changeBS(action, { amount: value });
               }}
               onBlur={() => {
                 checkAll.checkAmount(action, () => {
