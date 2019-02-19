@@ -19,10 +19,6 @@ export default class Election extends ModelExtend {
   @observable name = 'election';
   @observable originIntentions = []; // intentions rpc返回数据
   @observable originNominationRecords = []; // 投票记录rpc返回数据
-  @observable intentions = []; //所有节点
-  @observable validatorIntentions = []; //结算节点
-  @observable waitingIntentions = []; //候补节点
-  @observable myIntentions = []; //我的节点
   @observable pseduIntentions = []; //充值挖矿列表
   @observable bondingDuration = 0; // 投票赎回锁定块数
 
