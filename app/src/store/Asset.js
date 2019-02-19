@@ -5,7 +5,7 @@ import {
   getAsset,
   getDepositList,
   getTrusteeAddress,
-  getWithdrawalListByAccount,
+  getWithdrawalList,
   transfer,
   withdraw,
 } from '../services';
@@ -142,7 +142,7 @@ export default class Asset extends ModelExtend {
         balance: withdraw.balance, // 数量
         token: withdraw.token, // 币种
         addr: withdraw.addr, // 地址
-        fee: 0.001, // 手续费，目前写死
+        memo: withdraw.memo,
         state, // 状态
         originChainTxId: undefined, // TODO: 目前通过rpc返回均为正在进行中的提现，无法获取原链交易ID
       };
@@ -168,9 +168,12 @@ export default class Asset extends ModelExtend {
 
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
-    const withdrawList = await getWithdrawalListByAccount(account.address, 0, 100);
+    const withdrawList = await getWithdrawalList('Bitcoin', 0, 100);
 
-    this.changeModel('onChainAccountWithdrawList', withdrawList.data);
+    this.changeModel(
+      'onChainAccountWithdrawList',
+      withdrawList.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address)
+    );
   }
 
   async getDepositRecords() {
