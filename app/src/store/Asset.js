@@ -26,6 +26,7 @@ function getAssetWithZeroBalance(info) {
     chain: info.chain,
     precision: info.precision,
     trusteeAddr: info.trusteeAddr,
+    desc: info.desc,
   };
 }
 
