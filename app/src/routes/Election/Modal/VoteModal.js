@@ -28,12 +28,21 @@ class VoteModal extends Mixin {
 
   checkAll = {
     checkAmount: () => {
-      const { amount } = this.state;
+      const { amount, action } = this.state;
       const {
         assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
+        globalStore: {
+          setDefaultPrecision,
+          modal: { data: { myTotalVote = 0 } = {} },
+        },
       } = this.props;
 
-      const errMsg = Patterns.check('required')(amount) || Patterns.smaller(amount, freeShow);
+      const errMsg =
+        Patterns.check('required')(amount) ||
+        Patterns.smaller(0, amount, '数量太小') ||
+        (action === 'add'
+          ? Patterns.smaller(amount, freeShow)
+          : Patterns.smaller(amount, setDefaultPrecision(myTotalVote), '赎回数量不足'));
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -47,7 +56,7 @@ class VoteModal extends Mixin {
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action } = this.state;
     const {
-      model: { dispatch, openModal, setDefaultPrecision },
+      model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision },
       globalStore: {
         modal: { data: { target, myTotalVote = 0 } = {} },
         nativeAssetName: token,
@@ -118,6 +127,7 @@ class VoteModal extends Mixin {
             <InputHorizotalList
               left={
                 <Input.Text
+                  precision={getDefaultPrecision()}
                   label={`${operation}数量`}
                   value={amount}
                   errMsg={amountErrMsg}
@@ -135,6 +145,7 @@ class VoteModal extends Mixin {
             />
           ) : (
             <Input.Text
+              precision={getDefaultPrecision()}
               label={`${operation}数量`}
               value={amount}
               errMsg={amountErrMsg}

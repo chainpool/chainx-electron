@@ -87,8 +87,8 @@ export const Patterns = {
     return value1 === value2 ? '' : errMsg;
   },
   smaller: (inputValue, baseValue, errMsg = '余额不足') => {
-    if (inputValue && !_.isNaN(baseValue)) {
-      return Number(inputValue) > Number(baseValue) ? errMsg : '';
+    if (!_.isNaN(inputValue) && !_.isNaN(baseValue)) {
+      return Number(inputValue) >= Number(baseValue) ? errMsg : '';
     }
   },
   characterLength: (inputValue = '', minLength, maxLength) => {
@@ -160,7 +160,7 @@ export const RegEx = {
   number: /^[0-9]*$/,
   decimalNumber: /^[0-9]+([.|。]{1}[0-9]*){0,1}$/,
   website: /^[0-9a-zA-Z\.]*$/,
-  setDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
+  checkDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
 };
 
 export const isEmpty = value => {

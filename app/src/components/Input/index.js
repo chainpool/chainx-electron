@@ -1,7 +1,7 @@
 import React from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Clipboard, Mixin } from '../../components';
-import { _, classNames, isEmpty, RegEx } from '../../utils';
+import { _, classNames, RegEx } from '../../utils';
 import * as styles from './index.less';
 
 class InputRadio extends React.Component {
@@ -219,6 +219,8 @@ class InputText extends Mixin {
       placeholder = '',
       rows = 1,
       className,
+      isDecimal = false,
+      precision,
     } = this.props;
     const props = {
       placeholder,
@@ -226,7 +228,13 @@ class InputText extends Mixin {
       value: value,
       disabled: disabled,
       onChange: e => {
-        if (type === 'decimal' && !(RegEx.decimalNumber.test(e.target.value) || e.target.value === '')) {
+        if (
+          (isDecimal === 'decimal' || precision) &&
+          !(RegEx.decimalNumber.test(e.target.value) || e.target.value === '')
+        ) {
+          return;
+        }
+        if (precision && !(RegEx.checkDecimalNumber(precision).test(e.target.value) || e.target.value === '')) {
           return;
         }
         if (!disabled) {
