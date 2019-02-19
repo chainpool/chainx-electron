@@ -57,7 +57,7 @@ class Asset extends Mixin {
           </li>
           <li>
             <TableTitle title={'跨链资产'}>
-              {null && (
+              {
                 <ul>
                   <li>
                     <Button type="blank">
@@ -68,7 +68,7 @@ class Asset extends Mixin {
                     </Button>
                   </li>
                 </ul>
-              )}
+              }
             </TableTitle>
             <CrossChainAssetTable {...props} />
           </li>

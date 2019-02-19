@@ -106,20 +106,18 @@ class CrossChainAssetTable extends Mixin {
                       充值
                     </Button>
                   ) : (
-                    null && (
-                      <Button
-                        onClick={() => {
-                          openModal({
-                            name: 'CrossChainBindModal',
-                            data: {
-                              token: item.name,
-                              trusteeAddr: item.trusteeAddr,
-                            },
-                          });
-                        }}>
-                        绑定
-                      </Button>
-                    )
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
+                        });
+                      }}>
+                      绑定
+                    </Button>
                   )}
                   {!isXDOT ? (
                     <Button
