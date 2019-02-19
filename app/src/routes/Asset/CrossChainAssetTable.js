@@ -11,11 +11,10 @@ import Asset from './components/Asset';
 @Inject(({ configureStore }) => ({ configureStore }))
 class CrossChainAssetTable extends Mixin {
   startInit = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-
-    dispatch({ type: 'getAccountBTCAddresses' });
+    // const {
+    //   model: { dispatch },
+    // } = this.props;
+    // dispatch({ type: 'getAccountBTCAddresses' });
   };
 
   render() {

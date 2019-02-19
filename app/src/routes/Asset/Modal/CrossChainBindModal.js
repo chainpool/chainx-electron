@@ -8,11 +8,11 @@ import { u8aToHex } from '@polkadot/util/u8a';
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
   startInit = () => {
-    const {
-      assetStore: { dispatch },
-    } = this.props;
-
-    dispatch({ type: 'getBTCTrusteeAddress' });
+    // const {
+    //   assetStore: { dispatch },
+    // } = this.props;
+    //
+    // dispatch({ type: 'getBTCTrusteeAddress' });
   };
 
   render() {
@@ -57,13 +57,13 @@ class CrossChainBindModal extends Mixin {
               <strong>其他钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</strong>
               <br />
               目前支持的钱包有:{' '}
-              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+              <a className={styles.anchor} href="https://trezor.io/" rel="noopener noreferrer" target="_blank">
                 Trezor
               </a>
               <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
                 ChainX离线绑定工具
               </a>
-              <a className={styles.anchor} rel="noopener noreferrer" target="_blank">
+              <a className={styles.anchor} href="https://coinb.in/" rel="noopener noreferrer" target="_blank">
                 Coinb.in
               </a>{' '}
               等。
@@ -102,7 +102,7 @@ class CrossChainBindModal extends Mixin {
     switch (token) {
       case 'BTC':
         return btcModal;
-      case 'XDOT':
+      case 'SDOT':
       case 'DOT':
         return ethModal;
       default:

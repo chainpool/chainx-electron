@@ -10,7 +10,6 @@ class DepositModal extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
-
     dispatch({ type: 'getAccountBTCAddresses' });
   };
 
