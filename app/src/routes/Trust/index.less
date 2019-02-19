@@ -22,6 +22,22 @@
       color: #003E00;
       line-height: 16px;
     }
+
+    & > div:last-of-type {
+      display: flex;
+      justify-content: space-between;
+      flex: 1;
+      button {
+        background: unset;
+        i {
+          color: #F6C94A;
+        }
+        span {
+          font-weight: 500;
+          color: @fontgray;
+        }
+      }
+    }
   }
 
   .withdrawTitle {

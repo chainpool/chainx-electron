@@ -9,6 +9,7 @@ import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
+import TrustSetting from './Modal/TrustSetting';
 
 @Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
@@ -34,6 +35,13 @@ class Trust extends Mixin {
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
           <span>{`（您当前是：${isActiveValidator ? '验证' : '候选'}节点）`}</span>
+          <Button
+            onClick={() => {
+              openModal({ name: 'TrustSetting' });
+            }}>
+            <Icon name="icon-shezhixintuo" />
+            <span>设置信托</span>
+          </Button>
         </TableTitle>
         <SettingTable {...this.props} />
 
@@ -62,6 +70,7 @@ class Trust extends Mixin {
         {name === 'NodeSettingModal' ? <NodeSettingModal {...this.props} /> : null}
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...this.props} /> : null}
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...this.props} /> : null}
+        {name === 'TrustSetting' ? <TrustSetting {...this.props} /> : null}
       </div>
     );
   }
