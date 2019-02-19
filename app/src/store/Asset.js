@@ -80,7 +80,11 @@ export default class Asset extends ModelExtend {
     }
 
     const info = this.rootStore.globalStore.nativeAsset;
-    return [getAssetWithZeroBalance(info)];
+    if (info) {
+      return [getAssetWithZeroBalance(info)];
+    } else {
+      return [];
+    }
   }
 
   @computed get accountNativeAssetFreeBalance() {
