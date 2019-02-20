@@ -148,24 +148,21 @@ export default class Trade extends ModelExtend {
     this.changeModel('currentPair', this.getPair({ id }), {});
   };
 
-  putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
+  putOrder = ({ pairId, orderType, direction, amount, price, success, fail }) => {
     const currentPair = this.currentPair;
     price = this.setPrecision(price, currentPair.precision, true);
     amount = this.setPrecision(amount, currentPair.assets, true);
-    return new Promise((resolve, reject) => {
-      putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        if (resOk(result)) {
-          this.reload();
-          resolve(result);
-        }
-        if (resFail(result)) {
-          return reject(err);
-        }
-      });
-    });
+    const extrinsic = putOrder(pairId, orderType, direction, Number(amount), Number(price));
+    return {
+      extrinsic,
+      success: res => {
+        this.reload();
+        _.isFunction(success) && success(res);
+      },
+      fail: err => {
+        _.isFunction(fail) && fail(err);
+      },
+    };
   };
 
   _putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
@@ -188,7 +185,15 @@ export default class Trade extends ModelExtend {
     });
   };
 
-  cancelOrder = ({ signer, acceleration, pairId, index }) => {
+  cancelOrder = ({ pairId, index }) => {
+    const extrinsic = cancelOrder(pairId, index);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _cancelOrder = ({ signer, acceleration, pairId, index }) => {
     cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
     });

@@ -34,6 +34,7 @@ class WithdrawModal extends Mixin {
       };
       // TODO: 根据token检查地址格式
       const errMsg = Patterns.check('required')(address) || (await vertifyAddress());
+      console.log(errMsg, '--------errMsg1');
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -51,7 +52,7 @@ class WithdrawModal extends Mixin {
     },
 
     confirm: () => {
-      return ['checkAddress', 'checkAmount'].every(item => !this.checkAll[item]());
+      return ['checkAddress', 'checkAmount'].every(async item => await !this.checkAll[item]());
     },
   };
 
@@ -90,12 +91,10 @@ class WithdrawModal extends Mixin {
                       { name: '收款地址', value: address },
                       { name: '备注', value: remark },
                     ],
-                    callback: ({ signer, acceleration }) => {
-                      dispatch({
+                    callback: ({ token }) => {
+                      return dispatch({
                         type: 'withdraw',
                         payload: {
-                          signer,
-                          acceleration,
                           token,
                           amount,
                           dest: address,
