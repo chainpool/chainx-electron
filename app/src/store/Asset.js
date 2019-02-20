@@ -212,7 +212,16 @@ export default class Asset extends ModelExtend {
     });
   };
 
-  withdraw = ({ signer, acceleration, token, amount, dest, remark }) => {
+  withdraw = ({ token, amount, dest, remark }) => {
+    amount = this.setPrecision(amount, token, true);
+    const extrinsic = withdraw(token, Number(amount), dest, remark);
+    return {
+      extrinsic,
+      success: this.reload(),
+    };
+  };
+
+  _withdraw = ({ signer, acceleration, token, amount, dest, remark }) => {
     amount = this.setPrecision(amount, token, true);
     withdraw(signer, Number(acceleration), token, Number(amount), dest, remark, (err, result) => {
       resOk(result) && this.reload();
