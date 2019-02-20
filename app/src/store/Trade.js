@@ -156,7 +156,6 @@ export default class Trade extends ModelExtend {
     return {
       extrinsic,
       success: res => {
-        console.log(res, '--------------res');
         this.reload();
         _.isFunction(success) && success(res);
       },
@@ -186,7 +185,15 @@ export default class Trade extends ModelExtend {
     });
   };
 
-  cancelOrder = ({ signer, acceleration, pairId, index }) => {
+  cancelOrder = ({ pairId, index }) => {
+    const extrinsic = cancelOrder(pairId, index);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _cancelOrder = ({ signer, acceleration, pairId, index }) => {
     cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
     });

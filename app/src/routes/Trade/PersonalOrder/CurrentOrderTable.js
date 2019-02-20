@@ -85,12 +85,10 @@ class CurrentOrderTable extends SwitchPair {
                       { name: '委托价格', value: item.priceShow },
                       { name: '委托数量', value: item.amountShow },
                     ],
-                    callback: ({ signer, acceleration }) => {
-                      dispatch({
+                    callback: () => {
+                      return dispatch({
                         type: 'cancelOrder',
                         payload: {
-                          signer,
-                          acceleration,
                           pairId: item.filterPair.id,
                           index: item.index,
                         },
