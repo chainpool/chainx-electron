@@ -41,8 +41,15 @@ class CrossChainBindModal extends Mixin {
                 <div className={styles.address}>
                   <div id="copy">{opReturnHex}</div>
                   <button>
-                    <Clipboard id="copy" />
-                    <span className={styles.desc}>复制信息</span>
+                    <Clipboard
+                      id="copy"
+                      outInner={
+                        <span className={styles.desc}>
+                          复制信息
+                          <div className={styles.coverclick} />
+                        </span>
+                      }
+                    />
                   </button>
                 </div>
               </div>

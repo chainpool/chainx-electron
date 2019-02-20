@@ -15,7 +15,7 @@ export default class Clipboard extends Component {
 
   render() {
     const { uid } = this.state;
-    const { children, className, width } = this.props;
+    const { children, className, width, outInner = '' } = this.props;
     return (
       <span className={classNames(styles.clipboard, className)}>
         <span id={uid} className={classNames(styles.children, width ? styles.ellipse : null)} style={{ width }}>
@@ -27,6 +27,7 @@ export default class Clipboard extends Component {
             data-clipboard-target={`#${uid}`}
             style={{ marginLeft: children ? 8 : null }}
           />
+          {outInner}
         </Tooltip>
       </span>
     );
