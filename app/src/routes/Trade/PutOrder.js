@@ -189,7 +189,7 @@ class PutOrder extends SwitchPair {
           <span>
             {action === 'buy'
               ? setPrecision(currentCurrencyAssetFree, currentPair.currency) || '-'
-              : setPrecision(currentAssetsAssetFree, currentPair.assets) || '-'}
+              : setPrecision(currentAssetsAssetFree, currentPair.assets) || '-'}{' '}
             <span>{action === 'buy' ? currentPair.currency : currentPair.assets}</span>
           </span>
         </div>
