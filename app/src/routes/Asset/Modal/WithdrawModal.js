@@ -66,7 +66,7 @@ class WithdrawModal extends Mixin {
     } = this.props;
 
     const options = addresses
-      .filter(address => address.chain === token)
+      .filter(address => address.token === token)
       .map(address => {
         return {
           label: address.label,

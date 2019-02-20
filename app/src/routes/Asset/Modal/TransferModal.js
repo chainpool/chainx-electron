@@ -50,7 +50,7 @@ class TransferModal extends Component {
 
     const allAccounts = accountsList.concat(
       addresses
-        .filter(address => address.chain === nativeAssetName)
+        .filter(address => address.token === nativeAssetName)
         .map(address => ({
           label: address.label,
           value: address.address,

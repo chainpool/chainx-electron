@@ -62,7 +62,8 @@ class AddAddressModal extends Component {
                   type: 'addAddress',
                   payload: {
                     label: this.state.label,
-                    chain: this.state.chain.value,
+                    token: this.state.chain.token,
+                    chain: this.state.chain.chain,
                     address: this.state.address,
                   },
                 });
@@ -80,7 +81,10 @@ class AddAddressModal extends Component {
                 value={chain}
                 errMsg={chainErrMsg}
                 options={options}
-                onChange={value => this.setState({ chain: value })}
+                onChange={value => {
+                  const asset = assets.find(asset => asset.name === value.value);
+                  this.setState({ chain: { chain: asset.chain, token: asset.name } });
+                }}
                 onBlur={checkAll.checkChain}
               />
             }
