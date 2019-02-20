@@ -76,13 +76,11 @@ class TransferModal extends Component {
                       { name: '接收人地址', value: address },
                       { name: '备注', value: remark },
                     ],
-                    callback: ({ signer, acceleration, token }) => {
-                      dispatch({
+                    callback: ({ token }) => {
+                      return dispatch({
                         type: 'transfer',
                         payload: {
-                          signer,
                           dest: address,
-                          acceleration,
                           token,
                           amount,
                           remark,

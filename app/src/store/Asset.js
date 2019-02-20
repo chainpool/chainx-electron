@@ -1,6 +1,7 @@
 import { _, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
+  cancelOrder,
   getAddressByAccount,
   getAsset,
   getDepositList,
@@ -193,7 +194,17 @@ export default class Asset extends ModelExtend {
     this.changeModel('btcTrusteeAddress', resp.address);
   }
 
-  transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
+  transfer = ({ dest, token, amount, remark }) => {
+    console.log(dest, token, amount, remark);
+    amount = this.setPrecision(amount, token, true);
+    const extrinsic = transfer(dest, token, Number(amount), remark);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
     console.log(signer, acceleration, dest, token, amount, remark);
     amount = this.setPrecision(amount, token, true);
     transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {

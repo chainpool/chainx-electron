@@ -62,7 +62,7 @@ class SignModal extends Component {
             onClick={async () => {
               if (checkAll.confirm()) {
                 if (_.isFunction(callback)) {
-                  const result = await callback();
+                  const result = await callback({ token });
                   const extrinsic = result.extrinsic;
                   extrinsic.signAndSend(
                     ChainX.account.fromKeyStore(currentAccount.encoded, password),
