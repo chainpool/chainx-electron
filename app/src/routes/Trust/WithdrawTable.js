@@ -35,6 +35,7 @@ class WithdrawTable extends Component {
         },
         {
           title: '原链地址',
+          ellipse: true,
           dataIndex: 'addr',
         },
         {
