@@ -27,38 +27,18 @@ class CrossChainBindModal extends Mixin {
     } = this.props;
 
     const opReturnHex = u8aToHex(new TextEncoder('utf-8').encode('ChainX:' + currentAddress));
-
-    const btcModal = (
-      <Modal title={`跨链绑定（${token}）`}>
-        <div className={styles.crossChainBind}>
-          <div className={styles.desc}>
-            <div />
-            使用支持OP_Return的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
-          </div>
-          <div className={classNames(styles.grayblock, styles.addressall)}>
-            <div>
-              <div>
-                <div className={styles.address}>
-                  <div id="copy">{opReturnHex}</div>
-                  <button>
-                    <Clipboard
-                      id="copy"
-                      outInner={
-                        <span className={styles.desc}>
-                          复制信息
-                          <div className={styles.coverclick} />
-                        </span>
-                      }
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles.depositaddress}>
-            <span className={styles.label}>多签托管地址:</span>
-            <Clipboard>{btcTrusteeAddress}</Clipboard>
-          </div>
+    const show = {
+      BTC: {
+        desc1: (
+          <span>
+            使用<strong>支持OP_Return</strong>
+            的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
+          </span>
+        ),
+        value1: opReturnHex,
+        desc2: '公共多签托管地址',
+        value2: btcTrusteeAddress,
+        warn: (
           <Warn>
             <div>
               <strong>其他钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</strong>
@@ -84,45 +64,74 @@ class CrossChainBindModal extends Mixin {
               等。
             </div>
           </Warn>
-        </div>
-      </Modal>
-    );
+        ),
+      },
+      SDOT: {
+        desc1: (
+          <span>
+            使用<strong>支持Data</strong>的Ethereum钱包钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
+          </span>
+        ),
+        value1: '0x00c5f23c64c9ffb9301834e6a2ec7f16c1624b3f',
+        desc2: '公共地址',
+        value2: currentAddress,
+        warn: (
+          <Warn>
+            <div>
+              <strong>其他钱包交易中的备注字段并不是Data，无法发起跨链绑定交易。</strong>
+              <br />
+              目前支持的钱包有:{' '}
+              <a className={styles.anchor} href="https://token.im/" rel="noopener noreferrer" target="_blank">
+                imToken
+              </a>
+              、
+              <a className={styles.anchor} href="https://www.parity.io/" rel="noopener noreferrer" target="_blank">
+                Parity
+              </a>{' '}
+              等。
+            </div>
+          </Warn>
+        ),
+      },
+    };
 
-    const ethModal = (
+    const findOne = show[token];
+
+    return (
       <Modal title={`跨链绑定（${token}）`}>
         <div className={styles.crossChainBind}>
           <div className={styles.desc}>
             <div />
-            使用您的Ethereum钱包向公共地址发起金额为0的转账交易，并在高级选项的Data中写明您的ChainX地址。
+            {findOne.desc1}
           </div>
           <div className={classNames(styles.grayblock, styles.addressall)}>
             <div>
               <div>
                 <div className={styles.address}>
-                  <span className={styles.label}>公共地址:</span>
-                  <Clipboard>0x00C5f23c64C9FFb9301834e6A2eC7f16c1624b3f</Clipboard>
-                </div>
-                <div className={styles.address}>
-                  <span className={styles.label}>Data:</span>
-                  <Clipboard>{currentAddress}</Clipboard>
+                  <div id="copy">{findOne.value1}</div>
+                  <button>
+                    <Clipboard
+                      id="copy"
+                      outInner={
+                        <span className={styles.desc}>
+                          复制信息
+                          <div className={styles.coverclick} />
+                        </span>
+                      }
+                    />
+                  </button>
                 </div>
               </div>
             </div>
-            <div className={styles.right} />
           </div>
+          <div className={styles.depositaddress}>
+            <span className={styles.label}>{findOne.desc2}</span>
+            <Clipboard>{findOne.value2}</Clipboard>
+          </div>
+          {findOne.warn}
         </div>
       </Modal>
     );
-
-    switch (token) {
-      case 'BTC':
-        return btcModal;
-      case 'SDOT':
-      case 'DOT':
-        return ethModal;
-      default:
-        throw Error('unknow token');
-    }
   }
 }
 
