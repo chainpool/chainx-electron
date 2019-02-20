@@ -255,6 +255,14 @@ class PutOrder extends SwitchPair {
               className={styles[action]}
               onClick={() => {
                 if (checkAll.confirm(action) && !tradeErrMsg) {
+                  const content = (
+                    <div>
+                      交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
+                      {action === 'buy' ? '买入' : '卖出'}；报价 {price}
+                      <br />
+                      数量 {amount}
+                    </div>
+                  );
                   openModal({
                     name: 'SignModal',
                     data: {
@@ -265,35 +273,25 @@ class PutOrder extends SwitchPair {
                         { name: '报价', value: price },
                         { name: '账户', value: currentAccount.address },
                       ],
-                      callback: ({ signer, acceleration }) => {
-                        const content = (
-                          <div>
-                            交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
-                            {action === 'buy' ? '买入' : '卖出'}；报价 {price}
-                            <br />
-                            数量 {amount}
-                          </div>
-                        );
-                        dispatch({
+                      callback: () => {
+                        return dispatch({
                           type: 'putOrder',
                           payload: {
-                            signer,
-                            acceleration,
                             pairId: currentPair.id,
                             orderType: 'Limit',
                             direction: action === 'buy' ? 'Buy' : 'Sell',
                             price,
                             amount,
+                            success: res => {
+                              if (res) {
+                                Toast.success('挂单已完成', content);
+                              }
+                            },
+                            fail: () => {
+                              Toast.warn('挂单报错', content);
+                            },
                           },
-                        })
-                          .then(res => {
-                            if (res) {
-                              Toast.success('挂单已完成', content);
-                            }
-                          })
-                          .catch(() => {
-                            Toast.warn('挂单报错', content);
-                          });
+                        });
                       },
                     },
                   });

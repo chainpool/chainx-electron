@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { _, ChainX, Inject, Patterns } from '../../../utils';
+import { _, ChainX, Inject, Patterns, resOk } from '../../../utils';
 import { Modal, Button, Input } from '../../../components';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './index.less';
@@ -59,15 +59,24 @@ class SignModal extends Component {
           <Button
             size="full"
             type="confirm"
-            onClick={() => {
+            onClick={async () => {
               if (checkAll.confirm()) {
-                _.isFunction(callback) &&
-                  callback({
-                    signer: ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                    acceleration: acceleration.value,
-                    token,
-                  });
-                closeModal();
+                if (_.isFunction(callback)) {
+                  const result = await callback();
+                  const extrinsic = result.extrinsic;
+                  extrinsic.signAndSend(
+                    ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                    { acceleration: acceleration.value },
+                    (err, res) => {
+                      if (!err) {
+                        resOk(res) && _.isFunction(result.success) && result.success(res);
+                      } else {
+                        _.isFunction(result.fail) && result.fail(err);
+                      }
+                      closeModal();
+                    }
+                  );
+                }
               }
             }}>
             签名
