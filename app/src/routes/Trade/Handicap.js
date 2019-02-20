@@ -19,7 +19,7 @@ class Handicap extends SwitchPair {
   };
 
   render() {
-    const {
+    let {
       model: { buyList = [], sellList = [], currentPair = {} },
     } = this.props;
     const setTableProps = color => ({
@@ -45,9 +45,11 @@ class Handicap extends SwitchPair {
       dataSource: [],
     });
 
+    sellList = sellList.slice(0, 6);
+
     const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0)
       .fill()
-      .concat(sellList.slice(Math.max(sellList.length - 5, 0), sellList.length));
+      .concat(sellList.slice(5 - sellList.length > 0 ? sellList.length - 5 : 0, sellList.length));
     const dataSourceBuy = buyList.concat(new Array(5 - buyList.length > 0 ? 5 - buyList.length : 0).fill());
 
     const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);

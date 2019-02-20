@@ -76,6 +76,7 @@ export default class Trade extends ModelExtend {
     // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];
     res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
     res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
+
     const formatList = (list, action) => {
       const showUnit = this.showUnitPrecision(currentPair.precision, currentPair.unitPrecision);
       return list.map((item = [], index) => {
