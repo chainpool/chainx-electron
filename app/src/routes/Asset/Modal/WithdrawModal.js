@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
+import { Modal, Input, Button, Mixin } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Inject, Patterns } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ addressManageStore }) => ({ addressManageStore }))
-class WithdrawModal extends Component {
+class WithdrawModal extends Mixin {
   state = {
     address: '',
     addressErrMsg: '',
@@ -14,19 +14,38 @@ class WithdrawModal extends Component {
     remark: '',
   };
   checkAll = {
-    checkAddress: () => {
+    checkAddress: async () => {
       const { address } = this.state;
       const {
+        model: { dispatch },
         globalStore: { modal: { data: { token } = {} } = {} },
       } = this.props;
+      const vertifyAddress = async () => {
+        const res = await dispatch({
+          type: 'verifyAddressValidity',
+          payload: {
+            token,
+            address,
+            remark: '备注',
+          },
+        });
+        if (!res) return '地址格式错误';
+        return '';
+      };
       // TODO: 根据token检查地址格式
-      const errMsg = Patterns.check('required')(address);
+      const errMsg = Patterns.check('required')(address) || (await vertifyAddress());
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
     checkAmount: () => {
+      const {
+        globalStore: { modal: { data: { freeShow } = {} } = {} },
+      } = this.props;
       const { amount } = this.state;
-      const errMsg = Patterns.check('required')(amount) || Patterns.check('smaller')(0, amount, '提现数量必须大于0');
+      const errMsg =
+        Patterns.check('required')(amount) ||
+        Patterns.check('smaller')(0, amount, '提现数量必须大于0') ||
+        Patterns.check('smallerOrEqual')(amount, freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
