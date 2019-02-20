@@ -56,7 +56,9 @@ class Handicap extends SwitchPair {
     const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     return (
       <div className={styles.handicap}>
-        <div className={styles.title}>挂单列表</div>
+        <div className={styles.title}>
+          挂单列表 <span>(盘口10档)</span>
+        </div>
         <Table {...setTableProps('red')} dataSource={dataSourceSell} />
         <div className={styles.latestprice}>
           <span className={classNames(isInSell ? styles.red : null, isInBuy ? styles.green : null)}>
