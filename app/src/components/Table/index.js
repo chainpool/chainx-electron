@@ -227,7 +227,7 @@ export default class TableComponent extends Component {
       <div
         style={{ height: this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll }) }}
         className={classNames(styles.tableContainer, className)}>
-        {_.isFunction(noDataTip) && noDataTip() ? (
+        {_.isFunction(noDataTip) && noDataTip() && !dataSource.length ? (
           <div className="default">{noDataTip()}</div>
         ) : (
           <Table className={style.table}>

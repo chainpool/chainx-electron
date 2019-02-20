@@ -17,6 +17,7 @@ class CurrentOrderTable extends SwitchPair {
     } = this.props;
 
     const tableProps = {
+      noDataTip: this.props.noDataTip,
       tableHeight: [36, 40],
       className: styles.tableContainer,
       columns: [
