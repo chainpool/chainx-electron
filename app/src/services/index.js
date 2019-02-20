@@ -49,6 +49,8 @@ export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payl
 
 export const getDepositList = (...payload) => asset.getDepositList(...payload);
 
+export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity(...payload);
+
 export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
 
 export const getQuotations = (...payload) => trade.getQuotations(...payload);

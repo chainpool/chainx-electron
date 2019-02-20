@@ -94,6 +94,11 @@ export const Patterns = {
       return Number(inputValue) >= Number(baseValue) ? errMsg : '';
     }
   },
+  smallerOrEqual: (inputValue, baseValue, errMsg = '余额不足') => {
+    if (!_.isNaN(inputValue) && !_.isNaN(baseValue)) {
+      return Number(inputValue) > Number(baseValue) ? errMsg : '';
+    }
+  },
   characterLength: (inputValue = '', minLength, maxLength) => {
     let result = '';
     result = inputValue.length > minLength ? '' : `最少${minLength}个字符`;

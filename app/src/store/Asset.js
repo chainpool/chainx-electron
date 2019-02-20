@@ -7,6 +7,7 @@ import {
   getTrusteeAddress,
   getWithdrawalList,
   transfer,
+  verifyAddressValidity,
   withdraw,
 } from '../services';
 import { encodeAddress } from '@polkadot/keyring/address';
@@ -205,5 +206,10 @@ export default class Asset extends ModelExtend {
     withdraw(signer, Number(acceleration), token, Number(amount), dest, remark, (err, result) => {
       resOk(result) && this.reload();
     });
+  };
+
+  verifyAddressValidity = async ({ token, address, remark }) => {
+    const res = await verifyAddressValidity(token, address, remark);
+    return !res;
   };
 }
