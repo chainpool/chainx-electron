@@ -43,7 +43,7 @@ class DepositMineTable extends Mixin {
           dataIndex: 'circulationShow',
         },
         {
-          title: '移动平均价(PCX)',
+          title: '挖矿算力',
           ellipse: true,
           dataIndex: 'priceShow',
         },
