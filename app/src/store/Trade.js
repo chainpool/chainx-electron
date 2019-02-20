@@ -14,6 +14,7 @@ export default class Trade extends ModelExtend {
     precision: '',
     unitPrecision: '',
     assetsPrecision: '',
+    lastPriceShow: '',
   };
   @observable orderPairs = [];
   @observable buyList = [];
@@ -114,12 +115,14 @@ export default class Trade extends ModelExtend {
     let res = await getOrderPairs();
     res = res.map((item = {}) => {
       const precision = item.precision;
+      const priceShow = price =>
+        this.showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(price, precision));
       return {
         ...item,
         precision,
-        lastPriceShow: this.showUnitPrecision(precision, item.unitPrecision)(
-          this.setPrecision(item.lastPrice, precision)
-        ),
+        lastPriceShow: priceShow(item.lastPrice),
+        maxLastPriceShow: priceShow(item.lastPrice * 1.1),
+        minLastPriceShow: priceShow(item.lastPrice * 0.9),
       };
     });
     this.changeModel('orderPairs', res, []);

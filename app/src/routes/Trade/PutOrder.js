@@ -45,7 +45,17 @@ class PutOrder extends SwitchPair {
       } = this.props;
       const errMsg =
         Patterns.check('required')(price) ||
-        Patterns.check('precision')(price, currentPair.precision - currentPair.unitPrecision);
+        Patterns.check('precision')(price, currentPair.precision - currentPair.unitPrecision) ||
+        Patterns.check('smallerOrEqual')(
+          price,
+          currentPair.maxLastPriceShow,
+          `最大报价为${currentPair.maxLastPriceShow}`
+        ) ||
+        Patterns.check('smallerOrEqual')(
+          currentPair.minLastPriceShow,
+          price,
+          `最小报价为${currentPair.minLastPriceShow}`
+        );
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
       return errMsg;
     },
