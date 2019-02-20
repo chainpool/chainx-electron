@@ -168,6 +168,26 @@ export default class Trade extends ModelExtend {
     });
   };
 
+  _putOrder = ({ signer, acceleration, pairId, orderType, direction, amount, price }) => {
+    const currentPair = this.currentPair;
+    price = this.setPrecision(price, currentPair.precision, true);
+    amount = this.setPrecision(amount, currentPair.assets, true);
+    return new Promise((resolve, reject) => {
+      putOrder(signer, acceleration, pairId, orderType, direction, Number(amount), Number(price), (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        if (resOk(result)) {
+          this.reload();
+          resolve(result);
+        }
+        if (resFail(result)) {
+          return reject(err);
+        }
+      });
+    });
+  };
+
   cancelOrder = ({ signer, acceleration, pairId, index }) => {
     cancelOrder(signer, acceleration, pairId, index, (err, result) => {
       resOk(result) && this.reload();
