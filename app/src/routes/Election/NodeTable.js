@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table } from '../../components';
+import { Button, ButtonGroup, Table, RouterGo } from '../../components';
 import { HoverTip } from '../components';
-import { Inject, isEmpty, formatNumber } from '../../utils';
+import { Inject, isEmpty, formatNumber, toJS } from '../../utils';
 
 const zeroPlaceHolder = '-';
 
@@ -44,7 +44,13 @@ class NodeTable extends Component {
         {
           title: '名称',
           dataIndex: 'name',
-          render: (value, item) => <HoverTip tip={item.about + ' '}>{value}</HoverTip>,
+          render: (value, item) => (
+            <HoverTip tip={item.about + ' '}>
+              <RouterGo isOutSide go={{ pathname: item.url }}>
+                {value}
+              </RouterGo>
+            </HoverTip>
+          ),
         },
         {
           title: '账户地址',
