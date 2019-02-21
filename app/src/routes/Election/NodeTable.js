@@ -106,6 +106,7 @@ class NodeTable extends Component {
                       data: {
                         target: item.account,
                         myTotalVote: item.myTotalVote,
+                        isCurrentAccount: item.address === currentAccount.address,
                       },
                     });
                   }}>

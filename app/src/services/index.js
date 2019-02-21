@@ -70,3 +70,5 @@ export const getTrusteeAddress = (...payload) => asset.getTrusteeAddress(...payl
 export const getBlockPeriod = (...payload) => chain.getBlockPeriod(...payload);
 
 export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);
+
+export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);

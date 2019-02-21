@@ -24,6 +24,7 @@ class VoteModal extends Mixin {
 
     dispatch({ type: 'getBlockPeriod' });
     electionDispatch({ type: 'getBondingDuration' });
+    electionDispatch({ type: 'getIntentionBondingDuration' });
   };
 
   checkAll = {
@@ -58,15 +59,16 @@ class VoteModal extends Mixin {
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision },
       globalStore: {
-        modal: { data: { target, myTotalVote = 0 } = {} },
+        modal: { data: { target, myTotalVote = 0, isCurrentAccount } = {} },
         nativeAssetName: token,
       },
       chainStore: { blockDuration },
-      electionStore: { bondingDuration },
+      electionStore: { bondingDuration, intentionBondingDuration },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
     } = this.props;
 
-    const bondingSeconds = (blockDuration * bondingDuration) / 1000;
+    const bondingSeconds =
+      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 3600);
     const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}`;
 
     return (
@@ -114,7 +116,7 @@ class VoteModal extends Mixin {
                   value={action}
                   onClick={() => this.setState({ action: item.value })}>
                   {item.value === 'cancel' ? (
-                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}秒)`}</span>
+                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}小时)`}</span>
                   ) : null}
                 </Input.Radio>
               ))}

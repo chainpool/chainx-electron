@@ -12,7 +12,7 @@ import {
   unfreeze,
   unnominate,
   getBondingDuration,
-  putOrder,
+  getIntentionBondingDuration,
 } from '../services';
 import { computed } from 'mobx';
 
@@ -22,6 +22,7 @@ export default class Election extends ModelExtend {
   @observable originNominationRecords = []; // 投票记录rpc返回数据
   @observable pseduIntentions = []; //充值挖矿列表
   @observable bondingDuration = 0; // 投票赎回锁定块数
+  @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
 
   @computed get validatorsWithAddress() {
     return this.originIntentions.map(intention => {
@@ -273,5 +274,10 @@ export default class Election extends ModelExtend {
   getBondingDuration = async () => {
     const duration = await getBondingDuration();
     this.changeModel('bondingDuration', duration);
+  };
+
+  getIntentionBondingDuration = async () => {
+    const duration = await getIntentionBondingDuration();
+    this.changeModel('intentionBondingDuration', duration);
   };
 }
