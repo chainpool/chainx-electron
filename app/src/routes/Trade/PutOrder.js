@@ -298,8 +298,7 @@ class PutOrder extends SwitchPair {
                   });
                 }
               }}>
-              {label}
-              {currentPair.assets}
+              {label} {currentPair.assets}
             </button>
           </div>
         ) : null}

@@ -59,10 +59,10 @@ export default [
     path: PATH.trade,
     component: Trade,
   },
-  {
-    title: 'DAPP专区',
-    path: '',
-  },
+  // {
+  //   title: 'DAPP专区',
+  //   path: '/dapp',
+  // },
   {
     title: '配置',
     show: false,
