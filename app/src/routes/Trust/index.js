@@ -60,7 +60,7 @@ class Trust extends Mixin {
                   openModal({ name: 'WithdrawSignModal' });
                 }}>
                 <Icon name="icon-xiangyingtixian" />
-                相应多签提现
+                响应多签提现
               </Button>
             </ButtonGroup>
           </TableTitle>
