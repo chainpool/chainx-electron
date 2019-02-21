@@ -3,7 +3,6 @@ import { Button, Icon, Mixin } from '../../components';
 import * as styles from './index.less';
 import { Tab } from '../components';
 import NodeTable from './NodeTable';
-import DepositMineTable from './DepositMineTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
@@ -38,8 +37,8 @@ class Election extends Mixin {
 
     // const tabs = ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿'];
     const tabs = currentAddress
-      ? ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿']
-      : ['信托节点', '验证节点', '候选节点', '充值挖矿'];
+      ? ['信托节点', '验证节点', '候选节点', '我的投票']
+      : ['信托节点', '验证节点', '候选节点'];
 
     const operations = (
       <ul>
@@ -87,11 +86,7 @@ class Election extends Mixin {
           />
           {currentAddress ? operations : null}
         </div>
-        {(currentAddress && activeIndex === 4) || (!currentAddress && activeIndex === 3) ? (
-          <DepositMineTable {...this.props} />
-        ) : (
-          <NodeTable activeIndex={activeIndex} {...this.props} />
-        )}
+        <NodeTable activeIndex={activeIndex} {...this.props} />
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}

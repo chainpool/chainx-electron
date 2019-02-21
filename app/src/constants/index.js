@@ -1,5 +1,6 @@
 export const PATH = {
   default: '/election',
+  mine: '/digMine',
   asset: '/asset',
   election: '/election',
   depositWithdrawRecord: '/asset/depositWithdrawRecord',
