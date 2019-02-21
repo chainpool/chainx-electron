@@ -59,6 +59,7 @@ export default [
   },
   {
     title: 'DAPP专区',
+    path: '',
   },
   {
     title: '配置',
