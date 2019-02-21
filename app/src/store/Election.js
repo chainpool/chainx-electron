@@ -1,7 +1,8 @@
-import { ChainX, observable, resOk, Rx, formatNumber } from '../utils';
+import { ChainX, observable, Rx, formatNumber } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  claim,
+  depositClaim,
+  voteClaim,
   getIntentions,
   getNominationRecords,
   getPseduIntentions,
@@ -189,13 +190,6 @@ export default class Election extends ModelExtend {
     };
   };
 
-  _nominate = ({ signer, acceleration, target, amount, remark }) => {
-    amount = this.setDefaultPrecision(amount, true);
-    nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
-      resOk(result) && this.reload();
-    });
-  };
-
   /*解冻 */
   unfreeze = ({ target, revocationIndex }) => {
     const extrinsic = unfreeze(target, revocationIndex);
@@ -203,12 +197,6 @@ export default class Election extends ModelExtend {
       extrinsic,
       success: () => this.reload(),
     };
-  };
-
-  _unfreeze = ({ signer, acceleration, target, revocationIndex }) => {
-    unfreeze(signer, acceleration, target, revocationIndex, (err, result) => {
-      resOk(result) && this.reload();
-    });
   };
 
   unnominate = ({ target, amount, remark }) => {
@@ -220,25 +208,12 @@ export default class Election extends ModelExtend {
     };
   };
 
-  _unnominate = ({ signer, acceleration, target, amount, remark }) => {
-    amount = this.setDefaultPrecision(amount, true);
-    unnominate(signer, acceleration, target, amount, remark, (err, result) => {
-      resOk(result) && this.reload();
-    });
-  };
-
   register = ({ name }) => {
     const extrinsic = register(name);
     return {
       extrinsic,
       success: () => this.reload(),
     };
-  };
-
-  _register = ({ signer, acceleration, name }) => {
-    register(signer, Number(acceleration), name, (err, result) => {
-      resOk(result) && this.reload();
-    });
   };
 
   /*更新节点*/
@@ -250,25 +225,21 @@ export default class Election extends ModelExtend {
     };
   };
 
-  _refresh = ({ signer, acceleration, url, participating, address, about }) => {
-    refresh(signer, acceleration, url, participating, address, about, (err, result) => {
-      resOk(result) && this.reload();
-    });
-  };
-
   /*提息*/
-  claim = ({ signer, acceleration, target }) => {
-    const extrinsic = claim(target);
+  voteClaim = ({ target }) => {
+    const extrinsic = voteClaim(target);
     return {
       extrinsic,
       success: () => this.reload(),
     };
   };
 
-  _claim = ({ signer, acceleration, target }) => {
-    claim(signer, acceleration, target, (err, result) => {
-      resOk(result) && this.reload();
-    });
+  depositClaim = ({ token }) => {
+    const extrinsic = depositClaim(token);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
   };
 
   getBondingDuration = async () => {

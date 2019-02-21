@@ -87,8 +87,9 @@ class DepositMineTable extends Mixin {
                         description: [{ name: '操作', value: '提息' }],
                         callback: () => {
                           return dispatch({
-                            type: 'claim',
+                            type: 'depositClaim',
                             payload: {
+                              token: item.id,
                               // target: item.account,
                             },
                           });
