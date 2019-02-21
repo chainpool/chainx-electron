@@ -12,6 +12,7 @@ import {
   unfreeze,
   unnominate,
   getBondingDuration,
+  putOrder,
 } from '../services';
 import { computed } from 'mobx';
 
@@ -178,7 +179,16 @@ export default class Election extends ModelExtend {
     }
   };
 
-  nominate = ({ signer, acceleration, target, amount, remark }) => {
+  nominate = ({ target, amount, remark }) => {
+    amount = this.setDefaultPrecision(amount, true);
+    const extrinsic = nominate(target, Number(amount), remark);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _nominate = ({ signer, acceleration, target, amount, remark }) => {
     amount = this.setDefaultPrecision(amount, true);
     nominate(signer, acceleration, target, Number(amount), remark, (err, result) => {
       resOk(result) && this.reload();
@@ -192,7 +202,16 @@ export default class Election extends ModelExtend {
     });
   };
 
-  unnominate = ({ signer, acceleration, target, amount, remark }) => {
+  unnominate = ({ target, amount, remark }) => {
+    amount = this.setDefaultPrecision(amount, true);
+    const extrinsic = unnominate(target, amount, remark);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _unnominate = ({ signer, acceleration, target, amount, remark }) => {
     amount = this.setDefaultPrecision(amount, true);
     unnominate(signer, acceleration, target, amount, remark, (err, result) => {
       resOk(result) && this.reload();

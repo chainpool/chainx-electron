@@ -86,12 +86,10 @@ class VoteModal extends Mixin {
                       { name: `${operation}数量`, value: amount },
                       { name: '备注', value: remark },
                     ],
-                    callback: ({ signer, acceleration }) => {
-                      dispatch({
+                    callback: () => {
+                      return dispatch({
                         type: action !== 'add' ? 'unnominate' : 'nominate',
                         payload: {
-                          signer,
-                          acceleration,
                           target,
                           amount,
                           remark,

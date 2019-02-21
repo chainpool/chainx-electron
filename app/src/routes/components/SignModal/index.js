@@ -73,9 +73,9 @@ class SignModal extends Component {
                       } else {
                         _.isFunction(result.fail) && result.fail(err);
                       }
-                      closeModal();
                     }
                   );
+                  closeModal();
                 }
               }
             }}>
