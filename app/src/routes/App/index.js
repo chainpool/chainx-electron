@@ -35,6 +35,7 @@ class Main extends Component {
     const {
       globalStore: { dispatch: dispatchGlobal },
       accountStore: { dispatch: dispatchAccount },
+      electionStore: { dispatch: dispatchElection },
       history: {
         location: { search },
       },
@@ -54,6 +55,7 @@ class Main extends Component {
       },
     });
     await dispatchGlobal({ type: 'getAllAssets' });
+    await dispatchElection({ type: 'getIntentions' });
     this.setState({
       ready: true,
     });
@@ -72,6 +74,7 @@ class Main extends Component {
           {routers.map(item => (
             <AuthorityRoute
               authority={item.authority}
+              requireTrustee={item.requireTrustee}
               key={item.path}
               path={item.path}
               exact

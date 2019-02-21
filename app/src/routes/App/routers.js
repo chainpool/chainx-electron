@@ -51,6 +51,8 @@ export default [
     title: '资产信托',
     path: PATH.trust,
     component: Trust,
+    authority: [1],
+    requireTrustee: true,
   },
   {
     title: '币币交易',

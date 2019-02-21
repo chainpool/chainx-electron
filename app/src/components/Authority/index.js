@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router';
+import { Redirect, Route } from 'react-router';
 import { Inject } from '../../utils';
 import { PATH } from '../../constants';
 
@@ -7,9 +7,15 @@ import { PATH } from '../../constants';
 class AuthorityRoute extends Component {
   render() {
     const {
-      model: { isLogin },
+      model: { isLogin, isTrustee },
       authority = [],
+      requireTrustee,
     } = this.props;
+
+    if (requireTrustee && !isTrustee) {
+      return <Redirect to={PATH.default} />;
+    }
+
     return authority[0] && !isLogin() ? <Redirect to={PATH.default} /> : <Route {...this.props} />;
   }
 }
