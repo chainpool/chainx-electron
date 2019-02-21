@@ -25,7 +25,7 @@ class Trust extends Mixin {
 
   render() {
     const {
-      accountStore: { isActiveValidator, openModal },
+      accountStore: { isTrustee, isActiveValidator, openModal },
       globalStore: {
         modal: { name },
       },
@@ -34,7 +34,7 @@ class Trust extends Mixin {
     return (
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
-          <span>{`（您当前是：${isActiveValidator ? '验证' : '候选'}节点）`}</span>
+          <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
           <Button
             onClick={() => {
               openModal({ name: 'TrustSetting' });
