@@ -2,8 +2,10 @@ import React from 'react';
 import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject } from '../../../utils';
+import { ChainX, classNames, Inject } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
+import imtoken from '../../../resource/imtoken.png';
+import parity from '../../../resource/parity.png';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
@@ -72,21 +74,27 @@ class CrossChainBindModal extends Mixin {
             使用<strong>支持Data</strong>的Ethereum钱包钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
           </span>
         ),
-        value1: currentAddress,
+        value1: ChainX.account.decodeAddress(currentAddress),
         desc2: '公共地址',
         value2: '0x000000000000000000000000000000000000abcd',
         warn: (
           <Warn>
-            <div>
+            <div className={styles.sdot}>
               <strong>其他钱包交易中的备注字段并不是Data，无法发起跨链绑定交易。</strong>
               <br />
               目前支持的钱包有:{' '}
               <a className={styles.anchor} href="https://token.im/" rel="noopener noreferrer" target="_blank">
                 imToken
+                <span className={styles.hoverimg} style={{ left: -100 }}>
+                  <img src={imtoken} width={244} />
+                </span>
               </a>
               、
               <a className={styles.anchor} href="https://www.parity.io/" rel="noopener noreferrer" target="_blank">
                 Parity
+                <span className={styles.hoverimg} style={{ left: -150 }}>
+                  <img src={parity} width={352} />
+                </span>
               </a>{' '}
               等。
             </div>

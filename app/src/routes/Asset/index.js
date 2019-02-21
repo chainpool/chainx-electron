@@ -19,11 +19,17 @@ class Asset extends Mixin {
 
   startInit = () => {
     const {
-      model: { dispatch },
+      model: { dispatch, openModal },
     } = this.props;
 
     dispatch({
       type: 'getAccountAssets',
+    });
+    openModal({
+      name: 'CrossChainBindModal',
+      data: {
+        token: 'SDOT',
+      },
     });
   };
 
