@@ -7,9 +7,9 @@ import { PlaceHolder } from '../../../constants';
 @Inject(({ addressManageStore }) => ({ addressManageStore }))
 class WithdrawModal extends Mixin {
   state = {
-    address: '2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY',
+    address: '',
     addressErrMsg: '',
-    amount: '0.00000791',
+    amount: '',
     amountErrMsg: '',
     remark: '',
   };
