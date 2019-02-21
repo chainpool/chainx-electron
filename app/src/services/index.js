@@ -34,6 +34,10 @@ export const unnominate = (...payload) => stake.unnominate(...payload);
 
 export const unfreeze = (...payload) => stake.unfreeze(...payload);
 
+export const voteClaim = (...payload) => stake.voteClaim(...payload);
+
+export const depositClaim = (...payload) => stake.depositClaim(...payload);
+
 export const claim = (...payload) => stake.claim(...payload);
 
 export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);

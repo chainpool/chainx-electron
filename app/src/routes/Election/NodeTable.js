@@ -136,7 +136,7 @@ class NodeTable extends Component {
                         description: [{ name: '操作', value: '提息' }],
                         callback: () => {
                           return dispatch({
-                            type: 'claim',
+                            type: 'voteClaim',
                             payload: {
                               target: item.account,
                             },
