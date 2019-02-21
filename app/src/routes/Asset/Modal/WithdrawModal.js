@@ -7,9 +7,9 @@ import { PlaceHolder } from '../../../constants';
 @Inject(({ addressManageStore }) => ({ addressManageStore }))
 class WithdrawModal extends Mixin {
   state = {
-    address: '',
+    address: '2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY',
     addressErrMsg: '',
-    amount: '',
+    amount: '0.00000791',
     amountErrMsg: '',
     remark: '',
   };
@@ -33,8 +33,8 @@ class WithdrawModal extends Mixin {
         return '';
       };
       // TODO: 根据token检查地址格式
-      const errMsg = Patterns.check('required')(address) || (await vertifyAddress());
-      console.log(errMsg, '--------errMsg1');
+      const isVertifyAddress = await vertifyAddress();
+      const errMsg = Patterns.check('required')(address) || isVertifyAddress;
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -51,8 +51,10 @@ class WithdrawModal extends Mixin {
       return errMsg;
     },
 
-    confirm: () => {
-      return ['checkAddress', 'checkAmount'].every(async item => await !this.checkAll[item]());
+    confirm: async () => {
+      const result1 = await this.checkAll['checkAddress']();
+      const result2 = await this.checkAll['checkAmount']();
+      return !result1 && !result2;
     },
   };
 
@@ -81,8 +83,8 @@ class WithdrawModal extends Mixin {
           <Button
             size="full"
             type="confirm"
-            onClick={() => {
-              if (checkAll.confirm()) {
+            onClick={async () => {
+              if (await checkAll.confirm()) {
                 openModal({
                   name: 'SignModal',
                   data: {
