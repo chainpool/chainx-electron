@@ -36,6 +36,7 @@ class NodeTable extends Component {
         {
           title: '排名',
           width: 85,
+          ellipse: 20,
           dataIndex: 'name',
           render: (value, record, index) => {
             return `${index + 1}${record.isActive ? '' : '（退选）'}`;
