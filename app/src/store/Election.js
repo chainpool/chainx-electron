@@ -218,7 +218,15 @@ export default class Election extends ModelExtend {
     });
   };
 
-  register = ({ signer, acceleration, name }) => {
+  register = ({ name }) => {
+    const extrinsic = register(name);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _register = ({ signer, acceleration, name }) => {
     register(signer, Number(acceleration), name, (err, result) => {
       resOk(result) && this.reload();
     });

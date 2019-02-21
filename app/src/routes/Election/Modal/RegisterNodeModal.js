@@ -47,12 +47,10 @@ class RegisterNodeModal extends Component {
                   name: 'SignModal',
                   data: {
                     description: [{ name: '操作', value: '注册节点' }, { name: '名称', value: name }],
-                    callback: ({ signer, acceleration }) => {
-                      dispatch({
+                    callback: () => {
+                      return dispatch({
                         type: 'register',
                         payload: {
-                          signer,
-                          acceleration,
                           name,
                         },
                       });
