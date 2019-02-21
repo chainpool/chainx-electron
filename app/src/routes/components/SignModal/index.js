@@ -79,7 +79,6 @@ class SignModal extends Mixin {
 
     const marks = {
       [defaultAcceleration]: '',
-      [max * 0.5]: '',
       [max]: '',
     };
     const sliderProps = {
