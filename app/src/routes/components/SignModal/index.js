@@ -1,15 +1,41 @@
 import React, { Component } from 'react';
 import { _, ChainX, Inject, Patterns, resOk } from '../../../utils';
-import { Modal, Button, Input } from '../../../components';
+import { Modal, Button, Input, Mixin, Slider } from '../../../components';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './index.less';
 
 @Inject(({ accountStore: model }) => ({ model }))
-class SignModal extends Component {
+class SignModal extends Mixin {
   state = {
-    acceleration: { label: '0.0001', value: '1' },
+    defaultAcceleration: 1,
+    acceleration: 1,
+    fee: '',
     password: '',
     passwordErrMsg: '',
+    showSlider: false,
+  };
+
+  startInit = async () => {
+    const {
+      globalStore: { modal: { data: { token: targetToken, callback } = {} } = {} },
+    } = this.props;
+    const token = targetToken || 'PCX';
+    if (_.isFunction(callback)) {
+      this.result = await callback({ token });
+      this.getFee();
+    }
+  };
+
+  getFee = async () => {
+    const { acceleration } = this.state;
+
+    const {
+      model: { setDefaultPrecision, currentAccount },
+    } = this.props;
+    const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
+    this.setState({
+      fee: setDefaultPrecision(fee),
+    });
   };
 
   checkAll = {
@@ -29,15 +55,13 @@ class SignModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { acceleration, password, passwordErrMsg } = this.state;
+    const { defaultAcceleration, acceleration, fee, password, passwordErrMsg, showSlider } = this.state;
     const {
       globalStore: {
         closeModal,
         nativeAssetName,
         modal: {
           data: {
-            token: targetToken,
-            callback,
             description = [
               { name: '操作', value: '挂单' },
               { name: '交易对', value: 'PCX /BTC' },
@@ -51,7 +75,30 @@ class SignModal extends Component {
       model: { currentAccount },
     } = this.props;
 
-    const token = targetToken || 'PCX';
+    const max = 10;
+
+    const marks = {
+      [defaultAcceleration]: '',
+      [max * 0.5]: '',
+      [max]: '',
+    };
+    const sliderProps = {
+      value: acceleration,
+      onChange: value => {
+        this.changeState(
+          {
+            acceleration: value,
+          },
+          this.getFee
+        );
+      },
+      marks: marks,
+      min: +defaultAcceleration,
+      max: +max,
+      defaultValue: defaultAcceleration,
+      step: 1,
+    };
+
     return (
       <Modal
         title="交易签名"
@@ -61,12 +108,13 @@ class SignModal extends Component {
             type="confirm"
             onClick={async () => {
               if (checkAll.confirm()) {
-                if (_.isFunction(callback)) {
-                  const result = await callback({ token });
+                if (this.result) {
+                  const result = this.result;
                   const extrinsic = result.extrinsic;
+                  closeModal();
                   extrinsic.signAndSend(
                     ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                    { acceleration: acceleration.value },
+                    { acceleration },
                     (err, res) => {
                       if (!err) {
                         resOk(res) && _.isFunction(result.success) && result.success(res);
@@ -75,7 +123,6 @@ class SignModal extends Component {
                       }
                     }
                   );
-                  closeModal();
                 }
               }
             }}>
@@ -92,18 +139,38 @@ class SignModal extends Component {
             ))}
           </ul>
           <div className={styles.fee}>
-            <span>交易费用</span>
+            <span>节点费用</span>
             <div className={styles.speed}>
-              <Input.Select
-                getOptionLabel={item => `${item.label}${nativeAssetName}`}
-                options={[acceleration]}
-                value={acceleration}
-                onChange={value => {
-                  this.setState({ acceleration: value });
-                }}
-              />
+              <div>
+                {fee} {nativeAssetName}
+                <span
+                  onClick={() => {
+                    this.setState({
+                      showSlider: !showSlider,
+                    });
+                  }}>
+                  <svg
+                    height="20"
+                    width="20"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    focusable="false"
+                    className="css-19bqh2r">
+                    <path
+                      d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                      fill="#7B7F82"
+                    />
+                  </svg>
+                </span>
+              </div>
             </div>
           </div>
+          {showSlider ? (
+            <div className={styles.slider}>
+              <Slider {...sliderProps} style={{ width: 276 }} />
+            </div>
+          ) : null}
+
           <Input.Text
             isPassword
             placeholder={PlaceHolder.password}
