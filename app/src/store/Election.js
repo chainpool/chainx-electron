@@ -130,7 +130,7 @@ export default class Election extends ModelExtend {
           lastDepositWeigh: record.lastTotalDepositWeight,
           lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
         };
-        item.discountVote = (item.price * item.circulation) / Math.pow(10, precision);
+        item.discountVote = (item.power * item.circulation) / Math.pow(10, precision);
 
         const blockNumber = this.rootStore.chainStore.blockNumber;
         // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
@@ -147,7 +147,7 @@ export default class Election extends ModelExtend {
           discountVoteShow: formatNumber.toPrecision(item.discountVote, nativeAssetPrecision),
           balanceShow: this.setPrecision(item.balance, token),
           circulationShow: this.setPrecision(item.circulation, token),
-          priceShow: formatNumber.toPrecision(item.price, nativeAssetPrecision),
+          priceShow: formatNumber.toPrecision(item.power, nativeAssetPrecision),
           jackpotShow: this.setPrecision(item.jackpot, nativeAssetPrecision),
         };
       });
