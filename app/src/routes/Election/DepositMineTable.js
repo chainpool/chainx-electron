@@ -3,6 +3,7 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import { observer } from '../../utils';
 import Balance from './components/Balance';
+import { HoverTip } from '@routes/components';
 
 @observer
 class DepositMineTable extends Mixin {
@@ -46,6 +47,13 @@ class DepositMineTable extends Mixin {
           title: '挖矿算力(PCX)',
           ellipse: true,
           dataIndex: 'priceShow',
+          render: (value, item) => {
+            return (
+              <span>
+                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : '每日均价 * 50%'}> {value}</HoverTip>
+              </span>
+            );
+          },
         },
         {
           title: '折合投票数',
