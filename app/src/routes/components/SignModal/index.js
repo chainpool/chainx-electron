@@ -78,8 +78,9 @@ class SignModal extends Mixin {
     const max = 10;
 
     const marks = {
-      [defaultAcceleration]: '',
-      [max]: '',
+      [defaultAcceleration]: 'x1',
+      [acceleration]: `x${acceleration}`,
+      [max]: 'x10',
     };
     const sliderProps = {
       value: acceleration,
@@ -166,7 +167,7 @@ class SignModal extends Mixin {
           </div>
           {showSlider ? (
             <div className={styles.slider}>
-              <Slider {...sliderProps} style={{ width: 256 }} />
+              <Slider {...sliderProps} style={{ width: 252 }} />
               <span className={styles.feedesc}>费用越高打包速度越快</span>
             </div>
           ) : null}
