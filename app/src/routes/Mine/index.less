@@ -1,0 +1,14 @@
+@import '~@styles/index.less';
+
+.mine {
+  padding: 24px;
+  .tableContainer {
+    .mixin_tableContainer();
+  }
+
+  > ul {
+    > li + li {
+      margin-top: 32px;
+    }
+  }
+}

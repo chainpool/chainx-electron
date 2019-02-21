@@ -1,4 +1,5 @@
 import { default as Asset } from '../Asset';
+import { default as Mine } from '../Mine';
 import { default as Election } from '../Election';
 import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
 import { default as TradeRecord } from '../TradeRecord';
@@ -15,7 +16,13 @@ export default [
     authority: [1],
   },
   {
-    title: '选举',
+    title: '充值挖矿',
+    path: PATH.mine,
+    component: Mine,
+    authority: [1],
+  },
+  {
+    title: '节点选举',
     path: PATH.election,
     component: Election,
   },
@@ -46,7 +53,7 @@ export default [
     component: Trust,
   },
   {
-    title: '交易',
+    title: '币币交易',
     path: PATH.trade,
     component: Trade,
   },
