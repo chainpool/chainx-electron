@@ -154,7 +154,7 @@ class PutOrder extends SwitchPair {
     const { changeBS, checkAll } = this;
 
     const {
-      model: { isLogin, openModal, dispatch, currentPair, setPrecision },
+      model: { isLogin, openModal, dispatch, currentPair, setPrecision, loading },
       accountStore: { currentAccount },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];

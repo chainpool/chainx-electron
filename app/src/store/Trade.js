@@ -7,6 +7,10 @@ export default class Trade extends ModelExtend {
     super(rootStore);
   }
 
+  @observable loading = {
+    putOrder: false,
+  };
+
   @observable name = 'trade';
   @observable currentPair = {
     assets: '',
@@ -160,6 +164,7 @@ export default class Trade extends ModelExtend {
     const extrinsic = putOrder(pairId, orderType, direction, Number(amount), Number(price));
     return {
       extrinsic,
+      loading: status => this.changeModel(this.loading.putOrder, status),
       success: res => {
         this.reload();
         _.isFunction(success) && success(res);
