@@ -72,9 +72,9 @@ class CrossChainBindModal extends Mixin {
             使用<strong>支持Data</strong>的Ethereum钱包钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
           </span>
         ),
-        value1: '0x00c5f23c64c9ffb9301834e6a2ec7f16c1624b3f',
+        value1: currentAddress,
         desc2: '公共地址',
-        value2: currentAddress,
+        value2: '0x000000000000000000000000000000000000abcd',
         warn: (
           <Warn>
             <div>

@@ -49,12 +49,12 @@ class PutOrder extends SwitchPair {
         Patterns.check('smallerOrEqual')(
           price,
           currentPair.maxLastPriceShow,
-          `最大报价为${currentPair.maxLastPriceShow}`
+          `最高报价为${currentPair.maxLastPriceShow}`
         ) ||
         Patterns.check('smallerOrEqual')(
           currentPair.minLastPriceShow,
           price,
-          `最小报价为${currentPair.minLastPriceShow}`
+          `最低报价为${currentPair.minLastPriceShow}`
         );
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
       return errMsg;

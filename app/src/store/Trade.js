@@ -31,8 +31,12 @@ export default class Trade extends ModelExtend {
   showUnitPrecision = (precision, unitPrecision) => {
     return value => {
       const show = precision - unitPrecision;
-      const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
-      return String(value).replace(reg, '$1');
+      // const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
+      // return String(value).replace(reg, '$1');
+
+      const re = new RegExp(`(\\d*\.\\d{` + show + `})\\d*$`);
+      const m = String(value).match(re);
+      return m[1];
     };
   };
 
@@ -117,6 +121,7 @@ export default class Trade extends ModelExtend {
       const precision = item.precision;
       const priceShow = price =>
         this.showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(price, precision));
+
       return {
         ...item,
         precision,

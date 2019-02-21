@@ -4,14 +4,21 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer } from '../../utils';
+import { _, observer, parseQueryString } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {
-  state = {
-    activeIndex: 0,
-    activeTrIndex: 0,
-  };
+  constructor(props) {
+    super(props);
+    const {
+      location: { search },
+    } = props;
+    const id = parseQueryString(search).id;
+    this.state = {
+      activeIndex: id || 0,
+      activeTrIndex: 0,
+    };
+  }
 
   switchPair = id => {
     const {
