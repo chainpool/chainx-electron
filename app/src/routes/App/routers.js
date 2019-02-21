@@ -22,7 +22,7 @@ export default [
     authority: [1],
   },
   {
-    title: '节点选举',
+    title: '投票选举',
     path: PATH.election,
     component: Election,
   },
@@ -48,7 +48,7 @@ export default [
     authority: [1],
   },
   {
-    title: '信托',
+    title: '资产信托',
     path: PATH.trust,
     component: Trust,
   },
@@ -56,6 +56,9 @@ export default [
     title: '币币交易',
     path: PATH.trade,
     component: Trade,
+  },
+  {
+    title: 'DAPP专区',
   },
   {
     title: '配置',
