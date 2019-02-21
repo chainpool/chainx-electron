@@ -27,7 +27,7 @@ class TransferModal extends Component {
       } = this.props;
       const errMsg =
         Patterns.check('required')(amount) ||
-        Patterns.check('smaller')(0, amount, '转账数量必须大于0') ||
+        //Patterns.check('smaller')(0, amount, '转账数量必须大于0') ||  // 可以为0
         Patterns.check('smallerOrEqual')(amount, freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
