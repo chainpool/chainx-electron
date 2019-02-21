@@ -46,16 +46,17 @@ class PutOrder extends SwitchPair {
       const errMsg =
         Patterns.check('required')(price) ||
         Patterns.check('precision')(price, currentPair.precision - currentPair.unitPrecision) ||
-        Patterns.check('smallerOrEqual')(
-          price,
-          currentPair.maxLastPriceShow,
-          `最高报价为${currentPair.maxLastPriceShow}`
-        ) ||
-        Patterns.check('smallerOrEqual')(
-          currentPair.minLastPriceShow,
-          price,
-          `最低报价为${currentPair.minLastPriceShow}`
-        );
+        action === 'buy'
+          ? Patterns.check('smallerOrEqual')(
+              price,
+              currentPair.maxLastPriceShow,
+              `最高 ${currentPair.maxLastPriceShow}`
+            )
+          : Patterns.check('smallerOrEqual')(
+              currentPair.minLastPriceShow,
+              price,
+              `最低 ${currentPair.minLastPriceShow}`
+            );
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
       return errMsg;
     },
