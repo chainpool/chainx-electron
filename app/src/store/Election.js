@@ -233,7 +233,15 @@ export default class Election extends ModelExtend {
   };
 
   /*更新节点*/
-  refresh = ({ signer, acceleration, url, participating, address, about }) => {
+  refresh = ({ url, participating, address, about }) => {
+    const extrinsic = refresh(url, participating, address, about);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _refresh = ({ signer, acceleration, url, participating, address, about }) => {
     refresh(signer, acceleration, url, participating, address, about, (err, result) => {
       resOk(result) && this.reload();
     });

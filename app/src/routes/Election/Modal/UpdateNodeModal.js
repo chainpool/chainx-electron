@@ -85,12 +85,10 @@ class UpdateNodeModal extends Component {
                       { name: '参选状态', value: willParticipating ? '参选' : '退选' },
                       { name: '简介', value: about },
                     ],
-                    callback: ({ signer, acceleration }) => {
-                      dispatch({
+                    callback: () => {
+                      return dispatch({
                         type: 'refresh',
                         payload: {
-                          signer,
-                          acceleration,
                           url: website,
                           participating: willParticipating,
                           address,
