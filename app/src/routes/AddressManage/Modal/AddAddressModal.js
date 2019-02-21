@@ -58,12 +58,13 @@ class AddAddressModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                const target = assets.find(asset => asset.name === chain.value);
                 dispatch({
                   type: 'addAddress',
                   payload: {
                     label: this.state.label,
-                    token: this.state.chain.token,
-                    chain: this.state.chain.chain,
+                    token: target.name,
+                    chain: target.chain,
                     address: this.state.address,
                   },
                 });
@@ -82,8 +83,7 @@ class AddAddressModal extends Component {
                 errMsg={chainErrMsg}
                 options={options}
                 onChange={value => {
-                  const asset = assets.find(asset => asset.name === value.value);
-                  this.setState({ chain: { chain: asset.chain, token: asset.name } });
+                  this.setState({ chain: value });
                 }}
                 onBlur={checkAll.checkChain}
               />
