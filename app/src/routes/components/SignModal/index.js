@@ -167,7 +167,8 @@ class SignModal extends Mixin {
           </div>
           {showSlider ? (
             <div className={styles.slider}>
-              <Slider {...sliderProps} style={{ width: 276 }} />
+              <Slider {...sliderProps} style={{ width: 256 }} />
+              <span className={styles.feedesc}>费用越高打包速度越快</span>
             </div>
           ) : null}
 
