@@ -80,12 +80,12 @@ class CrossChainAssetTable extends Mixin {
               const isSDOT = item.name === 'SDOT';
               return (
                 <ButtonGroup>
-                  {isTestNet && !isSDOT ? (
+                  {isTestNet ? (
                     <Button
                       type="warn"
                       onClick={() => {
                         openModal({
-                          name: 'GetCollarModal',
+                          name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
                         });
                       }}>
                       领币
