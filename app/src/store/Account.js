@@ -1,5 +1,5 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, parseQueryString, stringifyQueryString } from '../utils';
+import { _, localSave, parseQueryString, stringifyQueryString, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { ipc as ipcMsg } from '@constants';
 

@@ -17,9 +17,16 @@ class Mixin extends React.Component {
     } = prevProps;
     const {
       location: { search },
+      globalStore: { dispatch: dispatchGlobal },
     } = this.props;
 
     if (!_.isEqual(searchPrev, search)) {
+      dispatchGlobal({
+        type: 'setHistory',
+        payload: {
+          history: this.props.history,
+        },
+      });
       _.isFunction(this.startInit) && this.startInit();
       _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }

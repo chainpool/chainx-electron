@@ -68,7 +68,7 @@ class PutOrder extends SwitchPair {
       const errMsg =
         Patterns.check('required')(amount) ||
         Patterns.check('precision')(amount, currentPair.assetsPrecision) ||
-        Patterns.check('smaller')(amount, this.getMaxAmount(action, price), '数量不足');
+        Patterns.check('smallerOrEqual')(amount, this.getMaxAmount(action, price), '数量不足');
       this.changeBS(action, { amountErrMsg: errMsg }, callback);
       return errMsg;
     },
