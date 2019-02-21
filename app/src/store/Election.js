@@ -196,7 +196,15 @@ export default class Election extends ModelExtend {
   };
 
   /*解冻 */
-  unfreeze = ({ signer, acceleration, target, revocationIndex }) => {
+  unfreeze = ({ target, revocationIndex }) => {
+    const extrinsic = unfreeze(target, revocationIndex);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _unfreeze = ({ signer, acceleration, target, revocationIndex }) => {
     unfreeze(signer, acceleration, target, revocationIndex, (err, result) => {
       resOk(result) && this.reload();
     });
@@ -249,6 +257,14 @@ export default class Election extends ModelExtend {
 
   /*提息*/
   claim = ({ signer, acceleration, target }) => {
+    const extrinsic = claim(target);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  _claim = ({ signer, acceleration, target }) => {
     claim(signer, acceleration, target, (err, result) => {
       resOk(result) && this.reload();
     });

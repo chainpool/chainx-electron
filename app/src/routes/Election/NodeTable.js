@@ -133,12 +133,10 @@ class NodeTable extends Component {
                       name: 'SignModal',
                       data: {
                         description: [{ name: '操作', value: '提息' }],
-                        callback: ({ signer, acceleration }) => {
-                          dispatch({
+                        callback: () => {
+                          return dispatch({
                             type: 'claim',
                             payload: {
-                              signer,
-                              acceleration,
                               target: item.account,
                             },
                           });

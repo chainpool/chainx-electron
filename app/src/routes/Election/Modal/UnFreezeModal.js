@@ -55,12 +55,10 @@ class UnFreezeModal extends Component {
                     name: 'SignModal',
                     data: {
                       description: [{ name: '操作', value: '解冻' }],
-                      callback: ({ signer, acceleration }) => {
-                        dispatch({
+                      callback: () => {
+                        return dispatch({
                           type: 'unfreeze',
                           payload: {
-                            signer,
-                            acceleration,
                             target: account,
                             revocationIndex: index,
                           },
