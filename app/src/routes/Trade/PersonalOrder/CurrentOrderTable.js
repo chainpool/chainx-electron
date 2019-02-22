@@ -12,12 +12,16 @@ class CurrentOrderTable extends SwitchPair {
 
   render() {
     const {
-      model: { openModal, dispatch, currentOrderList = [] },
+      model: {
+        openModal,
+        dispatch,
+        currentOrderList = [],
+        loading: { cancelOrder },
+      },
       noDataTip,
     } = this.props;
-
     const tableProps = {
-      noDataTip: this.props.noDataTip,
+      noDataTip,
       tableHeight: [36, 40],
       className: styles.tableContainer,
       columns: [
@@ -70,6 +74,7 @@ class CurrentOrderTable extends SwitchPair {
           dataIndex: '_action',
           render: (value, item) => (
             <Button
+              loading={cancelOrder && item.loading}
               onClick={() => {
                 openModal({
                   name: 'SignModal',

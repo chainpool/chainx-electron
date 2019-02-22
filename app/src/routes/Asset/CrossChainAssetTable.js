@@ -11,10 +11,10 @@ import Asset from './components/Asset';
 @Inject(({ configureStore }) => ({ configureStore }))
 class CrossChainAssetTable extends Mixin {
   startInit = () => {
-    // const {
-    //   model: { dispatch },
-    // } = this.props;
-    // dispatch({ type: 'getAccountBTCAddresses' });
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({ type: 'getAccountBTCAddresses' });
   };
 
   render() {
@@ -78,6 +78,7 @@ class CrossChainAssetTable extends Mixin {
             dataIndex: '_action',
             render: (value, item) => {
               const isSDOT = item.name === 'SDOT';
+              const isBTC = item.name === 'BTC';
               return (
                 <ButtonGroup>
                   {isTestNet ? (
@@ -91,7 +92,7 @@ class CrossChainAssetTable extends Mixin {
                       领币
                     </Button>
                   ) : null}
-                  {hasBindAddress ? (
+                  {hasBindAddress && isBTC ? (
                     <Button
                       onClick={() => {
                         openModal({

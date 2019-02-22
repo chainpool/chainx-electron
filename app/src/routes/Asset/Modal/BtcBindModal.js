@@ -13,7 +13,7 @@ class CrossChainAssetTable extends Mixin {
     const registerUrl = process.env.CHAINX_BITCOIN_REGISTER_URL || 'https://wallet.chainx.org/bitcoin-register';
 
     return (
-      <Modal title="ChainX离线绑定工具">
+      <Modal title="ChainX绑定工具">
         <div className={styles.register}>
           <iframe
             title="绑定BTC账户"
