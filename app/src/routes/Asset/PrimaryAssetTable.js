@@ -8,7 +8,7 @@ import Asset from './components/Asset';
 
 function drawCandies(address) {
   if (!address) return;
-  fetch('http://wallet.chainx.org/server-api/faucet', {
+  fetch('https://wallet.chainx.org/server-api/faucet', {
     body: JSON.stringify({
       address,
     }),
