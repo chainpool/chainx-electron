@@ -115,6 +115,7 @@ class SignModal extends Mixin {
                   }
                   const extrinsic = result.extrinsic;
                   closeModal();
+                  _.isFunction(result.beforeSend) && result.beforeSend();
                   extrinsic.signAndSend(
                     ChainX.account.fromKeyStore(currentAccount.encoded, password),
                     { acceleration },

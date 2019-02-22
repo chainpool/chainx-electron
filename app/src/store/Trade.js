@@ -10,6 +10,7 @@ export default class Trade extends ModelExtend {
   @observable loading = {
     putOrderBuy: false,
     putOrderSell: false,
+    cancelOrder: true,
   };
 
   @observable name = 'trade';
@@ -180,6 +181,21 @@ export default class Trade extends ModelExtend {
     const extrinsic = cancelOrder(pairId, index);
     return {
       extrinsic,
+      beforeSend: () => {
+        this.changeModel(
+          'currentOrderList',
+          this.currentOrderList.map((item = {}) => {
+            if (item.index !== index) return item;
+            else {
+              return {
+                ...item,
+                loading: true,
+              };
+            }
+          })
+        );
+      },
+      loading: status => this.changeModel(`loading.cancelOrder`, status),
       success: () => this.reload(),
     };
   };
