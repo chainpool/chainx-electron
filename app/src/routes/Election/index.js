@@ -35,10 +35,7 @@ class Election extends Mixin {
       },
     } = this.props;
 
-    // const tabs = ['信托节点', '验证节点', '候选节点', '我的投票', '充值挖矿'];
-    const tabs = currentAddress
-      ? ['信托节点', '验证节点', '候选节点', '我的投票']
-      : ['信托节点', '验证节点', '候选节点'];
+    const tabs = currentAddress ? ['验证节点', '候选节点', '我的投票'] : ['验证节点', '候选节点'];
 
     const operations = (
       <ul>

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table, RouterGo } from '../../components';
+import { Button, ButtonGroup, RouterGo, Table } from '../../components';
 import { HoverTip } from '../components';
-import { Inject, isEmpty, formatNumber, toJS } from '../../utils';
+import { formatNumber, Inject, isEmpty } from '../../utils';
+import trusteeImg from '../../resource/trustee.png';
 
 const zeroPlaceHolder = '-';
 
@@ -23,12 +24,7 @@ class NodeTable extends Component {
       globalStore: { nativeAssetPrecision = 0 },
     } = this.props;
 
-    const dataSources = {
-      0: trustIntentions,
-      1: validators,
-      2: backupValidators,
-      3: validatorsWithMyNomination,
-    };
+    const dataSources = [validators, backupValidators, validatorsWithMyNomination];
 
     const tableProps = {
       className: styles.tableContainer,
@@ -46,11 +42,14 @@ class NodeTable extends Component {
           title: '名称',
           dataIndex: 'name',
           render: (value, item) => (
-            <HoverTip tip={item.about + ' '}>
-              <RouterGo isOutSide go={{ pathname: item.url }}>
-                {value}
-              </RouterGo>
-            </HoverTip>
+            <div className={styles.name}>
+              <HoverTip tip={item.about + ' '}>
+                <RouterGo isOutSide go={{ pathname: item.url }}>
+                  {value}
+                </RouterGo>
+              </HoverTip>
+              {item.isTrustee ? <img src={trusteeImg} alt="" /> : null}
+            </div>
           ),
         },
         {
