@@ -32,6 +32,7 @@ class WithDrawTable extends Mixin {
         },
         {
           title: '币种',
+          width: 100,
           dataIndex: 'token',
         },
         {
