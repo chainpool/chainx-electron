@@ -172,20 +172,20 @@ class Account extends Mixin {
                     <li
                       onClick={() => {
                         openModal({
-                          name: 'ImportAccountModal',
-                        });
-                      }}>
-                      <Icon name="icon-daoruzhanghu" />
-                      导入账户
-                    </li>
-                    <li
-                      onClick={() => {
-                        openModal({
                           name: 'CreateAccountModal',
                         });
                       }}>
                       <Icon name="icon-tianjia" />
                       新增账户
+                    </li>
+                    <li
+                      onClick={() => {
+                        openModal({
+                          name: 'ImportAccountModal',
+                        });
+                      }}>
+                      <Icon name="icon-daoruzhanghu" />
+                      导入账户
                     </li>
                   </ul>
                 </div>

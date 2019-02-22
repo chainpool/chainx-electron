@@ -26,9 +26,9 @@ class GetCollarModal extends Component {
                 <RouterGo
                   isOutSide
                   go={{
-                    pathname: 'https://bitpay.com/wallet',
+                    pathname: 'https://github.com/bitpay/copay/releases/tag/v4.8.1',
                   }}>
-                  https://bitpay.com/wallet，
+                  https://github.com/bitpay/copay/releases/tag/v4.8.1，
                 </RouterGo>
                 下载后点击Create personal wallet，Coin选择Bitcoin(BTC)，advanced
                 options选择Testnet即可创建一个testnet3地址。
