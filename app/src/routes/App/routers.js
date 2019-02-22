@@ -19,7 +19,6 @@ export default [
     title: '充值挖矿',
     path: PATH.mine,
     component: Mine,
-    authority: [1],
   },
   {
     title: '投票选举',
