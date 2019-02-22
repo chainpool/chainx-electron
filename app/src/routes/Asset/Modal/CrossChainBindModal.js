@@ -10,11 +10,11 @@ import parity from '../../../resource/parity.png';
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
   startInit = () => {
-    // const {
-    //   assetStore: { dispatch },
-    // } = this.props;
-    //
-    // dispatch({ type: 'getBTCTrusteeAddress' });
+    const {
+      assetStore: { dispatch },
+    } = this.props;
+
+    dispatch({ type: 'getTrusteeAddress', payload: { chain: 'Bitcoin' } });
   };
 
   render() {
@@ -71,7 +71,7 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            使用<strong>支持Data</strong>的Ethereum钱包钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
+            使用<strong>支持Data</strong>的Ethereum钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
           </span>
         ),
         value1: ChainX.account.decodeAddress(currentAddress),
