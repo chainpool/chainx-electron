@@ -53,7 +53,7 @@ class CrossChainBindModal extends Mixin {
                 onClick={() => {
                   openModal({ name: 'BtcBindModal' });
                 }}>
-                ChainX离线绑定工具
+                ChainX绑定工具
               </a>
               、
               <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">

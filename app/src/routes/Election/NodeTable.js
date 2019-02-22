@@ -12,14 +12,7 @@ class NodeTable extends Component {
   render() {
     const {
       activeIndex,
-      model: {
-        dispatch,
-        openModal,
-        trustIntentions = [],
-        validators = [],
-        backupValidators = [],
-        validatorsWithMyNomination = [],
-      },
+      model: { dispatch, openModal, validators = [], backupValidators = [], validatorsWithMyNomination = [] },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetPrecision = 0 },
     } = this.props;
