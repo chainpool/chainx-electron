@@ -8,7 +8,8 @@ export default class Trade extends ModelExtend {
   }
 
   @observable loading = {
-    putOrder: false,
+    putOrderBuy: false,
+    putOrderSell: false,
   };
 
   @observable name = 'trade';
@@ -164,7 +165,7 @@ export default class Trade extends ModelExtend {
     const extrinsic = putOrder(pairId, orderType, direction, Number(amount), Number(price));
     return {
       extrinsic,
-      loading: status => this.changeModel(this.loading.putOrder, status),
+      loading: status => this.changeModel(`loading[putOrder${direction}]`, status),
       success: res => {
         this.reload();
         _.isFunction(success) && success(res);

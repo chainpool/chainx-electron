@@ -12,11 +12,19 @@ export class Button extends React.Component {
       style = {},
       shape = 'circle',
       className,
+      loading = false,
     } = this.props;
     return (
       <button
         style={style}
-        className={classNames(styles.button, styles[size], styles[type], styles[shape], className)}
+        className={classNames(
+          styles.button,
+          styles[size],
+          styles[type],
+          styles[shape],
+          loading ? styles.loading : null,
+          className
+        )}
         onClick={() => {
           _.isFunction(onClick) && onClick();
         }}>
