@@ -28,7 +28,7 @@ class CrossChainBindModal extends Mixin {
       },
     } = this.props;
 
-    const opReturnHex = u8aToHex(new TextEncoder('utf-8').encode('ChainX:' + currentAddress));
+    const opReturnHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
     const show = {
       BTC: {
         desc1: (
