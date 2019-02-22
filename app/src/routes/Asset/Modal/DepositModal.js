@@ -16,8 +16,7 @@ class DepositModal extends Mixin {
   render() {
     const {
       model: { openModal },
-      globalStore: { modal: { data: { trusteeAddr } = {} } = {} },
-      assetStore: { btcAddresses = [] },
+      assetStore: { btcAddresses = [], btcTrusteeAddress },
     } = this.props;
 
     return (
@@ -50,7 +49,7 @@ class DepositModal extends Mixin {
             <div className={styles.title}>公共多签托管地址</div>
             <div className={styles.address}>
               <span className={styles.token}>Bitcoin:</span>
-              <Clipboard>{trusteeAddr}</Clipboard>
+              <Clipboard>{btcTrusteeAddress}</Clipboard>
             </div>
             <Warn>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</Warn>
           </div>

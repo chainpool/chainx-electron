@@ -28,7 +28,7 @@ class CrossChainBindModal extends Mixin {
       },
     } = this.props;
 
-    const opReturnHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
+    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
     const show = {
       BTC: {
         desc1: (
@@ -37,7 +37,7 @@ class CrossChainBindModal extends Mixin {
             的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
           </span>
         ),
-        value1: opReturnHex,
+        value1: chainxAddressHex,
         desc2: '公共多签托管地址',
         value2: btcTrusteeAddress,
         warn: (
@@ -74,7 +74,7 @@ class CrossChainBindModal extends Mixin {
             使用<strong>支持Data</strong>的Ethereum钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
           </span>
         ),
-        value1: ChainX.account.decodeAddress(currentAddress),
+        value1: chainxAddressHex,
         desc2: '公共地址',
         value2: '0x000000000000000000000000000000000000abcd',
         warn: (

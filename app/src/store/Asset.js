@@ -1,7 +1,6 @@
 import { _, observable, resOk } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  cancelOrder,
   getAddressByAccount,
   getAsset,
   getDepositList,
@@ -39,9 +38,10 @@ export default class Asset extends ModelExtend {
   @observable onChainAccountWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
   @observable accountAssets = []; // 现账户资产
-  @observable btcTrusteeAddress = '2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY'; // BTC公共多签地址
+  @observable btcTrusteeAddress; // BTC公共多签地址
 
-  @computed get normalizedAccountAssets() {
+  @computed
+  get normalizedAccountAssets() {
     const assetsInfo = this.rootStore.globalStore.assets; // 获取资产基本信息
     if (!assetsInfo) {
       return [];
