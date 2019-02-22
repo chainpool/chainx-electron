@@ -120,7 +120,11 @@ class SignModal extends Mixin {
                     { acceleration },
                     (err, res) => {
                       if (!err) {
-                        resOk(res) && _.isFunction(result.success) && result.success(res);
+                        if (resOk(res)) {
+                          _.isFunction(result.success) && result.success(res);
+                        } else if (resFail(res)) {
+                          _.isFunction(result.fail) && result.fail(err);
+                        }
                       } else {
                         _.isFunction(result.fail) && result.fail(err);
                       }
