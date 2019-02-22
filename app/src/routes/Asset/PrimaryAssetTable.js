@@ -22,7 +22,7 @@ function drawCandies(address) {
       if (resp.status === 200) {
         alert('领取成功，等待打包');
       } else if (resp.status === 429) {
-        alert('请不要重复点击，一分钟后领取');
+        alert('请不要重复点击，十分钟后领取');
       } else {
         alert('领取失败');
       }
