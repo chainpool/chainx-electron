@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button, Input, Modal } from '../../../components';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './UpdateNodeModal.less';
-import { PlaceHolder } from '../../../constants';
 
 @Inject(({ electionStore, accountStore }) => ({ electionStore, accountStore }))
 class UpdateNodeModal extends Component {
@@ -18,15 +17,21 @@ class UpdateNodeModal extends Component {
 
   componentDidMount() {
     const {
-      electionStore: { accountValidator = [] },
+      electionStore: { accountValidator = {}, dispatch },
     } = this.props;
 
-    console.log(accountValidator);
-    this.setState({
-      address: accountValidator.address,
-      website: accountValidator.url,
-      about: accountValidator.about,
-      willParticipating: accountValidator.isActive,
+    dispatch({ type: 'getNextKeyFor', payload: { address: accountValidator.account } }).then(() => {
+      const {
+        electionStore: {
+          accountValidator: { nextKey },
+        },
+      } = this.props;
+      this.setState({
+        address: nextKey,
+        website: accountValidator.url,
+        about: accountValidator.about,
+        willParticipating: accountValidator.isActive,
+      });
     });
   }
 
@@ -64,8 +69,8 @@ class UpdateNodeModal extends Component {
     const { address, addressErrMsg, website, websiteErrMsg, willParticipating, about, aboutErrMsg } = this.state;
     const {
       model: { dispatch, openModal },
-      electionStore: { accountValidator = [] },
     } = this.props;
+
     return (
       <Modal
         title="更新节点"
