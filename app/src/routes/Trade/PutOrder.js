@@ -153,7 +153,6 @@ class PutOrder extends SwitchPair {
 
   renderArea = ({ direction: { price, amount, action } = {}, label }) => {
     const { changeBS, checkAll } = this;
-
     const {
       model: { isLogin, openModal, dispatch, currentPair, setPrecision, loading },
       accountStore: { currentAccount },

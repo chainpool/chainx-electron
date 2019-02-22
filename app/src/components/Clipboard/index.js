@@ -10,7 +10,8 @@ export default class Clipboard extends Component {
   };
 
   componentDidMount() {
-    new ClipboardJS('.clipboard');
+    const { outInner = '' } = this.props;
+    new ClipboardJS(outInner ? '.outerInner' : '.clipboard');
   }
 
   render() {
@@ -27,7 +28,11 @@ export default class Clipboard extends Component {
             data-clipboard-target={`#${uid}`}
             style={{ marginLeft: children ? 8 : null }}
           />
-          {outInner}
+          {outInner ? (
+            <span className="outerInner" data-clipboard-target={`#${uid}`}>
+              {outInner}
+            </span>
+          ) : null}
         </Tooltip>
       </span>
     );
