@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { default as ReactSlider } from 'rc-slider';
+// import './rc-slider.css';
 import 'rc-slider/assets/index.css';
 import './index.less';
 

@@ -117,7 +117,7 @@ class ImportAccountModal extends Component {
           ) : (
             <Input.Text
               isTextArea
-              rows={1}
+              rows={3}
               label=""
               value={secretKey}
               errMsg={secretKeyErrMsg}
