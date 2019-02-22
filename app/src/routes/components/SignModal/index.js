@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { _, ChainX, Inject, Patterns, resOk } from '../../../utils';
+import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
 import { Modal, Button, Input, Mixin, Slider } from '../../../components';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './index.less';
@@ -110,6 +110,9 @@ class SignModal extends Mixin {
               if (checkAll.confirm()) {
                 if (this.result) {
                   const result = this.result;
+                  if (_.isFunction(result.loading)) {
+                    result.loading(true);
+                  }
                   const extrinsic = result.extrinsic;
                   closeModal();
                   extrinsic.signAndSend(
@@ -120,6 +123,9 @@ class SignModal extends Mixin {
                         resOk(res) && _.isFunction(result.success) && result.success(res);
                       } else {
                         _.isFunction(result.fail) && result.fail(err);
+                      }
+                      if (resOk(res) || resFail(res)) {
+                        result.loading(false);
                       }
                     }
                   );

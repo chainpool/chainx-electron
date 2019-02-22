@@ -46,12 +46,8 @@ class Handicap extends SwitchPair {
     });
 
     sellList = sellList.slice(0, 6);
-
-    const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0)
-      .fill()
-      .concat(sellList.slice(5 - sellList.length > 0 ? sellList.length - 5 : 0, sellList.length));
+    const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0).fill().concat(sellList);
     const dataSourceBuy = buyList.concat(new Array(5 - buyList.length > 0 ? 5 - buyList.length : 0).fill());
-
     const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     return (

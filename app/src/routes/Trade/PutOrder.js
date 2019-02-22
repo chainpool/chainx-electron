@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, RegEx } from '../../utils';
+import { _, Inject, Patterns, formatNumber, RegEx, classNames } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
@@ -183,6 +183,8 @@ class PutOrder extends SwitchPair {
       step: setPrecision(1, currentPair.assets),
       disabled: false,
     };
+
+    const loadingAction = action === 'buy' ? 'putOrderBuy' : 'putOrderSell';
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
@@ -252,8 +254,9 @@ class PutOrder extends SwitchPair {
         </div>
         {isLogin() ? (
           <div className={styles.submit}>
-            <button
-              className={styles[action]}
+            <Button
+              loading={loading[loadingAction]}
+              className={classNames(styles[action], loading[loadingAction] ? styles.loading : null)}
               onClick={() => {
                 if (checkAll.confirm(action) && !tradeErrMsg) {
                   const content = (
@@ -299,7 +302,7 @@ class PutOrder extends SwitchPair {
                 }
               }}>
               {label} {currentPair.assets}
-            </button>
+            </Button>
           </div>
         ) : null}
       </div>
