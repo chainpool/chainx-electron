@@ -46,10 +46,6 @@ class CrossChainBindModal extends Mixin {
               <strong>其他钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</strong>
               <br />
               目前支持的钱包有:{' '}
-              <a className={styles.anchor} href="https://trezor.io/" rel="noopener noreferrer" target="_blank">
-                Trezor
-              </a>
-              、
               <a
                 className={styles.anchor}
                 rel="noopener noreferrer"
@@ -59,8 +55,12 @@ class CrossChainBindModal extends Mixin {
                 }}>
                 ChainX离线绑定工具
               </a>
-              和
-              <a className={styles.anchor} href="https://coinb.in/" rel="noopener noreferrer" target="_blank">
+              、
+              <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
+                Trezor
+              </a>
+              、
+              <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
                 Coinb.in
               </a>{' '}
               等。
