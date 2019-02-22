@@ -73,7 +73,11 @@ class Header extends Component {
                     {/*{item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}*/}
                   </RouterGo>
                 );
-                return item.path === PATH.asset ? <AuthorityComponent key={item.path}>{com}</AuthorityComponent> : com;
+                return item.authority && item.authority[0] === 1 ? (
+                  <AuthorityComponent key={item.path}>{com}</AuthorityComponent>
+                ) : (
+                  com
+                );
               })}
             </ul>
           </div>
