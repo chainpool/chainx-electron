@@ -17,21 +17,14 @@ class UpdateNodeModal extends Component {
 
   componentDidMount() {
     const {
-      electionStore: { accountValidator = {}, dispatch },
+      electionStore: { accountValidator = {} },
     } = this.props;
 
-    dispatch({ type: 'getNextKeyFor', payload: { address: accountValidator.account } }).then(() => {
-      const {
-        electionStore: {
-          accountValidator: { nextKey },
-        },
-      } = this.props;
-      this.setState({
-        address: nextKey,
-        website: accountValidator.url,
-        about: accountValidator.about,
-        willParticipating: accountValidator.isActive,
-      });
+    this.setState({
+      address: accountValidator.sessionAddress,
+      website: accountValidator.url,
+      about: accountValidator.about,
+      willParticipating: accountValidator.isActive,
     });
   }
 

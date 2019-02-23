@@ -28,7 +28,10 @@ export default class Election extends ModelExtend {
 
   @computed get validatorsWithAddress() {
     return this.originIntentions.map(intention => {
-      return Object.assign({}, intention, { address: ChainX.account.encodeAddress(intention.account) });
+      return Object.assign({}, intention, {
+        address: ChainX.account.encodeAddress(intention.account),
+        sessionAddress: ChainX.account.encodeAddress(intention.sessionKey),
+      });
     });
   }
 
@@ -252,16 +255,5 @@ export default class Election extends ModelExtend {
   getIntentionBondingDuration = async () => {
     const duration = await getIntentionBondingDuration();
     this.changeModel('intentionBondingDuration', duration);
-  };
-
-  getNextKeyFor = async ({ address }) => {
-    const result = await ChainX.stake.getNextKeyFor(address);
-    if (result) {
-      const index = this.originIntentions.findIndex(item => item.account === address);
-      const intentions = [...this.originIntentions];
-      intentions.splice(index, 1, { nextKey: result, ...intentions[index] });
-
-      this.changeModel('originIntentions', intentions);
-    }
   };
 }
