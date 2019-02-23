@@ -20,6 +20,15 @@ export default class Slider extends Component {
     } = this.props;
     const [blue, gray] = ['#f6c94a', '#dce0e2'];
 
+    /*解决slider组件marks相同值keys warning问题*/
+    const keys = Object.keys(marks);
+    keys.map((item, index) => {
+      const ins = keys.map(item2 => String(parseFloat(item2))).indexOf(String(parseFloat(item)));
+      if (ins > -1 && ins !== index && index > 0) {
+        delete marks[item];
+      }
+    });
+
     const props = {
       onChange,
       ...(value ? { value } : {}),
