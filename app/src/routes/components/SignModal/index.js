@@ -137,24 +137,28 @@ class SignModal extends Mixin {
                   const extrinsic = result.extrinsic;
                   closeModal();
                   _.isFunction(result.beforeSend) && result.beforeSend();
-                  extrinsic.signAndSend(
-                    ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                    { acceleration },
-                    (err, res) => {
-                      if (!err) {
-                        if (resOk(res)) {
-                          success(res);
-                        } else if (resFail(res)) {
+                  try {
+                    extrinsic.signAndSend(
+                      ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                      { acceleration },
+                      (err, res) => {
+                        if (!err) {
+                          if (resOk(res)) {
+                            success(res);
+                          } else if (resFail(res)) {
+                            fail(err);
+                          }
+                        } else {
                           fail(err);
                         }
-                      } else {
-                        fail(err);
+                        if (resOk(res) || resFail(res)) {
+                          _.isFunction(result.loading) && result.loading(false);
+                        }
                       }
-                      if (resOk(res) || resFail(res)) {
-                        _.isFunction(result.loading) && result.loading(false);
-                      }
-                    }
-                  );
+                    );
+                  } catch (err) {
+                    fail(err);
+                  }
                 }
               }
             }}>
