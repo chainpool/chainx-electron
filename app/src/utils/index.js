@@ -191,3 +191,14 @@ export const formatNumber = {
   },
   percent: (value, accuracy = 0) => (value * 100).toFixed(accuracy) + '%',
 };
+
+export const getDeepPath = (routers, path) =>
+  routers.filter(one =>
+    _.find(
+      path
+        .split('/')
+        .filter(item => item)
+        .concat(path.slice(1)),
+      item => `/${item}` === one.path
+    )
+  ) || [];

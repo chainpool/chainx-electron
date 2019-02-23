@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { RouterGo, routerGo } from '../../../components';
-import { _ } from '../../../utils';
+import { _, getDeepPath } from '../../../utils';
 import routers from '../../App/routers';
 import * as styles from './index.less';
 
@@ -11,16 +11,7 @@ class BreadCrumb extends Component {
     const {
       match: { path },
     } = this.props;
-    const routes =
-      routers.filter(one =>
-        _.find(
-          path
-            .split('/')
-            .filter(item => item)
-            .concat(path.slice(1)),
-          item => `/${item}` === one.path
-        )
-      ) || [];
+    const routes = getDeepPath(routers, path);
     return (
       <ul className={styles.breadCrumb}>
         {routes.map((item, index) => (
