@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
-import { Modal, Button, Input, Mixin, Slider } from '../../../components';
+import { Modal, Button, Input, Mixin, Slider, Toast } from '../../../components';
 import { PlaceHolder } from '../../../constants';
+
 import * as styles from './index.less';
+
+const operation = '操作';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class SignModal extends Mixin {
@@ -63,7 +66,7 @@ class SignModal extends Mixin {
         modal: {
           data: {
             description = [
-              { name: '操作', value: '挂单' },
+              { name: operation, value: '挂单' },
               { name: '交易对', value: 'PCX /BTC' },
               { name: '方向', value: '买入' },
               { name: '报价', value: '0.00032424' },
@@ -110,9 +113,27 @@ class SignModal extends Mixin {
               if (checkAll.confirm()) {
                 if (this.result) {
                   const result = this.result;
-                  if (_.isFunction(result.loading)) {
-                    result.loading(true);
-                  }
+                  const {
+                    globalStore: { modal: { data: { description = [] } = {} } = {} },
+                  } = this.props;
+                  const operationItem = description.filter((item = {}) => item.name === operation)[0] || {};
+
+                  const success = res => {
+                    _.isFunction(result.success) && result.success(res);
+                    Toast.success(
+                      `${_.get(result, 'successToast.title') || operationItem.value || operation}已完成`,
+                      _.get(result, 'successToast.message')
+                    );
+                  };
+
+                  const fail = err => {
+                    _.isFunction(result.fail) && result.fail(err);
+                    Toast.warn(
+                      `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
+                      _.get(result, 'failToast.message')
+                    );
+                  };
+                  _.isFunction(result.loading) && result.loading(true);
                   const extrinsic = result.extrinsic;
                   closeModal();
                   _.isFunction(result.beforeSend) && result.beforeSend();
@@ -122,15 +143,15 @@ class SignModal extends Mixin {
                     (err, res) => {
                       if (!err) {
                         if (resOk(res)) {
-                          _.isFunction(result.success) && result.success(res);
+                          success(res);
                         } else if (resFail(res)) {
-                          _.isFunction(result.fail) && result.fail(err);
+                          fail(err);
                         }
                       } else {
-                        _.isFunction(result.fail) && result.fail(err);
+                        fail(err);
                       }
                       if (resOk(res) || resFail(res)) {
-                        result.loading(false);
+                        _.isFunction(result.loading) && result.loading(false);
                       }
                     }
                   );

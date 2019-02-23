@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { Button, ButtonGroup, Input, Slider, Toast } from '../../components';
-import { _, Inject, Patterns, formatNumber, RegEx, classNames } from '../../utils';
+import { Button, ButtonGroup, Input, Slider } from '../../components';
+import { _, Inject, Patterns, formatNumber, classNames } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
@@ -285,13 +285,11 @@ class PutOrder extends SwitchPair {
                             direction: action === 'buy' ? 'Buy' : 'Sell',
                             price,
                             amount,
-                            success: res => {
-                              if (res) {
-                                Toast.success('挂单已完成', content);
-                              }
+                            successToast: {
+                              message: content,
                             },
-                            fail: () => {
-                              Toast.warn('挂单报错', content);
+                            failToast: {
+                              message: content,
                             },
                           },
                         });

@@ -159,7 +159,7 @@ export default class Trade extends ModelExtend {
     this.changeModel('currentPair', this.getPair({ id }), {});
   };
 
-  putOrder = ({ pairId, orderType, direction, amount, price, success, fail }) => {
+  putOrder = ({ pairId, orderType, direction, amount, price, successToast, failToast }) => {
     const currentPair = this.currentPair;
     price = this.setPrecision(price, currentPair.precision, true);
     amount = this.setPrecision(amount, currentPair.assets, true);
@@ -167,13 +167,9 @@ export default class Trade extends ModelExtend {
     return {
       extrinsic,
       loading: status => this.changeModel(`loading[putOrder${direction}]`, status),
-      success: res => {
-        this.reload();
-        _.isFunction(success) && success(res);
-      },
-      fail: err => {
-        _.isFunction(fail) && fail(err);
-      },
+      success: () => this.reload(),
+      successToast,
+      failToast,
     };
   };
 
