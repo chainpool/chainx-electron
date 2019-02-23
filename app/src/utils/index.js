@@ -78,7 +78,7 @@ export const Patterns = {
     }
   },
   required: (value, errMsg = '必填') => {
-    return !value ? errMsg : '';
+    return !value && value !== 0 ? errMsg : '';
   },
   equal: (value1, value2, errMsg = '不相等') => {
     if (value1 && value2) {

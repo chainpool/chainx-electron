@@ -163,23 +163,6 @@ class InputText extends Mixin {
   };
 
   componentDidUpdate() {
-    // console.log(this.state.errMsg, this.props.errMsg, this.props.value, '==========');
-    // if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
-    //   this.setState({
-    //     errMsg: this.props.errMsg,
-    //   });
-    // }
-    // console.log(this.state.errMsg, '--', prevProps.errMsg, '||', this.props.errMsg, '++', this.props.value, '==');
-    // if (prevProps.errMsg !== this.props.errMsg) {
-    //   this.setState({
-    //     errMsg: this.props.errMsg,
-    //   });
-    // } else if (this.state.errMsg === '' && this.props.errMsg && this.props.value === '') {
-    //   this.setState({
-    //     errMsg: this.props.errMsg,
-    //   });
-    // }
-
     this.checkStatus();
   }
 
@@ -198,7 +181,7 @@ class InputText extends Mixin {
   };
 
   render() {
-    const { passwordType, errMsg } = this.state;
+    const { passwordType } = this.state;
     const {
       children,
       isPassword = false,
@@ -221,7 +204,10 @@ class InputText extends Mixin {
       className,
       isDecimal = false,
       precision,
+      errMsgIsOutside = false,
     } = this.props;
+
+    const errMsg = errMsgIsOutside ? this.props.errMsg : this.state.errMsg;
     const props = {
       placeholder,
       type: isPassword && passwordType ? 'password' : 'text',
