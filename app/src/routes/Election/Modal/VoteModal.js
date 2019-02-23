@@ -68,7 +68,7 @@ class VoteModal extends Mixin {
     } = this.props;
 
     const bondingSeconds =
-      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 3600);
+      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
     const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}`;
 
     return (
@@ -116,7 +116,7 @@ class VoteModal extends Mixin {
                   value={action}
                   onClick={() => this.setState({ action: item.value })}>
                   {item.value === 'cancel' ? (
-                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}小时)`}</span>
+                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}分钟)`}</span>
                   ) : null}
                 </Input.Radio>
               ))}

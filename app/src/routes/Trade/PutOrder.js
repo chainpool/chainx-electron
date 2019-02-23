@@ -69,6 +69,8 @@ class PutOrder extends SwitchPair {
         Patterns.check('required')(amount) ||
         Patterns.check('precision')(amount, currentPair.assetsPrecision) ||
         Patterns.check('smallerOrEqual')(amount, this.getMaxAmount(action, price), '数量不足');
+
+      // console.log(amount, errMsg, '==========================================amount');
       this.changeBS(action, { amountErrMsg: errMsg }, callback);
       return errMsg;
     },
@@ -171,10 +173,12 @@ class PutOrder extends SwitchPair {
     const sliderProps = {
       value: Number(amount),
       onChange: value => {
-        checkAll.checkAmount(action, () => {
-          checkAll.checkTotal(action);
+        // console.log(value, marks, '=======================');
+        changeBS(action, { amount: value }, () => {
+          checkAll.checkAmount(action, () => {
+            checkAll.checkTotal(action);
+          });
         });
-        changeBS(action, { amount: value });
       },
       marks: marks,
       max: +max,

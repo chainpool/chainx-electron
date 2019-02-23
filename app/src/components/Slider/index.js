@@ -14,7 +14,7 @@ export default class Slider extends Component {
       marks = {},
       onChange,
       defaultValue,
-      value = 50,
+      value = 0,
       style = {},
       disabled,
     } = this.props;
@@ -31,7 +31,8 @@ export default class Slider extends Component {
 
     const props = {
       onChange,
-      ...(value ? { value } : {}),
+      value,
+      //...(value ? { value } : { value: 0 }),
       marks,
       defaultValue,
       min,
