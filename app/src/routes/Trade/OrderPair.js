@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer, parseQueryString } from '../../utils';
+import { _, observer, parseQueryString, toJS } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {
@@ -45,7 +45,8 @@ class OrderPair extends SwitchPair {
     } = this.props;
     orderPairs = orderPairs.filter((item = {}) => item.online);
     const groupPairs = _.groupBy(orderPairs, 'currency') || {};
-    const dataSource = groupPairs[_.keys(groupPairs)[activeIndex]] || [];
+    const activeOne = orderPairs.filter((item = {}) => item.id === +activeIndex)[0] || {};
+    const dataSource = groupPairs[activeOne.currency] || [];
     const tableProps = {
       activeTrIndex: Math.max(_.findIndex(dataSource, (item = {}) => currentPair.id === item.id), 0),
       tableHeight: [36, 40],
