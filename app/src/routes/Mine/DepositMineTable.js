@@ -39,7 +39,7 @@ class DepositMineTable extends Mixin {
           width: 120,
         },
         {
-          title: '最新总余额',
+          title: '全链总余额',
           ellipse: true,
           dataIndex: 'circulationShow',
         },

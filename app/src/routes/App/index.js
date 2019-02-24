@@ -5,9 +5,10 @@ import { ChainX, parseQueryString } from '../../utils';
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
-import { AuthorityRoute } from '../../components';
+import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
+import * as styles from './index.less';
 
 @Inject(({ globalStore, accountStore, electionStore }) => ({ globalStore, accountStore, electionStore }))
 class Main extends Component {
@@ -86,7 +87,12 @@ class Main extends Component {
         {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
     ) : (
-      '连接中'
+      <div className={styles.loading}>
+        <div>
+          <Loading size={60} />
+          <div className={styles.desc}>加载中......</div>
+        </div>
+      </div>
     );
   }
 }
