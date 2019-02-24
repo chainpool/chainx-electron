@@ -44,23 +44,23 @@ class DepositMineTable extends Mixin {
           dataIndex: 'circulationShow',
         },
         {
-          title: '挖矿算力(PCX)',
+          title: '挖矿算力',
           ellipse: true,
           dataIndex: 'priceShow',
           render: (value, item) => {
             return (
               <span>
-                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : '每日均价 * 50%'}> {value}</HoverTip>
+                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : '每日均价 * 50%'}> {`1: ${value}`}</HoverTip>
               </span>
             );
           },
         },
         {
-          title: '折合投票数',
+          title: '折合投票数(PCX)',
           dataIndex: 'discountVoteShow',
         },
         {
-          title: '奖池金额',
+          title: '奖池金额(PCX)',
           dataIndex: 'jackpotShow',
         },
         {
@@ -69,7 +69,7 @@ class DepositMineTable extends Mixin {
           render: value => <Balance value={value} />,
         },
         {
-          title: '待领利息',
+          title: '待领利息(PCX)',
           dataIndex: 'interestShow',
           render: value => <Balance value={value} />,
         },
