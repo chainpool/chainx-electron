@@ -143,7 +143,7 @@ export default class Trade extends ModelExtend {
     };
 
     const pairs = this.orderPairs.length ? this.orderPairs : localSave.get('orderPair');
-    if (pairs.length) {
+    if (pairs && pairs.length) {
       update();
       this.changeModel('orderPairs', pairs, []);
       return Promise.resolve(pairs);
