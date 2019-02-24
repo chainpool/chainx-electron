@@ -16,7 +16,7 @@ class Trade extends SwitchPair {
 
   startInit = async () => {
     const {
-      model: { dispatch, openModal } = {},
+      model: { dispatch } = {},
       location: { search },
     } = this.props;
     const id = parseQueryString(search).id;
@@ -27,9 +27,6 @@ class Trade extends SwitchPair {
         id,
       },
     });
-    // openModal({
-    //   name: 'SignModal',
-    // });
     this.setState({
       show: true,
     });

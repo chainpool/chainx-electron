@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable, resOk, resFail, toJS } from '../utils';
+import { _, formatNumber, moment_helper, observable, resOk, resFail, toJS, localSave } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -121,24 +121,35 @@ export default class Trade extends ModelExtend {
   };
 
   getOrderPairs = async () => {
-    // if (this.orderPairs.length) return Promise.resolve(this.orderPairs);
-    let res = await getOrderPairs();
-    res = res.map((item = {}) => {
-      const precision = item.precision;
-      const priceShow = price =>
-        this.showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(price, precision));
+    const update = async () => {
+      let res = await getOrderPairs();
+      res = res.map((item = {}) => {
+        const precision = item.precision;
+        const priceShow = price =>
+          this.showUnitPrecision(precision, item.unitPrecision)(this.setPrecision(price, precision));
 
-      return {
-        ...item,
-        precision,
-        lastPriceShow: priceShow(item.lastPrice),
-        maxLastPriceShow: priceShow(item.lastPrice * 1.1),
-        minLastPriceShow: priceShow(item.lastPrice * 0.9),
-      };
-    });
-    this.changeModel('orderPairs', res, []);
-    console.log(res, '------pair交易对列表');
-    return res;
+        return {
+          ...item,
+          precision,
+          lastPriceShow: priceShow(item.lastPrice),
+          maxLastPriceShow: priceShow(item.lastPrice * 1.1),
+          minLastPriceShow: priceShow(item.lastPrice * 0.9),
+        };
+      });
+      this.changeModel('orderPairs', res, []);
+      localSave.set('orderPair', res || []);
+      console.log(res, '------pair交易对列表');
+      return res;
+    };
+
+    const pairs = this.orderPairs.length ? this.orderPairs : localSave.get('orderPair');
+    if (pairs.length) {
+      update();
+      this.changeModel('orderPairs', pairs, []);
+      return Promise.resolve(pairs);
+    } else {
+      return await update();
+    }
   };
 
   getPair = ({ id }) => {
