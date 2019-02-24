@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { default as ReactSlider } from 'rc-slider';
-// import './rc-slider.css';
-import 'rc-slider/assets/index.css';
+import { default as ReactSlider } from 'slider-perfect';
+import 'slider-perfect/assets/index.css';
 import './index.less';
 
 export default class Slider extends Component {
