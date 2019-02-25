@@ -45,10 +45,9 @@ export default class Trade extends ModelExtend {
       const show = precision - unitPrecision;
       // const reg = new RegExp(`(\.\\d{` + show + `})0*$`);
       // return String(value).replace(reg, '$1');
-
       const re = new RegExp(`(\\d*\.\\d{` + show + `})\\d*$`);
       const m = String(value).match(re);
-      return m[1];
+      return m ? m[1] : 0;
     };
   };
 
