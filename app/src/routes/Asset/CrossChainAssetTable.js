@@ -100,6 +100,7 @@ class CrossChainAssetTable extends Mixin {
                           data: {
                             token: item.name,
                             trusteeAddr: item.trusteeAddr,
+                            chain: item.chain,
                           },
                         });
                       }}>
