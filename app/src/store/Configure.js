@@ -20,4 +20,25 @@ export default class Configure extends ModelExtend {
   setCurrentNetWork({ name, ip }) {
     this.changeModel('currentNetWork', { name, ip });
   }
+
+  update = () => {};
+
+  updateNode = ({ action, ...rest }) => {
+    const { name, address } = rest;
+    const nodes = [...this.nodes];
+    switch (action) {
+      case 'add':
+        {
+          nodes.push({
+            type: '自定义',
+            name,
+            address,
+          });
+        }
+        break;
+      case 'delete': {
+      }
+    }
+    this.changeModel('nodes', nodes);
+  };
 }

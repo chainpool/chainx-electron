@@ -7,7 +7,7 @@ import { Table, Button, ButtonGroup } from '../../components';
 class NodeManageTable extends Component {
   render() {
     const {
-      model: { openModal, nodes = [] },
+      model: { openModal, nodes = [], dispatch },
       widths,
     } = this.props;
 
@@ -43,7 +43,7 @@ class NodeManageTable extends Component {
             title: '',
             dataIndex: '_action',
             width: 200,
-            render: () => (
+            render: (value, item, s, index) => (
               <ButtonGroup>
                 <Button onClick={() => {}}>停止同步</Button>
                 <Button onClick={() => {}}>修改</Button>
@@ -53,6 +53,15 @@ class NodeManageTable extends Component {
                       name: 'DeleteNodeModal',
                       data: {
                         title: '删除节点',
+                        callback: () => {
+                          dispatch({
+                            type: 'updateNode',
+                            payload: {
+                              action: 'delete',
+                              index,
+                            },
+                          });
+                        },
                       },
                     });
                   }}>

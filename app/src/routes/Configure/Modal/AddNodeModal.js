@@ -31,7 +31,7 @@ class AddNodeModal extends Component {
     const { checkAll } = this;
     const { name, nameErrMsg, address, addressErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch },
     } = this.props;
     return (
       <Modal
@@ -42,6 +42,14 @@ class AddNodeModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'updateNode',
+                  payload: {
+                    action: 'add',
+                    name,
+                    address,
+                  },
+                });
                 closeModal();
               }
             }}>
@@ -55,7 +63,7 @@ class AddNodeModal extends Component {
             value={name}
             errMsg={nameErrMsg}
             onChange={value => {
-              this.setState({ name: value });
+              this.setState({ name: value.slice(0, 12) });
             }}
             onBlur={checkAll.checkName}
           />
