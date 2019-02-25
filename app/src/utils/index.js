@@ -14,7 +14,7 @@ export { localSave, moment_helper, Rx } from './helper';
 export { default as classNames } from 'classnames';
 
 // ----------------------------项目适用
-export { toJS, observable, action, runInAction } from 'mobx';
+export { toJS, observable, computed, action, runInAction } from 'mobx';
 
 export const resOk = result => {
   console.log(result);

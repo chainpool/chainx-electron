@@ -21,17 +21,8 @@ class OrderPair extends SwitchPair {
   }
 
   switchPair = id => {
-    const {
-      model: { dispatch },
-      history,
-    } = this.props;
+    const { history } = this.props;
     history.push({ search: `?id=${id}` });
-    dispatch({
-      type: 'switchPair',
-      payload: {
-        id,
-      },
-    });
   };
 
   render() {

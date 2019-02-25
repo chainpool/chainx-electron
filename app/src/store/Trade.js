@@ -1,4 +1,4 @@
-import { _, formatNumber, moment_helper, observable, resOk, resFail, toJS, localSave } from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, toJS, localSave, parseQueryString } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
@@ -14,14 +14,20 @@ export default class Trade extends ModelExtend {
   };
 
   @observable name = 'trade';
-  @observable currentPair = {
-    assets: '',
-    currency: '',
-    precision: '',
-    unitPrecision: '',
-    assetsPrecision: '',
-    lastPriceShow: '',
-  };
+  @computed get currentPair() {
+    const prev = {
+      assets: '',
+      currency: '',
+      precision: '',
+      unitPrecision: '',
+      assetsPrecision: '',
+      lastPriceShow: '',
+    };
+    return {
+      ...prev,
+      ...this.getPair({}),
+    };
+  }
   @observable orderPairs = [];
   @observable buyList = [];
   @observable sellList = [];
@@ -153,6 +159,11 @@ export default class Trade extends ModelExtend {
   };
 
   getPair = ({ id }) => {
+    const history = this.getHistory();
+    const {
+      location: { search },
+    } = history;
+    id = id || parseQueryString(search).id;
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
     if (findOne) {
@@ -164,10 +175,6 @@ export default class Trade extends ModelExtend {
       ...currentPair,
       assetsPrecision: this.getPrecision(currentPair.assets),
     };
-  };
-
-  switchPair = ({ id }) => {
-    this.changeModel('currentPair', this.getPair({ id }), {});
   };
 
   putOrder = ({ pairId, orderType, direction, amount, price, successToast, failToast }) => {

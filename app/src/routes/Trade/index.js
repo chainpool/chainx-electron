@@ -15,18 +15,8 @@ class Trade extends SwitchPair {
   };
 
   startInit = async () => {
-    const {
-      model: { dispatch } = {},
-      location: { search },
-    } = this.props;
-    const id = parseQueryString(search).id;
+    const { model: { dispatch } = {} } = this.props;
     await dispatch({ type: 'getOrderPairs' });
-    await dispatch({
-      type: 'switchPair',
-      payload: {
-        id,
-      },
-    });
     this.setState({
       show: true,
     });

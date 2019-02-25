@@ -118,7 +118,12 @@ class SignModal extends Mixin {
                   } = this.props;
                   const operationItem = description.filter((item = {}) => item.name === operation)[0] || {};
 
+                  const reCoverLoading = status => {
+                    _.isFunction(result.loading) && result.loading(status);
+                  };
+
                   const success = res => {
+                    reCoverLoading(false);
                     _.isFunction(result.success) && result.success(res);
                     Toast.success(
                       `${_.get(result, 'successToast.title') || operationItem.value || operation}已完成`,
@@ -127,13 +132,15 @@ class SignModal extends Mixin {
                   };
 
                   const fail = err => {
+                    reCoverLoading(false);
                     _.isFunction(result.fail) && result.fail(err);
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
                       _.get(result, 'failToast.message')
                     );
                   };
-                  _.isFunction(result.loading) && result.loading(true);
+
+                  reCoverLoading(true);
                   const extrinsic = result.extrinsic;
                   closeModal();
                   _.isFunction(result.beforeSend) && result.beforeSend();
