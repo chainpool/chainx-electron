@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Input, Mixin, Modal, RadioGroup } from '../../../components';
 import { InputHorizotalList } from '../../components';
 import { PlaceHolder } from '../../../constants';
-import { Inject, Patterns } from '../../../utils';
+import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import * as styles from './VoteModal.less';
 import { FreeBalance } from '@routes/components';
 
@@ -85,7 +85,7 @@ class VoteModal extends Mixin {
                   data: {
                     description: [
                       { name: '操作', value: operation },
-                      { name: `${operation}数量`, value: amount },
+                      { name: `${operation}数量`, value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],
                     callback: () => {
