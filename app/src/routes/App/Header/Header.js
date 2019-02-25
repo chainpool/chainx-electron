@@ -67,12 +67,12 @@ class Header extends Component {
                   <RouterGo
                     key={item.path}
                     Ele="li"
-                    go={{ pathname: item.path }}
+                    go={{ pathname: item.status === 'awaiting' ? '' : item.path }}
                     className={
                       getDeepPath(routers, pathname).filter(item2 => item2.path === item.path)[0] ? styles.active : null
                     }>
                     {item.title}
-                    {/*{item.path === PATH.trade ? <div className={styles.feewarn}>0手续费</div> : null}*/}
+                    {item.warn ? <div className={styles.warn}>{item.warn}</div> : null}
                   </RouterGo>
                 );
                 return item.authority && item.authority[0] === 1 ? (

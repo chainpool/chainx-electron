@@ -58,10 +58,13 @@ export default [
     path: PATH.trade,
     component: Trade,
   },
-  // {
-  //   title: 'DAPP专区',
-  //   path: '/dapp',
-  // },
+  {
+    title: 'DAPP专区',
+    path: '/dapp',
+    component: Trade,
+    status: 'awaiting',
+    warn: '敬请期待',
+  },
   {
     title: '配置',
     show: false,
