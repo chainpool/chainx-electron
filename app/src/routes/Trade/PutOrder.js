@@ -138,9 +138,10 @@ class PutOrder extends SwitchPair {
       model: { currentPair, setPrecision },
     } = this.props;
     const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
+    const unit = action === 'buy' ? currentPair.currency : currentPair.assets;
     return action === 'buy'
-      ? setPrecision(currentCurrencyAssetFree / price, currentPair.assets)
-      : setPrecision(currentAssetsAssetFree, currentPair.assets);
+      ? setPrecision(currentCurrencyAssetFree / price, unit)
+      : setPrecision(currentAssetsAssetFree, unit);
   };
 
   getMaxTradePrecision = () => {
