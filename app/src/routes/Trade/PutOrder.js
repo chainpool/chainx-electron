@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider } from '../../components';
-import { _, Inject, Patterns, formatNumber, classNames } from '../../utils';
+import { _, Inject, Patterns, formatNumber, classNames, setBlankSpace } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
@@ -273,7 +273,8 @@ class PutOrder extends SwitchPair {
                         { name: '操作', value: '交易' },
                         { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
                         { name: '方向', value: action === 'buy' ? '买入' : '卖出' },
-                        { name: '报价', value: price },
+                        { name: '报价', value: setBlankSpace(price, currentPair.currency) },
+                        { name: '数量', value: setBlankSpace(amount, currentPair.assets) },
                         { name: '账户', value: currentAccount.address },
                       ],
                       callback: () => {

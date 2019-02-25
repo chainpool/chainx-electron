@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal } from '../../../components';
 import { FreeBalance, InputHorizotalList } from '../../components';
-import { Inject, Patterns } from '../../../utils';
+import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ accountStore, addressManageStore }) => ({ accountStore, addressManageStore }))
@@ -72,7 +72,7 @@ class TransferModal extends Component {
                     token: token,
                     description: [
                       { name: '操作', value: '转账' },
-                      { name: '转账数量', value: `${amount}${token}` },
+                      { name: '转账数量', value: `${setBlankSpace(amount, token)}` },
                       { name: '接收人地址', value: address },
                       { name: '备注', value: remark },
                     ],

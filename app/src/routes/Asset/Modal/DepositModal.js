@@ -2,7 +2,7 @@ import React from 'react';
 import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
-import { Inject, toJS } from '@utils';
+import { Inject } from '@utils';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class DepositModal extends Mixin {
@@ -24,8 +24,6 @@ class DepositModal extends Mixin {
       model: { openModal },
       assetStore: { btcAddresses = [], btcTrusteeAddress },
     } = this.props;
-
-    console.log(toJS(btcTrusteeAddress));
 
     return (
       <Modal title="跨链充值">

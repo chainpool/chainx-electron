@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, Mixin } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Inject, Patterns } from '../../../utils';
+import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ addressManageStore }) => ({ addressManageStore }))
@@ -29,7 +29,7 @@ class WithdrawModal extends Mixin {
             remark: '备注',
           },
         });
-        if (!res) return '地址格式错误';
+        if (!!res) return '地址格式错误';
         return '';
       };
       // TODO: 根据token检查地址格式
@@ -91,6 +91,7 @@ class WithdrawModal extends Mixin {
                     description: [
                       { name: '操作', value: '提现' },
                       { name: '收款地址', value: address },
+                      { name: '数量', value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],
                     callback: ({ token }) => {

@@ -202,3 +202,7 @@ export const getDeepPath = (routers, path) =>
       item => `/${item}` === one.path
     )
   ) || [];
+
+export const setBlankSpace = (value, unit) => {
+  return `${value} ${unit}`;
+};

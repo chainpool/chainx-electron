@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Table } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
-import { observer } from '../../../utils';
+import { observer, setBlankSpace } from '../../../utils';
 
 @observer
 class CurrentOrderTable extends SwitchPair {
@@ -50,12 +50,12 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: `委托价格`,
           dataIndex: 'priceShow',
-          render: (value, item) => `${value}${' '}${item.filterPair.currency}`,
+          render: (value, item) => setBlankSpace(value, item.filterPair.currency),
         },
         {
           title: `委托数量`,
           dataIndex: 'amountShow',
-          render: (value, item) => `${value}${' '}${item.filterPair.assets}`,
+          render: (value, item) => setBlankSpace(value, item.filterPair.assets),
         },
         {
           title: `冻结金额`,
@@ -66,7 +66,7 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: `实际成交/成交率`,
           dataIndex: 'hasfillAmountShow',
-          render: (value, item) => `${value}${' '}(${item.hasfillAmountPercent})`,
+          render: (value, item) => setBlankSpace(value, item.hasfillAmountPercent),
         },
         {
           width: 50,
@@ -87,8 +87,8 @@ class CurrentOrderTable extends SwitchPair {
                         name: '方向',
                         value: item.direction === 'Buy' ? '买入' : '卖出',
                       },
-                      { name: '委托价格', value: item.priceShow },
-                      { name: '委托数量', value: item.amountShow },
+                      { name: '委托价格', value: setBlankSpace(item.priceShow, item.filterPair.currency) },
+                      { name: '委托数量', value: setBlankSpace(item.amountShow, item.filterPair.assets) },
                     ],
                     callback: () => {
                       return dispatch({
