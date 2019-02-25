@@ -26,20 +26,6 @@ class Header extends Component {
       return !(item.path === PATH.trust && !isTrustee);
     });
 
-    const accountAndSetting = [isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
-      return item === 0 ? (
-        <li key={index}>
-          <RouterGo go={{ pathname: PATH.configure }} className={pathname === PATH.configure ? styles.active : null}>
-            <Icon name="icon-shezhi" />
-          </RouterGo>
-        </li>
-      ) : item === 1 ? (
-        <li key={index}>
-          <Account {...this.props} />
-        </li>
-      ) : null;
-    });
-
     const txRecord = (
       <AuthorityComponent>
         <li>
@@ -89,11 +75,21 @@ class Header extends Component {
                 {/*TODO: 没有API服务器，暂时隐藏交易记录*/}
                 {false && txRecord}
 
-                <li>
-                  <Account {...this.props} />
-                </li>
-                {/* TODO: 暂时隐藏APP设置*/}
-                {false && accountAndSetting}
+                {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
+                  return item === 0 ? (
+                    <li key={index}>
+                      <RouterGo
+                        go={{ pathname: PATH.configure }}
+                        className={pathname === PATH.configure ? styles.active : null}>
+                        <Icon name="icon-shezhi" />
+                      </RouterGo>
+                    </li>
+                  ) : item === 1 ? (
+                    <li key={index}>
+                      <Account {...this.props} />
+                    </li>
+                  ) : null;
+                })}
               </ul>
             </div>
           </div>

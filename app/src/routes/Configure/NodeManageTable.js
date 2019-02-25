@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { setColumnsWidth } from '../../utils';
+import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
 
+@observer
 class NodeManageTable extends Component {
   render() {
     const {
-      model: { openModal },
+      model: { openModal, nodes = [] },
       widths,
     } = this.props;
 
@@ -16,27 +17,27 @@ class NodeManageTable extends Component {
         [
           {
             title: '类别',
-            dataIndex: 'data1',
+            dataIndex: 'type',
           },
           {
             title: '名称',
-            dataIndex: 'data2',
+            dataIndex: 'name',
           },
           {
             title: '节点地址',
-            dataIndex: 'data3',
+            dataIndex: 'address',
           },
           {
             title: '网络延迟',
-            dataIndex: 'data4',
+            dataIndex: 'delay',
           },
           {
             title: '连接节点数',
-            dataIndex: 'data5',
+            dataIndex: 'link',
           },
           {
             title: '同步状态',
-            dataIndex: 'data6',
+            dataIndex: 'syncStatus',
           },
           {
             title: '',
@@ -63,16 +64,7 @@ class NodeManageTable extends Component {
         ],
         widths
       ),
-      dataSource: [
-        {
-          data1: '系统默认',
-          data2: '本机私有',
-          data3: 'ws://localhost:6789',
-          data4: '1ms',
-          data5: '5个',
-          data6: '88.88%',
-        },
-      ],
+      dataSource: nodes,
     };
     return <Table {...tableProps} />;
   }
