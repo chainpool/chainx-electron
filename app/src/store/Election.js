@@ -118,6 +118,7 @@ export default class Election extends ModelExtend {
   reload = () => {
     this.getIntentions();
     this.getPseduIntentions();
+    this.getAccountAssets();
   };
 
   getPseduIntentions = async () => {
