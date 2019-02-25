@@ -71,19 +71,21 @@ class Main extends Component {
     } = this.props;
     return ready ? (
       <CommonLayOut {...this.props}>
-        <Switch>
-          {routers.map(item => (
-            <AuthorityRoute
-              authority={item.authority}
-              requireTrustee={item.requireTrustee}
-              key={item.path}
-              path={item.path}
-              exact
-              render={props => <item.component {...props} {...this.props} />}
-            />
-          ))}
-          <Redirect key={0} to={PATH.default} />
-        </Switch>
+        <Suspense fallback={<Loading size={60} />}>
+          <Switch>
+            {routers.map(item => (
+              <AuthorityRoute
+                authority={item.authority}
+                requireTrustee={item.requireTrustee}
+                key={item.path}
+                path={item.path}
+                exact
+                render={props => <item.component {...props} {...this.props} />}
+              />
+            ))}
+            <Redirect key={0} to={PATH.default} />
+          </Switch>
+        </Suspense>
         {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
     ) : (
@@ -97,18 +99,14 @@ class Main extends Component {
   }
 }
 
-const LoadingMessage = () => "I'm loading...";
-
 export default class App extends Component {
   render() {
     return (
       <Router>
-        <Suspense fallback={<LoadingMessage />}>
-          <Switch>
-            <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
-            <Route path="/" render={props => <Main {...props} {...this.props} />} />
-          </Switch>
-        </Suspense>
+        <Switch>
+          <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
+          <Route path="/" render={props => <Main {...props} {...this.props} />} />
+        </Switch>
       </Router>
     );
   }
