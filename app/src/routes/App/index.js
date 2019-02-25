@@ -69,9 +69,19 @@ class Main extends Component {
         modal: { name },
       },
     } = this.props;
+
+    const loading = (
+      <div className={styles.loading}>
+        <div>
+          <Loading size={60} />
+          <div className={styles.desc}>加载中......</div>
+        </div>
+      </div>
+    );
+
     return ready ? (
       <CommonLayOut {...this.props}>
-        <Suspense fallback={<Loading size={60} />}>
+        <Suspense fallback={loading}>
           <Switch>
             {routers.map(item => (
               <AuthorityRoute
@@ -89,12 +99,7 @@ class Main extends Component {
         {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
     ) : (
-      <div className={styles.loading}>
-        <div>
-          <Loading size={60} />
-          <div className={styles.desc}>加载中......</div>
-        </div>
-      </div>
+      loading
     );
   }
 }
