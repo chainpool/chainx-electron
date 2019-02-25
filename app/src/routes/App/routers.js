@@ -55,7 +55,7 @@ export default [
   {
     title: 'DAPP专区',
     path: '/dapp',
-    component: Trade,
+    component: lazy(() => import('../Trade')),
     status: 'awaiting',
     warn: '敬请期待',
   },
