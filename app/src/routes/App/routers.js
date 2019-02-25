@@ -1,62 +1,56 @@
-import { default as Asset } from '../Asset';
-import { default as Mine } from '../Mine';
-import { default as Election } from '../Election';
-import { default as DepositWithDrawRecord } from '../DepositWithDrawRecord';
-import { default as TradeRecord } from '../TradeRecord';
-import { default as AddressManage } from '../AddressManage';
-import { default as Trade } from '../Trade';
 import { default as Configure } from '../Configure';
-import { default as Trust } from '../Trust';
 import { PATH } from '../../constants';
+import { lazy } from 'react';
+
 export default [
   {
     title: '资产',
     path: PATH.asset,
-    component: Asset,
+    component: lazy(() => import('../Asset')),
     authority: [1],
   },
   {
     title: '充值挖矿',
     path: PATH.mine,
-    component: Mine,
+    component: lazy(() => import('../Mine')),
   },
   {
     title: '投票选举',
     path: PATH.election,
-    component: Election,
+    component: lazy(() => import('../Election')),
   },
   {
     title: '充提记录',
     show: false,
     path: PATH.depositWithdrawRecord,
-    component: DepositWithDrawRecord,
+    component: lazy(() => import('../DepositWithDrawRecord')),
     authority: [1],
   },
   {
     title: '交易记录',
     show: false,
     path: PATH.tradeRecord,
-    component: TradeRecord,
+    component: lazy(() => import('../TradeRecord')),
     authority: [1],
   },
   {
     title: '地址管理',
     show: false,
     path: PATH.addressManage,
-    component: AddressManage,
+    component: lazy(() => import('../AddressManage')),
     authority: [1],
   },
   {
     title: '资产信托',
     path: PATH.trust,
-    component: Trust,
+    component: lazy(() => import('../Trust')),
     authority: [1],
     requireTrustee: true,
   },
   {
     title: '币币交易',
     path: PATH.trade,
-    component: Trade,
+    component: lazy(() => import('../Trade')),
   },
   {
     title: 'DAPP专区',

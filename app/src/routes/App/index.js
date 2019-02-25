@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
 import { ChainX, parseQueryString } from '../../utils';
@@ -97,14 +97,18 @@ class Main extends Component {
   }
 }
 
+const LoadingMessage = () => "I'm loading...";
+
 export default class App extends Component {
   render() {
     return (
       <Router>
-        <Switch>
-          <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
-          <Route path="/" render={props => <Main {...props} {...this.props} />} />
-        </Switch>
+        <Suspense fallback={<LoadingMessage />}>
+          <Switch>
+            <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
+            <Route path="/" render={props => <Main {...props} {...this.props} />} />
+          </Switch>
+        </Suspense>
       </Router>
     );
   }
