@@ -36,8 +36,8 @@ export default class Election extends ModelExtend {
       const precision = precisionMap[token];
       const record = this.originPseduRecords.find(record => record.id === item.id) || {};
       item = {
-        ...item,
         ...record,
+        ...item,
         lastDepositWeigh: record.lastTotalDepositWeight,
         lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
       };
