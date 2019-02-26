@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
-import { Patterns } from '../../../utils';
-import * as styles from './AddNodeModal.less';
+import { Modal, Input, Button, Mixin } from '../../../components';
+import { Patterns, observer, _ } from '../../../utils';
+import * as styles from './OperationNodeModal.less';
 
-class AddNodeModal extends Component {
+@observer
+class OperationNodeModal extends Mixin {
   state = {
     name: '',
     nameErrMsg: '',
@@ -32,32 +33,33 @@ class AddNodeModal extends Component {
     const { checkAll } = this;
     const { name, nameErrMsg, address, addressErrMsg } = this.state;
     const {
-      model: { closeModal, dispatch },
+      model: { closeModal },
+      globalStore: {
+        modal: { data: { action, callback } = {} },
+      },
     } = this.props;
     return (
       <Modal
-        title="添加节点"
+        title={`${action === 'add' ? '添加' : '修改'}节点`}
         button={
           <Button
             size="full"
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                dispatch({
-                  type: 'updateNode',
-                  payload: {
-                    action: 'add',
+                _.isFunction(callback) &&
+                  callback({
+                    action,
                     name,
                     address,
-                  },
-                });
+                  });
                 closeModal();
               }
             }}>
             确定
           </Button>
         }>
-        <div className={styles.addNodeModal}>
+        <div className={styles.OperationNodeModal}>
           <Input.Text
             placeholder="12个字符以内"
             label="名称"
@@ -88,4 +90,4 @@ class AddNodeModal extends Component {
   }
 }
 
-export default AddNodeModal;
+export default OperationNodeModal;

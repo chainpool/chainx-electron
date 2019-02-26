@@ -7,3 +7,4 @@ export { default as HoverTip } from './HoverTip';
 export { default as Warn } from './Warn';
 export { default as ConfirmAndCancelModal } from './ConfirmAndCancelModal';
 export { default as SignModal } from './SignModal';
+export { default as IncreaseTime } from './IncreaseTime';

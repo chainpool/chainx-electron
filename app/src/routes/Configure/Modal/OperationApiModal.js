@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { Patterns } from '../../../utils';
-import * as styles from './AddApiModal.less';
+import * as styles from './OperationApiModal.less';
 
-class AddApiModal extends Component {
+class OperationApiModal extends Component {
   state = {
     name: '',
     nameErrMsg: '',
@@ -49,7 +49,7 @@ class AddApiModal extends Component {
             确定
           </Button>
         }>
-        <div className={styles.addApiModal}>
+        <div className={styles.OperationApiModal}>
           <Input.Text
             placeholder="12个字符以内"
             label="名称"
@@ -80,4 +80,4 @@ class AddApiModal extends Component {
   }
 }
 
-export default AddApiModal;
+export default OperationApiModal;

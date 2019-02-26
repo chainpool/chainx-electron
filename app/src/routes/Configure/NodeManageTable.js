@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
+import { IncreaseTime } from '../components';
 
 @observer
 class NodeManageTable extends Component {
@@ -30,6 +31,7 @@ class NodeManageTable extends Component {
           {
             title: '网络延迟',
             dataIndex: 'delay',
+            render: value => <IncreaseTime value={value} />,
           },
           {
             title: '连接节点数',
@@ -43,10 +45,31 @@ class NodeManageTable extends Component {
             title: '',
             dataIndex: '_action',
             width: 200,
-            render: (value, item, s, index) => (
+            render: (value, item, index) => (
               <ButtonGroup>
                 <Button onClick={() => {}}>停止同步</Button>
-                <Button onClick={() => {}}>修改</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'OperationNodeModal',
+                      data: {
+                        action: 'update',
+                        callback: ({ action, name, address }) => {
+                          dispatch({
+                            type: 'updateNode',
+                            payload: {
+                              action,
+                              index,
+                              name,
+                              address,
+                            },
+                          });
+                        },
+                      },
+                    });
+                  }}>
+                  修改
+                </Button>
                 <Button
                   onClick={() => {
                     openModal({
