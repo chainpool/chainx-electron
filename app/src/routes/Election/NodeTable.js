@@ -97,21 +97,19 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {currentAddress && item.isActive ? (
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'VoteModal',
-                      data: {
-                        target: item.account,
-                        myTotalVote: item.myTotalVote,
-                        isCurrentAccount: item.address === currentAccount.address,
-                      },
-                    });
-                  }}>
-                  投票
-                </Button>
-              ) : null}
+              <Button
+                onClick={() => {
+                  openModal({
+                    name: 'VoteModal',
+                    data: {
+                      target: item.account,
+                      myTotalVote: item.myTotalVote,
+                      isCurrentAccount: item.address === currentAccount.address,
+                    },
+                  });
+                }}>
+                投票
+              </Button>
               {item.myRevocation ? (
                 <Button
                   onClick={() => {
