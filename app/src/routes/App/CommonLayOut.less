@@ -1,3 +1,4 @@
+@import '~@styles/index.less';
 .layout {
   position: relative;
   width: 100%;
@@ -8,6 +9,7 @@
   flex-grow: 1;
   .header,
   .footer {
+    min-width: @winWidth;
     z-index: 10000;
     position: fixed;
     left: 0;
