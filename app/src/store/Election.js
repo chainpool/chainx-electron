@@ -22,9 +22,47 @@ export default class Election extends ModelExtend {
   @observable name = 'election';
   @observable originIntentions = []; // intentions rpc返回数据
   @observable originNominationRecords = []; // 投票记录rpc返回数据
-  @observable pseduIntentions = []; //充值挖矿列表
   @observable bondingDuration = 0; // 投票赎回锁定块数
   @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
+  @observable originPseduIntentions = [];
+  @observable originPseduRecords = [];
+
+  @computed get pseduIntentions() {
+    const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
+    const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
+
+    return this.originPseduIntentions.map((item = {}) => {
+      const token = item.id;
+      const precision = precisionMap[token];
+      const record = this.originPseduRecords.find(record => record.id === item.id) || {};
+      item = {
+        ...item,
+        ...record,
+        lastDepositWeigh: record.lastTotalDepositWeight,
+        lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
+      };
+      item.discountVote = (item.power * item.circulation) / Math.pow(10, precision);
+
+      // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
+      const myWeight =
+        (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance + record.lastTotalDepositWeight;
+      // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
+      const nodeVoteWeight =
+        (this.blockNumber - item.lastTotalDepositWeightUpdate) * item.circulation + item.lastTotalDepositWeight;
+      // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
+      item.interest = nodeVoteWeight <= 0 ? 0 : (myWeight / nodeVoteWeight) * item.jackpot;
+
+      return {
+        ...item,
+        interestShow: this.setPrecision(item.interest, nativeAssetPrecision),
+        discountVoteShow: formatNumber.toPrecision(item.discountVote, nativeAssetPrecision),
+        balanceShow: this.setPrecision(item.balance, token),
+        circulationShow: this.setPrecision(item.circulation, token),
+        priceShow: formatNumber.toPrecision(item.power, nativeAssetPrecision),
+        jackpotShow: this.setPrecision(item.jackpot, nativeAssetPrecision),
+      };
+    });
+  }
 
   @computed get validatorsWithAddress() {
     return this.originIntentions.map(intention => {
@@ -35,6 +73,10 @@ export default class Election extends ModelExtend {
     });
   }
 
+  @computed get blockNumber() {
+    return this.rootStore.chainStore.blockNumber;
+  }
+
   // 当前账户节点
   @computed get accountValidator() {
     const account = this.getCurrentAccount();
@@ -42,8 +84,7 @@ export default class Election extends ModelExtend {
   }
 
   @computed get validatorsWithRecords() {
-    const blockNumber = this.rootStore.chainStore.blockNumber;
-    if (typeof blockNumber === 'undefined') {
+    if (typeof this.blockNumber === 'undefined') {
       return [];
     }
 
@@ -70,10 +111,11 @@ export default class Election extends ModelExtend {
       }, 0);
 
       // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
-      const myWeight = (blockNumber - record.lastVoteWeightUpdate) * myTotalVote + record.lastVoteWeight;
+      const myWeight = (this.blockNumber - record.lastVoteWeightUpdate) * myTotalVote + record.lastVoteWeight;
       // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
       const nodeVoteWeight =
-        (blockNumber - intention.lastTotalVoteWeightUpdate) * intention.totalNomination + intention.lastTotalVoteWeight;
+        (this.blockNumber - intention.lastTotalVoteWeightUpdate) * intention.totalNomination +
+        intention.lastTotalVoteWeight;
       // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
       const myInterest = (myWeight / nodeVoteWeight) * intention.jackpot;
 
@@ -122,48 +164,10 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
-    const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
-    const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
     const getPseduIntentions$ = Rx.combineLatest(getPseduIntentions(), this.getPseduNominationRecords());
-    let res = [];
     return getPseduIntentions$.subscribe(([pseduIntentions = [], records = []]) => {
-      res = pseduIntentions.map((item = {}) => {
-        const token = item.id;
-        const precision = precisionMap[token];
-        const record = records.find(record => record.id === item.id) || {};
-        item = {
-          ...item,
-          ...record,
-          lastDepositWeigh: record.lastTotalDepositWeight,
-          lastDepositWeightUpdate: record.lastTotalDepositWeightUpdate,
-        };
-        item.discountVote = (item.power * item.circulation) / Math.pow(10, precision);
-
-        const blockNumber = this.rootStore.chainStore.blockNumber;
-        // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
-        const myWeight = (blockNumber - item.lastDepositWeightUpdate) * record.balance + item.lastDepositWeigh;
-        // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
-        const nodeVoteWeight =
-          (blockNumber - item.lastTotalDepositWeightUpdate) * item.circulation + item.lastTotalDepositWeight;
-        // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
-        item.interest = nodeVoteWeight <= 0 ? 0 : (myWeight / nodeVoteWeight) * item.jackpot;
-
-        return {
-          ...item,
-          interestShow: this.setPrecision(item.interest, nativeAssetPrecision),
-          discountVoteShow: formatNumber.toPrecision(item.discountVote, nativeAssetPrecision),
-          balanceShow: this.setPrecision(item.balance, token),
-          circulationShow: this.setPrecision(item.circulation, token),
-          priceShow: formatNumber.toPrecision(item.power, nativeAssetPrecision),
-          jackpotShow: this.setPrecision(item.jackpot, nativeAssetPrecision),
-        };
-      });
-      this.changeModel(
-        {
-          pseduIntentions: res,
-        },
-        []
-      );
+      this.changeModel('originPseduIntentions', pseduIntentions);
+      this.changeModel('originPseduRecords', records);
     });
   };
 
