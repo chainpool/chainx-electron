@@ -80,8 +80,6 @@ class CrossChainBindModal extends Mixin {
         warn: (
           <Warn>
             <div className={styles.sdot}>
-              <strong>其他钱包交易中的备注字段并不是Data，无法发起跨链绑定交易。</strong>
-              <br />
               目前支持的钱包有:{' '}
               <a className={styles.anchor} href="https://token.im/" rel="noopener noreferrer" target="_blank">
                 imToken
