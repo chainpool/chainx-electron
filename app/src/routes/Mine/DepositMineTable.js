@@ -17,12 +17,9 @@ class DepositMineTable extends Mixin {
     });
   };
 
-  componentWillUnsubscribe() {
-    this.getPseduIntentions$.unsubscribe();
-  }
   render() {
     const {
-      model: { openModal, dispatch, pseduIntentions = [] },
+      model: { openModal, dispatch, normalizedPseduIntentions = [] },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -41,12 +38,12 @@ class DepositMineTable extends Mixin {
         {
           title: '全链总余额',
           ellipse: true,
-          dataIndex: 'circulationShow',
+          dataIndex: 'circulation',
         },
         {
           title: '挖矿算力',
           ellipse: true,
-          dataIndex: 'priceShow',
+          dataIndex: 'price',
           render: (value, item) => {
             return (
               <span>
@@ -57,20 +54,20 @@ class DepositMineTable extends Mixin {
         },
         {
           title: '折合投票数(PCX)',
-          dataIndex: 'discountVoteShow',
+          dataIndex: 'discountVote',
         },
         {
           title: '奖池金额(PCX)',
-          dataIndex: 'jackpotShow',
+          dataIndex: 'jackpot',
         },
         {
           title: '我的总余额',
-          dataIndex: 'balanceShow',
+          dataIndex: 'balance',
           render: value => <Balance value={value} />,
         },
         {
           title: '待领利息(PCX)',
-          dataIndex: 'interestShow',
+          dataIndex: 'interest',
           render: value => <Balance value={value} />,
         },
         {
@@ -104,7 +101,7 @@ class DepositMineTable extends Mixin {
           ),
         },
       ],
-      dataSource: pseduIntentions,
+      dataSource: normalizedPseduIntentions,
     };
     return <Table {...tableProps} />;
   }
