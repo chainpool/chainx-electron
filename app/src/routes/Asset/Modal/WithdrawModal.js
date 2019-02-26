@@ -94,11 +94,11 @@ class WithdrawModal extends Mixin {
                       { name: '数量', value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],
-                    callback: ({ token }) => {
+                    callback: () => {
                       return dispatch({
                         type: 'withdraw',
                         payload: {
-                          token,
+                          token, // 注意这里的token不要用callback的参数
                           amount,
                           dest: address,
                           remark,

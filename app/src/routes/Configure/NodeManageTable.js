@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
+import { IncreaseTime } from '../components';
 
 @observer
 class NodeManageTable extends Component {
@@ -30,6 +31,7 @@ class NodeManageTable extends Component {
           {
             title: '网络延迟',
             dataIndex: 'delay',
+            render: value => <IncreaseTime value={value} />,
           },
           {
             title: '连接节点数',

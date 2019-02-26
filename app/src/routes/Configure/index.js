@@ -11,11 +11,11 @@ import * as styles from './index.less';
 @Inject(({ configureStore: model }) => ({ model }))
 class Configure extends Mixin {
   startInit = () => {
-    // const {
-    //   model: { openModal },
-    // } = this.props;
-    // openModal({
-    //   name: 'DeleteApiModal',
+    const {
+      model: { dispatch },
+    } = this.props;
+    // dispatch({
+    //   type: 'subScribe',
     // });
   };
   render() {
