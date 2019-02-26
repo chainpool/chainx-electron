@@ -63,12 +63,16 @@ class DepositMineTable extends Mixin {
         {
           title: '我的总余额',
           dataIndex: 'balance',
-          render: value => <Balance value={value} />,
+          render: value => {
+            return value ? <Balance value={value} /> : '-';
+          },
         },
         {
           title: '待领利息(PCX)',
           dataIndex: 'interest',
-          render: value => <Balance value={value} />,
+          render: value => {
+            return value ? <Balance value={value} /> : '-';
+          },
         },
         {
           title: '',

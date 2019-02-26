@@ -1,8 +1,9 @@
-import { ChainX, observable, Rx, formatNumber } from '../utils';
+import { ChainX, formatNumber, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
-  voteClaim,
+  getBondingDuration,
+  getIntentionBondingDuration,
   getIntentions,
   getNominationRecords,
   getPseduIntentions,
@@ -12,8 +13,7 @@ import {
   register,
   unfreeze,
   unnominate,
-  getBondingDuration,
-  getIntentionBondingDuration,
+  voteClaim,
 } from '../services';
 import { computed } from 'mobx';
 import { Chainx } from '@utils/index';
@@ -33,36 +33,41 @@ export default class Election extends ModelExtend {
 
     return this.originPseduIntentions.map((intention = {}) => {
       const token = intention.id;
-      const precision = precisionMap[token];
-      const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
-
       // 折合投票数
-      const discountVote = (intention.power * intention.circulation) / Math.pow(10, precision);
+      const discountVote = (intention.power * intention.circulation) / Math.pow(10, precisionMap[token]);
 
-      // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
-      const myWeight =
-        (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance + record.lastTotalDepositWeight;
-      // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
-      const nodeVoteWeight =
-        (this.blockNumber - intention.lastTotalDepositWeightUpdate) * intention.circulation +
-        intention.lastTotalDepositWeight;
-      // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
-
-      // TODO: record.lastTotalDepositWeightUpdate <= 0的条件属于补救措施，后边应改掉
-      const interest =
-        nodeVoteWeight <= 0 || record.lastTotalDepositWeightUpdate <= 0
-          ? 0
-          : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
-
-      return {
+      const result = {
         ...intention,
-        interest: this.setPrecision(interest, nativeAssetPrecision),
         discountVote: formatNumber.toPrecision(discountVote, nativeAssetPrecision),
-        balance: this.setPrecision(record.balance, token),
         circulation: this.setPrecision(intention.circulation, token),
         price: formatNumber.toPrecision(intention.power, nativeAssetPrecision),
         jackpot: this.setPrecision(intention.jackpot, nativeAssetPrecision),
       };
+
+      const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
+      if (record) {
+        // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
+        const myWeight =
+          (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance + record.lastTotalDepositWeight;
+        // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
+        const nodeVoteWeight =
+          (this.blockNumber - intention.lastTotalDepositWeightUpdate) * intention.circulation +
+          intention.lastTotalDepositWeight;
+        // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
+
+        // TODO: record.lastTotalDepositWeightUpdate <= 0的条件属于补救措施，后边应改掉
+        const interest =
+          nodeVoteWeight <= 0 || record.lastTotalDepositWeightUpdate <= 0
+            ? 0
+            : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
+
+        Object.assign(result, {
+          interest: this.setPrecision(interest, nativeAssetPrecision),
+          balance: this.setPrecision(record.balance, token),
+        });
+      }
+
+      return result;
     });
   }
 
@@ -168,7 +173,7 @@ export default class Election extends ModelExtend {
   getPseduIntentions = async () => {
     const [intentions, records] = await Promise.all([getPseduIntentions(), this.getPseduNominationRecords()]);
     this.changeModel('originPseduIntentions', intentions);
-    this.changeModel('originPseduRecords', records);
+    this.changeModel('originPseduRecords', records || []);
   };
 
   getPseduNominationRecords = async () => {
