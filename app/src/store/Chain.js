@@ -6,6 +6,7 @@ import { subscribeNewHead, getBlockPeriod } from '../services';
 let newHeadSubscription;
 
 class Chain extends ModelExtend {
+  static count = 0;
   @observable blockNumber;
   @observable blockTime;
   @observable blockDuration = 2000; // 出块时间
@@ -23,7 +24,8 @@ class Chain extends ModelExtend {
       const blockTime = new Date(head.now * 1000);
       this.setBlockNumber(head.number);
       this.changeModel('blockTime', blockTime);
-      _.isFunction(callback) && callback(blockTime);
+      !Chain.count && _.isFunction(callback) && callback(blockTime);
+      Chain.count += 1;
     });
     return newHeadSubscription;
   }
