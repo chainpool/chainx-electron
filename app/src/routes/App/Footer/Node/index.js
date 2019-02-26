@@ -5,6 +5,7 @@ import { classNames, Inject, moment_helper } from '@utils/index';
 
 @Inject(({ chainStore }) => ({ chainStore }))
 class Node extends Component {
+  static count = 0;
   constructor(props) {
     super(props);
     this.state = { date: new Date() };
@@ -18,8 +19,10 @@ class Node extends Component {
       type: 'subscribeNewHead',
       payload: {
         callback: blockTime => {
-          if (moment_helper.diff(blockTime, Date.now()) > 1) {
+          const isLocal = /localhost/.test(window.location.href);
+          if (!Node.count && moment_helper.diff(blockTime, Date.now()) > 1 && !isLocal) {
             alert('ChainX测试网已暂停，无法发送交易，只能查看，请稍后再测。');
+            Node.count += 1;
           }
         },
       },
