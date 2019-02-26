@@ -83,7 +83,7 @@ class UpdateNodeModal extends Component {
                     description: [
                       { name: '操作', value: '更新节点' },
                       { name: '出块地址', value: address },
-                      { name: '网址', value: website },
+                      { name: '官网域名', value: website },
                       { name: '参选状态', value: willParticipating ? '参选' : '退选' },
                       { name: '简介', value: about },
                     ],
@@ -115,7 +115,7 @@ class UpdateNodeModal extends Component {
             onBlur={checkAll.checkAddress}
           />
           <Input.Text
-            label="网址"
+            label="官网域名"
             placeholder="32个字符以内"
             value={website}
             errMsg={websiteErrMsg}
