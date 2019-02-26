@@ -10,12 +10,20 @@ class Node extends Component {
     this.state = { date: new Date() };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {
       chainStore: { dispatch },
     } = this.props;
-
-    dispatch({ type: 'subscribeNewHead' });
+    dispatch({
+      type: 'subscribeNewHead',
+      payload: {
+        callback: blockTime => {
+          if (moment_helper.diff(blockTime, Date.now()) > 1) {
+            alert('ChainX测试网已暂停，无法发送交易，只能查看，请稍后再测。');
+          }
+        },
+      },
+    });
   }
 
   componentWillUnmount() {

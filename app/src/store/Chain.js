@@ -18,11 +18,14 @@ class Chain extends ModelExtend {
     this.changeModel('blockNumber', blockNumber);
   }
 
-  subscribeNewHead() {
+  subscribeNewHead({ callback }) {
     newHeadSubscription = subscribeNewHead().subscribe(head => {
+      const blockTime = new Date(head.now * 1000);
       this.setBlockNumber(head.number);
-      this.changeModel('blockTime', new Date(head.now * 1000));
+      this.changeModel('blockTime', blockTime);
+      _.isFunction(callback) && callback(blockTime);
     });
+    return newHeadSubscription;
   }
 
   unSubscribeNewHead() {

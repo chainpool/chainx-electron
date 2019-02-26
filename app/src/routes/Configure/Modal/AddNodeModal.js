@@ -13,7 +13,8 @@ class AddNodeModal extends Component {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg = Patterns.check('required')(name) || Patterns.check('smaller')(name.length, 12, '12字符以内');
+      const errMsg =
+        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(name.length, 12, '12字符以内');
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },

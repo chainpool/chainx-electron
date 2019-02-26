@@ -24,7 +24,7 @@ export default class Configure extends ModelExtend {
   update = () => {};
 
   updateNode = ({ action, ...rest }) => {
-    const { name, address } = rest;
+    const { name, address, index } = rest;
     const nodes = [...this.nodes];
     switch (action) {
       case 'add':
@@ -37,6 +37,7 @@ export default class Configure extends ModelExtend {
         }
         break;
       case 'delete': {
+        nodes.splice(index, 1);
       }
     }
     this.changeModel('nodes', nodes);

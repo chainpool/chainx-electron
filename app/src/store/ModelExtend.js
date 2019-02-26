@@ -10,7 +10,7 @@ export default class ModelExtend {
   changeModel = (k, v, defaultValue) => {
     const change = (k, v, defaultValue) => {
       if (k) {
-        this[`${k}_prev`] = this[k];
+        this[`${k}_prev`] = _.cloneDeep(this[k]);
         _.set(this, `${k}`, v || defaultValue);
       } else {
         console.error('changeModel参数的k是必须参数');

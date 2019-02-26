@@ -7,7 +7,7 @@ import { Table, Button, ButtonGroup } from '../../components';
 class ApiManageTable extends Component {
   render() {
     const {
-      model: { openModal },
+      model: { openModal, dispatch },
       widths = [],
     } = this.props;
 
@@ -39,7 +39,7 @@ class ApiManageTable extends Component {
             title: '',
             dataIndex: '_action',
             width: 200,
-            render: () => (
+            render: (value, item, s, index) => (
               <ButtonGroup>
                 <Button onClick={() => {}}>修改</Button>
                 <Button
@@ -48,7 +48,15 @@ class ApiManageTable extends Component {
                       name: 'DeleteApiModal',
                       data: {
                         title: '删除API',
-                        callback: () => {},
+                        callback: () => {
+                          dispatch({
+                            type: 'updateNode',
+                            payload: {
+                              action: 'delete',
+                              index,
+                            },
+                          });
+                        },
                       },
                     });
                   }}>

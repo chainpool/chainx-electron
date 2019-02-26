@@ -76,7 +76,7 @@ class CrossChainBindModal extends Mixin {
         ),
         value1: chainxAddressHex,
         desc2: '公共地址',
-        value2: '0x000000000000000000000000000000000000abcd',
+        value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
         warn: (
           <Warn>
             <div className={styles.sdot}>
