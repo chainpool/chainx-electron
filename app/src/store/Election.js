@@ -50,7 +50,7 @@ export default class Election extends ModelExtend {
       const nodeVoteWeight =
         (this.blockNumber - item.lastTotalDepositWeightUpdate) * item.circulation + item.lastTotalDepositWeight;
       // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
-      item.interest = nodeVoteWeight <= 0 ? 0 : (myWeight / nodeVoteWeight) * item.jackpot;
+      item.interest = nodeVoteWeight <= 0 ? 0 : (myWeight / nodeVoteWeight) * item.jackpot * 0.9;
 
       return {
         ...item,
