@@ -47,7 +47,12 @@ export default class Election extends ModelExtend {
         (this.blockNumber - intention.lastTotalDepositWeightUpdate) * intention.circulation +
         intention.lastTotalDepositWeight;
       // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
-      const interest = nodeVoteWeight <= 0 ? 0 : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
+
+      // TODO: record.lastTotalDepositWeightUpdate <= 0的条件属于补救措施，后边应改掉
+      const interest =
+        nodeVoteWeight <= 0 || record.lastTotalDepositWeightUpdate <= 0
+          ? 0
+          : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
 
       return {
         ...intention,
