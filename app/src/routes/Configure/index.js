@@ -4,8 +4,8 @@ import { TableTitle, ConfirmAndCancelModal } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
-import AddNodeModal from './Modal/AddNodeModal';
-import AddApiModal from './Modal/AddApiModal';
+import OperationApiModal from './Modal/OperationApiModal';
+import OperationNodeModal from './Modal/OperationNodeModal';
 import * as styles from './index.less';
 
 @Inject(({ configureStore: model }) => ({ model }))
@@ -63,7 +63,20 @@ class Configure extends Mixin {
             type="blank"
             onClick={() => {
               openModal({
-                name: 'AddNodeModal',
+                name: 'OperationNodeModal',
+                data: {
+                  action: 'add',
+                  callback: ({ action, name, address }) => {
+                    dispatch({
+                      type: 'updateNode',
+                      payload: {
+                        action,
+                        name,
+                        address,
+                      },
+                    });
+                  },
+                },
               });
             }}>
             <Icon name="icon-tianjia" />
@@ -85,7 +98,10 @@ class Configure extends Mixin {
             type="blank"
             onClick={() => {
               openModal({
-                name: 'AddApiModal',
+                name: 'OperationApiModal',
+                data: {
+                  action: 'add',
+                },
               });
             }}>
             <Icon name="icon-tianjia" />
@@ -93,8 +109,8 @@ class Configure extends Mixin {
           </Button>
         </TableTitle>
         <ApiManageTable {...tableProps} />
-        {name === 'AddNodeModal' ? <AddNodeModal {...this.props} /> : null}
-        {name === 'AddApiModal' ? <AddApiModal {...this.props} /> : null}
+        {name === 'OperationNodeModal' ? <OperationNodeModal {...this.props} /> : null}
+        {name === 'OperationApiModal' ? <OperationApiModal {...this.props} /> : null}
         {name === 'DeleteNodeModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
         {name === 'DeleteApiModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
       </div>

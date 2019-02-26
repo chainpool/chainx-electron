@@ -43,10 +43,31 @@ class NodeManageTable extends Component {
             title: '',
             dataIndex: '_action',
             width: 200,
-            render: (value, item, s, index) => (
+            render: (value, item, index) => (
               <ButtonGroup>
                 <Button onClick={() => {}}>停止同步</Button>
-                <Button onClick={() => {}}>修改</Button>
+                <Button
+                  onClick={() => {
+                    openModal({
+                      name: 'OperationNodeModal',
+                      data: {
+                        action: 'update',
+                        callback: ({ action, name, address }) => {
+                          dispatch({
+                            type: 'updateNode',
+                            payload: {
+                              action,
+                              index,
+                              name,
+                              address,
+                            },
+                          });
+                        },
+                      },
+                    });
+                  }}>
+                  修改
+                </Button>
                 <Button
                   onClick={() => {
                     openModal({
