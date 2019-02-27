@@ -14,6 +14,7 @@ export default class Configure extends ModelExtend {
         syncStatus: '',
         links: '',
         block: _.uniqueId(), // 保证每次重置
+        times: [],
       }));
     };
     autorun(() => {
@@ -42,15 +43,13 @@ export default class Configure extends ModelExtend {
   }
 
   subscribe = async () => {
-    let i = 0;
+    let i = -1;
     let readyNodes = [];
     const nodes = this.nodes;
-
     this.resetNodes();
-
     const caculateCount = () => {
       i++;
-      if (i === nodes.length) {
+      if (i === nodes.length - 1) {
         readyNodes.sort((a = {}, b = {}) => a.ins - b.ins);
         readyNodes = readyNodes.map((item = {}) => item.observer);
         const subs = Rx.combineLatest(...readyNodes);
@@ -58,17 +57,23 @@ export default class Configure extends ModelExtend {
           // console.log(readyNodes, res, '===========');
           this.changeModel(
             'nodes',
-            this.nodes.map((item = {}, index) => ({
-              ...item,
-              ...(_.get(res[index], 'number') ? { block: _.get(res[index], 'number') } : {}),
-            }))
+            this.nodes.map((item = {}, index) => {
+              if (index !== i) return item;
+              console.log(item, index, i, '==================');
+
+              return {
+                ...item,
+                block: res[index].number,
+                times: res[index].now,
+              };
+            })
           );
         });
       }
     };
 
-    for (let i = 0; i < nodes.length; i++) {
-      const ChainX = new Chainx(nodes[i].address);
+    for (let j = 0; j < nodes.length; j++) {
+      const ChainX = new Chainx(nodes[j].address);
 
       const getIntentions = () => {
         const setLinks = (ins, length) => {
@@ -86,17 +91,17 @@ export default class Configure extends ModelExtend {
         ChainX.stake
           .getIntentions()
           .then((res = []) => {
-            setLinks(i, res.length);
+            setLinks(j, res.length);
           })
           .catch(() => {
-            setLinks(i, '');
+            setLinks(j, '');
           });
       };
 
       ChainX.isRpcReady()
         .then(() => {
           readyNodes.push({
-            ins: i,
+            ins: j,
             observer: ChainX.chain.subscribeNewHead(),
           });
           caculateCount();
@@ -104,7 +109,7 @@ export default class Configure extends ModelExtend {
         })
         .catch(() => {
           readyNodes.push({
-            ins: i,
+            ins: j,
             observer: Rx.empty().pipe(startWith({})),
           });
           caculateCount();
