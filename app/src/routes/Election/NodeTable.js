@@ -97,7 +97,7 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {currentAddress && item.isActive ? (
+              {currentAddress ? (
                 <Button
                   onClick={() => {
                     openModal({
