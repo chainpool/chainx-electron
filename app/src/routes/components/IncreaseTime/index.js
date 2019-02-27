@@ -16,9 +16,9 @@ class IncreaseTime extends Mixin {
     this.interval = setInterval(() => {
       const { time } = this.state;
       this.changeState({
-        time: time + 1,
+        time: time + 100,
       });
-    }, 1);
+    }, 100);
   };
 
   componentDidUpdate(prevProps) {

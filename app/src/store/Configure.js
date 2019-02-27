@@ -54,7 +54,7 @@ export default class Configure extends ModelExtend {
             sum += times[i] - times[i - 1];
             item.sum = sum;
             item.speed = sum / (times.length - 1);
-            console.log(times[i], sum, item.speed);
+            console.log(times, sum, item.speed);
           }
         }
       });
