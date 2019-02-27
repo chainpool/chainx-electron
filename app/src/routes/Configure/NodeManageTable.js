@@ -30,7 +30,7 @@ class NodeManageTable extends Component {
           },
           {
             title: '网络延迟',
-            dataIndex: 'delay',
+            dataIndex: 'block',
             render: value => <IncreaseTime value={value} />,
           },
           {

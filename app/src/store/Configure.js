@@ -1,4 +1,4 @@
-import { observable, autorun, localSave } from '../utils';
+import { observable, autorun, localSave, Rx, _, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork } from '../constants';
 import { default as Chainx } from 'chainx.js';
@@ -19,9 +19,9 @@ export default class Configure extends ModelExtend {
       type: '自定义',
       name: '159',
       address: process.env.CHAINX_NODE_URL,
-      delay: '',
       links: '',
       syncStatus: '',
+      block: '',
     },
   ];
 
@@ -31,16 +31,49 @@ export default class Configure extends ModelExtend {
 
   update = () => {};
 
-  subScribe = async () => {
+  subscribe = async () => {
+    let i = 0;
+    const readyNodes = [];
     const nodes = this.nodes;
-    const ChainX = new Chainx(nodes[0].address);
-    await ChainX.isRpcReady();
-    ChainX.chain.subscribeNewHead().subscribe(res => {
-      // console.log(res, '============');
-    });
+    const caculateCount = () => {
+      i++;
+      if (i === nodes.length) {
+        console.log(i, '-----------------caculateCount');
+        const subs = Rx.combineLatest(...readyNodes);
+        this.subs = subs.subscribe((res = []) => {
+          console.log(toJS(this.nodes), res, '===========');
+          this.changeModel(
+            'nodes',
+            this.nodes.map((item, index) => ({
+              ...item,
+              ...(_.get(res[index], 'number') ? { block: _.get(res[index], 'number') } : {}),
+            }))
+          );
+        });
+      }
+    };
+    for (let i = 0; i < nodes.length; i++) {
+      const ChainX = new Chainx(nodes[i].address);
+      console.log(ChainX.isRpcReady, i, '======================================');
+      ChainX.isRpcReady()
+        .then(() => {
+          readyNodes.push(ChainX.chain.subscribeNewHead());
+          caculateCount();
+        })
+        .catch(() => {
+          caculateCount();
+        });
+    }
+
+    // for (let node in nodes) {
+    //   const ChainX = new Chainx(nodes[node].address);
+    //   await ChainX.isRpcReady();
+    //   readyNodes.push(ChainX.chain.subscribeNewHead());
+    // }
   };
 
   updateNode = ({ action, ...rest }) => {
+    this.subs && this.subs.unsubscribe();
     const { name, address, index } = rest;
     const nodes = [...this.nodes];
     switch (action) {
@@ -64,5 +97,6 @@ export default class Configure extends ModelExtend {
       }
     }
     this.changeModel('nodes', nodes);
+    this.subscribe();
   };
 }

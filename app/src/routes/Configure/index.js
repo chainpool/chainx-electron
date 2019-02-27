@@ -15,7 +15,7 @@ class Configure extends Mixin {
       model: { dispatch },
     } = this.props;
     // dispatch({
-    //   type: 'subScribe',
+    //   type: 'subscribe',
     // });
   };
   render() {

@@ -1,33 +1,44 @@
 import React, { Component } from 'react';
+import { Mixin } from '../../../components';
 
-class IncreaseTime extends Component {
+class IncreaseTime extends Mixin {
   state = {
     time: 0,
   };
 
-  componentDidMount() {
+  startInit = () => {
+    this.setTimer();
+  };
+
+  setTimer = () => {
     this.interval = setInterval(() => {
       const { time } = this.state;
-      this.setState({
+      this.changeState({
         time: time + 1,
       });
     }, 1);
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const { value: value_prev } = prevProps;
     const { value } = this.props;
     if (value !== value_prev) {
       clearInterval(this.interval);
-      this.setState({
-        time: 0,
-      });
+      this.interval = null;
+      this.changeState(
+        {
+          time: 0,
+        },
+        () => {
+          this.setTimer();
+        }
+      );
     }
   }
 
   render() {
     const { time } = this.state;
-    return <span>{time}</span>;
+    return <span>{time}/ms</span>;
   }
 }
 
