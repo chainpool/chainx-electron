@@ -13,7 +13,7 @@ export default class Configure extends ModelExtend {
         type: '自定义',
         syncStatus: '',
         links: '',
-        block: '',
+        block: _.uniqueId, // 保证每次重置
       }));
     };
     autorun(() => {
@@ -33,6 +33,10 @@ export default class Configure extends ModelExtend {
     ]
   );
 
+  resetNodes = () => {
+    this.changeModel('nodes', this.reset(this.nodes));
+  };
+
   setCurrentNetWork({ name, ip }) {
     this.changeModel('currentNetWork', { name, ip });
   }
@@ -42,7 +46,7 @@ export default class Configure extends ModelExtend {
     let readyNodes = [];
     const nodes = this.nodes;
 
-    this.changeModel('nodes', this.reset(this.nodes));
+    this.resetNodes();
 
     const caculateCount = () => {
       i++;
@@ -85,7 +89,7 @@ export default class Configure extends ModelExtend {
             setLinks(i, res.length);
           })
           .catch(() => {
-            setLinks(i, 0);
+            setLinks(i, '');
           });
       };
 
