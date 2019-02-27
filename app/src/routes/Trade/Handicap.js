@@ -7,8 +7,6 @@ import { classNames, observer, toJS } from '../../utils';
 
 @observer
 class Handicap extends SwitchPair {
-  state = {};
-
   startInit = () => {
     const {
       model: { dispatch },
@@ -21,14 +19,22 @@ class Handicap extends SwitchPair {
   render() {
     let {
       model: { buyList = [], sellList = [], currentPair = {} },
+      refs,
     } = this.props;
     const setTableProps = color => ({
+      onClickRow: item => {
+        const setPrice = action => {
+          const price = { price: item.priceShow };
+          refs.current.changeBS(action, price, () => refs.current.checkAll.checkPrice(action));
+        };
+        setPrice('buy');
+        setPrice('sell');
+      },
       tableHeight: [36, 23, 1, 0, 0],
       scroll: { tr: 5 },
       className: styles.tableContainer,
       columns: [
         {
-          // width: '38%',
           className: color,
           title: `价格(${currentPair.currency})`,
           dataIndex: 'priceShow',

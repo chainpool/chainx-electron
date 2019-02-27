@@ -5,14 +5,18 @@ import OrderPair from './OrderPair';
 import PutOrder from './PutOrder';
 import PersonalOrder from './PersonalOrder';
 
-import { Inject, parseQueryString } from '../../utils';
+import { Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ tradeStore: model }) => ({ model }))
+@Inject(({ tradeStore: model, assetStore }) => ({ model, assetStore }))
 class Trade extends SwitchPair {
-  state = {
-    show: false,
-  };
+  constructor(props) {
+    super(props);
+    this.putOrderRef = React.createRef();
+    this.state = {
+      show: false,
+    };
+  }
 
   startInit = async () => {
     const { model: { dispatch } = {} } = this.props;
@@ -33,12 +37,12 @@ class Trade extends SwitchPair {
         <div className={styles.top}>
           <div className={styles.left}>
             <div className={styles.handicap}>
-              <Handicap {...props} data-desc="挂单" />
+              <Handicap {...props} data-desc="挂单" refs={this.putOrderRef} />
             </div>
           </div>
           <div className={styles.center}>
             <div className={styles.putOrder}>
-              <PutOrder {...props} data-desc="下单" />
+              <PutOrder {...props} data-desc="下单" ref={this.putOrderRef} />
             </div>
           </div>
           <div className={styles.right}>

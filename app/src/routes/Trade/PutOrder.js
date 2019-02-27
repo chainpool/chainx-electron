@@ -1,10 +1,10 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider } from '../../components';
-import { _, Inject, Patterns, formatNumber, classNames, setBlankSpace } from '../../utils';
+import { _, Patterns, formatNumber, classNames, setBlankSpace, observer } from '../../utils';
 import * as styles from './PutOrder.less';
 
-@Inject(({ assetStore, tradeStore }) => ({ assetStore, tradeStore }))
+@observer
 class PutOrder extends SwitchPair {
   state = {
     buy: {
@@ -46,7 +46,7 @@ class PutOrder extends SwitchPair {
       const errMsg =
         Patterns.check('required')(price) ||
         Patterns.check('precision')(price, currentPair.precision - currentPair.unitPrecision) ||
-        action === 'buy'
+        (action === 'buy'
           ? Patterns.check('smallerOrEqual')(
               price,
               currentPair.maxLastPriceShow,
@@ -56,8 +56,9 @@ class PutOrder extends SwitchPair {
               currentPair.minLastPriceShow,
               price,
               `最低 ${currentPair.minLastPriceShow}`
-            );
+            ));
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
+
       return errMsg;
     },
     checkAmount: (action, callback) => {
@@ -80,8 +81,7 @@ class PutOrder extends SwitchPair {
 
   startInit = () => {
     const {
-      model: { currentPair, setPrecision, dispatch },
-      tradeStore: { showUnitPrecision },
+      model: { currentPair, setPrecision, dispatch, showUnitPrecision },
     } = this.props;
     dispatch({
       type: 'getAccountAssets',
@@ -199,6 +199,7 @@ class PutOrder extends SwitchPair {
           <div className={styles.pricelabel}>{label}价</div>
           <div className={styles.input}>
             <Input.Text
+              errMsgIsOutside
               errMsgSuffix
               errMsg={priceErrMsg}
               value={price}
