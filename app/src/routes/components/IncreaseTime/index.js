@@ -11,6 +11,8 @@ class IncreaseTime extends Mixin {
   };
 
   setTimer = () => {
+    clearInterval(this.interval);
+    this.interval = null;
     this.interval = setInterval(() => {
       const { time } = this.state;
       this.changeState({
@@ -23,8 +25,6 @@ class IncreaseTime extends Mixin {
     const { value: value_prev } = prevProps;
     const { value } = this.props;
     if (value !== value_prev) {
-      clearInterval(this.interval);
-      this.interval = null;
       this.changeState(
         {
           time: 0,

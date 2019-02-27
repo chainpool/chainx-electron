@@ -42,14 +42,34 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
+  calculateTime = () => {
+    clearTimeout(this.interval);
+    this.interval = setTimeout(() => {
+      let nodes = _.cloneDeep(this.nodes);
+      nodes.map((item = {}) => {
+        let sum = 0;
+        const times = item.times || [];
+        if (times.length > 1) {
+          for (let i = 1; i < times.length; i++) {
+            sum += times[i] - times[i - 1];
+            item.sum = sum;
+            item.speed = sum / (times.length - 1);
+            console.log(times[i], sum, item.speed);
+          }
+        }
+      });
+    }, 10000);
+  };
+
   subscribe = async () => {
-    let i = -1;
+    this.calculateTime();
+    let i = 0;
     let readyNodes = [];
     const nodes = this.nodes;
     this.resetNodes();
     const caculateCount = () => {
       i++;
-      if (i === nodes.length - 1) {
+      if (i === nodes.length) {
         readyNodes.sort((a = {}, b = {}) => a.ins - b.ins);
         readyNodes = readyNodes.map((item = {}) => item.observer);
         const subs = Rx.combineLatest(...readyNodes);
@@ -58,13 +78,15 @@ export default class Configure extends ModelExtend {
           this.changeModel(
             'nodes',
             this.nodes.map((item = {}, index) => {
-              if (index !== i) return item;
-              console.log(item, index, i, '==================');
+              const times = [...item.times];
 
+              if (_.get(res[index], 'now')) {
+                times.push(_.get(res[index], 'now'));
+              }
               return {
                 ...item,
-                block: res[index].number,
-                times: res[index].now,
+                ...(_.get(res[index], 'number') ? { block: _.get(res[index], 'number') } : {}),
+                times,
               };
             })
           );
@@ -74,7 +96,6 @@ export default class Configure extends ModelExtend {
 
     for (let j = 0; j < nodes.length; j++) {
       const ChainX = new Chainx(nodes[j].address);
-
       const getIntentions = () => {
         const setLinks = (ins, length) => {
           this.changeModel(
