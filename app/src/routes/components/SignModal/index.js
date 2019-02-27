@@ -131,12 +131,12 @@ class SignModal extends Mixin {
                     );
                   };
 
-                  const fail = err => {
+                  const fail = (err = {}) => {
                     reCoverLoading(false);
                     _.isFunction(result.fail) && result.fail(err);
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
-                      _.get(result, 'failToast.message')
+                      _.get(result, 'failToast.message') || err.message
                     );
                   };
 
