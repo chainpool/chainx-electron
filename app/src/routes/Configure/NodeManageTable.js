@@ -35,7 +35,7 @@ class NodeManageTable extends Component {
           },
           {
             title: '连接节点数',
-            dataIndex: 'link',
+            dataIndex: 'links',
           },
           {
             title: '同步状态',
@@ -54,6 +54,8 @@ class NodeManageTable extends Component {
                       name: 'OperationNodeModal',
                       data: {
                         action: 'update',
+                        name: item.name,
+                        address: item.address,
                         callback: ({ action, name, address }) => {
                           dispatch({
                             type: 'updateNode',

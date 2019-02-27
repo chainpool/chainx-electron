@@ -2,10 +2,20 @@ import { observable, autorun, localSave, Rx, _, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork } from '../constants';
 import { default as Chainx } from 'chainx.js';
+import { pipe, startWith } from 'rxjs/operators';
 
 export default class Configure extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
+    this.reset = nodes => {
+      return nodes.map(item => ({
+        ...item,
+        type: '自定义',
+        syncStatus: '',
+        links: '',
+        block: '',
+      }));
+    };
     autorun(() => {
       localSave.set('nodes', this.nodes);
     });
@@ -14,37 +24,37 @@ export default class Configure extends ModelExtend {
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
-  @observable nodes = localSave.get('nodes') || [
-    {
-      type: '自定义',
-      name: '159',
-      address: process.env.CHAINX_NODE_URL,
-      links: '',
-      syncStatus: '',
-      block: '',
-    },
-  ];
+  @observable nodes = this.reset(
+    localSave.get('nodes') || [
+      {
+        name: '159',
+        address: process.env.CHAINX_NODE_URL,
+      },
+    ]
+  );
 
   setCurrentNetWork({ name, ip }) {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  update = () => {};
-
   subscribe = async () => {
     let i = 0;
-    const readyNodes = [];
+    let readyNodes = [];
     const nodes = this.nodes;
+
+    this.changeModel('nodes', this.reset(this.nodes));
+
     const caculateCount = () => {
       i++;
       if (i === nodes.length) {
-        console.log(i, '-----------------caculateCount');
+        readyNodes.sort((a = {}, b = {}) => a.ins - b.ins);
+        readyNodes = readyNodes.map((item = {}) => item.observer);
         const subs = Rx.combineLatest(...readyNodes);
         this.subs = subs.subscribe((res = []) => {
-          console.log(toJS(this.nodes), res, '===========');
+          // console.log(readyNodes, res, '===========');
           this.changeModel(
             'nodes',
-            this.nodes.map((item, index) => ({
+            this.nodes.map((item = {}, index) => ({
               ...item,
               ...(_.get(res[index], 'number') ? { block: _.get(res[index], 'number') } : {}),
             }))
@@ -52,24 +62,51 @@ export default class Configure extends ModelExtend {
         });
       }
     };
+
     for (let i = 0; i < nodes.length; i++) {
       const ChainX = new Chainx(nodes[i].address);
-      console.log(ChainX.isRpcReady, i, '======================================');
+
+      const getIntentions = () => {
+        const setLinks = (ins, length) => {
+          this.changeModel(
+            'nodes',
+            this.nodes.map((item, index) => {
+              if (index !== ins) return item;
+              return {
+                ...item,
+                links: length || '',
+              };
+            })
+          );
+        };
+        ChainX.stake
+          .getIntentions()
+          .then((res = []) => {
+            setLinks(i, res.length);
+          })
+          .catch(() => {
+            setLinks(i, 0);
+          });
+      };
+
       ChainX.isRpcReady()
         .then(() => {
-          readyNodes.push(ChainX.chain.subscribeNewHead());
+          readyNodes.push({
+            ins: i,
+            observer: ChainX.chain.subscribeNewHead(),
+          });
           caculateCount();
+          getIntentions();
         })
         .catch(() => {
+          readyNodes.push({
+            ins: i,
+            observer: Rx.empty().pipe(startWith({})),
+          });
           caculateCount();
+          getIntentions();
         });
     }
-
-    // for (let node in nodes) {
-    //   const ChainX = new Chainx(nodes[node].address);
-    //   await ChainX.isRpcReady();
-    //   readyNodes.push(ChainX.chain.subscribeNewHead());
-    // }
   };
 
   updateNode = ({ action, ...rest }) => {

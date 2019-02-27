@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import store from 'store';
-import { forkJoin, from, of, Subject, combineLatest, interval } from 'rxjs';
+import { forkJoin, from, of, Subject, combineLatest, interval, never, empty } from 'rxjs';
 import {
   mergeMap,
   mergeAll,
@@ -68,6 +68,8 @@ export const Rx = {
   of,
   Subject,
   share,
+  never,
+  empty,
 };
 
 export const localSave = {

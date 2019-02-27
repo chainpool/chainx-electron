@@ -5,12 +5,21 @@ import * as styles from './OperationNodeModal.less';
 
 @observer
 class OperationNodeModal extends Mixin {
-  state = {
-    name: '',
-    nameErrMsg: '',
-    address: '',
-    addressErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      globalStore: {
+        modal: { data: { name = '', address = '' } = {} },
+      },
+    } = this.props;
+    this.state = {
+      name: name,
+      nameErrMsg: '',
+      address: address,
+      addressErrMsg: '',
+    };
+  }
+
   checkAll = {
     checkName: () => {
       const { name } = this.state;
