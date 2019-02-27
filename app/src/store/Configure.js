@@ -13,7 +13,7 @@ export default class Configure extends ModelExtend {
         type: '自定义',
         syncStatus: '',
         links: '',
-        block: _.uniqueId, // 保证每次重置
+        block: _.uniqueId(), // 保证每次重置
       }));
     };
     autorun(() => {
