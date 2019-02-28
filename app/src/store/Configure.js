@@ -46,8 +46,8 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  calculateTime = () => {
-    // if (Configure.amount) return;
+  calculateTime = ({ refresh }) => {
+    if (Configure.amount) return;
     clearTimeout(this.interval);
     this.interval = setTimeout(() => {
       let nodes = _.cloneDeep(this.nodes);
@@ -70,7 +70,9 @@ export default class Configure extends ModelExtend {
         bestNode.best = true;
         this.changeModel('nodes', nodes);
         const { pathname, search } = this.setQueryParams('bestNode', true);
-        window.location.href = `${pathname}${search}`;
+        if (refresh) {
+          window.location.href = `${pathname}${search}`;
+        }
       } else {
         console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
       }
@@ -78,8 +80,8 @@ export default class Configure extends ModelExtend {
     }, 60 * 1000);
   };
 
-  subscribe = async () => {
-    this.calculateTime();
+  subscribe = async ({ refresh }) => {
+    this.calculateTime({ refresh });
     let i = 0;
     let readyNodes = [];
     const nodes = this.nodes;
@@ -181,6 +183,6 @@ export default class Configure extends ModelExtend {
       }
     }
     this.changeModel('nodes', nodes);
-    this.subscribe();
+    this.subscribe({ refresh: true });
   };
 }

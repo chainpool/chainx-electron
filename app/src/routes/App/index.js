@@ -64,14 +64,12 @@ class Main extends Component {
     this.setState({
       ready: true,
     });
-    /*节点管理延迟进行*/
-    if (!bestNode) {
-      setTimeout(() => {
-        dispatchConfigure({
-          type: 'subscribe',
-        });
-      }, 3000);
-    }
+    dispatchConfigure({
+      type: 'subscribe',
+      payload: {
+        refresh: !bestNode,
+      },
+    });
   };
 
   render() {
