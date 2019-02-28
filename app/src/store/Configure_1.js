@@ -80,19 +80,6 @@ export default class Configure extends ModelExtend {
     }, 60 * 1000);
   };
 
-  getBestNumber = url => {
-    const fromHttp = httpUrl => {
-      return fetch(httpUrl, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: '123', jsonrpc: '2.0', method: 'chain_getBlock', params: [] }),
-      }).then(res => res.json());
-    };
-  };
-
   subscribe = async ({ refresh }) => {
     this.calculateTime({ refresh });
     let i = 0;
@@ -126,37 +113,38 @@ export default class Configure extends ModelExtend {
       }
     };
 
-    const changeNodes = (ins, key, value = '') => {
-      this.changeModel(
-        'nodes',
-        this.nodes.map((item, index) => {
-          if (index !== ins) return item;
-          return {
-            ...item,
-            [key]: value,
-          };
-        })
-      );
-    };
-
     for (let j = 0; j < nodes.length; j++) {
       const ChainX = new Chainx(nodes[j].address);
-      const getIntentions = async () => {
-        const startTime = Date.now();
-        const res = await ChainX.chain.systemPeers();
-        const endTime = Date.now();
-        if (res && res.length) {
-          changeNodes(j, 'links', res && res.length ? res.length : '');
-          changeNodes(j, 'delay', res ? endTime - startTime : '');
-        }
+      const getIntentions = () => {
+        const setLinks = (ins, length) => {
+          this.changeModel(
+            'nodes',
+            this.nodes.map((item, index) => {
+              if (index !== ins) return item;
+              return {
+                ...item,
+                links: length || '',
+              };
+            })
+          );
+        };
+        ChainX.stake
+          .getIntentions()
+          .then((res = []) => {
+            setLinks(j, res.length);
+          })
+          .catch(() => {
+            setLinks(j, '');
+          });
       };
+
       ChainX.isRpcReady()
         .then(() => {
           readyNodes.push({
             ins: j,
             observer: ChainX.chain.subscribeNewHead(),
           });
-          //caculateCount();
+          caculateCount();
           getIntentions();
         })
         .catch(() => {
@@ -164,7 +152,7 @@ export default class Configure extends ModelExtend {
             ins: j,
             observer: Rx.empty().pipe(startWith({})),
           });
-          // caculateCount();
+          caculateCount();
           getIntentions();
         });
     }

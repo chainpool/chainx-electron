@@ -30,8 +30,8 @@ class NodeManageTable extends Component {
           },
           {
             title: '网络延迟',
-            dataIndex: 'block',
-            render: value => <IncreaseTime value={value} />,
+            dataIndex: 'delay',
+            render: value => `${value}/ms`,
           },
           {
             title: '连接节点数',
