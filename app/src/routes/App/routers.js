@@ -61,7 +61,7 @@ export default [
   },
   {
     title: '配置',
-    // show: true,
+    show: false,
     path: PATH.configure,
     component: Configure,
   },
