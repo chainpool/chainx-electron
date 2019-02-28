@@ -75,7 +75,7 @@ export default class Configure extends ModelExtend {
         console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
       }
       Configure.amount = 1;
-    }, 5 * 1000);
+    }, 60 * 1000);
   };
 
   subscribe = async () => {
