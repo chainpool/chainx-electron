@@ -30,7 +30,7 @@ class OperationNodeModal extends Mixin {
     },
     checkAddress: () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
+      const errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -89,7 +89,7 @@ class OperationNodeModal extends Mixin {
             value={address}
             errMsg={addressErrMsg}
             onChange={value => {
-              this.setState({ address: value });
+              this.setState({ address: value.trim() });
             }}
             onBlur={checkAll.checkAddress}
           />

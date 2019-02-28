@@ -77,30 +77,34 @@ class Configure extends Mixin {
         </TableTitle>
         <NodeManageTable {...tableProps} />
 
-        <TableTitle
-          style={{ marginTop: 32 }}
-          title="API管理"
-          helpTitle={
-            <Button type="blank">
-              <Icon name="icon-APIbushuwendang" />
-              查看API部署文档
-            </Button>
-          }>
-          <Button
-            type="blank"
-            onClick={() => {
-              openModal({
-                name: 'OperationApiModal',
-                data: {
-                  action: 'add',
-                },
-              });
-            }}>
-            <Icon name="icon-tianjia" />
-            添加API
-          </Button>
-        </TableTitle>
-        <ApiManageTable {...tableProps} />
+        {false ? (
+          <>
+            <TableTitle
+              style={{ marginTop: 32 }}
+              title="API管理"
+              helpTitle={
+                <Button type="blank">
+                  <Icon name="icon-APIbushuwendang" />
+                  查看API部署文档
+                </Button>
+              }>
+              <Button
+                type="blank"
+                onClick={() => {
+                  openModal({
+                    name: 'OperationApiModal',
+                    data: {
+                      action: 'add',
+                    },
+                  });
+                }}>
+                <Icon name="icon-tianjia" />
+                添加API
+              </Button>
+            </TableTitle>
+            <ApiManageTable {...tableProps} />
+          </>
+        ) : null}
         {name === 'OperationNodeModal' ? <OperationNodeModal {...this.props} /> : null}
         {name === 'OperationApiModal' ? <OperationApiModal {...this.props} /> : null}
         {name === 'DeleteNodeModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
