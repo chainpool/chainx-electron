@@ -69,14 +69,13 @@ export default class Configure extends ModelExtend {
       if (bestNode.address && bestNode.address !== prevBestNode.address) {
         bestNode.best = true;
         this.changeModel('nodes', nodes);
+        const { pathname, search } = this.setQueryParams('bestNode', true);
+        window.location.href = `${pathname}${search}`;
       } else {
         console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
       }
-      // window.location.href=`${window.location.href}`
-      console.log(window.location.href, '================');
-
       Configure.amount = 1;
-    }, 10 * 1000);
+    }, 5 * 1000);
   };
 
   subscribe = async () => {

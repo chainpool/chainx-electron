@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Input, Icon, Mixin } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
-import { Inject } from '../../utils';
+import { Inject, parseQueryString } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
 import OperationApiModal from './Modal/OperationApiModal';
@@ -12,11 +12,15 @@ import * as styles from './index.less';
 class Configure extends Mixin {
   startInit = () => {
     const {
+      location: { search } = {},
       model: { dispatch },
     } = this.props;
-    dispatch({
-      type: 'subscribe',
-    });
+    const bestNode = parseQueryString(search).bestNode;
+    if (!bestNode) {
+      dispatch({
+        type: 'subscribe',
+      });
+    }
   };
   render() {
     const {

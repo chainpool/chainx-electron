@@ -4,7 +4,7 @@ import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
-import { default as Chainx } from 'chainx.js';
+import { ChainX as Chainx } from './chainx';
 
 //------------------通用部分
 export { request } from './request';
@@ -15,6 +15,7 @@ export { default as classNames } from 'classnames';
 
 // ----------------------------项目适用
 export { toJS, observable, computed, action, runInAction, autorun } from 'mobx';
+export const ChainX = Chainx;
 
 export const resOk = result => {
   console.log(result);
@@ -40,8 +41,6 @@ export const setColumnsWidth = (table = [], widths = []) => {
     width: widths[index],
   }));
 };
-
-export const ChainX = new Chainx(process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944');
 
 export const Patterns = {
   decode: (encoded, password, errMsg = '密码错误') => {
