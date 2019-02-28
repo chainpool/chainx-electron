@@ -42,6 +42,14 @@ export default class Scroller extends Component {
         className: /(^|\s)td(\s|$)/,
       },
     });
+    if (this.props.scroll.forceRefresh && this.scroll && this.scroll.refresh) {
+      this.scroll.on('scroll', () => {
+        this.scroll.refresh();
+      });
+      window.onresize = () => {
+        this.scroll.refresh();
+      };
+    }
     if (getScroller) {
       getScroller(this.scroll);
     }
