@@ -17,7 +17,7 @@ export { default as classNames } from 'classnames';
 export { toJS, observable, computed, action, runInAction, autorun } from 'mobx';
 
 const getBestNode = () => {
-  const nodes = localSave.get('nodes');
+  const nodes = localSave.get('nodes') || [];
   const findOne = nodes.filter((item = {}) => item.best)[0] || {};
   return findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';
 };
