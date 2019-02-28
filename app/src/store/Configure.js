@@ -47,7 +47,7 @@ export default class Configure extends ModelExtend {
   }
 
   calculateTime = () => {
-    if (Configure.amount) return;
+    // if (Configure.amount) return;
     clearTimeout(this.interval);
     this.interval = setTimeout(() => {
       let nodes = _.cloneDeep(this.nodes);
