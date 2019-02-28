@@ -95,7 +95,7 @@ class Account extends Mixin {
                             <div className={styles.tag}>{item.tag}</div>
                             <div className={styles.popover}>
                               <Icon name="icon-gengduocaozuo" />
-                              <div>
+                              <div style={accounts.length > 5 && index >= accounts.length - 2 ? { bottom: 20 } : {}}>
                                 <ul className={styles.clickPopover}>
                                   <li
                                     onClick={e => {
