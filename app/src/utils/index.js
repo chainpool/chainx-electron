@@ -1,10 +1,10 @@
-import { lodash_helper, moment_helper } from './helper';
+import { localSave, lodash_helper, moment_helper } from './helper';
 import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
-import { ChainX as Chainx } from './chainx';
+import { default as Chainx } from 'chainx.js';
 
 //------------------通用部分
 export { request } from './request';
@@ -15,7 +15,13 @@ export { default as classNames } from 'classnames';
 
 // ----------------------------项目适用
 export { toJS, observable, computed, action, runInAction, autorun } from 'mobx';
-export const ChainX = Chainx;
+
+const getBestNode = () => {
+  const nodes = localSave.get('nodes');
+  const findOne = nodes.filter((item = {}) => item.best)[0] || {};
+  return findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';
+};
+export const ChainX = new Chainx(getBestNode());
 
 export const resOk = result => {
   console.log(result);

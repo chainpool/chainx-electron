@@ -10,7 +10,12 @@ import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ globalStore, accountStore, electionStore }) => ({ globalStore, accountStore, electionStore }))
+@Inject(({ globalStore, accountStore, electionStore, configureStore }) => ({
+  globalStore,
+  accountStore,
+  electionStore,
+  configureStore,
+}))
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -34,11 +39,13 @@ class Main extends Component {
       globalStore: { dispatch: dispatchGlobal },
       accountStore: { dispatch: dispatchAccount },
       electionStore: { dispatch: dispatchElection },
+      configureStore: { dispatch: dispatchConfigure },
       history: {
         location: { search },
       },
     } = this.props;
     const address = parseQueryString(search).address;
+    const bestNode = parseQueryString(search).bestNode;
     await ChainX.isRpcReady();
     await dispatchGlobal({
       type: 'setHistory',
@@ -57,6 +64,14 @@ class Main extends Component {
     this.setState({
       ready: true,
     });
+    /*节点管理延迟进行*/
+    if (!bestNode) {
+      setTimeout(() => {
+        dispatchConfigure({
+          type: 'subscribe',
+        });
+      }, 3000);
+    }
   };
 
   render() {
