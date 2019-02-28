@@ -5,6 +5,7 @@ import { default as Chainx } from 'chainx.js';
 import { pipe, startWith } from 'rxjs/operators';
 
 export default class Configure extends ModelExtend {
+  static Amount = 0;
   constructor(rootStore) {
     super(rootStore);
     this.reset = nodes => {
@@ -15,6 +16,8 @@ export default class Configure extends ModelExtend {
         links: '',
         block: _.uniqueId(), // 保证每次重置
         times: [],
+        sum: 0,
+        speed: 0,
       }));
     };
     autorun(() => {
@@ -28,7 +31,8 @@ export default class Configure extends ModelExtend {
   @observable nodes = this.reset(
     localSave.get('nodes') || [
       {
-        name: '159',
+        name: '默认传入',
+        best: true,
         address: process.env.CHAINX_NODE_URL,
       },
     ]
@@ -43,6 +47,7 @@ export default class Configure extends ModelExtend {
   }
 
   calculateTime = () => {
+    if (Configure.amount) return;
     clearTimeout(this.interval);
     this.interval = setTimeout(() => {
       let nodes = _.cloneDeep(this.nodes);
@@ -54,11 +59,24 @@ export default class Configure extends ModelExtend {
             sum += times[i] - times[i - 1];
             item.sum = sum;
             item.speed = sum / (times.length - 1);
-            console.log(times, sum, item.speed);
           }
         }
+        console.log(times, item, item.sum, item.speed, '----');
       });
-    }, 10000);
+      const bestNode =
+        nodes.filter((item = {}) => item.sum && item.speed).sort((a = {}, b = {}) => a.speed - b.speed)[0] || {};
+      const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
+      if (bestNode.address && bestNode.address !== prevBestNode.address) {
+        bestNode.best = true;
+        this.changeModel('nodes', nodes);
+      } else {
+        console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
+      }
+      // window.location.href=`${window.location.href}`
+      console.log(window.location.href, '================');
+
+      Configure.amount = 1;
+    }, 10 * 1000);
   };
 
   subscribe = async () => {

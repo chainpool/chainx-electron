@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, formatNumber, observable } from '../utils';
+import { _, formatNumber, observable, parseQueryString, stringifyQueryString } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -68,6 +68,17 @@ export default class ModelExtend {
 
   getHistory = () => {
     return this.rootStore.globalStore.history || {};
+  };
+
+  setQueryParams = (key, value) => {
+    const history = this.getHistory();
+    const { location: { pathname, search } = {} } = history;
+    const searchPrev = parseQueryString(search);
+    searchPrev[key] = value;
+    return {
+      pathname,
+      search: `?${stringifyQueryString(searchPrev)}`,
+    };
   };
 
   isLogin = () => {

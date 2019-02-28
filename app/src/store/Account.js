@@ -86,13 +86,10 @@ export default class Store extends ModelExtend {
     }
 
     const history = this.getHistory();
-    const { location: { pathname, search } = {} } = history;
-
-    const searchPrev = parseQueryString(search);
     const nextAddress = newCurrentAccount.address;
-    searchPrev.address = nextAddress;
+    const { pathname, search } = this.setQueryParams('address', nextAddress);
     if (nextAddress) {
-      history.push({ search: `?${stringifyQueryString(searchPrev)}` });
+      history.push({ search });
     } else {
       history.push({ pathname });
     }
