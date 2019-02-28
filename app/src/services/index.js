@@ -1,8 +1,6 @@
 import { ChainX } from '../utils';
 import { default as store } from '../store';
 
-console.log(ChainX, '==================');
-
 const checkLogin = func => {
   const {
     accountStore: { currentAccount = {} },
