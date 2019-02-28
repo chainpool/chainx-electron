@@ -35,6 +35,99 @@ class Account extends Mixin {
       },
     } = this.props;
 
+    const accountULList = (
+      <ul className={styles.accountul}>
+        {accounts.map((item = {}, index) => {
+          const id = `popoverid_${index}`;
+          return (
+            <RouterGo
+              Ele="li"
+              go={{
+                search: `?address=${item.address}`,
+              }}
+              className={currentAccount.address === item.address ? styles.active : null}
+              key={index}
+              id={id}
+              onClick={() => {
+                dispatch({
+                  type: 'switchAccount',
+                  payload: {
+                    address: item.address,
+                  },
+                });
+              }}>
+              <div className={styles.leftbar} />
+              <div>
+                <div className={styles.tag}>{item.tag}</div>
+                <div className={styles.popover}>
+                  <Icon name="icon-gengduocaozuo" />
+                  <div className={classNames(accounts.length > 5 && index >= accounts.length - 2 ? styles.down : '')}>
+                    <ul className={styles.clickPopover}>
+                      <li
+                        onClick={e => {
+                          e.stopPropagation();
+                          openModal({
+                            name: 'ForgetAccountModal',
+                            data: {
+                              encoded: item.encoded,
+                              address: item.address,
+                            },
+                          });
+                        }}>
+                        忘记账户
+                      </li>
+                      <li
+                        onClick={e => {
+                          e.stopPropagation();
+                          openModal({
+                            name: 'EditLabelModal',
+                            data: {
+                              address: item.address,
+                            },
+                          });
+                        }}>
+                        修改标签
+                      </li>
+                      <li
+                        onClick={e => {
+                          e.stopPropagation();
+                          openModal({
+                            name: 'EditPasswordModal',
+                            data: {
+                              encoded: item.encoded,
+                              address: item.address,
+                            },
+                          });
+                        }}>
+                        修改密码
+                      </li>
+                      <li
+                        onClick={e => {
+                          e.stopPropagation();
+                          openModal({
+                            name: 'ExportSecretModal',
+                            data: {
+                              encoded: item.encoded,
+                            },
+                          });
+                        }}>
+                        导出私钥
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Clipboard>
+                  <span className={styles.address}>{item.address}</span>
+                </Clipboard>
+              </div>
+            </RouterGo>
+          );
+        })}
+      </ul>
+    );
+
     return (
       <div className={styles.account}>
         {isLogin() ? (
@@ -69,98 +162,11 @@ class Account extends Mixin {
                     </Button>
                   </div>
                 </div>
-                <Scroller scroll={{ y: 485, forceRefresh: true }}>
-                  <ul className={styles.accountul}>
-                    {accounts.map((item = {}, index) => {
-                      const id = `popoverid_${index}`;
-                      return (
-                        <RouterGo
-                          Ele="li"
-                          go={{
-                            search: `?address=${item.address}`,
-                          }}
-                          className={currentAccount.address === item.address ? styles.active : null}
-                          key={index}
-                          id={id}
-                          onClick={() => {
-                            dispatch({
-                              type: 'switchAccount',
-                              payload: {
-                                address: item.address,
-                              },
-                            });
-                          }}>
-                          <div className={styles.leftbar} />
-                          <div>
-                            <div className={styles.tag}>{item.tag}</div>
-                            <div className={styles.popover}>
-                              <Icon name="icon-gengduocaozuo" />
-                              <div style={accounts.length > 5 && index >= accounts.length - 2 ? { bottom: 20 } : {}}>
-                                <ul className={styles.clickPopover}>
-                                  <li
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      openModal({
-                                        name: 'ForgetAccountModal',
-                                        data: {
-                                          encoded: item.encoded,
-                                          address: item.address,
-                                        },
-                                      });
-                                    }}>
-                                    忘记账户
-                                  </li>
-                                  <li
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      openModal({
-                                        name: 'EditLabelModal',
-                                        data: {
-                                          address: item.address,
-                                        },
-                                      });
-                                    }}>
-                                    修改标签
-                                  </li>
-                                  <li
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      openModal({
-                                        name: 'EditPasswordModal',
-                                        data: {
-                                          encoded: item.encoded,
-                                          address: item.address,
-                                        },
-                                      });
-                                    }}>
-                                    修改密码
-                                  </li>
-                                  <li
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      openModal({
-                                        name: 'ExportSecretModal',
-                                        data: {
-                                          encoded: item.encoded,
-                                        },
-                                      });
-                                    }}>
-                                    导出私钥
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                          <div>
-                            <Clipboard>
-                              <span className={styles.address}>{item.address}</span>
-                            </Clipboard>
-                          </div>
-                        </RouterGo>
-                      );
-                    })}
-                  </ul>
-                </Scroller>
+                {accounts.length > 5 ? (
+                  <Scroller scroll={{ y: 485, forceRefresh: true }}>{accountULList}</Scroller>
+                ) : (
+                  accountULList
+                )}
               </div>
             </div>
           </div>
