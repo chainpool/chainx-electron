@@ -83,7 +83,7 @@ export const Patterns = {
     }
   },
   isWsAddress: (address, errMsg = '地址格式错误') => {
-    return /ws:\/\/[\d|.]*/.test(address) ? '' : errMsg;
+    return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
   },
   required: (value, errMsg = '必填') => {
     return !value && value !== 0 ? errMsg : '';
