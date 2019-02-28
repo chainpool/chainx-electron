@@ -5,7 +5,7 @@
   "homepage": ".",
   "scripts": {
     "start": "node config/scripts/start.js",
-    "build": "node config/scripts/build.js",
+    "build": "yarn && node config/scripts/build.js",
     "test": "node config/scripts/test.js"
   },
   "dependencies": {
