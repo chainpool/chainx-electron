@@ -173,7 +173,9 @@ class PutOrder extends SwitchPair {
       value: Number(amount),
       onChange: value => {
         changeBS(action, { amount: value }, () => {
-          checkAll.checkTotal(action); // 这里为了避免一些显示问题只检查total
+          checkAll.checkAmount(action, () => {
+            checkAll.checkTotal(action);
+          });
         });
       },
       marks: marks,
