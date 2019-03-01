@@ -15,7 +15,7 @@ export default class Configure extends ModelExtend {
         syncStatus: '',
         links: '',
         delay: '',
-        block: '', // 保证每次重置
+        block: '',
         times: [],
       }));
     };
@@ -115,9 +115,21 @@ export default class Configure extends ModelExtend {
         }
       };
 
+      const switchWs = () => {
+        clearInterval(this.interval);
+        this.interval = setTimeout(() => {
+          const { pathname, search } = this.setQueryParams('bestNode', true);
+          if (refresh) {
+            window.location.href = `${pathname}${search}`;
+          }
+        }, 1000);
+      };
+
       const caculatePercent = () => {
         const nodes = _.cloneDeep(this.nodes);
-        const bestNode = nodes.filter((item = {}) => item.block).sort((a = {}, b = {}) => b.block - a.block)[0] || {};
+        const bestNode =
+          nodes.filter((item = {}) => item.block).sort((a = {}, b = {}) => Number(b.block) - Number(a.block))[0] || {};
+        const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
         if (bestNode && bestNode.block) {
           const max = bestNode.block;
           nodes.map((item = {}) => {
@@ -125,6 +137,13 @@ export default class Configure extends ModelExtend {
               item.syncStatus = formatNumber.percent(item.block / max, 2);
             }
           });
+          if (prevBestNode.address !== bestNode.address) {
+            prevBestNode.best = false;
+            bestNode.best = true;
+            switchWs();
+          } else {
+            console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
+          }
           this.changeModel('nodes', nodes);
         }
       };
