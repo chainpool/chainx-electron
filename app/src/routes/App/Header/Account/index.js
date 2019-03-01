@@ -16,7 +16,7 @@ import Win from '../../../../resource/Win.png';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Mixin {
-  state = {};
+  static AccountListLength = 5;
   startInit = () => {
     const {
       model: { dispatch },
@@ -61,7 +61,10 @@ class Account extends Mixin {
                 <div className={styles.tag}>{item.tag}</div>
                 <div className={styles.popover}>
                   <Icon name="icon-gengduocaozuo" />
-                  <div className={classNames(accounts.length > 5 && index >= accounts.length - 2 ? styles.down : '')}>
+                  <div
+                    className={classNames(
+                      accounts.length > Account.AccountListLength && index >= accounts.length - 2 ? styles.down : ''
+                    )}>
                     <ul className={styles.clickPopover}>
                       <li
                         onClick={e => {
@@ -162,8 +165,10 @@ class Account extends Mixin {
                     </Button>
                   </div>
                 </div>
-                {accounts.length > 5 ? (
-                  <Scroller scroll={{ y: 485, forceRefresh: true }}>{accountULList}</Scroller>
+                {accounts.length > Account.AccountListLength ? (
+                  <Scroller scroll={{ y: 97 * Account.AccountListLength, forceRefresh: true }}>
+                    {accountULList}
+                  </Scroller>
                 ) : (
                   accountULList
                 )}
