@@ -31,7 +31,7 @@ class NodeManageTable extends Component {
           {
             title: '网络延迟',
             dataIndex: 'delay',
-            render: value => `${value}/ms`,
+            render: (value, item) => `${value}/ms`,
           },
           {
             title: '连接节点数',

@@ -1,4 +1,4 @@
-import { observable, autorun, localSave, Rx, _, toJS } from '../utils';
+import { observable, autorun, localSave, formatNumber, _, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork } from '../constants';
 import { default as Chainx } from 'chainx.js';
@@ -46,41 +46,9 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  calculateTime = ({ refresh }) => {
-    if (Configure.amount) return;
-    clearTimeout(this.interval);
-    this.interval = setTimeout(() => {
-      let nodes = _.cloneDeep(this.nodes);
-      nodes.map((item = {}) => {
-        let sum = 0;
-        const times = item.times || [];
-        if (times.length > 1) {
-          for (let i = 1; i < times.length; i++) {
-            sum += times[i] - times[i - 1];
-            item.sum = sum;
-            item.speed = sum / (times.length - 1);
-          }
-        }
-        console.log(times, item, item.sum, item.speed, '----');
-      });
-      const bestNode =
-        nodes.filter((item = {}) => item.sum && item.speed).sort((a = {}, b = {}) => a.speed - b.speed)[0] || {};
-      const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
-      if (bestNode.address && bestNode.address !== prevBestNode.address) {
-        bestNode.best = true;
-        this.changeModel('nodes', nodes);
-        const { pathname, search } = this.setQueryParams('bestNode', true);
-        if (refresh) {
-          window.location.href = `${pathname}${search}`;
-        }
-      } else {
-        console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
-      }
-      Configure.amount = 1;
-    }, 60 * 1000);
-  };
-
   getBestNumber = url => {
+    const id = _.uniqueId();
+    const message = JSON.stringify({ id, jsonrpc: '2.0', method: 'chain_getBlock', params: [] });
     const fromHttp = httpUrl => {
       return fetch(httpUrl, {
         method: 'POST',
@@ -88,43 +56,39 @@ export default class Configure extends ModelExtend {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: '123', jsonrpc: '2.0', method: 'chain_getBlock', params: [] }),
+        body: message,
       }).then(res => res.json());
     };
+
+    const fromWs = wsUrl => {
+      return new Promise((resolve, reject) => {
+        const ws = new WebSocket(wsUrl);
+        ws.onmessage = m => {
+          try {
+            const data = JSON.parse(m.data);
+            if (data.id === id) {
+              resolve(data);
+              ws.close();
+            }
+          } catch (err) {
+            reject(err);
+          }
+        };
+        ws.onopen = () => {
+          ws.send(message);
+        };
+      });
+    };
+
+    const isHttp = /^[http|https]/.test(url);
+    return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.result.block.header.number));
   };
 
   subscribe = async ({ refresh }) => {
-    this.calculateTime({ refresh });
     let i = 0;
     let readyNodes = [];
     const nodes = this.nodes;
     this.resetNodes();
-    const caculateCount = () => {
-      i++;
-      if (i === nodes.length) {
-        readyNodes.sort((a = {}, b = {}) => a.ins - b.ins);
-        readyNodes = readyNodes.map((item = {}) => item.observer);
-        const subs = Rx.combineLatest(...readyNodes);
-        this.subs = subs.subscribe((res = []) => {
-          // console.log(readyNodes, res, '===========');
-          this.changeModel(
-            'nodes',
-            this.nodes.map((item = {}, index) => {
-              const times = [...item.times];
-
-              if (_.get(res[index], 'now')) {
-                times.push(_.get(res[index], 'now'));
-              }
-              return {
-                ...item,
-                ...(_.get(res[index], 'number') ? { block: _.get(res[index], 'number') } : {}),
-                times,
-              };
-            })
-          );
-        });
-      }
-    };
 
     const changeNodes = (ins, key, value = '') => {
       this.changeModel(
@@ -141,6 +105,7 @@ export default class Configure extends ModelExtend {
 
     for (let j = 0; j < nodes.length; j++) {
       const ChainX = new Chainx(nodes[j].address);
+
       const getIntentions = async () => {
         const startTime = Date.now();
         const res = await ChainX.chain.systemPeers();
@@ -150,22 +115,38 @@ export default class Configure extends ModelExtend {
           changeNodes(j, 'delay', res ? endTime - startTime : '');
         }
       };
+
+      const caculatePercent = () => {
+        const nodes = _.cloneDeep(this.nodes);
+        const bestNode = nodes.filter((item = {}) => item.block).sort((a = {}, b = {}) => b.block - a.block)[0] || {};
+        if (bestNode && bestNode.block) {
+          const max = bestNode.block;
+          nodes.map((item = {}) => {
+            if (item.block) {
+              item.syncStatus = formatNumber.percent(item.block / max, 2);
+            }
+          });
+          this.changeModel('nodes', nodes);
+        }
+      };
+
+      const getBlockNumber = () => {
+        this.getBestNumber(nodes[j].address).then(res => {
+          if (res) {
+            changeNodes(j, 'block', res);
+            caculatePercent();
+          }
+        });
+      };
+
       ChainX.isRpcReady()
         .then(() => {
-          readyNodes.push({
-            ins: j,
-            observer: ChainX.chain.subscribeNewHead(),
-          });
-          //caculateCount();
           getIntentions();
+          getBlockNumber();
         })
         .catch(() => {
-          readyNodes.push({
-            ins: j,
-            observer: Rx.empty().pipe(startWith({})),
-          });
-          // caculateCount();
           getIntentions();
+          getBlockNumber();
         });
     }
   };
