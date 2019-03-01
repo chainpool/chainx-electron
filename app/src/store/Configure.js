@@ -28,13 +28,15 @@ export default class Configure extends ModelExtend {
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
   @observable nodes = this.reset(
-    localSave.get('nodes') || [
-      {
-        name: '默认传入',
-        best: true,
-        address: process.env.CHAINX_NODE_URL,
-      },
-    ]
+    localSave.get('nodes') && localSave.get('nodes').length
+      ? localSave.get('nodes')
+      : [
+          {
+            name: '默认传入',
+            best: true,
+            address: process.env.CHAINX_NODE_URL,
+          },
+        ]
   );
 
   resetNodes = () => {
