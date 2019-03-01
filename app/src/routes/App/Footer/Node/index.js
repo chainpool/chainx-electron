@@ -20,7 +20,7 @@ class Node extends Component {
       payload: {
         callback: blockTime => {
           const isLocal = /localhost/.test(window.location.href);
-          if (!Node.count && moment_helper.diff(blockTime, Date.now()) > 1 && !isLocal) {
+          if (!Node.count && moment_helper.diff(blockTime, Date.now()) > 10 && !isLocal) {
             alert('ChainX测试网已暂停，无法发送交易，只能查看，请稍后再测。');
             Node.count += 1;
           }
