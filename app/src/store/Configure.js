@@ -122,7 +122,7 @@ export default class Configure extends ModelExtend {
           if (refresh) {
             window.location.href = `${pathname}${search}`;
           }
-        }, 1000);
+        }, 60 * 1000);
       };
 
       const caculatePercent = () => {
@@ -194,6 +194,6 @@ export default class Configure extends ModelExtend {
       }
     }
     this.changeModel('nodes', nodes);
-    this.subscribe({ refresh: true });
+    this.subscribe({ refresh: false });
   };
 }
