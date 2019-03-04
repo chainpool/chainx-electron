@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Clipboard, Mixin } from '../../components';
 import { _, classNames, RegEx } from '../../utils';
 import * as styles from './index.less';
 
-class InputRadio extends React.Component {
+class InputRadio extends PureComponent {
   render() {
     const {
       className,
@@ -40,7 +40,7 @@ class InputRadio extends React.Component {
   }
 }
 
-class CheckBox extends React.Component {
+class CheckBox extends PureComponent {
   render() {
     const {
       className,

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 import { _ } from '../../../src/utils';
 import * as styles from './index.less';
 
 @withRouter
-class RouterGo extends Component {
+class RouterGo extends PureComponent {
   render() {
     const {
       children,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { _, toJS } from '../../utils';
+import { _ } from '../../utils';
 
 class Mixin extends React.Component {
   constructor(props) {

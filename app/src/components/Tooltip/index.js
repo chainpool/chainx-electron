@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
-export default class Tooltip extends React.Component {
+export default class Tooltip extends PureComponent {
   state = {
     uid: _.uniqueId('tooltip_'),
   };

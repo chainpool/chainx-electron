@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ClipboardJS from 'clipboard';
 import { Tooltip } from '../index';
 import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
-export default class Clipboard extends Component {
+export default class Clipboard extends PureComponent {
   state = {
     uid: this.props.id || _.uniqueId('clipboard_'),
   };
