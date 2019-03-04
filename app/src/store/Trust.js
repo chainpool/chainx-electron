@@ -1,9 +1,16 @@
-import { ChainX, moment, observable, formatNumber } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList } from '../services';
 import { computed } from 'mobx';
 
 export default class Trust extends ModelExtend {
+  constructor(props) {
+    super(props);
+    autorun(() => {
+      localSave.set('trusts', this.trusts);
+    });
+  }
+
   @observable name = 'Trust';
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
   @observable info = {
@@ -12,6 +19,18 @@ export default class Trust extends ModelExtend {
     hotPubKey: null,
     coldPubKey: null,
   };
+
+  @observable _trusts = localSave.get('trusts') || [];
+
+  @computed
+  get trusts() {
+    const currentAccount = this.getCurrentAccount();
+    return this._trusts.filter(item => item.address === currentAccount.address);
+  }
+
+  set trusts(value) {
+    this._trusts = value;
+  }
 
   @computed get normalizedOnChainAllWithdrawList() {
     const assetNamePrecisionMap = this.rootStore.globalStore.assetNamePrecisionMap; // 获取资产 name => precision map数据结构
@@ -50,6 +69,25 @@ export default class Trust extends ModelExtend {
       };
     });
   }
+
+  updateTrust = (obj = {}) => {
+    console.log(obj, '---------------obj');
+    const trusts = _.cloneDeep(this.trusts);
+    const { address, chain, hotPubKey, coldPubKey } = obj;
+    const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
+    if (!findOne) {
+      trusts.push({
+        address,
+        chain,
+        hotPubKey,
+        coldPubKey,
+      });
+    } else {
+      findOne.hotPubKey = hotPubKey;
+      findOne.coldPubKey = coldPubKey;
+    }
+    this.changeModel('trusts', trusts);
+  };
 
   getAllWithdrawalList = async () => {
     const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);

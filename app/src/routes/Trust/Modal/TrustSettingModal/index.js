@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal } from '../../../../components';
 import { InputHorizotalList } from '../../../components';
-import { Inject, Patterns } from '../../../../utils';
+import { Inject, observer, Patterns } from '../../../../utils';
 
-@Inject(({ globalStore }) => ({ globalStore }))
 class TrustSettingModal extends Component {
   state = {
     chain: '',
     chainErrMsg: '',
-    hotKey: '',
-    hotKeyErrMsg: '',
-    coldKey: '',
-    coldKeyErrMsg: '',
+    hotPubKey: '',
+    hotPubKeyErrMsg: '',
+    coldPubKey: '',
+    coldPubKeyErrMsg: '',
   };
   checkAll = {
     checkChain: () => {
@@ -21,15 +20,15 @@ class TrustSettingModal extends Component {
       return errMsg;
     },
     checkHotKey: () => {
-      const { hotKey } = this.state;
-      const errMsg = Patterns.check('required')(hotKey);
-      this.setState({ hotKeyErrMsg: errMsg });
+      const { hotPubKey } = this.state;
+      const errMsg = Patterns.check('required')(hotPubKey);
+      this.setState({ hotPubKeyErrMsg: errMsg });
       return errMsg;
     },
     checkColdKey: () => {
-      const { coldKey } = this.state;
-      const errMsg = Patterns.check('required')(coldKey);
-      this.setState({ coldKeyErrMsg: errMsg });
+      const { coldPubKey } = this.state;
+      const errMsg = Patterns.check('required')(coldPubKey);
+      this.setState({ coldPubKeyErrMsg: errMsg });
       return errMsg;
     },
 
@@ -40,9 +39,10 @@ class TrustSettingModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { chain, chainErrMsg, hotKey, hotKeyErrMsg, coldKey, coldKeyErrMsg } = this.state;
+    const { chain, chainErrMsg, hotPubKey, hotPubKeyErrMsg, coldPubKey, coldPubKeyErrMsg } = this.state;
     const {
-      model: { closeModal },
+      model: { closeModal, dispatch },
+      accountStore: { currentAccount: { address } = {} },
       globalStore: { assets = [] },
     } = this.props;
 
@@ -57,6 +57,15 @@ class TrustSettingModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                dispatch({
+                  type: 'updateTrust',
+                  payload: {
+                    address,
+                    chain: chain.label,
+                    hotPubKey,
+                    coldPubKey,
+                  },
+                });
                 closeModal();
               }
             }}>
@@ -81,16 +90,16 @@ class TrustSettingModal extends Component {
           />
           <Input.Text
             label="热公钥/地址"
-            value={hotKey}
-            errMsg={hotKeyErrMsg}
-            onChange={value => this.setState({ hotKey: value })}
+            value={hotPubKey}
+            errMsg={hotPubKeyErrMsg}
+            onChange={value => this.setState({ hotPubKey: value })}
             onBlur={checkAll.checkHotKey}
           />
           <Input.Text
             label="冷公钥/地址"
-            value={coldKey}
-            errMsg={coldKeyErrMsg}
-            onChange={value => this.setState({ coldKey: value })}
+            value={coldPubKey}
+            errMsg={coldPubKeyErrMsg}
+            onChange={value => this.setState({ coldPubKey: value })}
             onBlur={checkAll.checkColdKey}
           />
         </div>
