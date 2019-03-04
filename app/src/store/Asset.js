@@ -204,14 +204,6 @@ export default class Asset extends ModelExtend {
     };
   };
 
-  _transfer = ({ signer, acceleration, dest, token, amount, remark }) => {
-    console.log(signer, acceleration, dest, token, amount, remark);
-    amount = this.setPrecision(amount, token, true);
-    transfer(signer, Number(acceleration), dest, token, Number(amount), remark, (err, result) => {
-      resOk(result) && this.reload();
-    });
-  };
-
   withdraw = ({ token, amount, dest, remark }) => {
     amount = this.setPrecision(amount, token, true);
     const extrinsic = withdraw(token, Number(amount), dest, remark);
@@ -219,13 +211,6 @@ export default class Asset extends ModelExtend {
       extrinsic,
       success: this.reload(),
     };
-  };
-
-  _withdraw = ({ signer, acceleration, token, amount, dest, remark }) => {
-    amount = this.setPrecision(amount, token, true);
-    withdraw(signer, Number(acceleration), token, Number(amount), dest, remark, (err, result) => {
-      resOk(result) && this.reload();
-    });
   };
 
   verifyAddressValidity = async ({ token, address, remark }) => {

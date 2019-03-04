@@ -36,10 +36,20 @@ class SettingTable extends Component {
         {
           title: '',
           dataIndex: '_action',
-          render: () => (
+          render: (value, item) => (
             <ButtonGroup>
               <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal' })}>导入热私钥</Button>
-              <Button onClick={() => openModal({ name: 'NodeSettingModal' })}>设置节点</Button>
+              <Button
+                onClick={() =>
+                  openModal({
+                    name: 'NodeSettingModal',
+                    data: {
+                      chain: item.chain,
+                    },
+                  })
+                }>
+                设置节点
+              </Button>
             </ButtonGroup>
           ),
         },

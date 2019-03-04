@@ -13,19 +13,13 @@ export default class Trust extends ModelExtend {
 
   @observable name = 'Trust';
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
-  @observable info = {
-    chain: 'Bitcoin',
-    connected: false,
-    hotPubKey: null,
-    coldPubKey: null,
-  };
 
   @observable _trusts = localSave.get('trusts') || [];
 
   @computed
   get trusts() {
     const currentAccount = this.getCurrentAccount();
-    return this._trusts.filter(item => item.address === currentAccount.address);
+    return this._trusts.filter((item = {}) => item.address === currentAccount.address) || [];
   }
 
   set trusts(value) {
@@ -71,9 +65,10 @@ export default class Trust extends ModelExtend {
   }
 
   updateTrust = (obj = {}) => {
-    console.log(obj, '---------------obj');
+    const currentAccount = this.getCurrentAccount();
+    const { address } = currentAccount;
     const trusts = _.cloneDeep(this.trusts);
-    const { address, chain, hotPubKey, coldPubKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
       trusts.push({
@@ -83,10 +78,12 @@ export default class Trust extends ModelExtend {
         coldPubKey,
       });
     } else {
-      findOne.hotPubKey = hotPubKey;
-      findOne.coldPubKey = coldPubKey;
+      if (hotPubKey) findOne.hotPubKey = hotPubKey;
+      if (coldPubKey) findOne.coldPubKey = coldPubKey;
+      if (node) findOne.node = node;
     }
     this.changeModel('trusts', trusts);
+    console.log(trusts);
   };
 
   getAllWithdrawalList = async () => {

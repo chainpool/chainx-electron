@@ -42,7 +42,6 @@ class TrustSettingModal extends Component {
     const { chain, chainErrMsg, hotPubKey, hotPubKeyErrMsg, coldPubKey, coldPubKeyErrMsg } = this.state;
     const {
       model: { closeModal, dispatch },
-      accountStore: { currentAccount: { address } = {} },
       globalStore: { assets = [] },
     } = this.props;
 
@@ -60,7 +59,6 @@ class TrustSettingModal extends Component {
                 dispatch({
                   type: 'updateTrust',
                   payload: {
-                    address,
                     chain: chain.label,
                     hotPubKey,
                     coldPubKey,
