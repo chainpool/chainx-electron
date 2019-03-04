@@ -9,7 +9,7 @@ import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
-import TrustSetting from './Modal/TrustSetting';
+import TrustSetting from './Modal/TrustSettingModal';
 
 @Inject(({ trustStore: model, accountStore }) => ({ model, accountStore }))
 class Trust extends Mixin {
