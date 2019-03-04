@@ -132,7 +132,7 @@ class UpdateNodeModal extends Component {
           />
           <div className={styles.participate}>
             {[{ name: '参选', value: true }, { name: '退选', value: false }].map((item, index) => (
-              <button
+              <Button
                 key={index}
                 className={willParticipating === item.value ? styles.active : null}
                 onClick={() => {
@@ -141,7 +141,7 @@ class UpdateNodeModal extends Component {
                   });
                 }}>
                 {item.name}
-              </button>
+              </Button>
             ))}
           </div>
           <div>

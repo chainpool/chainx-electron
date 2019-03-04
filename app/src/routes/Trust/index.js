@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
-import { Inject } from '@utils';
+import { Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
