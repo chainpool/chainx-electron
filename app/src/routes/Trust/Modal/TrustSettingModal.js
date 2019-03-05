@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal } from '../../../../components';
-import { InputHorizotalList } from '../../../components';
-import { Inject, observer, Patterns } from '../../../../utils';
+import { Button, Input, Modal } from '../../../components';
+import { InputHorizotalList } from '../../components';
+import { Patterns } from '../../../utils';
 
 class TrustSettingModal extends Component {
   state = {

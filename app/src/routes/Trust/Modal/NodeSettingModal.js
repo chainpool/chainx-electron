@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, Input } from '@components';
-import { Patterns } from '../../../../utils';
+import { Patterns } from '../../../utils';
 
 class NodeSettingModal extends Component {
   constructor(props) {
@@ -82,7 +82,7 @@ class NodeSettingModal extends Component {
           <Input.Text
             label="节点地址"
             value={node}
-            errMsg={nodeErrMsg + ''}
+            errMsg={nodeErrMsg}
             onChange={value => {
               this.setState({ node: value });
             }}

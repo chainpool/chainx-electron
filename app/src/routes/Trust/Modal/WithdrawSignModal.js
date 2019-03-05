@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import * as styles from './index.less';
-import { ButtonGroup, Button, Modal, Input, Icon } from '../../../../components';
+import * as styles from './WithdrawSignModal.less';
+import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
 
 class WithdrawSignModal extends Component {
   state = {
