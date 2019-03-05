@@ -9,13 +9,19 @@ class ImportHotPrivateKeyModal extends Component {
   state = {
     hotPrivateKey: '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR',
     hotPrivateKeyErrMsg: '',
-    password: '12345678',
+    password: '',
     passwordErrMsg: '',
-    confirmedPassword: '12345678',
+    confirmedPassword: '',
     confirmedPasswordErrMsg: '',
   };
 
   checkAll = {
+    checkEqual: () => {
+      const { password, confirmedPassword } = this.state;
+      const errMsg = Patterns.check('equal')(password, confirmedPassword, '密码不一致');
+      this.setState({ passwordErrMsg: errMsg, confirmedPasswordErrMsg: errMsg });
+      return errMsg;
+    },
     checkHotPrivateKey: () => {
       const { hotPrivateKey } = this.state;
       const errMsg = Patterns.check('required')(hotPrivateKey) || Patterns.check('isHotPrivateKey')(hotPrivateKey);
@@ -26,7 +32,8 @@ class ImportHotPrivateKeyModal extends Component {
       const { password } = this.state;
       const errMsg =
         Patterns.check('required')(password) ||
-        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符');
+        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
+        this.checkAll.checkEqual();
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -34,7 +41,8 @@ class ImportHotPrivateKeyModal extends Component {
       const { confirmedPassword } = this.state;
       const errMsg =
         Patterns.check('required')(confirmedPassword) ||
-        Patterns.check('smallerOrEqual')(8, confirmedPassword.length, '密码至少包含8个字符');
+        Patterns.check('smallerOrEqual')(8, confirmedPassword.length, '密码至少包含8个字符') ||
+        this.checkAll.checkEqual();
       this.setState({ confirmedPasswordErrMsg: errMsg });
       return errMsg;
     },
@@ -95,6 +103,7 @@ class ImportHotPrivateKeyModal extends Component {
             onBlur={checkAll.checkHotPrivateKey}
           />
           <Input.Text
+            errMsgIsOutside
             isPassword
             placeholder="密码至少包含8个字符"
             label="热私钥密码"
@@ -106,6 +115,7 @@ class ImportHotPrivateKeyModal extends Component {
             onBlur={checkAll.checkPassword}
           />
           <Input.Text
+            errMsgIsOutside
             isPassword
             placeholder="重复输入密码"
             label="确认密码"
