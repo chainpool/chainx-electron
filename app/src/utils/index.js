@@ -5,6 +5,7 @@ import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg } from '../constants';
 import { default as Chainx } from 'chainx.js';
+import wif from 'wif';
 
 //------------------通用部分
 export { request } from './request';
@@ -84,6 +85,14 @@ export const Patterns = {
   },
   isWsAddress: (address, errMsg = '地址格式错误') => {
     return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
+  },
+  isHotPrivateKey: (address, errMsg = '热私钥格式错误') => {
+    try {
+      wif.decode(address);
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
   },
   required: (value, errMsg = '必填') => {
     return !value && value !== 0 ? errMsg : '';

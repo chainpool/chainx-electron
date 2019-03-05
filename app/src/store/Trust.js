@@ -117,7 +117,7 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this.trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, trusteeAddress } = obj;
+    const { chain, hotPubKey, coldPubKey, node, trusteeAddress, decodedHotKey } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
       trusts.push({
@@ -131,6 +131,7 @@ export default class Trust extends ModelExtend {
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
       if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
+      if (decodedHotKey) findOne.decodedHotKey = decodedHotKey;
     }
     this.changeModel('trusts', trusts);
     this.subScribeNodeStatus();

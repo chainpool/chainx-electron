@@ -42,7 +42,8 @@
     "rxjs": "^6.3.3",
     "slider-perfect": "^1.0.3",
     "store": "^2.0.12",
-    "whatwg-fetch": "^3.0.0"
+    "whatwg-fetch": "^3.0.0",
+    "wif": "^2.0.6"
   },
   "devDependencies": {
     "@babel/core": "7.1.0",
