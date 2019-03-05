@@ -7,7 +7,15 @@ export default class Trust extends ModelExtend {
   constructor(props) {
     super(props);
     autorun(() => {
-      localSave.set('trusts', this.trusts);
+      localSave.set(
+        'trusts',
+        this.trusts.map(item => {
+          return {
+            ...item,
+            connected: '',
+          };
+        })
+      );
     });
   }
 
@@ -64,10 +72,50 @@ export default class Trust extends ModelExtend {
     });
   }
 
+  fetchNodeStatus = () => {
+    const message = JSON.stringify({
+      id: _.uniqueId(),
+      jsonrpc: '1.0',
+      method: 'listunspent',
+      params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
+    });
+    return fetch('/getTrustNodeStatus', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: message,
+    })
+      .then(res => {
+        if (res && res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(res => res);
+  };
+
+  subScribeNodeStatus = () => {
+    const trusts = _.cloneDeep(this.trusts);
+    trusts.map(item => {
+      if (item.node) {
+        this.fetchNodeStatus().then(res => {
+          if (res) {
+            item.connected = true;
+            this.changeModel('trusts', trusts);
+          } else {
+            item.connected = true;
+            this.changeModel('trusts', trusts);
+          }
+        });
+      }
+    });
+  };
+
   updateTrust = (obj = {}) => {
+    const trusts = _.cloneDeep(this.trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    const trusts = _.cloneDeep(this.trusts);
     const { chain, hotPubKey, coldPubKey, node } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
@@ -83,6 +131,7 @@ export default class Trust extends ModelExtend {
       if (node) findOne.node = node;
     }
     this.changeModel('trusts', trusts);
+    this.subScribeNodeStatus();
     console.log(trusts);
   };
 

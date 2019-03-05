@@ -21,6 +21,9 @@ class Trust extends Mixin {
     } = this.props;
 
     dispatch({ type: 'getAllWithdrawalList' });
+    dispatch({
+      type: 'subScribeNodeStatus',
+    });
   };
 
   render() {
