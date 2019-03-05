@@ -1,17 +1,38 @@
-import { ChainX, moment, observable, formatNumber } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList } from '../services';
 import { computed } from 'mobx';
 
 export default class Trust extends ModelExtend {
+  constructor(props) {
+    super(props);
+    autorun(() => {
+      localSave.set(
+        'trusts',
+        this.trusts.map(item => {
+          return {
+            ...item,
+            connected: '',
+          };
+        })
+      );
+    });
+  }
+
   @observable name = 'Trust';
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
-  @observable info = {
-    chain: 'Bitcoin',
-    connected: false,
-    hotPubKey: null,
-    coldPubKey: null,
-  };
+
+  @observable _trusts = localSave.get('trusts') || [];
+
+  @computed
+  get trusts() {
+    const currentAccount = this.getCurrentAccount();
+    return this._trusts.filter((item = {}) => item.address === currentAccount.address) || [];
+  }
+
+  set trusts(value) {
+    this._trusts = value;
+  }
 
   @computed get normalizedOnChainAllWithdrawList() {
     const assetNamePrecisionMap = this.rootStore.globalStore.assetNamePrecisionMap; // 获取资产 name => precision map数据结构
@@ -50,6 +71,71 @@ export default class Trust extends ModelExtend {
       };
     });
   }
+
+  fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
+    const message = JSON.stringify({
+      id: _.uniqueId(),
+      jsonrpc: '1.0',
+      method: 'listunspent',
+      params: [6, 99999999, trusteeAddress],
+    });
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: message,
+    })
+      .then(res => {
+        if (res && res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(res => res);
+  };
+
+  subScribeNodeStatus = () => {
+    const trusts = _.cloneDeep(this.trusts);
+    trusts.map(item => {
+      if (item.node && item.trusteeAddress) {
+        this.fetchNodeStatus(item.node, item.trusteeAddress).then(res => {
+          console.log(res, '--------------信托res');
+          if (res) {
+            item.connected = true;
+            this.changeModel('trusts', trusts);
+          } else {
+            item.connected = false;
+            this.changeModel('trusts', trusts);
+          }
+        });
+      }
+    });
+  };
+
+  updateTrust = (obj = {}) => {
+    const trusts = _.cloneDeep(this.trusts);
+    const currentAccount = this.getCurrentAccount();
+    const { address } = currentAccount;
+    const { chain, hotPubKey, coldPubKey, node, trusteeAddress } = obj;
+    const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
+    if (!findOne) {
+      trusts.push({
+        address,
+        chain,
+        hotPubKey,
+        coldPubKey,
+      });
+    } else {
+      if (hotPubKey) findOne.hotPubKey = hotPubKey;
+      if (coldPubKey) findOne.coldPubKey = coldPubKey;
+      if (node) findOne.node = node;
+      if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
+    }
+    this.changeModel('trusts', trusts);
+    this.subScribeNodeStatus();
+    console.log(trusts);
+  };
 
   getAllWithdrawalList = async () => {
     const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);

@@ -37,10 +37,6 @@ export const NetWork = [
     name: '测试网',
     ip: '192.168.1.1',
   },
-  {
-    name: '正式网',
-    ip: '192.168.1.2',
-  },
 ];
 
 export const API = {
