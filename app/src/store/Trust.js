@@ -72,12 +72,12 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  fetchNodeStatus = url => {
+  fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
     const message = JSON.stringify({
       id: _.uniqueId(),
       jsonrpc: '1.0',
       method: 'listunspent',
-      params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
+      params: [6, 99999999, trusteeAddress],
     });
     return fetch(url, {
       method: 'POST',
@@ -98,8 +98,9 @@ export default class Trust extends ModelExtend {
   subScribeNodeStatus = () => {
     const trusts = _.cloneDeep(this.trusts);
     trusts.map(item => {
-      if (item.node) {
-        this.fetchNodeStatus(item.node).then(res => {
+      if (item.node && item.trusteeAddress) {
+        this.fetchNodeStatus(item.node, item.trusteeAddress).then(res => {
+          console.log(res, '--------------信托res');
           if (res) {
             item.connected = true;
             this.changeModel('trusts', trusts);
@@ -116,7 +117,7 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this.trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node } = obj;
+    const { chain, hotPubKey, coldPubKey, node, trusteeAddress } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
       trusts.push({
@@ -129,6 +130,7 @@ export default class Trust extends ModelExtend {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
+      if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
     }
     this.changeModel('trusts', trusts);
     this.subScribeNodeStatus();

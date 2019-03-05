@@ -190,8 +190,9 @@ export default class Asset extends ModelExtend {
   }
 
   async getTrusteeAddress({ chain }) {
-    const addresses = await getTrusteeAddress(chain);
+    const addresses = (await getTrusteeAddress(chain)) || [];
     this.changeModel('btcTrusteeAddress', addresses[0]);
+    return addresses[0];
   }
 
   transfer = ({ dest, token, amount, remark }) => {

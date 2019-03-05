@@ -11,7 +11,27 @@ class NodeSettingModal extends Component {
     this.state = {
       node: node_prev,
       nodeErrMsg: '',
+      trusteeAddress: '',
     };
+  }
+
+  componentDidMount() {
+    const {
+      assetStore: { dispatch },
+      globalStore: { modal: { data: { chain } = {} } = {} },
+    } = this.props;
+    dispatch({
+      type: 'getTrusteeAddress',
+      payload: {
+        chain,
+      },
+    }).then(res => {
+      if (res) {
+        this.setState({
+          trusteeAddress: res,
+        });
+      }
+    });
   }
 
   checkAll = {
@@ -29,7 +49,7 @@ class NodeSettingModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { node, nodeErrMsg } = this.state;
+    const { node, nodeErrMsg, trusteeAddress } = this.state;
     const {
       model: { dispatch, closeModal },
       globalStore: { modal: { data: { chain } = {} } = {} },
@@ -49,6 +69,7 @@ class NodeSettingModal extends Component {
                   payload: {
                     node,
                     chain,
+                    trusteeAddress: trusteeAddress ? [trusteeAddress] : '',
                   },
                 });
                 closeModal();
