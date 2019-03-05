@@ -72,14 +72,14 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  fetchNodeStatus = () => {
+  fetchNodeStatus = url => {
     const message = JSON.stringify({
       id: _.uniqueId(),
       jsonrpc: '1.0',
       method: 'listunspent',
       params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
     });
-    return fetch('/getTrustNodeStatus', {
+    return fetch(url, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -99,12 +99,12 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this.trusts);
     trusts.map(item => {
       if (item.node) {
-        this.fetchNodeStatus().then(res => {
+        this.fetchNodeStatus(item.node).then(res => {
           if (res) {
             item.connected = true;
             this.changeModel('trusts', trusts);
           } else {
-            item.connected = true;
+            item.connected = false;
             this.changeModel('trusts', trusts);
           }
         });

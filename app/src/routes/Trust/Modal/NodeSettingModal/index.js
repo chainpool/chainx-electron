@@ -3,10 +3,16 @@ import { Button, Modal, Input } from '@components';
 import { Patterns } from '../../../../utils';
 
 class NodeSettingModal extends Component {
-  state = {
-    node: '',
-    nodeErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      globalStore: { modal: { data: { node: node_prev } = {} } = {} },
+    } = props;
+    this.state = {
+      node: node_prev,
+      nodeErrMsg: '',
+    };
+  }
 
   checkAll = {
     checkNode: () => {

@@ -45,6 +45,7 @@ class SettingTable extends Component {
                     name: 'NodeSettingModal',
                     data: {
                       chain: item.chain,
+                      node: item.node,
                     },
                   })
                 }>
