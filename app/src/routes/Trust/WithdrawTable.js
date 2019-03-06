@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table } from '../../components';
-import { Inject } from '@utils';
+import { observer } from '../../utils';
 
-@Inject(({ trustStore }) => ({ trustStore }))
+@observer
 class WithdrawTable extends Component {
   render() {
     const {
-      trustStore: { normalizedOnChainAllWithdrawList },
+      model: { normalizedOnChainAllWithdrawList },
     } = this.props;
 
     const tableProps = {
