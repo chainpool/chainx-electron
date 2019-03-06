@@ -1,4 +1,4 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList } from '../services';
 import { computed } from 'mobx';
@@ -73,26 +73,12 @@ export default class Trust extends ModelExtend {
   }
 
   fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
-    const message = JSON.stringify({
-      id: _.uniqueId(),
-      jsonrpc: '1.0',
-      method: 'listunspent',
-      params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
-    });
-    return fetch(url, {
+    return fetchFromHttp({
+      httpUrl: url,
+      methodAlias: 'listunspent',
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: message,
-    })
-      .then(res => {
-        if (res && res.status === 200) {
-          return res.json();
-        }
-      })
-      .then(res => res);
+      params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
+    }).then(res => res);
   };
 
   subScribeNodeStatus = () => {

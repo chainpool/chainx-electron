@@ -249,3 +249,21 @@ export const fetchFromWs = ({ wsUrl, method, params = [] }) => {
     };
   });
 };
+
+export const fetchFromHttp = ({ httpUrl, method, methodAlias, params = [] }) => {
+  const id = _.uniqueId();
+  const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
+  return fetch(httpUrl, {
+    method: method,
+    headers: {
+      method: 'POST',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: message,
+  }).then(res => {
+    if (res && res.status === 200) {
+      return res.json();
+    }
+  });
+};
