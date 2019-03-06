@@ -115,20 +115,21 @@
         }
       }
       .checkbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
-        border: 1px solid #3da0d2;
         border-radius: 2px;
         width: 16px;
         height: 16px;
         overflow: hidden;
+        border: 1px solid #DCE0E2;
         &.active {
+          background: @yellow;
           border: none;
         }
         i {
-          position: absolute;
-          left: -1px;
-          top: -1px;
-          color: @blue;
+          color: white;
         }
       }
       .label {

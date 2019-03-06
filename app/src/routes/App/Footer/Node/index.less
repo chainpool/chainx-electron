@@ -29,7 +29,7 @@
         }
       }
       &:last-of-type {
-        color: @red;
+        color: @green;
         .circle {
           background: @red;
         }
@@ -66,12 +66,15 @@
           padding: 8px 24px;
           box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
           li {
+            display: flex;
+            white-space:nowrap;
+
             &.api {
               align-items: center;
               display: flex;
             }
             &.header {
-              border-bottom: 1px solid #dce0e2;
+              border-top: 1px solid #dce0e2;
               margin: 0 -24px;
               padding: 16px 24px;
             }

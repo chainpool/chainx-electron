@@ -68,7 +68,7 @@ class CheckBox extends PureComponent {
             _.isFunction(onClick) && onClick();
           }}>
           <div style={style} className={classNames(styles.checkbox, value ? styles.active : null)}>
-            {value ? <i className="iconfont icon-xuanzekuangxuanzhong" /> : null}
+            {value ? <i className="iconfont icon-dagou1" /> : null}
           </div>
           <div className={styles.label}>
             {label}

@@ -4,7 +4,6 @@ import { NetWork } from '../constants';
 import { pipe, startWith } from 'rxjs/operators';
 
 export default class Configure extends ModelExtend {
-  static Amount = 0;
   constructor(rootStore) {
     super(rootStore);
     this.reset = nodes => {
@@ -29,9 +28,11 @@ export default class Configure extends ModelExtend {
 
     autorun(() => {
       localSave.set('nodes', this.nodes);
+      localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
     });
   }
 
+  @observable autoSwitchBestNode = localSave.get('autoSwitchBestNode') || false;
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
@@ -149,7 +150,7 @@ export default class Configure extends ModelExtend {
       const caculatePercent = () => {
         const nodes = _.cloneDeep(this.nodes) || [];
         const sortedNodes = nodes
-          .filter((item = {}) => item.block)
+          .filter((item = {}) => item.block && item.delay)
           .sort((a = {}, b = {}) => Number(a.delay) - Number(b.delay));
         const bestNode = sortedNodes[0] || {};
         const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
@@ -161,10 +162,14 @@ export default class Configure extends ModelExtend {
             }
           });
           if (prevBestNode.address !== bestNode.address) {
-            prevBestNode.best = false;
-            bestNode.best = true;
-            console.log(bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
-            switchWs();
+            if (this.autoSwitchBestNode) {
+              prevBestNode.best = false;
+              bestNode.best = true;
+              console.log(sortedNodes, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
+              switchWs();
+            } else {
+              console.log('用户未允许自动切换功能');
+            }
           } else {
             console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
           }
@@ -212,5 +217,9 @@ export default class Configure extends ModelExtend {
     }
     this.changeModel('nodes', nodes);
     this.subscribe({ refresh: false });
+  };
+
+  updateAutoSwitchBestNode = ({ autoSwitchBestNode }) => {
+    this.changeModel('autoSwitchBestNode', autoSwitchBestNode);
   };
 }
