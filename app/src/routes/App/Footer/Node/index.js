@@ -45,7 +45,9 @@ class Node extends Component {
               {nodes.map(item => (
                 <li key={item.name}>
                   <div style={{ width: 150 }}>{item.name}</div>
-                  <span className={styles.time}>{`${item.delay} /ms`}</span>
+                  <span className={classNames(styles.time, item.delay > 300 ? 'yellow' : 'green')}>{`${
+                    item.delay
+                  } /ms`}</span>
                 </li>
               ))}
               <li key={'best'} className={classNames(styles.api, styles.header)}>

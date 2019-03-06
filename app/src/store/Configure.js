@@ -44,7 +44,7 @@ export default class Configure extends ModelExtend {
             type: '系统默认',
             name: 'wallet-server',
             best: true,
-            address: 'wss://wallet-server.chainx.org/ws', //process.env.CHAINX_NODE_URL,
+            address: process.env.CHAINX_NODE_URL,
             isSystem: true,
           },
           {

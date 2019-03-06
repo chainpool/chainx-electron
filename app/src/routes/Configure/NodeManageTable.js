@@ -30,7 +30,7 @@ class NodeManageTable extends Component {
           {
             title: '网络延迟',
             dataIndex: 'delay',
-            render: value => (value ? `${value}/ms` : ''),
+            render: value => <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>,
           },
           {
             title: '连接节点数',
@@ -39,6 +39,7 @@ class NodeManageTable extends Component {
           {
             title: '同步状态',
             dataIndex: 'syncStatus',
+            render: (value, item) => <span className={value !== '100.00%' ? 'red' : null}>{value}</span>,
           },
           {
             title: '',
