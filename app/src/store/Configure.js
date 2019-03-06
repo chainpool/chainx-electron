@@ -19,7 +19,7 @@ export default class Configure extends ModelExtend {
     };
 
     this.refreshLocalNodes = () => {
-      const nodes = localSave.get('nodes');
+      const nodes = localSave.get('nodes') || [];
       const findOne = nodes.filter((item = {}) => item.isSystem)[0];
       if (!findOne) {
         localSave.remove('nodes');
@@ -41,26 +41,28 @@ export default class Configure extends ModelExtend {
       : [
           {
             type: '系统默认',
-            name: '159',
+            name: 'wallet-server',
             best: true,
             address: 'wss://wallet-server.chainx.org/ws', //process.env.CHAINX_NODE_URL,
             isSystem: true,
           },
           {
             type: '系统默认',
-            name: 'localhost',
+            name: '本机',
             address: 'ws://localhost:8097',
             isSystem: true,
             isLocalhost: true,
           },
           {
-            type: '自定义',
+            type: '系统默认',
             name: 'w1',
+            isSystem: true,
             address: 'wss://w1.chainx.org/ws',
           },
           {
-            type: '自定义',
+            type: '系统默认',
             name: 'w2',
+            isSystem: true,
             address: 'wss://w2.chainx.org/ws',
           },
         ]
@@ -145,9 +147,11 @@ export default class Configure extends ModelExtend {
       };
 
       const caculatePercent = () => {
-        const nodes = _.cloneDeep(this.nodes);
-        const bestNode =
-          nodes.filter((item = {}) => item.block).sort((a = {}, b = {}) => Number(b.block) - Number(a.block))[0] || {};
+        const nodes = _.cloneDeep(this.nodes) || [];
+        const sortedNodes = nodes
+          .filter((item = {}) => item.block)
+          .sort((a = {}, b = {}) => Number(a.delay) - Number(b.delay));
+        const bestNode = sortedNodes[0] || {};
         const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
         if (bestNode && bestNode.block) {
           const max = bestNode.block;
@@ -159,7 +163,8 @@ export default class Configure extends ModelExtend {
           if (prevBestNode.address !== bestNode.address) {
             prevBestNode.best = false;
             bestNode.best = true;
-            // switchWs();
+            console.log(bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
+            switchWs();
           } else {
             console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
           }
