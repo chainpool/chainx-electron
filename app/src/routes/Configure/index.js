@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Input, Icon, Mixin } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
-import { Inject, parseQueryString } from '../../utils';
+import { Inject, localSave, parseQueryString } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
 import OperationApiModal from './Modal/OperationApiModal';
@@ -25,6 +25,7 @@ class Configure extends Mixin {
       },
     });
   };
+
   render() {
     const {
       model: { netWork = [], currentNetWork = {}, dispatch, openModal },
@@ -35,7 +36,7 @@ class Configure extends Mixin {
 
     const tableProps = {
       ...this.props,
-      widths: [150, 150, 200, 150, 150],
+      widths: [150, 150, 250, 150, 150],
     };
     return (
       <div className={styles.configure}>

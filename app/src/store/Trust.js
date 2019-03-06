@@ -77,7 +77,7 @@ export default class Trust extends ModelExtend {
       id: _.uniqueId(),
       jsonrpc: '1.0',
       method: 'listunspent',
-      params: [6, 99999999, trusteeAddress],
+      params: [6, 99999999, ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']],
     });
     return fetch(url, {
       method: 'POST',

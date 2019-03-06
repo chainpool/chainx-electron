@@ -1,7 +1,6 @@
-import { observable, autorun, localSave, formatNumber, _, toJS } from '../utils';
+import { observable, autorun, localSave, formatNumber, _, toJS, fetchFromWs } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork } from '../constants';
-import { default as Chainx } from 'chainx.js';
 import { pipe, startWith } from 'rxjs/operators';
 
 export default class Configure extends ModelExtend {
@@ -11,7 +10,6 @@ export default class Configure extends ModelExtend {
     this.reset = nodes => {
       return nodes.map(item => ({
         ...item,
-        type: '自定义',
         syncStatus: '',
         links: '',
         delay: '',
@@ -19,6 +17,16 @@ export default class Configure extends ModelExtend {
         times: [],
       }));
     };
+
+    this.refreshLocalNodes = () => {
+      const nodes = localSave.get('nodes');
+      const findOne = nodes.filter((item = {}) => item.isSystem)[0];
+      if (!findOne) {
+        localSave.remove('nodes');
+      }
+      return localSave.get('nodes') && localSave.get('nodes').length;
+    };
+
     autorun(() => {
       localSave.set('nodes', this.nodes);
     });
@@ -28,13 +36,32 @@ export default class Configure extends ModelExtend {
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
   @observable nodes = this.reset(
-    localSave.get('nodes') && localSave.get('nodes').length
+    this.refreshLocalNodes()
       ? localSave.get('nodes')
       : [
           {
-            name: '默认传入',
+            type: '系统默认',
+            name: '159',
             best: true,
-            address: process.env.CHAINX_NODE_URL,
+            address: 'wss://wallet-server.chainx.org/ws', //process.env.CHAINX_NODE_URL,
+            isSystem: true,
+          },
+          {
+            type: '系统默认',
+            name: 'localhost',
+            address: 'ws://localhost:8097',
+            isSystem: true,
+            isLocalhost: true,
+          },
+          {
+            type: '自定义',
+            name: 'w1',
+            address: 'wss://w1.chainx.org/ws',
+          },
+          {
+            type: '自定义',
+            name: 'w2',
+            address: 'wss://w2.chainx.org/ws',
           },
         ]
   );
@@ -62,32 +89,17 @@ export default class Configure extends ModelExtend {
     };
 
     const fromWs = wsUrl => {
-      return new Promise((resolve, reject) => {
-        const ws = new WebSocket(wsUrl);
-        ws.onmessage = m => {
-          try {
-            const data = JSON.parse(m.data);
-            if (data.id === id) {
-              resolve(data);
-              ws.close();
-            }
-          } catch (err) {
-            reject(err);
-          }
-        };
-        ws.onopen = () => {
-          ws.send(message);
-        };
+      return fetchFromWs({
+        wsUrl,
+        method: 'chain_getBlock',
       });
     };
 
     const isHttp = /^[http|https]/.test(url);
-    return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.result.block.header.number));
+    return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
   };
 
   subscribe = async ({ refresh }) => {
-    let i = 0;
-    let readyNodes = [];
     const nodes = this.nodes;
     this.resetNodes();
 
@@ -104,12 +116,17 @@ export default class Configure extends ModelExtend {
       );
     };
 
-    for (let j = 0; j < nodes.length; j++) {
-      const ChainX = new Chainx(nodes[j].address);
+    const fetchSystemPeers = wsUrl => {
+      return fetchFromWs({
+        wsUrl,
+        method: 'system_peers',
+      });
+    };
 
+    for (let j = 0; j < nodes.length; j++) {
       const getIntentions = async () => {
         const startTime = Date.now();
-        const res = await ChainX.chain.systemPeers();
+        const res = await fetchSystemPeers(nodes[j].address);
         const endTime = Date.now();
         if (res && res.length) {
           changeNodes(j, 'links', res && res.length ? res.length : '');
@@ -142,7 +159,7 @@ export default class Configure extends ModelExtend {
           if (prevBestNode.address !== bestNode.address) {
             prevBestNode.best = false;
             bestNode.best = true;
-            switchWs();
+            // switchWs();
           } else {
             console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
           }
@@ -159,15 +176,8 @@ export default class Configure extends ModelExtend {
         });
       };
 
-      ChainX.isRpcReady()
-        .then(() => {
-          getIntentions();
-          getBlockNumber();
-        })
-        .catch(() => {
-          getIntentions();
-          getBlockNumber();
-        });
+      getIntentions();
+      getBlockNumber();
     }
   };
 

@@ -223,3 +223,29 @@ export const getDeepPath = (routers, path) =>
 export const setBlankSpace = (value, unit) => {
   return `${value} ${unit}`;
 };
+
+export const fetchFromWs = ({ wsUrl, method, params = [] }) => {
+  const id = _.uniqueId();
+  const message = JSON.stringify({ id, jsonrpc: '2.0', method, params });
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(wsUrl);
+    ws.onmessage = m => {
+      try {
+        const data = JSON.parse(m.data);
+        if (data.id === id) {
+          resolve(data.result);
+          ws.close();
+        }
+      } catch (err) {
+        reject(err);
+      }
+    };
+    ws.onopen = () => {
+      ws.send(message);
+    };
+    ws.onerror = err => {
+      ws.close();
+      reject(err);
+    };
+  });
+};

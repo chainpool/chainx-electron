@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Table, Button, ButtonGroup } from '../../components';
-import { IncreaseTime } from '../components';
 
 @observer
 class NodeManageTable extends Component {
@@ -44,54 +43,57 @@ class NodeManageTable extends Component {
           {
             title: '',
             dataIndex: '_action',
-            width: 200,
             render: (value, item, index) => (
               <ButtonGroup>
-                <Button onClick={() => {}}>停止同步</Button>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'OperationNodeModal',
-                      data: {
-                        action: 'update',
-                        name: item.name,
-                        address: item.address,
-                        callback: ({ action, name, address }) => {
-                          dispatch({
-                            type: 'updateNode',
-                            payload: {
-                              action,
-                              index,
-                              name,
-                              address,
+                {item.isLocalhost ? <Button onClick={() => {}}>停止同步</Button> : null}
+                {!item.isSystem ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'OperationNodeModal',
+                          data: {
+                            action: 'update',
+                            name: item.name,
+                            address: item.address,
+                            callback: ({ action, name, address }) => {
+                              dispatch({
+                                type: 'updateNode',
+                                payload: {
+                                  action,
+                                  index,
+                                  name,
+                                  address,
+                                },
+                              });
                             },
-                          });
-                        },
-                      },
-                    });
-                  }}>
-                  修改
-                </Button>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'DeleteNodeModal',
-                      data: {
-                        title: '删除节点',
-                        callback: () => {
-                          dispatch({
-                            type: 'updateNode',
-                            payload: {
-                              action: 'delete',
-                              index,
+                          },
+                        });
+                      }}>
+                      修改
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'DeleteNodeModal',
+                          data: {
+                            title: '删除节点',
+                            callback: () => {
+                              dispatch({
+                                type: 'updateNode',
+                                payload: {
+                                  action: 'delete',
+                                  index,
+                                },
+                              });
                             },
-                          });
-                        },
-                      },
-                    });
-                  }}>
-                  删除
-                </Button>
+                          },
+                        });
+                      }}>
+                      删除
+                    </Button>
+                  </>
+                ) : null}
               </ButtonGroup>
             ),
           },

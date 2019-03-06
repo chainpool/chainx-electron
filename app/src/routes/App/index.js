@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
-import { ChainX, parseQueryString } from '../../utils';
+import { ChainX, localSave, parseQueryString } from '../../utils';
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
