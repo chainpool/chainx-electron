@@ -67,6 +67,7 @@ export default class Trust extends ModelExtend {
         address: ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
         token: withdraw.token, // 币种
         addr: withdraw.address, // 原链地址，提现的目标地址
+        balance_primary: withdraw.balance,
         balance: formatNumber.toPrecision(withdraw.balance, precision), // 数量
         memo: withdraw.memo, // 提现备注
         state, // 状态
@@ -74,7 +75,8 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  buildMultiSign = () => {
+  buildMultiSign = ({ withdrawList }) => {
+    console.log(withdrawList, '===========withdrawList');
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
@@ -129,9 +131,10 @@ export default class Trust extends ModelExtend {
       utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
 
       // TODO: 真实的chainx跨链提现需扣除提现手续费
-      withdrawList.forEach(withdraw => txb.addOutput(withdraw.address, withdraw.amount));
+      withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount));
 
       const change = totalInputAmount - totalWithdrawAmount - minerFee;
+      console.log(totalInputAmount, totalWithdrawAmount, change);
 
       txb.addOutput(multisigAddress, change);
 
@@ -142,16 +145,12 @@ export default class Trust extends ModelExtend {
           txb.sign(index, pair, redeemScript);
         });
       }
-
       // const rawTransaction = txb.build().toHex();
-
       const rawTransaction = txb.buildIncomplete().toHex();
-
       console.log(rawTransaction, '---------');
-      return false;
     };
     compose({
-      withdrawList: [{ address: '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo', amount: 1 }],
+      withdrawList,
       network: bitcoin.networks.testnet,
     });
   };

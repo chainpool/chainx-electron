@@ -27,7 +27,14 @@ class WithdrawConstructModal extends Component {
               dispatch({
                 type: 'buildMultiSign',
                 payload: {
-                  // unspents:
+                  withdrawList: withDrawIndexSignList.map((item = {}) => {
+                    const findOne =
+                      normalizedOnChainAllWithdrawList.filter((one = {}, index) => item.value === index)[0] || {};
+                    return {
+                      ...findOne,
+                      amount: findOne.balance_primary,
+                    };
+                  }),
                 },
               });
               closeModal();
