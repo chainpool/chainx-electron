@@ -1,113 +1,9 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList } from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
-
-async function getUnspents(address) {
-  let id = 0;
-  const bitcoinNodeUrl = '/getTrustNodeStatus';
-  const body = {
-    jsonrpc: '1.0',
-    id: id++,
-    method: 'listunspent',
-    params: [6, 99999999, [address]],
-  };
-
-  const res = await fetch(bitcoinNodeUrl, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  const unspents = await res.json();
-  return unspents.result;
-}
-function filterUnspentsByAmount(unspents, amount) {
-  const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
-
-  const result = [];
-  let sum = new BigNumber(0);
-  for (let utxo of nonZeroUnspents) {
-    result.push(utxo);
-    const value = new BigNumber(10).exponentiatedBy(8).multipliedBy(utxo.amount);
-    sum = sum.plus(value);
-    if (sum.isGreaterThan(amount)) {
-      break;
-    }
-  }
-
-  return sum.isLessThan(amount) ? [] : result;
-}
-
-const multisigAddress = '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo';
-const minerFee = 1;
-const privateKeys = ['cUSb9aWh7UVwpYPZnj1EX35ng5b8ZQ5GT6MdH66jmiUdtJ5drw33'];
-const redeemScript = Buffer.from(
-  '53210227e54b65612152485a812b8856e92f41f64788858466cc4d8df674939a5538c3210306117a360e5dbe10e1938a047949c25a86c0b0e08a0a7c1e611b97de6b2917dd210311252930af8ba766b9c7a6580d8dc4bbf9b0befd17a8ef7fabac275bba77ae402103f72c448a0e59f48d4adef86cba7b278214cece8e56ef32ba1d179e0a8129bdba54ae',
-  'hex'
-);
-
-async function compose({ withdrawList, network }) {
-  const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
-    return result + withdraw.amount;
-  }, 0);
-  if (totalWithdrawAmount <= 0) {
-    throw new Error('提现总额应大于0');
-  }
-
-  const utxos = await getUnspents(multisigAddress);
-
-  const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
-
-  if (targetUtxos.length <= 0) {
-    throw new Error('构造失败，账户余额不足');
-  }
-
-  const totalInputAmount = targetUtxos.reduce((result, utxo) => {
-    return new BigNumber(10)
-      .exponentiatedBy(8)
-      .multipliedBy(utxo.amount)
-      .plus(result)
-      .toNumber();
-  }, 0);
-
-  const txb = new bitcoin.TransactionBuilder(network);
-  txb.setVersion(1);
-  utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
-
-  // TODO: 真实的chainx跨链提现需扣除提现手续费
-  withdrawList.forEach(withdraw => txb.addOutput(withdraw.address, withdraw.amount));
-
-  const change = totalInputAmount - totalWithdrawAmount - minerFee;
-
-  txb.addOutput(multisigAddress, change);
-
-  const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-
-  for (let pair of keypairs) {
-    utxos.forEach((utxo, index) => {
-      txb.sign(index, pair, redeemScript);
-    });
-  }
-
-  // const rawTransaction = txb.build().toHex();
-
-  const rawTransaction = txb.buildIncomplete().toHex();
-
-  console.log(rawTransaction, '---------');
-  return false;
-
-  // console.log(rawTransaction);
-}
-// compose({
-//   withdrawList: [{ address: '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo', amount: 1 }],
-//   network: bitcoin.networks.testnet,
-// });
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -178,7 +74,87 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  buildMultiSign = async unspents => {};
+  buildMultiSign = () => {
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+    const multisigAddress = findOne.trusteeAddress[0];
+    const nodeUrl = findOne.node;
+    const minerFee = 1;
+    const privateKeys = ['cUSb9aWh7UVwpYPZnj1EX35ng5b8ZQ5GT6MdH66jmiUdtJ5drw33'];
+    const redeemScript = Buffer.from(
+      '53210227e54b65612152485a812b8856e92f41f64788858466cc4d8df674939a5538c3210306117a360e5dbe10e1938a047949c25a86c0b0e08a0a7c1e611b97de6b2917dd210311252930af8ba766b9c7a6580d8dc4bbf9b0befd17a8ef7fabac275bba77ae402103f72c448a0e59f48d4adef86cba7b278214cece8e56ef32ba1d179e0a8129bdba54ae',
+      'hex'
+    );
+    const getUnspents = async (url, multisigAddress) =>
+      this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
+    const filterUnspentsByAmount = (unspents, amount) => {
+      const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
+      const result = [];
+      let sum = new BigNumber(0);
+      for (let utxo of nonZeroUnspents) {
+        result.push(utxo);
+        const value = new BigNumber(10).exponentiatedBy(8).multipliedBy(utxo.amount);
+        sum = sum.plus(value);
+        if (sum.isGreaterThan(amount)) {
+          break;
+        }
+      }
+      return sum.isLessThan(amount) ? [] : result;
+    };
+
+    const compose = async ({ withdrawList, network }) => {
+      const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
+        return result + withdraw.amount;
+      }, 0);
+      if (totalWithdrawAmount <= 0) {
+        throw new Error('提现总额应大于0');
+      }
+      const utxos = await getUnspents(nodeUrl, [multisigAddress]);
+
+      const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
+
+      if (targetUtxos.length <= 0) {
+        throw new Error('构造失败，账户余额不足');
+      }
+
+      const totalInputAmount = targetUtxos.reduce((result, utxo) => {
+        return new BigNumber(10)
+          .exponentiatedBy(8)
+          .multipliedBy(utxo.amount)
+          .plus(result)
+          .toNumber();
+      }, 0);
+
+      const txb = new bitcoin.TransactionBuilder(network);
+      txb.setVersion(1);
+      utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+
+      // TODO: 真实的chainx跨链提现需扣除提现手续费
+      withdrawList.forEach(withdraw => txb.addOutput(withdraw.address, withdraw.amount));
+
+      const change = totalInputAmount - totalWithdrawAmount - minerFee;
+
+      txb.addOutput(multisigAddress, change);
+
+      const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
+
+      for (let pair of keypairs) {
+        utxos.forEach((utxo, index) => {
+          txb.sign(index, pair, redeemScript);
+        });
+      }
+
+      // const rawTransaction = txb.build().toHex();
+
+      const rawTransaction = txb.buildIncomplete().toHex();
+
+      console.log(rawTransaction, '---------');
+      return false;
+    };
+    compose({
+      withdrawList: [{ address: '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo', amount: 1 }],
+      network: bitcoin.networks.testnet,
+    });
+  };
 
   fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
     return fetchFromHttp({

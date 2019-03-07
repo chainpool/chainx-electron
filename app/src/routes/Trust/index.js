@@ -24,6 +24,11 @@ class Trust extends Mixin {
     dispatch({
       type: 'subScribeNodeStatus',
     });
+    setTimeout(() => {
+      dispatch({
+        type: 'buildMultiSign',
+      });
+    }, 2000);
   };
 
   render() {
