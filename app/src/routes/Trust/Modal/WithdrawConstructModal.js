@@ -69,7 +69,7 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, password, tx } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, password, tx, redeemScript } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList, dispatch, openModal },
     } = this.props;
@@ -93,6 +93,7 @@ class WithdrawConstructModal extends Component {
                       payload: {
                         withdrawList: this.getWithdrawList(withDrawIndexSignList),
                         tx,
+                        redeemScript,
                       },
                     });
                   },

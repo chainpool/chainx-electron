@@ -28,16 +28,36 @@ class WithdrawSignModal extends Component {
     });
   }
   render() {
-    const { activeIndex, tx } = this.state;
+    const { activeIndex, tx, redeemScript } = this.state;
     const {
-      accountStore: { closeModal },
+      model: { openModal, dispatch },
     } = this.props;
 
     return (
       <Modal
         title="响应多签提现"
         button={
-          <Button size="full" type="confirm">
+          <Button
+            size="full"
+            type="confirm"
+            onClick={() => {
+              openModal({
+                name: 'SignModal',
+                data: {
+                  description: [{ name: '操作', value: '响应多签提现' }],
+                  callback: () => {
+                    return dispatch({
+                      type: 'signWithdrawTx',
+                      payload: {
+                        voteState: !activeIndex,
+                        tx,
+                        redeemScript,
+                      },
+                    });
+                  },
+                },
+              });
+            }}>
             确定
           </Button>
         }>
