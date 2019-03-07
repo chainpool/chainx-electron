@@ -82,9 +82,11 @@ export default class Trust extends ModelExtend {
     const nodeUrl = findOne.node;
     const minerFee = 40000;
     const network = bitcoin.networks.testnet;
-    const privateKeys = ['cSXvChvzizEv4CkC1rQ94VEjjHWhRsUJaPxTZsUUMV97sncmTvQa'];
-    console.log(redeemScript, '=======redeemScript');
-    redeemScript = Buffer.from(redeemScript, 'hex');
+    const privateKeys = [
+      'cNM1Q55yj6PWbgvEbUkMG9pW8ZoXhgcyKJv5Lz2eacpudJmjp1hG',
+      // 'cNM1Q55yj6PWbgvEbUkMG9pW8ZoXhgcyKJv5Lz2eacpudJmjp1hG',
+      // 'cSXAH3eqx7T6RwtgrUhvxpWBoBkNJgnCx5nQVnCPyCRhAEkX2iqL',
+    ];
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents, amount) => {
@@ -104,7 +106,7 @@ export default class Trust extends ModelExtend {
 
     const compose = async () => {
       let rawTransaction;
-      const utxos = await getUnspents(nodeUrl, [multisigAddress]);
+      let utxos = await getUnspents(nodeUrl, [multisigAddress]);
       if (withdrawList) {
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
@@ -113,6 +115,7 @@ export default class Trust extends ModelExtend {
           throw new Error('提现总额应大于0');
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
+        console.log(targetUtxos, '----');
         if (targetUtxos.length <= 0) {
           throw new Error('构造失败，账户余额不足');
         }
@@ -133,16 +136,16 @@ export default class Trust extends ModelExtend {
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
       } else {
+        redeemScript = Buffer.from(redeemScript, 'hex');
         const transaction = bitcoin.Transaction.fromHex(tx);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-        console.log(utxos, transaction);
         for (let pair of keypairs) {
           utxos.forEach((utxo, index) => {
             txb.sign(index, pair, redeemScript);
           });
         }
-        rawTransaction = txb.buildIncomplete().toHex();
+        rawTransaction = txb.build().toHex();
       }
       return rawTransaction;
     };
@@ -151,7 +154,7 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     const ids = withdrawList.map((item = {}) => item.id);
-    console.log(ids, tx, '---ids, tx');
+    console.log(ids, '---ids, tx');
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
