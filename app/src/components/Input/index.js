@@ -110,6 +110,7 @@ class InputSelect extends React.Component {
       getOptionLabel = (item = {}) => item.label,
       getOptionValue = (item = {}) => item.value,
       prefix = '',
+      multi = false,
     } = this.props;
     return (
       <div className={classNames(styles.inputcontainer, className)}>
@@ -125,6 +126,8 @@ class InputSelect extends React.Component {
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
           <div className={styles.userinput}>
             <CreatableSelect
+              isMulti={multi}
+              closeMenuOnSelect={!multi}
               getOptionLabel={getOptionLabel}
               getOptionValue={getOptionValue}
               isClearable={false}

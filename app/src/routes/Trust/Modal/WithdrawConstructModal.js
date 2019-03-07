@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '@components';
+import { Modal, Input, Button } from '../../../components';
 
 class WithdrawConstructModal extends Component {
   state = {
-    withDrawSignList: [],
+    withDrawIndexSignList: [],
     password: '',
     signInfo: '',
   };
   render() {
-    const { withDrawSignList, password, signInfo } = this.state;
+    const { withDrawIndexSignList, password, signInfo } = this.state;
     const {
       accountStore: { closeModal },
       model: { normalizedOnChainAllWithdrawList, dispatch },
     } = this.props;
 
-    const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: item }));
+    const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: index }));
 
     return (
       <Modal
@@ -37,12 +37,12 @@ class WithdrawConstructModal extends Component {
         }>
         <div>
           <Input.Select
+            multi={true}
             label="选择链"
             options={options}
             onChange={value => {
-              const values = [...withDrawSignList, value];
               this.setState({
-                withDrawSignList: values,
+                withDrawIndexSignList: value,
               });
             }}
           />

@@ -104,10 +104,10 @@ async function compose({ withdrawList, network }) {
 
   // console.log(rawTransaction);
 }
-compose({
-  withdrawList: [{ address: '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo', amount: 1 }],
-  network: bitcoin.networks.testnet,
-});
+// compose({
+//   withdrawList: [{ address: '2N6mJFLkjN9muneSeHCsMCxWXVZ4ruLKfFo', amount: 1 }],
+//   network: bitcoin.networks.testnet,
+// });
 
 export default class Trust extends ModelExtend {
   constructor(props) {
