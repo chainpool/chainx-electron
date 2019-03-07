@@ -18,6 +18,8 @@ export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccoun
 
 export const createWithdrawTx = (...payload) => asset.createWithdrawTx(...payload);
 
+export const getWithdrawTx = (...payload) => asset.getWithdrawTx(...payload);
+
 export const register = (...payload) => stake.register(...payload);
 
 export const transfer = (...payload) => asset.transfer(...payload);

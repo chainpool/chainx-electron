@@ -136,7 +136,7 @@ class SignModal extends Mixin {
                     _.isFunction(result.fail) && result.fail(err);
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
-                      _.get(result, 'failToast.message') || err.message
+                      _.get(result, 'failToast.message') || _.get(err, 'message')
                     );
                   };
 

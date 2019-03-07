@@ -5,9 +5,30 @@ import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
 class WithdrawSignModal extends Component {
   state = {
     activeIndex: 0,
+    tx: '',
+    signStatus: true,
+    redeemScript: '',
   };
+
+  componentDidMount() {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getWithdrawTx',
+    }).then(res => {
+      if (res) {
+        const { tx, signStatus, redeemScript } = res;
+        this.setState({
+          tx,
+          signStatus,
+          redeemScript,
+        });
+      }
+    });
+  }
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, tx } = this.state;
     const {
       accountStore: { closeModal },
     } = this.props;
@@ -23,9 +44,9 @@ class WithdrawSignModal extends Component {
         <div className={styles.withdrawSign}>
           <div className={styles.sign}>
             <div className={styles.desc}>待签原文：</div>
-            <div>
-              hdahsudhiaushdiahsidiquhdahsudhiaushdiahsidiquhdahsudhiaushdia…
+            <div className={styles.tx}>
               <span>
+                {tx}
                 <Icon name="icon-wancheng" className={styles.right} />
                 正确
               </span>

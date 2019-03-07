@@ -1,6 +1,6 @@
 import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getWithdrawalList, createWithdrawTx, cancelOrder } from '../services';
+import { getWithdrawalList, createWithdrawTx, getWithdrawTx } from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -154,10 +154,19 @@ export default class Trust extends ModelExtend {
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     console.log(withdrawList);
     const ids = withdrawList.map((item = {}) => item.id);
+    console.log(ids, tx, '---ids, tx');
     const extrinsic = createWithdrawTx(ids, tx);
     return {
       extrinsic,
     };
+  };
+
+  getWithdrawTx = async () => {
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+    if (findOne && findOne.chain) {
+      const tx = await getWithdrawTx(findOne.chain);
+      return tx;
+    }
   };
 
   fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {

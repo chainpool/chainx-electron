@@ -11,14 +11,30 @@ class WithdrawConstructModal extends Component {
   };
 
   checkAll = {
-    checkWithDrawIndexSignList: () => {
+    checkWithDrawIndexSignList: async () => {
       const { withDrawIndexSignList } = this.state;
-      const errMsg = Patterns.check('required')(withDrawIndexSignList);
+      const {
+        model: { dispatch },
+      } = this.props;
+
+      let error = '';
+      try {
+        await dispatch({
+          type: 'sign',
+          payload: {
+            withdrawList: this.getWithdrawList(withDrawIndexSignList),
+          },
+        });
+      } catch (err) {
+        error = err;
+      }
+
+      const errMsg = Patterns.check('required')(withDrawIndexSignList) || error.message;
       this.setState({ withDrawIndexSignListErrMsg: errMsg });
       return errMsg;
     },
     confirm: () => {
-      return ['checkHotPrivateKey', 'checkPassword', 'checkConfirmedPassword'].every(item => !this.checkAll[item]());
+      return ['checkWithDrawIndexSignList'].every(item => !this.checkAll[item]());
     },
   };
 
@@ -36,12 +52,13 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { withDrawIndexSignList, password, tx } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, password, tx } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList, dispatch, openModal },
     } = this.props;
 
     const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: index }));
+    console.log(withDrawIndexSignListErrMsg);
 
     return (
       <Modal
@@ -72,6 +89,8 @@ class WithdrawConstructModal extends Component {
         }>
         <div>
           <Input.Select
+            errMsgIsOutside
+            errMsg={withDrawIndexSignListErrMsg}
             multi={true}
             label="选择链"
             options={options}
@@ -81,15 +100,21 @@ class WithdrawConstructModal extends Component {
                   withDrawIndexSignList: value,
                 },
                 async () => {
-                  const tx = await dispatch({
-                    type: 'sign',
-                    payload: {
-                      withdrawList: this.getWithdrawList(value),
-                    },
-                  });
-                  if (tx) {
+                  try {
+                    const tx = await dispatch({
+                      type: 'sign',
+                      payload: {
+                        withdrawList: this.getWithdrawList(value),
+                      },
+                    });
+                    if (tx) {
+                      this.setState({
+                        tx,
+                      });
+                    }
+                  } catch {
                     this.setState({
-                      tx,
+                      tx: '',
                     });
                   }
                 }

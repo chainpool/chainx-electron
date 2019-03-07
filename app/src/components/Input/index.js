@@ -94,7 +94,6 @@ class InputSelect extends React.Component {
   }
 
   render() {
-    const { errMsg = '' } = this.state;
     const {
       className,
       size = 'middle',
@@ -111,7 +110,9 @@ class InputSelect extends React.Component {
       getOptionValue = (item = {}) => item.value,
       prefix = '',
       multi = false,
+      errMsgIsOutside = false,
     } = this.props;
+    const errMsg = errMsgIsOutside ? this.props.errMsg : this.state.errMsg;
     return (
       <div className={classNames(styles.inputcontainer, className)}>
         {label ? <div className={styles.label}>{label}</div> : null}
