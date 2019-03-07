@@ -16,6 +16,8 @@ const { stake, asset, chain, trade } = ChainX;
 
 export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
+export const createWithdrawTx = (...payload) => asset.createWithdrawTx(...payload);
+
 export const register = (...payload) => stake.register(...payload);
 
 export const transfer = (...payload) => asset.transfer(...payload);

@@ -1,17 +1,44 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
+import { Patterns } from '../../../utils';
 
 class WithdrawConstructModal extends Component {
   state = {
     withDrawIndexSignList: [],
+    withDrawIndexSignListErrMsg: '',
     password: '',
-    signInfo: '',
+    tx: '',
+  };
+
+  checkAll = {
+    checkWithDrawIndexSignList: () => {
+      const { withDrawIndexSignList } = this.state;
+      const errMsg = Patterns.check('required')(withDrawIndexSignList);
+      this.setState({ withDrawIndexSignListErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkHotPrivateKey', 'checkPassword', 'checkConfirmedPassword'].every(item => !this.checkAll[item]());
+    },
+  };
+
+  getWithdrawList = withDrawIndexSignList => {
+    const {
+      model: { normalizedOnChainAllWithdrawList },
+    } = this.props;
+    return withDrawIndexSignList.map((item = {}) => {
+      const findOne = normalizedOnChainAllWithdrawList.filter((one = {}, index) => item.value === index)[0] || {};
+      return {
+        ...findOne,
+        amount: findOne.balance_primary,
+      };
+    });
   };
   render() {
-    const { withDrawIndexSignList, password, signInfo } = this.state;
+    const { checkAll } = this;
+    const { withDrawIndexSignList, password, tx } = this.state;
     const {
-      accountStore: { closeModal },
-      model: { normalizedOnChainAllWithdrawList, dispatch },
+      model: { normalizedOnChainAllWithdrawList, dispatch, openModal },
     } = this.props;
 
     const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: index }));
@@ -24,20 +51,21 @@ class WithdrawConstructModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              dispatch({
-                type: 'buildMultiSign',
-                payload: {
-                  withdrawList: withDrawIndexSignList.map((item = {}) => {
-                    const findOne =
-                      normalizedOnChainAllWithdrawList.filter((one = {}, index) => item.value === index)[0] || {};
-                    return {
-                      ...findOne,
-                      amount: findOne.balance_primary,
-                    };
-                  }),
+              openModal({
+                name: 'SignModal',
+                data: {
+                  description: [{ name: '操作', value: '构造多签提现' }],
+                  callback: () => {
+                    return dispatch({
+                      type: 'createWithdrawTx',
+                      payload: {
+                        withdrawList: this.getWithdrawList(withDrawIndexSignList),
+                        tx,
+                      },
+                    });
+                  },
                 },
               });
-              closeModal();
             }}>
             确定
           </Button>
@@ -48,12 +76,28 @@ class WithdrawConstructModal extends Component {
             label="选择链"
             options={options}
             onChange={value => {
-              this.setState({
-                withDrawIndexSignList: value,
-              });
+              this.setState(
+                {
+                  withDrawIndexSignList: value,
+                },
+                async () => {
+                  const tx = await dispatch({
+                    type: 'sign',
+                    payload: {
+                      withdrawList: this.getWithdrawList(value),
+                    },
+                  });
+                  if (tx) {
+                    this.setState({
+                      tx,
+                    });
+                  }
+                }
+              );
             }}
+            onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text value={signInfo} isTextArea label="待签原文" rows={2} />
+          <Input.Text value={tx} isTextArea label="待签原文" rows={5} />
           <Input.Text
             value={password}
             isPassword
