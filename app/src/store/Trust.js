@@ -80,7 +80,7 @@ export default class Trust extends ModelExtend {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
-    const minerFee = 1;
+    const minerFee = 40000;
     const network = bitcoin.networks.testnet;
     const privateKeys = ['cUSb9aWh7UVwpYPZnj1EX35ng5b8ZQ5GT6MdH66jmiUdtJ5drw33'];
     const redeemScript = Buffer.from(
@@ -113,6 +113,7 @@ export default class Trust extends ModelExtend {
         throw new Error('提现总额应大于0');
       }
       const utxos = await getUnspents(nodeUrl, [multisigAddress]);
+      console.log(utxos, '==============utxos');
       const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
       if (targetUtxos.length <= 0) {
         throw new Error('构造失败，账户余额不足');
@@ -128,12 +129,11 @@ export default class Trust extends ModelExtend {
       txb.setVersion(1);
       utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
       // TODO: 真实的chainx跨链提现需扣除提现手续费
-      withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount));
-      const change = totalInputAmount - totalWithdrawAmount - minerFee;
-      console.log(totalInputAmount, totalWithdrawAmount, change);
+      withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount - minerFee));
+      // const change = totalInputAmount - totalWithdrawAmount - minerFee;
+      const change = totalInputAmount - totalWithdrawAmount - 10000;
       txb.addOutput(multisigAddress, change);
       let rawTransaction = txb.buildIncomplete().toHex();
-
       if (isCreate) {
         rawTransaction = txb.buildIncomplete().toHex();
       } else {
@@ -155,7 +155,7 @@ export default class Trust extends ModelExtend {
     console.log(withdrawList);
     const ids = withdrawList.map((item = {}) => item.id);
     console.log(ids, tx, '---ids, tx');
-    const extrinsic = createWithdrawTx(ids, tx);
+    const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
     };
@@ -199,7 +199,7 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this.trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, trusteeAddress, decodedHotKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node, trusteeAddress, decodedHotPrivateKey } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
       trusts.push({
@@ -213,7 +213,7 @@ export default class Trust extends ModelExtend {
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
       if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
-      if (decodedHotKey) findOne.decodedHotKey = decodedHotKey;
+      if (decodedHotPrivateKey) findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
     this.subScribeNodeStatus();

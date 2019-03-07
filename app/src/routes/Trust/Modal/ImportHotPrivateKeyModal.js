@@ -7,7 +7,7 @@ import wif from 'wif';
 
 class ImportHotPrivateKeyModal extends Component {
   state = {
-    hotPrivateKey: '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR',
+    hotPrivateKey: 'cUSb9aWh7UVwpYPZnj1EX35ng5b8ZQ5GT6MdH66jmiUdtJ5drw33',
     hotPrivateKeyErrMsg: '',
     password: '',
     passwordErrMsg: '',
@@ -76,11 +76,11 @@ class ImportHotPrivateKeyModal extends Component {
               if (checkAll.confirm()) {
                 const decoded = wif.decode(hotPrivateKey);
                 if (decoded && decoded.privateKey) {
-                  const decodedHotKey = bip38.encrypt(decoded.privateKey, decoded.compressed, 'chainx');
+                  const decodedHotPrivateKey = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
                   dispatch({
                     type: 'updateTrust',
                     payload: {
-                      decodedHotKey,
+                      decodedHotPrivateKey,
                       chain,
                     },
                   });

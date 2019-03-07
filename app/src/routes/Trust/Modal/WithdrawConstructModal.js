@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { Patterns } from '../../../utils';
+import bip38 from 'bip38';
+import wif from 'wif';
 
 class WithdrawConstructModal extends Component {
   state = {
@@ -16,7 +18,6 @@ class WithdrawConstructModal extends Component {
       const {
         model: { dispatch },
       } = this.props;
-
       let error = '';
       try {
         await dispatch({
@@ -32,6 +33,22 @@ class WithdrawConstructModal extends Component {
       const errMsg = Patterns.check('required')(withDrawIndexSignList) || error.message;
       this.setState({ withDrawIndexSignListErrMsg: errMsg });
       return errMsg;
+    },
+    checkPassword: () => {
+      const {
+        model: { trusts },
+        password,
+      } = this.props;
+      const findOne = trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+      const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+      try {
+        const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+        wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
+      } catch (err) {
+        console.log(err, '--------------解析报错');
+      }
+
+      console.log(findOne, '---------------findOne');
     },
     confirm: () => {
       return ['checkWithDrawIndexSignList'].every(item => !this.checkAll[item]());
@@ -56,9 +73,7 @@ class WithdrawConstructModal extends Component {
     const {
       model: { normalizedOnChainAllWithdrawList, dispatch, openModal },
     } = this.props;
-
     const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: index }));
-    console.log(withDrawIndexSignListErrMsg);
 
     return (
       <Modal
@@ -132,6 +147,7 @@ class WithdrawConstructModal extends Component {
                 password: value,
               });
             }}
+            onBlur={checkAll.checkPassword}
           />
         </div>
       </Modal>
