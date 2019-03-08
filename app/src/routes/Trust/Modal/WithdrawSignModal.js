@@ -87,8 +87,7 @@ class WithdrawSignModal extends Component {
                       return dispatch({
                         type: 'signWithdrawTx',
                         payload: {
-                          voteState: !activeIndex,
-                          tx,
+                          tx: !activeIndex ? tx : null,
                           redeemScript,
                           privateKey,
                         },
