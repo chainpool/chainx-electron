@@ -1,20 +1,32 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, Button } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { ChainX, classNames, Inject } from '../../../utils';
+import { classNames, Inject } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
+  state = {
+    txid: '',
+    errMsg: '',
+  };
+
   startInit = () => {
     const {
       assetStore: { dispatch },
     } = this.props;
 
     dispatch({ type: 'getTrusteeAddress', payload: { chain: 'Bitcoin' } });
+  };
+
+  checkTxId = value => {
+    const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
+    const result = regexp.exec(value);
+    const errMsg = !result || !result[3] ? '交易ID错误' : '';
+    this.setState({ errMsg });
   };
 
   render() {
@@ -27,6 +39,8 @@ class CrossChainBindModal extends Mixin {
         },
       },
     } = this.props;
+
+    const { txid } = this.state;
 
     const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
     const show = {
@@ -71,7 +85,7 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            使用<strong>支持Data</strong>的Ethereum钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
+            使用<strong>支持Data</strong>以太坊钱包向自己发起任意金额（建议为0）的转账交易，并在Data中输入下方信息：
           </span>
         ),
         value1: chainxAddressHex,
@@ -122,10 +136,32 @@ class CrossChainBindModal extends Mixin {
               </div>
             </div>
           </div>
-          <div className={styles.depositaddress}>
-            <span className={styles.label}>{findOne.desc2}</span>
-            <Clipboard>{findOne.value2}</Clipboard>
-          </div>
+          {token === 'BTC' ? (
+            <div className={styles.depositaddress}>
+              <span className={styles.label}>{findOne.desc2}</span>
+              <Clipboard>{findOne.value2}</Clipboard>
+            </div>
+          ) : (
+            <div className={styles.ethTx}>
+              <div className={styles.desc}>
+                <div />
+                交易打包成功后，在下面输入交易ID（txid），交易签名验证无误后，即可完成绑定
+              </div>
+              <Input.Text
+                placeholder="输入交易ID"
+                label=""
+                value={txid}
+                errMsg={this.state.errMsg}
+                onChange={value => {
+                  this.setState({ txid: value });
+                }}
+                onBlur={this.checkTxId}
+              />
+              <Button size="full" type="confirm">
+                确定
+              </Button>
+            </div>
+          )}
           {findOne.warn}
         </div>
       </Modal>
