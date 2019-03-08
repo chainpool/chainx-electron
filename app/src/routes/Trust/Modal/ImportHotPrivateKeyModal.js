@@ -7,7 +7,7 @@ import wif from 'wif';
 
 class ImportHotPrivateKeyModal extends Component {
   state = {
-    hotPrivateKey: 'cUSb9aWh7UVwpYPZnj1EX35ng5b8ZQ5GT6MdH66jmiUdtJ5drw33',
+    hotPrivateKey: '',
     hotPrivateKeyErrMsg: '',
     password: '',
     passwordErrMsg: '',

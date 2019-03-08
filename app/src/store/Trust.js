@@ -77,14 +77,14 @@ export default class Trust extends ModelExtend {
   }
 
   sign = ({ withdrawList, tx, redeemScript }) => {
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (!findOne) {
       throw new Error('未设置节点');
     }
     if (!findOne.connected) {
       throw new Error('节点未连接');
     }
-    if (!findOne.trusteeAddress && findOne.trusteeAddress[0]) {
+    if (!findOne.trusteeAddress && !findOne.trusteeAddress[0]) {
       throw new Error('当前节点未设置信托地址');
     }
     const multisigAddress = findOne.trusteeAddress[0];
@@ -124,7 +124,6 @@ export default class Trust extends ModelExtend {
           throw new Error('提现总额应大于0');
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
-        console.log(targetUtxos, '----');
         if (targetUtxos.length <= 0) {
           throw new Error('构造失败，账户余额不足');
         }

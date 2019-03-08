@@ -6,6 +6,7 @@ import device from 'current-device';
 import { ErrMsg } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
+import bip38 from 'bip38';
 
 //------------------通用部分
 export { request } from './request';
@@ -89,6 +90,15 @@ export const Patterns = {
   isHotPrivateKey: (address, errMsg = '热私钥格式错误') => {
     try {
       wif.decode(address);
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
+  },
+  isHotPrivateKeyPassword: (decodedHotPrivateKey, password, errMsg = '密码错误') => {
+    try {
+      const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+      wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
       return '';
     } catch (err) {
       return errMsg;
