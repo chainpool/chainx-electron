@@ -76,7 +76,7 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  sign = ({ withdrawList, tx, redeemScript }) => {
+  sign = ({ withdrawList, tx, redeemScript, privateKey }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (!findOne) {
       throw new Error('未设置节点');
@@ -91,11 +91,6 @@ export default class Trust extends ModelExtend {
     const nodeUrl = findOne.node;
     const minerFee = 40000;
     const network = bitcoin.networks.testnet;
-    const privateKeys = [
-      'cSXAH3eqx7T6RwtgrUhvxpWBoBkNJgnCx5nQVnCPyCRhAEkX2iqL',
-      // 'cNM1Q55yj6PWbgvEbUkMG9pW8ZoXhgcyKJv5Lz2eacpudJmjp1hG',
-      // 'cSXAH3eqx7T6RwtgrUhvxpWBoBkNJgnCx5nQVnCPyCRhAEkX2iqL',
-    ];
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
@@ -145,6 +140,8 @@ export default class Trust extends ModelExtend {
         rawTransaction = txb.buildIncomplete().toHex();
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
+        console.log(privateKey, typeof privateKey);
+        const privateKeys = [privateKey];
         const transaction = bitcoin.Transaction.fromHex(tx);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
@@ -177,8 +174,8 @@ export default class Trust extends ModelExtend {
     }
   };
 
-  signWithdrawTx = async ({ voteState, tx, redeemScript }) => {
-    const tx_trans = await this.sign({ tx, redeemScript });
+  signWithdrawTx = async ({ voteState, tx, redeemScript, privateKey }) => {
+    const tx_trans = await this.sign({ tx, redeemScript, privateKey });
     console.log(tx_trans, '====================tx_trans');
     const extrinsic = signWithdrawTx(`0x${tx_trans}`, voteState);
     return {
