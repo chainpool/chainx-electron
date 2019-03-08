@@ -97,8 +97,8 @@ export const Patterns = {
   },
   isHotPrivateKeyPassword: (decodedHotPrivateKey, password, errMsg = '密码错误') => {
     try {
-      const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
-      wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
+      bip38.decrypt(decodedHotPrivateKey, password);
+      // wif.encode(0xef, decryptedKey.privateKey, decryptedKey.compressed);
       return '';
     } catch (err) {
       return errMsg;

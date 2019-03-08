@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import * as styles from './WithdrawSignModal.less';
 import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
+import wif from 'wif';
+import bip38 from 'bip38';
+import { Patterns } from '../../../utils';
 
 class WithdrawSignModal extends Component {
   state = {
@@ -8,6 +11,31 @@ class WithdrawSignModal extends Component {
     tx: '',
     signStatus: true,
     redeemScript: '',
+    password: '',
+    passwordErrMsg: '',
+  };
+
+  checkAll = {
+    checkPassword: () => {
+      const { password } = this.state;
+      const {
+        model: { trusts },
+        accountStore: {
+          currentAccount: { address },
+        },
+      } = this.props;
+      const findOne = trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
+      const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+      const errMsg =
+        Patterns.check('required')(password) ||
+        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
+      this.setState({ passwordErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      const result3 = this.checkAll['checkPassword']();
+      return !result3;
+    },
   };
 
   componentDidMount() {
@@ -28,9 +56,13 @@ class WithdrawSignModal extends Component {
     });
   }
   render() {
-    const { activeIndex, tx, redeemScript } = this.state;
+    const { checkAll } = this;
+    const { activeIndex, tx, redeemScript, password, passwordErrMsg } = this.state;
     const {
-      model: { openModal, dispatch },
+      model: { openModal, dispatch, trusts },
+      accountStore: {
+        currentAccount: { address },
+      },
     } = this.props;
 
     return (
@@ -41,22 +73,30 @@ class WithdrawSignModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              openModal({
-                name: 'SignModal',
-                data: {
-                  description: [{ name: '操作', value: '响应多签提现' }],
-                  callback: () => {
-                    return dispatch({
-                      type: 'signWithdrawTx',
-                      payload: {
-                        voteState: !activeIndex,
-                        tx,
-                        redeemScript,
-                      },
-                    });
+              if (checkAll.confirm()) {
+                const findOne =
+                  trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
+                const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+                const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+                const privateKey = wif.encode(0xef, decryptedKey.privateKey, decryptedKey.compressed);
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '响应多签提现' }],
+                    callback: () => {
+                      return dispatch({
+                        type: 'signWithdrawTx',
+                        payload: {
+                          voteState: !activeIndex,
+                          tx,
+                          redeemScript,
+                          privateKey,
+                        },
+                      });
+                    },
                   },
-                },
-              });
+                });
+              }
             }}>
             确定
           </Button>
@@ -87,7 +127,17 @@ class WithdrawSignModal extends Component {
               </Button>
             ))}
           </ButtonGroup>
-          <Input.Text isPassword placeholder="输入热私钥密码" />
+          <Input.Text
+            isPassword
+            value={password}
+            errMsg={passwordErrMsg}
+            placeholder="输入热私钥密码"
+            onChange={value => {
+              this.setState({
+                password: value,
+              });
+            }}
+          />
         </div>
       </Modal>
     );
