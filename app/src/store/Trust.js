@@ -78,6 +78,15 @@ export default class Trust extends ModelExtend {
 
   sign = ({ withdrawList, tx, redeemScript }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+    if (!findOne) {
+      throw new Error('未设置节点');
+    }
+    if (!findOne.connected) {
+      throw new Error('节点未连接');
+    }
+    if (!findOne.trusteeAddress && findOne.trusteeAddress[0]) {
+      throw new Error('当前节点未设置信托地址');
+    }
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = 40000;
@@ -89,7 +98,7 @@ export default class Trust extends ModelExtend {
     ];
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
-    const filterUnspentsByAmount = (unspents, amount) => {
+    const filterUnspentsByAmount = (unspents = [], amount) => {
       const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
       const result = [];
       let sum = new BigNumber(0);
@@ -188,18 +197,25 @@ export default class Trust extends ModelExtend {
   };
 
   subScribeNodeStatus = () => {
-    const trusts = _.cloneDeep(this.trusts);
+    const trusts = _.cloneDeep(this._trusts);
+    const currentAccount = this.getCurrentAccount();
+    const { address } = currentAccount;
     trusts.map(item => {
-      if (item.node && item.trusteeAddress) {
-        this.fetchNodeStatus(item.node, item.trusteeAddress).then(res => {
-          if (res) {
-            item.connected = true;
-            this.changeModel('trusts', trusts);
-          } else {
+      if (item.node && item.trusteeAddress && item.address === address) {
+        this.fetchNodeStatus(item.node, item.trusteeAddress)
+          .then(res => {
+            if (res) {
+              item.connected = true;
+              this.changeModel('trusts', trusts);
+            } else {
+              item.connected = false;
+              this.changeModel('trusts', trusts);
+            }
+          })
+          .catch(() => {
             item.connected = false;
             this.changeModel('trusts', trusts);
-          }
-        });
+          });
       }
     });
   };

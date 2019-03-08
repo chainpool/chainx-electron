@@ -45,7 +45,9 @@ class TrustSettingModal extends Component {
       globalStore: { assets = [] },
     } = this.props;
 
-    const options = assets.map(asset => ({ label: asset.chain, value: asset.name }));
+    const options = assets
+      .filter((item = {}) => item.chain === 'Bitcoin')
+      .map(asset => ({ label: asset.chain, value: asset.name }));
 
     return (
       <Modal
