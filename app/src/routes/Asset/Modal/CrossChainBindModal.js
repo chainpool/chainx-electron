@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject } from '../../../utils';
@@ -11,6 +11,7 @@ import parity from '../../../resource/parity.png';
 class CrossChainBindModal extends Mixin {
   state = {
     step: 0,
+    recommendChannel: '',
   };
   startInit = () => {
     const {
@@ -21,6 +22,7 @@ class CrossChainBindModal extends Mixin {
   };
 
   render() {
+    const { step, recommendChannel } = this.state;
     const {
       accountStore: { currentAddress, openModal },
       assetStore: { btcTrusteeAddress },
@@ -31,7 +33,8 @@ class CrossChainBindModal extends Mixin {
       },
     } = this.props;
 
-    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
+    const channel = recommendChannel ? `@${recommendChannel}` : '';
+    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`));
     const show = {
       BTC: {
         desc1: (
@@ -109,27 +112,65 @@ class CrossChainBindModal extends Mixin {
     return (
       <Modal title={`跨链绑定（${token}）`}>
         <div className={styles.crossChainBind}>
-          <div className={styles.desc}>
-            <div />
-            {findOne.desc1}
-          </div>
-          <div className={classNames(styles.grayblock, styles.addressall)}>
+          {step === 0 ? (
             <div>
-              <div>
-                <div className={styles.address}>
-                  <div id="copy">{findOne.value1}</div>
-                  <button>
-                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制信息</span>} />
-                  </button>
+              <Input.Text
+                value={recommendChannel}
+                placeholder={'输入推荐渠道的节点名称 (选填)'}
+                onChange={value => {
+                  this.setState({
+                    recommendChannel: value,
+                  });
+                }}
+              />
+              <ButtonGroup className={styles.recommendChannel}>
+                <Button
+                  onClick={() => {
+                    this.setState({
+                      step: 1,
+                      recommendChannel: '',
+                    });
+                  }}>
+                  跳过
+                </Button>
+                <Button
+                  type="confirm"
+                  onClick={() => {
+                    if (recommendChannel) {
+                      this.setState({
+                        step: 1,
+                      });
+                    }
+                  }}>
+                  确定
+                </Button>
+              </ButtonGroup>
+            </div>
+          ) : (
+            <>
+              <div className={styles.desc}>
+                <div />
+                {findOne.desc1}
+              </div>
+              <div className={classNames(styles.grayblock, styles.addressall)}>
+                <div>
+                  <div>
+                    <div className={styles.address}>
+                      <div id="copy">{findOne.value1}</div>
+                      <button>
+                        <Clipboard id="copy" outInner={<span className={styles.desc}>复制信息</span>} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className={styles.depositaddress}>
-            <span className={styles.label}>{findOne.desc2}</span>
-            <Clipboard>{findOne.value2}</Clipboard>
-          </div>
-          {findOne.warn}
+              <div className={styles.depositaddress}>
+                <span className={styles.label}>{findOne.desc2}</span>
+                <Clipboard>{findOne.value2}</Clipboard>
+              </div>
+              {findOne.warn}
+            </>
+          )}
         </div>
       </Modal>
     );
