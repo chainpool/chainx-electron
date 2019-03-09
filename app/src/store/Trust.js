@@ -1,6 +1,7 @@
 import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList, createWithdrawTx, getWithdrawTx, signWithdrawTx } from '../services';
+import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -96,7 +97,7 @@ export default class Trust extends ModelExtend {
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = 40000;
-    const network = bitcoin.networks.testnet;
+    const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
@@ -194,13 +195,16 @@ export default class Trust extends ModelExtend {
     };
   };
 
-  fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
+  fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
       httpUrl: url,
       methodAlias: 'listunspent',
       method: 'POST',
       params: [6, 99999999, trusteeAddress],
-    }).then(res => res);
+    }).then(res => {
+      this.reload();
+      return res;
+    });
   };
 
   subScribeNodeStatus = () => {

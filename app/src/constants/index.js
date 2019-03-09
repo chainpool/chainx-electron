@@ -53,3 +53,5 @@ export const ipc = {
   SAVE_KEYSTORE: 'SAVE_KEYSTORE', // 用户renderer向main请求保存keystore
   DELETE_KEYSTORE: 'DELETE_KEYSTORE',
 };
+
+export const BitcoinTestNet = true;
