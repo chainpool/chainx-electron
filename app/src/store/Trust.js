@@ -53,7 +53,7 @@ export default class Trust extends ModelExtend {
         throw new Error('无法找到提现列表中资产定义');
       }
 
-      let state = '';
+      let state = withdraw.status;
       switch (withdraw.status) {
         case 'applying':
           state = '申请中';
@@ -61,6 +61,9 @@ export default class Trust extends ModelExtend {
         case 'signing':
         case 'processing':
           state = '处理中';
+          break;
+        case 'notApplying':
+          state = '未申请';
           break;
         case 'unknown':
         default:
@@ -77,6 +80,7 @@ export default class Trust extends ModelExtend {
         balance: formatNumber.toPrecision(withdraw.balance, precision), // 数量
         memo: withdraw.memo, // 提现备注
         state, // 状态
+        status: withdraw.status,
       };
     });
   }

@@ -64,7 +64,7 @@ class WithdrawConstructModal extends Component {
       model: { normalizedOnChainAllWithdrawList },
     } = this.props;
     return withDrawIndexSignList.map((item = {}) => {
-      const findOne = normalizedOnChainAllWithdrawList.filter((one = {}, index) => item.value === index)[0] || {};
+      const findOne = normalizedOnChainAllWithdrawList.filter((one = {}) => item.value === one.id)[0] || {};
       return {
         ...findOne,
         amount: findOne.balance_primary,
@@ -83,9 +83,15 @@ class WithdrawConstructModal extends Component {
       redeemScript,
     } = this.state;
     const {
-      model: { normalizedOnChainAllWithdrawList, dispatch, openModal },
+      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
-    const options = normalizedOnChainAllWithdrawList.map((item, index) => ({ label: index + 1, value: index }));
+    const options = normalizedOnChainAllWithdrawList
+      .map((item = {}) => ({
+        label: item.id,
+        value: item.id,
+        status: item.status,
+      }))
+      .filter((item = {}) => item.status !== 'signing' && item.status !== 'processing');
 
     return (
       <Modal
