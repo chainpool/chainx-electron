@@ -155,9 +155,9 @@ export default class Configure extends ModelExtend {
         const bestNode = sortedNodes[0] || {};
         const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
         if (bestNode && bestNode.block) {
-          const max = bestNode.block;
+          const max = _.get(_.cloneDeep(nodes).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
           nodes.map((item = {}) => {
-            if (item.block) {
+            if (item.block && max) {
               item.syncStatus = formatNumber.percent(item.block / max, 2);
             }
           });

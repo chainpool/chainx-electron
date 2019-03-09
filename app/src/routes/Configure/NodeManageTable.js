@@ -39,7 +39,7 @@ class NodeManageTable extends Component {
           {
             title: '同步状态',
             dataIndex: 'syncStatus',
-            render: (value, item) => <span className={value !== '100.00%' ? 'red' : null}>{value}</span>,
+            render: value => <span className={value !== '100.00%' ? 'red' : null}>{value}</span>,
           },
           {
             title: '',
