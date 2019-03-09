@@ -7,7 +7,7 @@ import { observer } from '../../utils';
 class WithdrawTable extends Component {
   render() {
     const {
-      model: { normalizedOnChainAllWithdrawList },
+      model: { normalizedOnChainAllWithdrawList = [] },
     } = this.props;
 
     const tableProps = {

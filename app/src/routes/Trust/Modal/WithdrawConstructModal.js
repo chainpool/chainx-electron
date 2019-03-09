@@ -122,7 +122,7 @@ class WithdrawConstructModal extends Component {
             errMsgIsOutside
             errMsg={withDrawIndexSignListErrMsg}
             multi={true}
-            label="选择链"
+            label="提现列表"
             options={options}
             onChange={value => {
               this.setState(

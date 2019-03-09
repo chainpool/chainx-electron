@@ -58,7 +58,7 @@ class Trust extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { trusts },
+      model: { trusts = [], normalizedOnChainAllWithdrawList = [] },
     } = this.props;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -67,7 +67,11 @@ class Trust extends Mixin {
       currentTrustNode,
     };
 
-    const isShowWithdraw = currentTrustNode && currentTrustNode.connected && currentTrustNode.decodedHotPrivateKey;
+    const isShowWithdraw =
+      currentTrustNode &&
+      currentTrustNode.connected &&
+      currentTrustNode.decodedHotPrivateKey &&
+      normalizedOnChainAllWithdrawList.length;
 
     return (
       <div className={styles.trust}>

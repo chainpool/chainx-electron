@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
-import { ErrMsg } from '../constants';
+import { ErrMsg, BitcoinTestNet } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
@@ -88,11 +88,22 @@ export const Patterns = {
   isWsAddress: (address, errMsg = '地址格式错误') => {
     return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
   },
+  isPublicKey: (pubkey, errMsg = '格式错误') => {
+    try {
+      Buffer.from(pubkey, 'hex');
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
+  },
   isHotPrivateKey: (prikey, pubkey, errMsg = '热私钥格式错误') => {
     try {
       wif.decode(prikey);
       try {
-        let ecPair = bitcoin.ECPair.fromWIF(prikey, bitcoin.networks.testnet); // 导入私钥
+        let ecPair = bitcoin.ECPair.fromWIF(
+          prikey,
+          BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
+        ); // 导入私钥
         return ecPair.publicKey.toString('hex') === pubkey ? '' : '热私钥与热公钥不匹配';
       } catch (err) {
         return '热私钥与热公钥不匹配';

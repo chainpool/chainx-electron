@@ -31,6 +31,7 @@ class SettingTable extends Component {
         },
         {
           title: '冷公钥/地址',
+          ellipse: true,
           dataIndex: 'coldPubKey',
         },
         {

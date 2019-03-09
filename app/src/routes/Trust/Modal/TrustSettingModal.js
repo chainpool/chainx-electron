@@ -21,13 +21,13 @@ class TrustSettingModal extends Component {
     },
     checkHotKey: () => {
       const { hotPubKey } = this.state;
-      const errMsg = Patterns.check('required')(hotPubKey);
+      const errMsg = Patterns.check('required')(hotPubKey) || Patterns.check('isPublicKey')(hotPubKey);
       this.setState({ hotPubKeyErrMsg: errMsg });
       return errMsg;
     },
     checkColdKey: () => {
       const { coldPubKey } = this.state;
-      const errMsg = Patterns.check('required')(coldPubKey);
+      const errMsg = Patterns.check('required')(coldPubKey) || Patterns.check('isPublicKey')(coldPubKey);
       this.setState({ coldPubKeyErrMsg: errMsg });
       return errMsg;
     },
