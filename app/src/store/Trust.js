@@ -138,7 +138,7 @@ export default class Trust extends ModelExtend {
         txb.setVersion(1);
         utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         // TODO: 真实的chainx跨链提现需扣除提现手续费
-        console.log(utxos, withdrawList, '========');
+        console.log(utxos, withdrawList, '========utxos, withdrawList');
         withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount - minerFee));
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - totalWithdrawAmount - 10000;

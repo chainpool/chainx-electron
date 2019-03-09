@@ -13,6 +13,7 @@ class ImportHotPrivateKeyModal extends Component {
     passwordErrMsg: '',
     confirmedPassword: '',
     confirmedPasswordErrMsg: '',
+    percent: 0,
   };
 
   checkAll = {
@@ -60,6 +61,7 @@ class ImportHotPrivateKeyModal extends Component {
       passwordErrMsg,
       confirmedPassword,
       confirmedPasswordErrMsg,
+      percent,
     } = this.state;
     const {
       model: { closeModal, dispatch },

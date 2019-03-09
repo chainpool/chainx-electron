@@ -52,6 +52,7 @@ class WithdrawConstructModal extends Component {
       const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
       const errMsg =
         Patterns.check('required')(password) ||
+        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
         Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
@@ -143,9 +144,12 @@ class WithdrawConstructModal extends Component {
                       },
                     });
                     if (tx) {
-                      this.setState({
-                        tx,
-                      });
+                      this.setState(
+                        {
+                          tx,
+                        },
+                        checkAll.checkTx
+                      );
                     }
                   } catch {
                     this.setState({
@@ -157,8 +161,9 @@ class WithdrawConstructModal extends Component {
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
+          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
           <Input.Text
+            errMsgIsOutside
             errMsg={passwordErrMsg}
             value={password}
             isPassword
@@ -166,6 +171,11 @@ class WithdrawConstructModal extends Component {
             onChange={value => {
               this.setState({
                 password: value,
+              });
+            }}
+            onFocus={() => {
+              this.setState({
+                passwordErrMsg: '',
               });
             }}
           />
