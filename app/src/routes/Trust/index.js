@@ -13,7 +13,9 @@ import TrustSetting from './Modal/TrustSettingModal';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
-  state = {};
+  state = {
+    signStatus: '',
+  };
 
   startInit = () => {
     const {
@@ -24,15 +26,48 @@ class Trust extends Mixin {
     dispatch({
       type: 'subScribeNodeStatus',
     });
+    this.getSign();
+  };
+
+  getSign = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getWithdrawTx',
+    }).then(res => {
+      if (res) {
+        const { tx, signStatus } = res;
+        this.setState({
+          tx,
+          signStatus,
+        });
+      }
+    });
   };
 
   render() {
+    const { tx } = this.state;
     const {
-      accountStore: { isTrustee, isActiveValidator, openModal },
+      accountStore: {
+        isTrustee,
+        isActiveValidator,
+        openModal,
+        currentAccount: { address },
+      },
       globalStore: {
         modal: { name },
       },
+      model: { trusts },
     } = this.props;
+    const currentTrustNode =
+      trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
+    const props = {
+      ...this.props,
+      currentTrustNode,
+    };
+
+    const isShowWithdraw = currentTrustNode && currentTrustNode.connected && currentTrustNode.decodedHotPrivateKey;
 
     return (
       <div className={styles.trust}>
@@ -50,30 +85,34 @@ class Trust extends Mixin {
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
-            <ButtonGroup>
-              <Button
-                onClick={() => {
-                  openModal({ name: 'WithdrawConstructModal' });
-                }}>
-                <Icon name="icon-goujiantixian" />
-                构造多签提现
-              </Button>
-              <Button
-                onClick={() => {
-                  openModal({ name: 'WithdrawSignModal' });
-                }}>
-                <Icon name="icon-xiangyingtixian" />
-                响应多签提现
-              </Button>
-            </ButtonGroup>
+            {isShowWithdraw ? (
+              <ButtonGroup>
+                <Button
+                  onClick={() => {
+                    openModal({ name: 'WithdrawConstructModal' });
+                  }}>
+                  <Icon name="icon-goujiantixian" />
+                  构造多签提现
+                </Button>
+                {tx ? (
+                  <Button
+                    onClick={() => {
+                      openModal({ name: 'WithdrawSignModal' });
+                    }}>
+                    <Icon name="icon-xiangyingtixian" />
+                    响应多签提现
+                  </Button>
+                ) : null}
+              </ButtonGroup>
+            ) : null}
           </TableTitle>
-          <WithdrawTable {...this.props} />
+          <WithdrawTable {...props} />
         </div>
-        {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...this.props} /> : null}
-        {name === 'NodeSettingModal' ? <NodeSettingModal {...this.props} /> : null}
-        {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...this.props} /> : null}
-        {name === 'WithdrawSignModal' ? <WithdrawSignModal {...this.props} /> : null}
-        {name === 'TrustSetting' ? <TrustSetting {...this.props} /> : null}
+        {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...props} /> : null}
+        {name === 'NodeSettingModal' ? <NodeSettingModal {...props} /> : null}
+        {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
+        {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
+        {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
       </div>
     );
   }

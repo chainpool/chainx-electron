@@ -55,7 +55,8 @@ export default class Trust extends ModelExtend {
           state = '申请中';
           break;
         case 'signing':
-          state = '签名中';
+        case 'processing':
+          state = '处理中';
           break;
         case 'unknown':
         default:
@@ -75,6 +76,11 @@ export default class Trust extends ModelExtend {
       };
     });
   }
+
+  reload = () => {
+    this.getAllWithdrawalList();
+    this.getWithdrawTx();
+  };
 
   sign = ({ withdrawList, tx, redeemScript, privateKey }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
@@ -133,6 +139,7 @@ export default class Trust extends ModelExtend {
         txb.setVersion(1);
         utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         // TODO: 真实的chainx跨链提现需扣除提现手续费
+        console.log(utxos, withdrawList, '========utxos, withdrawList');
         withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount - minerFee));
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - totalWithdrawAmount - 10000;
@@ -159,27 +166,31 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     const ids = withdrawList.map((item = {}) => item.id);
-    console.log(ids, '---ids, tx');
+    console.log(ids, tx, '---ids, tx');
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
+      success: this.reload,
     };
   };
 
   getWithdrawTx = async () => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
-      const tx = await getWithdrawTx(findOne.chain);
-      return tx;
+      return await getWithdrawTx(findOne.chain);
     }
   };
 
-  signWithdrawTx = async ({ voteState, tx, redeemScript, privateKey }) => {
-    const tx_trans = await this.sign({ tx, redeemScript, privateKey });
-    console.log(tx_trans, '====================tx_trans');
-    const extrinsic = signWithdrawTx(`0x${tx_trans}`, voteState);
+  signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
+    let tx_trans = null;
+    if (tx) {
+      tx_trans = await this.sign({ tx, redeemScript, privateKey });
+    }
+
+    const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
     return {
       extrinsic,
+      success: this.reload,
     };
   };
 

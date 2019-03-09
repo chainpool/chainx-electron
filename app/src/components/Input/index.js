@@ -196,6 +196,7 @@ class InputText extends Mixin {
       value = '',
       onChange,
       onBlur,
+      onFocus,
       icon = '',
       disabled = false,
       label = '',
@@ -245,6 +246,7 @@ class InputText extends Mixin {
           });
         }
       },
+      onFocus,
     };
     const input = isTextArea ? (
       <textarea {...props} rows={rows} />
