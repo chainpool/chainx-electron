@@ -42,14 +42,8 @@ class WithdrawConstructModal extends Component {
     },
     checkPassword: () => {
       const { password } = this.state;
-      const {
-        model: { trusts },
-        accountStore: {
-          currentAccount: { address },
-        },
-      } = this.props;
-      const findOne = trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
-      const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+      const { currentTrustNode } = this.props;
+      const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
       const errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||

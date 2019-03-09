@@ -79,6 +79,7 @@ export default class Trust extends ModelExtend {
 
   reload = () => {
     this.getAllWithdrawalList();
+    this.getWithdrawTx();
   };
 
   sign = ({ withdrawList, tx, redeemScript, privateKey }) => {
@@ -176,8 +177,7 @@ export default class Trust extends ModelExtend {
   getWithdrawTx = async () => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
-      const tx = await getWithdrawTx(findOne.chain);
-      return tx;
+      return await getWithdrawTx(findOne.chain);
     }
   };
 

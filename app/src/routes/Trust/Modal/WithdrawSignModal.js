@@ -18,16 +18,11 @@ class WithdrawSignModal extends Component {
   checkAll = {
     checkPassword: () => {
       const { password } = this.state;
-      const {
-        model: { trusts },
-        accountStore: {
-          currentAccount: { address },
-        },
-      } = this.props;
-      const findOne = trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
-      const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+      const { currentTrustNode } = this.props;
+      const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
       const errMsg =
         Patterns.check('required')(password) ||
+        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
         Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
@@ -59,10 +54,8 @@ class WithdrawSignModal extends Component {
     const { checkAll } = this;
     const { activeIndex, tx, redeemScript, password, passwordErrMsg } = this.state;
     const {
-      model: { openModal, dispatch, trusts },
-      accountStore: {
-        currentAccount: { address },
-      },
+      model: { openModal, dispatch },
+      currentTrustNode,
     } = this.props;
 
     return (
@@ -74,9 +67,7 @@ class WithdrawSignModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const findOne =
-                  trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
-                const decodedHotPrivateKey = findOne.decodedHotPrivateKey;
+                const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
                 const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
                 const privateKey = wif.encode(0xef, decryptedKey.privateKey, decryptedKey.compressed);
                 openModal({
@@ -127,6 +118,7 @@ class WithdrawSignModal extends Component {
             ))}
           </ButtonGroup>
           <Input.Text
+            errMsgIsOutside
             isPassword
             value={password}
             errMsg={passwordErrMsg}
@@ -134,6 +126,11 @@ class WithdrawSignModal extends Component {
             onChange={value => {
               this.setState({
                 password: value,
+              });
+            }}
+            onFocus={() => {
+              this.setState({
+                passwordErrMsg: '',
               });
             }}
           />
