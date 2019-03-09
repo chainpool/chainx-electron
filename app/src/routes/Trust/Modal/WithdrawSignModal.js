@@ -3,7 +3,6 @@ import * as styles from './WithdrawSignModal.less';
 import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
 import { BitcoinTestNet } from '../../../constants';
 import wif from 'wif';
-import bip38 from 'bip38';
 import { Patterns } from '../../../utils';
 
 class WithdrawSignModal extends Component {
@@ -21,7 +20,9 @@ class WithdrawSignModal extends Component {
       const errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
-        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
+        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password, decryptedKey => {
+          this.decryptedKey = decryptedKey;
+        });
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -44,7 +45,6 @@ class WithdrawSignModal extends Component {
     const { activeIndex, password, passwordErrMsg } = this.state;
     const {
       model: { openModal, dispatch, tx, redeemScript },
-      currentTrustNode,
     } = this.props;
 
     return (
@@ -56,14 +56,12 @@ class WithdrawSignModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
-                const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+                const decryptedKey = this.decryptedKey;
                 const privateKey = wif.encode(
                   BitcoinTestNet ? 0xef : 0x80,
                   decryptedKey.privateKey,
                   decryptedKey.compressed
                 );
-
                 openModal({
                   name: 'SignModal',
                   data: {

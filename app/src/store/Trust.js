@@ -160,9 +160,14 @@ export default class Trust extends ModelExtend {
         const transaction = bitcoin.Transaction.fromHex(tx);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-        for (let i = 0; i < keypairs.length; i++) {
-          txb.sign(i, keypairs[i], redeemScript);
+        try {
+          for (let i = 0; i < keypairs.length; i++) {
+            txb.sign(i, keypairs[i], redeemScript);
+          }
+        } catch (err) {
+          alert(err.message);
         }
+
         // for (let pair of keypairs) {
         //   utxos.forEach((utxo, index) => {
         //     txb.sign(index, pair, redeemScript);
