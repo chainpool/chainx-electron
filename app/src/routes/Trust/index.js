@@ -13,10 +13,6 @@ import TrustSetting from './Modal/TrustSettingModal';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
-  state = {
-    signStatus: '',
-  };
-
   startInit = () => {
     const {
       model: { dispatch },
@@ -35,19 +31,13 @@ class Trust extends Mixin {
     } = this.props;
     dispatch({
       type: 'getWithdrawTx',
-    }).then(res => {
-      if (res) {
-        const { tx, signStatus } = res;
-        this.setState({
-          tx,
-          signStatus,
-        });
-      }
     });
   };
 
   render() {
-    const { tx } = this.state;
+    const {
+      model: { tx, signStatus },
+    } = this.props;
     const {
       accountStore: {
         isTrustee,
@@ -91,13 +81,15 @@ class Trust extends Mixin {
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
             {isShowWithdraw ? (
               <ButtonGroup>
-                <Button
-                  onClick={() => {
-                    openModal({ name: 'WithdrawConstructModal' });
-                  }}>
-                  <Icon name="icon-goujiantixian" />
-                  构造多签提现
-                </Button>
+                {signStatus === false ? null : (
+                  <Button
+                    onClick={() => {
+                      openModal({ name: 'WithdrawConstructModal' });
+                    }}>
+                    <Icon name="icon-goujiantixian" />
+                    构造多签提现
+                  </Button>
+                )}
                 {tx ? (
                   <Button
                     onClick={() => {

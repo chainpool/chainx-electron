@@ -26,6 +26,9 @@ export default class Trust extends ModelExtend {
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
 
   @observable _trusts = localSave.get('trusts') || [];
+  @observable tx = '';
+  @observable signStatus = '';
+  @observable redeemScript = '';
 
   @computed
   get trusts() {
@@ -117,8 +120,8 @@ export default class Trust extends ModelExtend {
 
     const compose = async () => {
       let rawTransaction;
-      let utxos = await getUnspents(nodeUrl, [multisigAddress]);
       if (withdrawList) {
+        const utxos = await getUnspents(nodeUrl, [multisigAddress]);
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
@@ -138,26 +141,38 @@ export default class Trust extends ModelExtend {
         }, 0);
         const txb = new bitcoin.TransactionBuilder(network);
         txb.setVersion(1);
-        utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+        targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         // TODO: 真实的chainx跨链提现需扣除提现手续费
-        console.log(utxos, withdrawList, '========utxos, withdrawList');
-        withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount - minerFee));
+        console.log(targetUtxos, withdrawList, '========targetUtxos, withdrawList');
+        let feeSum = 0;
+        withdrawList.forEach(withdraw => {
+          const fee = withdraw.amount - minerFee;
+          txb.addOutput(withdraw.addr, fee);
+          feeSum += fee;
+        });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - totalWithdrawAmount - 10000;
+        const change = totalInputAmount - feeSum - 10000;
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
-        console.log(privateKey, typeof privateKey);
         const privateKeys = [privateKey];
         const transaction = bitcoin.Transaction.fromHex(tx);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-        for (let pair of keypairs) {
-          utxos.forEach((utxo, index) => {
-            txb.sign(index, pair, redeemScript);
-          });
+        for (let i = 0; i < keypairs.length; i++) {
+          txb.sign(i, keypairs[i], redeemScript);
         }
+        // for (let pair of keypairs) {
+        //   utxos.forEach((utxo, index) => {
+        //     txb.sign(index, pair, redeemScript);
+        //   });
+        // }
+        // for (let pair of keypairs) {
+        //   utxos.forEach((utxo, index) => {
+        //     txb.sign(index, pair, redeemScript);
+        //   });
+        // }
         rawTransaction = txb.build().toHex();
       }
       return rawTransaction;
@@ -178,7 +193,14 @@ export default class Trust extends ModelExtend {
   getWithdrawTx = async () => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
-      return await getWithdrawTx(findOne.chain);
+      const res = (await getWithdrawTx(findOne.chain)) || {};
+      const { tx, signStatus, redeemScript } = res;
+      this.changeModel({
+        tx,
+        signStatus,
+        redeemScript,
+      });
+      return res;
     }
   };
 

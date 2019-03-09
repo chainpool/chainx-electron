@@ -2,13 +2,16 @@ import React from 'react';
 import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { ChainX, classNames, Inject } from '../../../utils';
+import { classNames, Inject } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
+  state = {
+    step: 0,
+  };
   startInit = () => {
     const {
       assetStore: { dispatch },

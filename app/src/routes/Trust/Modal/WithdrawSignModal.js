@@ -9,9 +9,6 @@ import { Patterns } from '../../../utils';
 class WithdrawSignModal extends Component {
   state = {
     activeIndex: 0,
-    tx: '',
-    signStatus: true,
-    redeemScript: '',
     password: '',
     passwordErrMsg: '',
   };
@@ -40,22 +37,13 @@ class WithdrawSignModal extends Component {
     } = this.props;
     dispatch({
       type: 'getWithdrawTx',
-    }).then(res => {
-      if (res) {
-        const { tx, signStatus, redeemScript } = res;
-        this.setState({
-          tx,
-          signStatus,
-          redeemScript,
-        });
-      }
     });
   }
   render() {
     const { checkAll } = this;
-    const { activeIndex, tx, redeemScript, password, passwordErrMsg } = this.state;
+    const { activeIndex, password, passwordErrMsg } = this.state;
     const {
-      model: { openModal, dispatch },
+      model: { openModal, dispatch, tx, redeemScript },
       currentTrustNode,
     } = this.props;
 
@@ -75,6 +63,7 @@ class WithdrawSignModal extends Component {
                   decryptedKey.privateKey,
                   decryptedKey.compressed
                 );
+
                 openModal({
                   name: 'SignModal',
                   data: {
@@ -100,11 +89,11 @@ class WithdrawSignModal extends Component {
           <div className={styles.sign}>
             <div className={styles.desc}>待签原文：</div>
             <div className={styles.tx}>
-              <span>
+              <div style={{ maxHeight: 300, overflowY: 'scroll' }}>
                 {tx}
                 <Icon name="icon-wancheng" className={styles.right} />
                 正确
-              </span>
+              </div>
             </div>
           </div>
           <ButtonGroup className={styles.buttonselect}>
