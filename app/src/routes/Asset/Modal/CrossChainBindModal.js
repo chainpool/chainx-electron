@@ -12,7 +12,22 @@ class CrossChainBindModal extends Mixin {
   state = {
     step: 0,
     recommendChannel: '',
+    tradeId: '',
+    tradeIdErrMsg: '',
   };
+  checkAll = {
+    checkTradeId: value => {
+      const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
+      const result = regexp.exec(value);
+      const errMsg = !result || !result[3] ? '交易ID错误' : '';
+      this.setState({ tradeIdErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkTradeId'].every(item => !this.checkAll[item]());
+    },
+  };
+
   startInit = () => {
     const {
       assetStore: { dispatch },
@@ -22,7 +37,8 @@ class CrossChainBindModal extends Mixin {
   };
 
   render() {
-    const { step, recommendChannel } = this.state;
+    const { checkAll } = this;
+    const { step, recommendChannel, tradeId, tradeIdErrMsg } = this.state;
     const {
       accountStore: { currentAddress, openModal },
       assetStore: { btcTrusteeAddress },
@@ -40,7 +56,7 @@ class CrossChainBindModal extends Mixin {
         desc1: (
           <span>
             使用<strong>支持OP_Return</strong>
-            的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
+            的BTC钱包向公共多签托管地址发起金额为0的转账交易，在OP_RETURN中输入下方十六进制 (Hex) 信息：
           </span>
         ),
         value1: chainxAddressHex,
@@ -77,7 +93,8 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            使用<strong>支持Data</strong>的Ethereum钱包向公共地址发起金额为0的转账交易，并在Data中输入下方信息：
+            使用<strong>支持Data</strong>的以太坊钱包，向任意地址发起任意金额 (建议为0) 的转账交易，并在{' '}
+            <strong>Data</strong> 中输入下方<strong>十六进制 (Hex)</strong> 信息：：
           </span>
         ),
         value1: chainxAddressHex,
@@ -87,19 +104,30 @@ class CrossChainBindModal extends Mixin {
           <Warn>
             <div className={styles.sdot}>
               目前支持的钱包有:{' '}
-              <a className={styles.anchor} href="https://token.im/" rel="noopener noreferrer" target="_blank">
-                imToken
-                <span className={styles.hoverimg} style={{ left: -100 }}>
-                  <img src={imtoken} width={244} />
-                </span>
-              </a>
-              、
-              <a className={styles.anchor} href="https://www.parity.io/" rel="noopener noreferrer" target="_blank">
-                Parity
-                <span className={styles.hoverimg} style={{ left: -150 }}>
-                  <img src={parity} width={352} />
-                </span>
-              </a>{' '}
+              {[
+                {
+                  href: 'https://token.im/',
+                  content: 'imToken',
+                  style: { left: -100 },
+                  src: imtoken,
+                  imgWidth: 244,
+                },
+                {
+                  href: 'https://www.parity.io/',
+                  content: 'Parity',
+                  style: { left: -150 },
+                  src: parity,
+                  imgWidth: 352,
+                },
+              ].map((item, index) => (
+                <a key={index} className={styles.anchor} href={''} rel="noopener noreferrer" target="_blank">
+                  {item.content}
+                  <span className={styles.hoverimg} style={item.style}>
+                    <img src={item.src} width={item.imgWidth} />
+                  </span>
+                  、
+                </a>
+              ))}{' '}
               等。
             </div>
           </Warn>
@@ -164,10 +192,43 @@ class CrossChainBindModal extends Mixin {
                   </div>
                 </div>
               </div>
-              <div className={styles.depositaddress}>
-                <span className={styles.label}>{findOne.desc2}</span>
-                <Clipboard>{findOne.value2}</Clipboard>
-              </div>
+              {token === 'BTC' ? (
+                <div className={styles.depositaddress}>
+                  <span className={styles.label}>{findOne.desc2}</span>
+                  <Clipboard>{findOne.value2}</Clipboard>
+                </div>
+              ) : null}
+              {token === 'SDOT' ? (
+                <>
+                  <div className={styles.desc}>
+                    <div />
+                    交易打包成功后，在下面输入<strong>交易ID (txid)</strong>，交易签名验证无误后，即可完成绑定
+                  </div>
+                  <div className={styles.tradeid}>
+                    <Input.Text
+                      value={tradeId}
+                      errMsg={tradeIdErrMsg}
+                      placeholder={'输入交易ID'}
+                      onChange={value => {
+                        this.setState({
+                          tradeId: value,
+                        });
+                      }}
+                      onBlur={checkAll.checkTradeId}
+                    />
+                    <Button
+                      size="full"
+                      type="confirm"
+                      onClick={() => {
+                        if (checkAll.confirm()) {
+                        }
+                      }}>
+                      确认
+                    </Button>
+                  </div>
+                </>
+              ) : null}
+
               {findOne.warn}
             </>
           )}
