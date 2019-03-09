@@ -124,8 +124,8 @@ export default class Trust extends ModelExtend {
 
     const compose = async () => {
       let rawTransaction;
+      const utxos = await getUnspents(nodeUrl, [multisigAddress]);
       if (withdrawList) {
-        const utxos = await getUnspents(nodeUrl, [multisigAddress]);
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
@@ -165,8 +165,10 @@ export default class Trust extends ModelExtend {
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
         try {
-          for (let i = 0; i < keypairs.length; i++) {
-            txb.sign(i, keypairs[i], redeemScript);
+          for (let pair of keypairs) {
+            transaction.ins.forEach((utxo, index) => {
+              txb.sign(index, pair, redeemScript);
+            });
           }
         } catch (err) {
           alert(err.message);
@@ -177,11 +179,7 @@ export default class Trust extends ModelExtend {
         //     txb.sign(index, pair, redeemScript);
         //   });
         // }
-        // for (let pair of keypairs) {
-        //   utxos.forEach((utxo, index) => {
-        //     txb.sign(index, pair, redeemScript);
-        //   });
-        // }
+
         rawTransaction = txb.build().toHex();
       }
       return rawTransaction;
