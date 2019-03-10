@@ -3,10 +3,11 @@ import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
-import { ErrMsg } from '../constants';
+import { ErrMsg, BitcoinTestNet } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
+import { default as bitcoin } from 'bitcoinjs-lib';
 
 //------------------通用部分
 export { request } from './request';
@@ -87,18 +88,34 @@ export const Patterns = {
   isWsAddress: (address, errMsg = '地址格式错误') => {
     return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
   },
-  isHotPrivateKey: (address, errMsg = '热私钥格式错误') => {
+  isPublicKey: (pubkey, errMsg = '格式错误') => {
     try {
-      wif.decode(address);
+      Buffer.from(pubkey, 'hex');
       return '';
     } catch (err) {
       return errMsg;
     }
   },
-  isHotPrivateKeyPassword: (decodedHotPrivateKey, password, errMsg = '密码错误') => {
+  isHotPrivateKey: (prikey, pubkey, errMsg = '热私钥格式错误') => {
     try {
-      bip38.decrypt(decodedHotPrivateKey, password);
-      // wif.encode(0xef, decryptedKey.privateKey, decryptedKey.compressed);
+      wif.decode(prikey);
+      try {
+        let ecPair = bitcoin.ECPair.fromWIF(
+          prikey,
+          BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
+        ); // 导入私钥
+        return ecPair.publicKey.toString('hex') === pubkey ? '' : '热私钥与热公钥不匹配';
+      } catch (err) {
+        return '热私钥与热公钥不匹配';
+      }
+    } catch (err) {
+      return errMsg;
+    }
+  },
+  isHotPrivateKeyPassword: (decodedHotPrivateKey, password, callback, errMsg = '密码错误') => {
+    try {
+      const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+      _.isFunction(callback) && callback(decryptedKey);
       return '';
     } catch (err) {
       return errMsg;

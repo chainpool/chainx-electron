@@ -7,7 +7,7 @@ import { observer } from '../../utils';
 class WithdrawTable extends Component {
   render() {
     const {
-      model: { normalizedOnChainAllWithdrawList },
+      model: { normalizedOnChainAllWithdrawList = [] },
     } = this.props;
 
     const tableProps = {
@@ -19,10 +19,7 @@ class WithdrawTable extends Component {
         },
         {
           title: '编号',
-          dataIndex: 'date',
-          render: (value, record, index) => {
-            return `${index + 1}`;
-          },
+          dataIndex: 'id',
         },
         {
           title: '账户地址',

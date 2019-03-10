@@ -1,6 +1,7 @@
 import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { getWithdrawalList, createWithdrawTx, getWithdrawTx, signWithdrawTx } from '../services';
+import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -25,6 +26,9 @@ export default class Trust extends ModelExtend {
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
 
   @observable _trusts = localSave.get('trusts') || [];
+  @observable tx = '';
+  @observable signStatus = '';
+  @observable redeemScript = '';
 
   @computed
   get trusts() {
@@ -49,7 +53,7 @@ export default class Trust extends ModelExtend {
         throw new Error('无法找到提现列表中资产定义');
       }
 
-      let state = '';
+      let state = withdraw.status;
       switch (withdraw.status) {
         case 'applying':
           state = '申请中';
@@ -57,6 +61,9 @@ export default class Trust extends ModelExtend {
         case 'signing':
         case 'processing':
           state = '处理中';
+          break;
+        case 'notApplying':
+          state = '未申请';
           break;
         case 'unknown':
         default:
@@ -73,6 +80,7 @@ export default class Trust extends ModelExtend {
         balance: formatNumber.toPrecision(withdraw.balance, precision), // 数量
         memo: withdraw.memo, // 提现备注
         state, // 状态
+        status: withdraw.status,
       };
     });
   }
@@ -96,7 +104,7 @@ export default class Trust extends ModelExtend {
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = 40000;
-    const network = bitcoin.networks.testnet;
+    const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
@@ -116,7 +124,7 @@ export default class Trust extends ModelExtend {
 
     const compose = async () => {
       let rawTransaction;
-      let utxos = await getUnspents(nodeUrl, [multisigAddress]);
+      const utxos = await getUnspents(nodeUrl, [multisigAddress]);
       if (withdrawList) {
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
@@ -137,26 +145,41 @@ export default class Trust extends ModelExtend {
         }, 0);
         const txb = new bitcoin.TransactionBuilder(network);
         txb.setVersion(1);
-        utxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+        targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         // TODO: 真实的chainx跨链提现需扣除提现手续费
-        console.log(utxos, withdrawList, '========utxos, withdrawList');
-        withdrawList.forEach(withdraw => txb.addOutput(withdraw.addr, withdraw.amount - minerFee));
+        console.log(targetUtxos, withdrawList, '========targetUtxos, withdrawList');
+        let feeSum = 0;
+        withdrawList.forEach(withdraw => {
+          const fee = withdraw.amount - minerFee;
+          txb.addOutput(withdraw.addr, fee);
+          feeSum += fee;
+        });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - totalWithdrawAmount - 10000;
+        const change = totalInputAmount - feeSum - 10000;
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
-        console.log(privateKey, typeof privateKey);
         const privateKeys = [privateKey];
         const transaction = bitcoin.Transaction.fromHex(tx);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-        for (let pair of keypairs) {
-          utxos.forEach((utxo, index) => {
-            txb.sign(index, pair, redeemScript);
-          });
+        try {
+          for (let pair of keypairs) {
+            transaction.ins.forEach((utxo, index) => {
+              txb.sign(index, pair, redeemScript);
+            });
+          }
+        } catch (err) {
+          alert(err.message);
         }
+
+        // for (let pair of keypairs) {
+        //   utxos.forEach((utxo, index) => {
+        //     txb.sign(index, pair, redeemScript);
+        //   });
+        // }
+
         rawTransaction = txb.build().toHex();
       }
       return rawTransaction;
@@ -177,7 +200,14 @@ export default class Trust extends ModelExtend {
   getWithdrawTx = async () => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
-      return await getWithdrawTx(findOne.chain);
+      const res = (await getWithdrawTx(findOne.chain)) || {};
+      const { tx, signStatus, redeemScript } = res;
+      this.changeModel({
+        tx,
+        signStatus,
+        redeemScript,
+      });
+      return res;
     }
   };
 
@@ -194,13 +224,16 @@ export default class Trust extends ModelExtend {
     };
   };
 
-  fetchNodeStatus = (url = '/getTrustNodeStatus', trusteeAddress = ['2N1CPZyyoKj1wFz2Fy4gEHpSCVxx44GtyoY']) => {
+  fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
       httpUrl: url,
       methodAlias: 'listunspent',
       method: 'POST',
       params: [6, 99999999, trusteeAddress],
-    }).then(res => res);
+    }).then(res => {
+      this.reload();
+      return res;
+    });
   };
 
   subScribeNodeStatus = () => {

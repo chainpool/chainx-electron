@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import * as styles from './WithdrawSignModal.less';
 import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
+import { BitcoinTestNet } from '../../../constants';
 import wif from 'wif';
-import bip38 from 'bip38';
 import { Patterns } from '../../../utils';
 
 class WithdrawSignModal extends Component {
   state = {
     activeIndex: 0,
-    tx: '',
-    signStatus: true,
-    redeemScript: '',
     password: '',
     passwordErrMsg: '',
   };
@@ -23,7 +20,9 @@ class WithdrawSignModal extends Component {
       const errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
-        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
+        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password, decryptedKey => {
+          this.decryptedKey = decryptedKey;
+        });
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -39,23 +38,13 @@ class WithdrawSignModal extends Component {
     } = this.props;
     dispatch({
       type: 'getWithdrawTx',
-    }).then(res => {
-      if (res) {
-        const { tx, signStatus, redeemScript } = res;
-        this.setState({
-          tx,
-          signStatus,
-          redeemScript,
-        });
-      }
     });
   }
   render() {
     const { checkAll } = this;
-    const { activeIndex, tx, redeemScript, password, passwordErrMsg } = this.state;
+    const { activeIndex, password, passwordErrMsg } = this.state;
     const {
-      model: { openModal, dispatch },
-      currentTrustNode,
+      model: { openModal, dispatch, tx, redeemScript },
     } = this.props;
 
     return (
@@ -67,9 +56,12 @@ class WithdrawSignModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
-                const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
-                const privateKey = wif.encode(0xef, decryptedKey.privateKey, decryptedKey.compressed);
+                const decryptedKey = this.decryptedKey;
+                const privateKey = wif.encode(
+                  BitcoinTestNet ? 0xef : 0x80,
+                  decryptedKey.privateKey,
+                  decryptedKey.compressed
+                );
                 openModal({
                   name: 'SignModal',
                   data: {
@@ -95,11 +87,11 @@ class WithdrawSignModal extends Component {
           <div className={styles.sign}>
             <div className={styles.desc}>待签原文：</div>
             <div className={styles.tx}>
-              <span>
+              <div style={{ maxHeight: 300, overflowY: 'scroll' }}>
                 {tx}
                 <Icon name="icon-wancheng" className={styles.right} />
                 正确
-              </span>
+              </div>
             </div>
           </div>
           <ButtonGroup className={styles.buttonselect}>

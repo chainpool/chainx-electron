@@ -25,7 +25,10 @@ class ImportHotPrivateKeyModal extends Component {
     },
     checkHotPrivateKey: () => {
       const { hotPrivateKey } = this.state;
-      const errMsg = Patterns.check('required')(hotPrivateKey) || Patterns.check('isHotPrivateKey')(hotPrivateKey);
+      const { currentTrustNode } = this.props;
+      const errMsg =
+        Patterns.check('required')(hotPrivateKey) ||
+        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey);
       this.setState({ hotPrivateKeyErrMsg: errMsg });
       return errMsg;
     },
@@ -61,7 +64,6 @@ class ImportHotPrivateKeyModal extends Component {
       passwordErrMsg,
       confirmedPassword,
       confirmedPasswordErrMsg,
-      percent,
     } = this.state;
     const {
       model: { closeModal, dispatch },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal, Input, Button } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject } from '../../../utils';
@@ -10,8 +10,22 @@ import parity from '../../../resource/parity.png';
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
   state = {
-    txid: '',
-    errMsg: '',
+    step: 0,
+    recommendChannel: '',
+    tradeId: '',
+    tradeIdErrMsg: '',
+  };
+  checkAll = {
+    checkTradeId: value => {
+      const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
+      const result = regexp.exec(value);
+      const errMsg = !result || !result[3] ? '交易ID错误' : '';
+      this.setState({ tradeIdErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkTradeId'].every(item => !this.checkAll[item]());
+    },
   };
 
   startInit = () => {
@@ -22,14 +36,9 @@ class CrossChainBindModal extends Mixin {
     dispatch({ type: 'getTrusteeAddress', payload: { chain: 'Bitcoin' } });
   };
 
-  checkTxId = value => {
-    const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
-    const result = regexp.exec(value);
-    const errMsg = !result || !result[3] ? '交易ID错误' : '';
-    this.setState({ errMsg });
-  };
-
   render() {
+    const { checkAll } = this;
+    const { step, recommendChannel, tradeId, tradeIdErrMsg } = this.state;
     const {
       accountStore: { currentAddress, openModal },
       assetStore: { btcTrusteeAddress },
@@ -40,15 +49,14 @@ class CrossChainBindModal extends Mixin {
       },
     } = this.props;
 
-    const { txid } = this.state;
-
-    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(currentAddress));
+    const channel = recommendChannel ? `@${recommendChannel}` : '';
+    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`));
     const show = {
       BTC: {
         desc1: (
           <span>
             使用<strong>支持OP_Return</strong>
-            的BTC钱包向公共多签托管地址发起金额为0的转账交易，并在OP_Return中输入下方信息：
+            的BTC钱包向公共多签托管地址发起金额为0的转账交易，在OP_RETURN中输入下方十六进制 (Hex) 信息：
           </span>
         ),
         value1: chainxAddressHex,
@@ -85,7 +93,8 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            使用<strong>支持Data</strong>以太坊钱包向自己发起任意金额（建议为0）的转账交易，并在Data中输入下方信息：
+            使用<strong>支持Data</strong>的以太坊钱包，向任意地址发起任意金额 (建议为0) 的转账交易，并在{' '}
+            <strong>Data</strong> 中输入下方<strong>十六进制 (Hex)</strong> 信息：：
           </span>
         ),
         value1: chainxAddressHex,
@@ -95,19 +104,30 @@ class CrossChainBindModal extends Mixin {
           <Warn>
             <div className={styles.sdot}>
               目前支持的钱包有:{' '}
-              <a className={styles.anchor} href="https://token.im/" rel="noopener noreferrer" target="_blank">
-                imToken
-                <span className={styles.hoverimg} style={{ left: -100 }}>
-                  <img src={imtoken} width={244} />
-                </span>
-              </a>
-              、
-              <a className={styles.anchor} href="https://www.parity.io/" rel="noopener noreferrer" target="_blank">
-                Parity
-                <span className={styles.hoverimg} style={{ left: -150 }}>
-                  <img src={parity} width={352} />
-                </span>
-              </a>{' '}
+              {[
+                {
+                  href: 'https://token.im/',
+                  content: 'imToken',
+                  style: { left: -100 },
+                  src: imtoken,
+                  imgWidth: 244,
+                },
+                {
+                  href: 'https://www.parity.io/',
+                  content: 'Parity',
+                  style: { left: -150 },
+                  src: parity,
+                  imgWidth: 352,
+                },
+              ].map((item, index) => (
+                <a key={index} className={styles.anchor} href={''} rel="noopener noreferrer" target="_blank">
+                  {item.content}
+                  <span className={styles.hoverimg} style={item.style}>
+                    <img src={item.src} width={item.imgWidth} />
+                  </span>
+                  、
+                </a>
+              ))}{' '}
               等。
             </div>
           </Warn>
@@ -120,49 +140,98 @@ class CrossChainBindModal extends Mixin {
     return (
       <Modal title={`跨链绑定（${token}）`}>
         <div className={styles.crossChainBind}>
-          <div className={styles.desc}>
-            <div />
-            {findOne.desc1}
-          </div>
-          <div className={classNames(styles.grayblock, styles.addressall)}>
+          {step === 0 ? (
             <div>
-              <div>
-                <div className={styles.address}>
-                  <div id="copy">{findOne.value1}</div>
-                  <button>
-                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制信息</span>} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {token === 'BTC' ? (
-            <div className={styles.depositaddress}>
-              <span className={styles.label}>{findOne.desc2}</span>
-              <Clipboard>{findOne.value2}</Clipboard>
+              <Input.Text
+                value={recommendChannel}
+                placeholder={'输入推荐渠道的节点名称 (选填)'}
+                onChange={value => {
+                  this.setState({
+                    recommendChannel: value,
+                  });
+                }}
+              />
+              <ButtonGroup className={styles.recommendChannel}>
+                <Button
+                  onClick={() => {
+                    this.setState({
+                      step: 1,
+                      recommendChannel: '',
+                    });
+                  }}>
+                  跳过
+                </Button>
+                <Button
+                  type="confirm"
+                  onClick={() => {
+                    if (recommendChannel) {
+                      this.setState({
+                        step: 1,
+                      });
+                    }
+                  }}>
+                  确定
+                </Button>
+              </ButtonGroup>
             </div>
           ) : (
-            <div className={styles.ethTx}>
+            <>
               <div className={styles.desc}>
                 <div />
-                交易打包成功后，在下面输入交易ID（txid），交易签名验证无误后，即可完成绑定
+                {findOne.desc1}
               </div>
-              <Input.Text
-                placeholder="输入交易ID"
-                label=""
-                value={txid}
-                errMsg={this.state.errMsg}
-                onChange={value => {
-                  this.setState({ txid: value });
-                }}
-                onBlur={this.checkTxId}
-              />
-              <Button size="full" type="confirm">
-                确定
-              </Button>
-            </div>
+              <div className={classNames(styles.grayblock, styles.addressall)}>
+                <div>
+                  <div>
+                    <div className={styles.address}>
+                      <div id="copy">{findOne.value1}</div>
+                      <button>
+                        <Clipboard id="copy" outInner={<span className={styles.desc}>复制信息</span>} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {token === 'BTC' ? (
+                <div className={styles.depositaddress}>
+                  <span className={styles.label}>{findOne.desc2}</span>
+                  <Clipboard>{findOne.value2}</Clipboard>
+                </div>
+              ) : null}
+              {token === 'SDOT' ? (
+                <>
+                  <div className={styles.desc}>
+                    <div />
+                    交易打包成功后，在下面输入<strong>交易ID (txid)</strong>，交易签名验证无误后，即可完成绑定
+                  </div>
+                  <div className={styles.tradeid}>
+                    <Input.Text
+                      value={tradeId}
+                      errMsg={tradeIdErrMsg}
+                      placeholder={'输入交易ID'}
+                      onChange={value => {
+                        this.setState({
+                          tradeId: value,
+                        });
+                      }}
+                      onBlur={checkAll.checkTradeId}
+                    />
+                    <Button
+                      size="full"
+                      type="confirm"
+                      onClick={() => {
+                        if (checkAll.confirm()) {
+                        }
+                      }}>
+                      确认
+                    </Button>
+                  </div>
+                </>
+              ) : null}
+
+              {findOne.warn}
+            </>
           )}
-          {findOne.warn}
         </div>
       </Modal>
     );
