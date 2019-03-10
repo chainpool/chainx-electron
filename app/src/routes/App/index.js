@@ -9,6 +9,11 @@ import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
+// const worker = new Worker('test.worker.js'); // 传入 worker 脚本文件的路径即可
+// // worker.postMessage({ a: 1 });
+// // worker.onmessage = function(event) {
+// //   console.log(event.data, '----------------app');
+// // };
 
 @Inject(({ globalStore, accountStore, electionStore }) => ({
   globalStore,

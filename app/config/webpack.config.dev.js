@@ -310,6 +310,10 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          {
+            test: /\.worker\.js$/,
+            use: { loader: 'worker-loader' },
+          },
         ],
       },
       // ** STOP ** Are you adding a new loader?
