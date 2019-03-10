@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
-import { ErrMsg, BitcoinTestNet } from '../constants';
+import { ErrMsg, BitcoinTestNet, SCRYPT_PARAMS } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
@@ -96,9 +96,10 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isHotPrivateKey: (prikey, pubkey, errMsg = '热私钥格式错误') => {
+  isHotPrivateKey: (prikey, pubkey, callback, errMsg = '热私钥格式错误') => {
     try {
-      wif.decode(prikey);
+      const decoded = wif.decode(prikey);
+      _.isFunction(callback) && callback(decoded);
       try {
         let ecPair = bitcoin.ECPair.fromWIF(
           prikey,
@@ -114,7 +115,7 @@ export const Patterns = {
   },
   isHotPrivateKeyPassword: (decodedHotPrivateKey, password, callback, errMsg = '密码错误') => {
     try {
-      const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password);
+      const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password, () => {}, SCRYPT_PARAMS);
       _.isFunction(callback) && callback(decryptedKey);
       return '';
     } catch (err) {
