@@ -55,3 +55,9 @@ export const ipc = {
 };
 
 export const BitcoinTestNet = true;
+
+export const SCRYPT_PARAMS = {
+  N: 64, // specified by BIP38
+  r: 4,
+  p: 4,
+};

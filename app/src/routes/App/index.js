@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
-import { ChainX, localSave, parseQueryString } from '../../utils';
+import { ChainX, parseQueryString } from '../../utils';
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
@@ -9,11 +9,6 @@ import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
-// const worker = new Worker('test.worker.js'); // 传入 worker 脚本文件的路径即可
-// // worker.postMessage({ a: 1 });
-// // worker.onmessage = function(event) {
-// //   console.log(event.data, '----------------app');
-// // };
 
 @Inject(({ globalStore, accountStore, electionStore }) => ({
   globalStore,

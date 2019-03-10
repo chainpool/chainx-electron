@@ -19,7 +19,6 @@ class WithdrawSignModal extends Component {
       const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
       const errMsg =
         Patterns.check('required')(password) ||
-        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
         Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password, decryptedKey => {
           this.decryptedKey = decryptedKey;
         });
@@ -110,7 +109,6 @@ class WithdrawSignModal extends Component {
             ))}
           </ButtonGroup>
           <Input.Text
-            errMsgIsOutside
             isPassword
             value={password}
             errMsg={passwordErrMsg}
@@ -120,11 +118,7 @@ class WithdrawSignModal extends Component {
                 password: value,
               });
             }}
-            onFocus={() => {
-              this.setState({
-                passwordErrMsg: '',
-              });
-            }}
+            onBlur={checkAll.checkPassword}
           />
         </div>
       </Modal>

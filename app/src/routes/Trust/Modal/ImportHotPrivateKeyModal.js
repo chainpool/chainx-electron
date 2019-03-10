@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Button, Modal, Input } from '@components';
 import * as styles from './ImportHotPrivateKeyModal.less';
 import { Patterns } from '../../../utils';
+import { SCRYPT_PARAMS } from '../../../constants';
 import bip38 from 'bip38';
-import wif from 'wif';
 
 class ImportHotPrivateKeyModal extends Component {
   state = {
@@ -28,7 +28,9 @@ class ImportHotPrivateKeyModal extends Component {
       const { currentTrustNode } = this.props;
       const errMsg =
         Patterns.check('required')(hotPrivateKey) ||
-        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey);
+        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey, decoded => {
+          this.decoded = decoded;
+        });
       this.setState({ hotPrivateKeyErrMsg: errMsg });
       return errMsg;
     },
@@ -78,9 +80,16 @@ class ImportHotPrivateKeyModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const decoded = wif.decode(hotPrivateKey);
+                // 传入 worker 脚本文件的路径即可
+                const decoded = this.decoded;
                 if (decoded && decoded.privateKey) {
-                  const decodedHotPrivateKey = bip38.encrypt(decoded.privateKey, decoded.compressed, password);
+                  const decodedHotPrivateKey = bip38.encrypt(
+                    decoded.privateKey,
+                    decoded.compressed,
+                    password,
+                    () => {},
+                    SCRYPT_PARAMS
+                  );
                   dispatch({
                     type: 'updateTrust',
                     payload: {
