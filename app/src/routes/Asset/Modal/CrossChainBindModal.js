@@ -1,8 +1,8 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button, Toast } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject } from '../../../utils';
+import { classNames, Inject, fetchFromHttp } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -12,20 +12,28 @@ class CrossChainBindModal extends Mixin {
   state = {
     step: 0,
     recommendChannel: '',
-    tradeId: '',
+    tradeId: 'https://etherscan.io/tx/0xb991c00f4edb829eb135dad03fc84fad46cd522fe1a61dba5fb4050a198f62c7',
     tradeIdErrMsg: '',
   };
   checkAll = {
-    checkTradeId: value => {
-      const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
-      const result = regexp.exec(value);
-      const errMsg = !result || !result[3] ? '交易ID错误' : '';
+    checkTradeId: () => {
+      const result = this.getTradeId();
+      const errMsg = !result ? '交易ID错误' : '';
       this.setState({ tradeIdErrMsg: errMsg });
       return errMsg;
     },
     confirm: () => {
       return ['checkTradeId'].every(item => !this.checkAll[item]());
     },
+  };
+
+  getTradeId = () => {
+    const { tradeId } = this.state;
+    const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
+    const result = regexp.exec(tradeId);
+    if (result && result[3]) {
+      return result[3];
+    }
   };
 
   startInit = () => {
@@ -221,6 +229,12 @@ class CrossChainBindModal extends Mixin {
                       type="confirm"
                       onClick={() => {
                         if (checkAll.confirm()) {
+                          const params = this.getTradeId();
+                          fetchFromHttp({ httpUrl: '', methodAlias: 'tx_hash', params: [params] })
+                            .then(() => Toast.warn('交易ID绑定已完成'))
+                            .catch(err => {
+                              Toast.warn('交易ID绑定失败', err.message);
+                            });
                         }
                       }}>
                       确认
