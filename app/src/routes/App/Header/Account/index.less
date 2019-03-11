@@ -4,19 +4,17 @@
   .download {
     position: relative;
     &:hover {
-       .hoverpannel {
-         // background: red;
+       >div {
         display: block !important;
       }
     }
     > div {
-
       display: none;
       padding-top: 6px;
       position: absolute;
       z-index: 10000;
       right: 0;
-      top: 32px;
+      top: 31px;
       > div {
         cursor: Default;
         box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
@@ -53,6 +51,7 @@
     }
   }
   .download {
+    color:@fontgray;
     > div {
       > div {
         padding: 16px 32px 32px;

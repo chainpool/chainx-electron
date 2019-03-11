@@ -177,7 +177,7 @@ class Account extends Mixin {
           </div>
         ) : (
           <ButtonGroup>
-            <Button type="warnoutline" className={styles.addaccount}>
+            <Button type="warnoutline" className={styles.addaccount} Ele={'div'}>
               添加账户
               <div className={styles.hoverpannel}>
                 <div>
@@ -204,7 +204,7 @@ class Account extends Mixin {
                 </div>
               </div>
             </Button>
-            <Button type="success" onClick={() => {}} className={styles.download}>
+            <Button type="success" className={styles.download} Ele={'div'}>
               下载钱包
               <div>
                 <div>

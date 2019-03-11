@@ -13,9 +13,10 @@ export class Button extends PureComponent {
       shape = 'circle',
       className,
       loading = false,
+      Ele = 'button',
     } = this.props;
     return (
-      <button
+      <Ele
         style={style}
         className={classNames(
           styles.button,
@@ -29,7 +30,7 @@ export class Button extends PureComponent {
           _.isFunction(onClick) && onClick();
         }}>
         {type === 'more' ? <>...</> : children}
-      </button>
+      </Ele>
     );
   }
 }

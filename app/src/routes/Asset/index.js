@@ -46,7 +46,7 @@ class Asset extends Mixin {
             <TableTitle title={'ChainX资产'}>
               <ul>
                 <li>
-                  <Button type="blank">
+                  <Button type="blank" Ele="div">
                     <RouterGo go={{ pathname: PATH.addressManage }}>
                       <Icon name="icon-dizhiguanli" />
                       联系人
@@ -62,7 +62,7 @@ class Asset extends Mixin {
               {
                 <ul>
                   <li>
-                    <Button type="blank">
+                    <Button type="blank" Ele="div">
                       <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>
                         <Icon name="icon-chongtijilu" />
                         充提记录
