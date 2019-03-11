@@ -208,8 +208,10 @@ class Account extends Mixin {
               下载钱包
               <div>
                 <div>
-                  <Icon name="icon-xiazai" className={styles.downloadicon} />
-                  <div className={styles.appname}>桌面端安全钱包</div>
+                  <div className={styles.desc}>
+                    <Icon name="icon-xiazai" className={styles.downloadicon} />
+                    <div className={styles.appname}>桌面端安全钱包</div>
+                  </div>
                   <div className={styles.desc}>去中心化全节点钱包，不依赖中心化交易所</div>
                   <ul>
                     {[
