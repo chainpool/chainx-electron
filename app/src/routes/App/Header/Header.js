@@ -6,7 +6,7 @@ import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
 import logTest from '../../../resource/logo_test.png';
 import Account from './Account';
-import { Inject, getDeepPath } from '../../../utils';
+import { Inject, getDeepPath, classNames } from '../../../utils';
 
 @Inject(({ configureStore, accountStore }) => ({ configureStore, accountStore }))
 class Header extends Component {
@@ -54,9 +54,10 @@ class Header extends Component {
                     key={item.path}
                     Ele="li"
                     go={{ pathname: item.status === 'awaiting' ? '' : item.path }}
-                    className={
+                    className={classNames(
+                      item.warn ? styles.warn : null,
                       getDeepPath(routers, pathname).filter(item2 => item2.path === item.path)[0] ? styles.active : null
-                    }>
+                    )}>
                     {item.title}
                     {item.warn ? <div className={styles.warn}>{item.warn}</div> : null}
                   </RouterGo>

@@ -179,7 +179,7 @@ class Account extends Mixin {
           <ButtonGroup>
             <Button type="warnoutline" className={styles.addaccount}>
               添加账户
-              <div>
+              <div className={styles.hoverpannel}>
                 <div>
                   <ul>
                     <li
