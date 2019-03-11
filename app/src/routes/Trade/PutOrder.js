@@ -261,7 +261,7 @@ class PutOrder extends SwitchPair {
               loading={loading[loadingAction]}
               className={classNames(styles[action], loading[loadingAction] ? styles.loading : null)}
               onClick={() => {
-                if (checkAll.confirm(action) && !tradeErrMsg) {
+                if (false && checkAll.confirm(action) && !tradeErrMsg) {
                   const content = (
                     <div>
                       交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}

@@ -51,6 +51,7 @@ export default [
     title: '币币交易',
     path: PATH.trade,
     component: lazy(() => import('../Trade')),
+    warn: '维护中',
   },
   {
     title: 'DAPP专区',

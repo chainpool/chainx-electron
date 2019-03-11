@@ -278,20 +278,28 @@ export const fetchFromWs = ({ wsUrl, method, params = [] }) => {
   });
 };
 
-export const fetchFromHttp = ({ httpUrl, method, methodAlias, params = [] }) => {
+export const fetchFromHttp = ({ httpUrl, method = 'POST', methodAlias, params = [] }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
   return fetch(httpUrl, {
     method: method,
     headers: {
-      method: 'POST',
+      method,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: message,
-  }).then(res => {
-    if (res && res.status === 200) {
+  })
+    .then(res => {
+      if (res.status >= 200 && res.status < 300) {
+        return res;
+      } else {
+        let error = new Error(res.statusText);
+        error.response = res;
+        throw error;
+      }
+    })
+    .then(res => {
       return res.json();
-    }
-  });
+    });
 };
