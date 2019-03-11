@@ -126,6 +126,9 @@ export default class Trust extends ModelExtend {
       let rawTransaction;
       const utxos = await getUnspents(nodeUrl, [multisigAddress]);
       if (withdrawList) {
+        if (!utxos.length) {
+          throw new Error('当前节点无任何utxo');
+        }
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
@@ -228,7 +231,7 @@ export default class Trust extends ModelExtend {
 
   fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
-      httpUrl: url,
+      httpUrl: `/getTrustNodeStatus?ip=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       params: [6, 99999999, trusteeAddress],
@@ -244,7 +247,7 @@ export default class Trust extends ModelExtend {
     const { address } = currentAccount;
     trusts.map(item => {
       if (item.node && item.trusteeAddress && item.address === address) {
-        this.fetchNodeStatus(`/getTrustNodeStatus?ip=http://${item.node}`, item.trusteeAddress)
+        this.fetchNodeStatus(item.node, item.trusteeAddress)
           .then(res => {
             if (res) {
               item.connected = true;
