@@ -7,7 +7,7 @@ import * as styles from './index.less';
 
 const operation = '操作';
 
-@Inject(({ accountStore: model }) => ({ model }))
+@Inject(({ accountStore: model, assetStore }) => ({ model, assetStore }))
 class SignModal extends Mixin {
   state = {
     defaultAcceleration: 1,
@@ -31,29 +31,37 @@ class SignModal extends Mixin {
 
   getFee = async () => {
     const { acceleration } = this.state;
-
     const {
       model: { setDefaultPrecision, currentAccount },
     } = this.props;
     const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
+    const result = setDefaultPrecision(fee);
     this.setState({
-      fee: setDefaultPrecision(fee),
+      fee: result,
     });
+    return result;
   };
 
   checkAll = {
-    checkPassword: () => {
+    checkPassword: async () => {
       const { password } = this.state;
+      const fee = await this.getFee();
       const {
-        model: { currentAccount: { encoded } = {} },
+        model: { currentAccount: { encoded } = {}, setPrecision },
+        assetStore: { nativeAccountAssets = [] },
       } = this.props;
-      const errMsg = Patterns.check('required')(password) || Patterns.check('decode')(encoded, password);
+      const { free = 0, name } = nativeAccountAssets[0] || {};
+      const errMsg =
+        Patterns.check('required')(password) ||
+        Patterns.check('decode')(encoded, password) ||
+        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用');
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
 
-    confirm: () => {
-      return ['checkPassword'].every(item => !this.checkAll[item]());
+    confirm: async () => {
+      const result = await this.checkAll.checkPassword();
+      return !result;
     },
   };
   render() {
@@ -92,7 +100,10 @@ class SignModal extends Mixin {
           {
             acceleration: value,
           },
-          this.getFee
+          () => {
+            this.getFee();
+            checkAll.checkPassword();
+          }
         );
       },
       marks: marks,
@@ -110,7 +121,7 @@ class SignModal extends Mixin {
             size="full"
             type="confirm"
             onClick={async () => {
-              if (checkAll.confirm()) {
+              if (await checkAll.confirm()) {
                 if (this.result) {
                   const result = this.result;
                   const {
@@ -216,6 +227,7 @@ class SignModal extends Mixin {
           ) : null}
 
           <Input.Text
+            errMsgIsOutside
             isPassword
             placeholder={PlaceHolder.password}
             label=""
