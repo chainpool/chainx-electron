@@ -2,7 +2,7 @@ import React from 'react';
 import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button, Toast } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, fetchFromHttp, _ } from '../../../utils';
+import { classNames, Inject, fetchFromHttp, _, Patterns } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -17,8 +17,9 @@ class CrossChainBindModal extends Mixin {
   };
   checkAll = {
     checkTradeId: () => {
+      const { tradeId } = this.state;
       const result = this.getTradeId();
-      const errMsg = !result ? '交易ID错误' : '';
+      const errMsg = Patterns.check('required')(tradeId) || (!result ? '交易ID错误' : '');
       this.setState({ tradeIdErrMsg: errMsg });
       return errMsg;
     },
