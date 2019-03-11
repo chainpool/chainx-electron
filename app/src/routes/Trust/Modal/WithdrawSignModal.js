@@ -64,7 +64,7 @@ class WithdrawSignModal extends Component {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '响应多签提现' }],
+                    description: [{ name: '操作', value: `响应多签提现${!activeIndex ? '签名' : '否决'}` }],
                     callback: () => {
                       return dispatch({
                         type: 'signWithdrawTx',

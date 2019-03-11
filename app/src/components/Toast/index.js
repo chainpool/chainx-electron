@@ -59,7 +59,7 @@ class Toast {
       </div>,
       {
         hideProgressBar: true,
-        autoClose: 4000,
+        autoClose: 2000,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
       }

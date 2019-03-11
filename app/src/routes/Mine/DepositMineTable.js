@@ -79,7 +79,7 @@ class DepositMineTable extends Mixin {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {item.interest ? (
+              {item.interest > 0 ? (
                 <Button
                   onClick={() => {
                     openModal({
