@@ -63,6 +63,8 @@ class Trust extends Mixin {
       currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.length;
 
+    const isAnyUseableWithdraws = normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying');
+
     return (
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
@@ -81,7 +83,7 @@ class Trust extends Mixin {
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
             {isShowWithdraw ? (
               <ButtonGroup>
-                {signStatus === false ? null : (
+                {signStatus === false ? null : isAnyUseableWithdraws.length ? (
                   <Button
                     onClick={() => {
                       openModal({ name: 'WithdrawConstructModal' });
@@ -89,7 +91,7 @@ class Trust extends Mixin {
                     <Icon name="icon-goujiantixian" />
                     构造多签提现
                   </Button>
-                )}
+                ) : null}
                 {tx ? (
                   <Button
                     onClick={() => {

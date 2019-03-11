@@ -21,7 +21,8 @@ class GetCollarModalSDOT extends Component {
           </Button>
         }>
         <div className={styles.GetCollarModalSDOT}>
-          ChainX测试网中，使用任意以太坊主网地址或Kovan测试网地址，进行跨链绑定，均可领取5个SDOT。
+          参与过Polkadot第一期投资的ETH地址可以直接领取SDOT。
+          当前测试网期间其余人可以通过给0x000000000000000000000000000000000000abcd发起一笔金额为0的交易来标记自己，下次测试网启动时，将可以获得测试资格，领取5个SDOT，这些新增的测试数据不会保留至主网线上。
         </div>
       </Modal>
     );

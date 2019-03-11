@@ -162,7 +162,9 @@ export default class Trust extends ModelExtend {
         redeemScript = Buffer.from(redeemScript, 'hex');
         const privateKeys = [privateKey];
         const transaction = bitcoin.Transaction.fromHex(tx);
+        //console.log(transaction, transaction.ins, transaction.outs, '------------------transaction');
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+        //console.log(txb, '------------------txb');
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
         try {
           for (let pair of keypairs) {
@@ -242,7 +244,7 @@ export default class Trust extends ModelExtend {
     const { address } = currentAccount;
     trusts.map(item => {
       if (item.node && item.trusteeAddress && item.address === address) {
-        this.fetchNodeStatus(item.node, item.trusteeAddress)
+        this.fetchNodeStatus(`/getTrustNodeStatus?ip=http://${item.node}`, item.trusteeAddress)
           .then(res => {
             if (res) {
               item.connected = true;
