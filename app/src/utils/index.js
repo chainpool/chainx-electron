@@ -285,6 +285,7 @@ export const fetchFromHttp = ({ httpUrl, method = 'POST', methodAlias, params = 
     method: method,
     headers: {
       method,
+      // 'Access-Control-Allow-Origin': '*',
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },

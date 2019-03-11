@@ -18,7 +18,8 @@ class RegisterNodeModal extends Component {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg = Patterns.check('required')(name) || Patterns.check('smaller')(name.length, 12, '不能超过12个字符');
+      const errMsg =
+        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(name.length, 12, '不能超过12个字符');
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
