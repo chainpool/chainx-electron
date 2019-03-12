@@ -76,12 +76,18 @@ export default class Trade extends ModelExtend {
       const data = await getOrdersApi({
         accountId: ChainX.account.decodeAddress(account.address),
       });
-      const reflectData = data.map(item => ({
-        createTime: item.create_time,
+      const reflectData = data.items.map(item => ({
+        index: item.id,
+        pair: item.pairid,
+        createTime: item.block_time,
+        amount: item.amount,
+        price: item.price,
+        hasfillAmount: item.hasfill_amount,
+        reserveLast: item.reserve_last,
+        direction: item.direction,
       }));
-      const res = await getOrders(account.address, 0, 100);
-      console.log(data, '----------data');
-      console.log(res, '------------------res');
+      /*await getOrders(account.address, 0, 100)*/
+      const res = { data: reflectData };
       if (res && res.data) {
         this.changeModel(
           {
@@ -91,7 +97,7 @@ export default class Trade extends ModelExtend {
               const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
                 ...item,
-                createTimeShow: moment_helper.formatHMS(item.createTime * 1000),
+                createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime * 1000) : '',
                 priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
                 amountShow: this.setPrecision(item.amount, filterPair.assets),
                 hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
