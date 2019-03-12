@@ -20,7 +20,7 @@ class Trust extends Mixin {
 
     dispatch({ type: 'getAllWithdrawalList' });
     dispatch({
-      type: 'subScribeNodeStatus',
+      type: 'getSomeOneInfo',
     });
     this.getSign();
   };

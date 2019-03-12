@@ -51,6 +51,10 @@ export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...pa
 
 export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
 
+export const getTrusteeInfoByAccount = (...payload) => stake.getTrusteeInfoByAccount(...payload);
+
+export const setupTrustee = (...payload) => stake.setupTrustee(...payload);
+
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
 export const getWithdrawalListByAccount = (...payload) =>

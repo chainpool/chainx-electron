@@ -1,6 +1,13 @@
 import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getWithdrawalList, createWithdrawTx, getWithdrawTx, signWithdrawTx } from '../services';
+import {
+  getWithdrawalList,
+  createWithdrawTx,
+  getWithdrawTx,
+  signWithdrawTx,
+  getTrusteeInfoByAccount,
+  setupTrustee,
+} from '../services';
 import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
@@ -16,6 +23,8 @@ export default class Trust extends ModelExtend {
           return {
             ...item,
             connected: '',
+            hotPubKey: '',
+            coldPubKey: '',
           };
         })
       );
@@ -149,8 +158,6 @@ export default class Trust extends ModelExtend {
         const txb = new bitcoin.TransactionBuilder(network);
         txb.setVersion(1);
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
-        // TODO: 真实的chainx跨链提现需扣除提现手续费
-        console.log(targetUtxos, withdrawList, '========targetUtxos, withdrawList');
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
           const fee = withdraw.amount - minerFee;
@@ -287,6 +294,32 @@ export default class Trust extends ModelExtend {
     }
     this.changeModel('trusts', trusts);
     this.subScribeNodeStatus();
+  };
+
+  updateTrustToChain = ({ chain, about = 'bitocin', hotPubKey, coldPubKey }) => {
+    const extrinsic = setupTrustee(chain, about, [chain, `0x${hotPubKey}`], [chain, `0x${coldPubKey}`]);
+    return {
+      extrinsic,
+      success: this.getSomeOneInfo,
+    };
+  };
+
+  getSomeOneInfo = async () => {
+    const currentAccount = this.getCurrentAccount();
+    const { address } = currentAccount;
+    const turstInfo = await getTrusteeInfoByAccount(address);
+    const findOne = turstInfo.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    if (findOne) {
+      const { chain, coldEntity: hotPubKey, hotEntity: coldPubKey } = findOne;
+      const obj = {
+        address,
+        chain,
+        hotPubKey,
+        coldPubKey,
+      };
+      this.updateTrust(obj);
+      return obj;
+    }
   };
 
   getAllWithdrawalList = async () => {
