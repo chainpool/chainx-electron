@@ -1,6 +1,6 @@
 import { _, formatNumber, moment_helper, observable, computed, toJS, localSave, parseQueryString } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
+import { getOrderPairs, getOrderPairsApi, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -126,8 +126,20 @@ export default class Trade extends ModelExtend {
 
   getOrderPairs = async () => {
     const update = async () => {
-      let res = await getOrderPairs();
-      // console.log(res, '-------------------pairs');
+      const data = await getOrderPairsApi();
+      const reflectData = data
+        .map((item = {}) => ({
+          assets: item.currency_pair[0],
+          currency: item.currency_pair[1],
+          id: item.pairid,
+          precision: item.precision,
+          unitPrecision: item.unit_precision,
+          online: item.online,
+          lastPrice: item.price.last_price,
+        }))
+        .sort((a, b) => a.id - b.id);
+      /*await getOrderPairs()*/
+      let res = reflectData;
       res = res.map((item = {}) => {
         const precision = item.precision;
         const priceShow = price =>
@@ -143,7 +155,6 @@ export default class Trade extends ModelExtend {
       });
       this.changeModel('orderPairs', res, []);
       localSave.set('orderPair', res || []);
-      // console.log(res, '------pair交易对列表');
       return res;
     };
 
