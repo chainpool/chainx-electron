@@ -204,49 +204,51 @@ class Account extends Mixin {
                 </div>
               </div>
             </Button>
-            <Button type="success" className={styles.download} Ele={'div'}>
-              下载钱包
-              <div>
+            {false && (
+              <Button type="success" className={styles.download} Ele={'div'}>
+                下载钱包
                 <div>
-                  <div className={styles.desc}>
-                    <Icon name="icon-xiazai" className={styles.downloadicon} />
-                    <div className={styles.appname}>桌面端安全钱包</div>
+                  <div>
+                    <div className={styles.desc}>
+                      <Icon name="icon-xiazai" className={styles.downloadicon} />
+                      <div className={styles.appname}>桌面端安全钱包</div>
+                    </div>
+                    <div className={styles.desc}>去中心化全节点钱包，不依赖中心化交易所</div>
+                    <ul>
+                      {[
+                        {
+                          src: Win,
+                          alias: 'Win',
+                          name: 'Windows',
+                        },
+                        {
+                          src: Mac,
+                          alias: 'Mac',
+                          name: 'MacOs',
+                        },
+                        {
+                          src: Linux,
+                          alias: 'Linux',
+                          name: 'Linux',
+                        },
+                      ].map(item => (
+                        <li key={item.name}>
+                          <img src={item.src} alt={`${item.src}`} />
+                          <div>{item.name}</div>
+                          <div
+                            className={classNames(
+                              styles.button,
+                              Device.getOS() === `${item.alias}` ? styles.active : null
+                            )}>
+                            下载
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className={styles.desc}>去中心化全节点钱包，不依赖中心化交易所</div>
-                  <ul>
-                    {[
-                      {
-                        src: Win,
-                        alias: 'Win',
-                        name: 'Windows',
-                      },
-                      {
-                        src: Mac,
-                        alias: 'Mac',
-                        name: 'MacOs',
-                      },
-                      {
-                        src: Linux,
-                        alias: 'Linux',
-                        name: 'Linux',
-                      },
-                    ].map(item => (
-                      <li key={item.name}>
-                        <img src={item.src} alt={`${item.src}`} />
-                        <div>{item.name}</div>
-                        <div
-                          className={classNames(
-                            styles.button,
-                            Device.getOS() === `${item.alias}` ? styles.active : null
-                          )}>
-                          下载
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-              </div>
-            </Button>
+              </Button>
+            )}
           </ButtonGroup>
         )}
 

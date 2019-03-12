@@ -127,6 +127,7 @@ export default class Trade extends ModelExtend {
   getOrderPairs = async () => {
     const update = async () => {
       let res = await getOrderPairs();
+      // console.log(res, '-------------------pairs');
       res = res.map((item = {}) => {
         const precision = item.precision;
         const priceShow = price =>
