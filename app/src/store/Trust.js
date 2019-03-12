@@ -290,7 +290,7 @@ export default class Trust extends ModelExtend {
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
       if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
-      if (decodedHotPrivateKey) findOne.decodedHotPrivateKey = decodedHotPrivateKey;
+      if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
     this.subScribeNodeStatus();
@@ -300,22 +300,25 @@ export default class Trust extends ModelExtend {
     const extrinsic = setupTrustee(chain, about, [chain, `0x${hotPubKey}`], [chain, `0x${coldPubKey}`]);
     return {
       extrinsic,
-      success: this.getSomeOneInfo,
+      success: () => {
+        this.getSomeOneInfo({ decodedHotPrivateKey: '' });
+      },
     };
   };
 
-  getSomeOneInfo = async () => {
+  getSomeOneInfo = async (payload = {}) => {
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
     const turstInfo = await getTrusteeInfoByAccount(address);
     const findOne = turstInfo.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (findOne) {
-      const { chain, coldEntity: hotPubKey, hotEntity: coldPubKey } = findOne;
+      const { chain, coldEntity: coldPubKey, hotEntity: hotPubKey } = findOne;
       const obj = {
         address,
         chain,
         hotPubKey,
         coldPubKey,
+        ...payload,
       };
       this.updateTrust(obj);
       return obj;
