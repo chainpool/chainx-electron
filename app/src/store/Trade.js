@@ -76,10 +76,10 @@ export default class Trade extends ModelExtend {
       const data = await getOrdersApi({
         accountId: ChainX.account.decodeAddress(account.address),
       });
-      const reflectData = data.items.map(item => ({
+      const reflectData = data.items.map((item = {}) => ({
         index: item.id,
         pair: item.pairid,
-        createTime: item.block_time,
+        createTime: item['block.time'],
         amount: item.amount,
         price: item.price,
         hasfillAmount: item.hasfill_amount,
@@ -92,7 +92,7 @@ export default class Trade extends ModelExtend {
         this.changeModel(
           {
             currentOrderList: res.data.map((item = {}) => {
-              const filterPair = this.getPair({ id: item.pair });
+              const filterPair = this.getPair({ id: String(item.pair) });
 
               const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
