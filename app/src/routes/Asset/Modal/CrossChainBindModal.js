@@ -232,7 +232,7 @@ class CrossChainBindModal extends Mixin {
                         if (checkAll.confirm()) {
                           const params = this.getTradeId();
                           fetchFromHttp({
-                            httpUrl: 'http://47.99.192.159:8100',
+                            url: 'http://47.99.192.159:8100',
                             methodAlias: 'tx_hash',
                             params: [params],
                           })

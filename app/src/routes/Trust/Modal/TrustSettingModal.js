@@ -11,7 +11,29 @@ class TrustSettingModal extends Component {
     hotPubKeyErrMsg: '',
     coldPubKey: '',
     coldPubKeyErrMsg: '',
+    options: [],
   };
+
+  componentDidMount() {
+    const {
+      model: { dispatch },
+    } = this.props;
+
+    dispatch({
+      type: 'getSomeOneInfo',
+    }).then(res => {
+      if (res) {
+        const { chain, hotPubKey, coldPubKey } = res;
+        this.setState({
+          chain: { label: chain, value: chain },
+          options: [{ label: chain, value: chain }],
+          hotPubKey,
+          coldPubKey,
+        });
+      }
+    });
+  }
+
   checkAll = {
     checkChain: () => {
       const { chain } = this.state;
@@ -39,15 +61,10 @@ class TrustSettingModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { chain, chainErrMsg, hotPubKey, hotPubKeyErrMsg, coldPubKey, coldPubKeyErrMsg } = this.state;
+    const { options = [], chain, chainErrMsg, hotPubKey, hotPubKeyErrMsg, coldPubKey, coldPubKeyErrMsg } = this.state;
     const {
-      model: { closeModal, dispatch },
-      globalStore: { assets = [] },
+      model: { dispatch, openModal },
     } = this.props;
-
-    const options = assets
-      .filter((item = {}) => item.chain === 'Bitcoin')
-      .map(asset => ({ label: asset.chain, value: asset.name }));
 
     return (
       <Modal
@@ -58,15 +75,22 @@ class TrustSettingModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                dispatch({
-                  type: 'updateTrust',
-                  payload: {
-                    chain: chain.label,
-                    hotPubKey,
-                    coldPubKey,
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [{ name: '操作', value: '设置信托' }],
+                    callback: () => {
+                      return dispatch({
+                        type: 'updateTrustToChain',
+                        payload: {
+                          chain: chain.label,
+                          hotPubKey,
+                          coldPubKey,
+                        },
+                      });
+                    },
                   },
                 });
-                closeModal();
               }
             }}>
             确定

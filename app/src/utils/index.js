@@ -253,11 +253,11 @@ export const setBlankSpace = (value, unit) => {
   return `${value} ${unit}`;
 };
 
-export const fetchFromWs = ({ wsUrl, method, params = [] }) => {
+export const fetchFromWs = ({ url, method, params = [] }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method, params });
   return new Promise((resolve, reject) => {
-    const ws = new WebSocket(wsUrl);
+    const ws = new WebSocket(url);
     ws.onmessage = m => {
       try {
         const data = JSON.parse(m.data);
@@ -279,18 +279,17 @@ export const fetchFromWs = ({ wsUrl, method, params = [] }) => {
   });
 };
 
-export const fetchFromHttp = ({ httpUrl, method = 'POST', methodAlias, params = [] }) => {
+export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
-  return fetch(httpUrl, {
+  return fetch(url, {
     method: method,
     headers: {
       method,
-      // 'Access-Control-Allow-Origin': '*',
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: message,
+    ...(method === 'get' ? {} : { body: message }),
   })
     .then(res => {
       if (res.status >= 200 && res.status < 300) {

@@ -1,4 +1,4 @@
-import { ChainX } from '../utils';
+import { ChainX, fetchFromHttp } from '../utils';
 import { default as store } from '../store';
 
 const checkLogin = func => {
@@ -13,6 +13,7 @@ const checkLogin = func => {
 };
 
 const { stake, asset, chain, trade } = ChainX;
+const API = 'http://localhost:3001';
 
 export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
@@ -50,6 +51,10 @@ export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...pa
 
 export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
 
+export const getTrusteeInfoByAccount = (...payload) => stake.getTrusteeInfoByAccount(...payload);
+
+export const setupTrustee = (...payload) => stake.setupTrustee(...payload);
+
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
 export const getWithdrawalListByAccount = (...payload) =>
@@ -63,13 +68,38 @@ export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity
 
 export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
 
+export const getOrderPairsApi = payload =>
+  fetchFromHttp({
+    url: `${API}/trade/pairs`,
+    method: 'get',
+    ...payload,
+  });
+
 export const getQuotations = (...payload) => trade.getQuotations(...payload);
+
+export const getQuotationsApi = payload => {
+  const { id, count } = payload;
+  return fetchFromHttp({
+    url: `${API}/trade/handicap/${id}?count=${count}`,
+    method: 'get',
+    ...payload,
+  });
+};
 
 export const putOrder = (...payload) => trade.putOrder(...payload);
 
 export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 
 export const getOrders = (...payload) => trade.getOrders(...payload);
+
+export const getOrdersApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `${API}/trade/userorders/${accountId}`,
+    method: 'get',
+    ...payload,
+  });
+};
 
 export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...payload);
 
