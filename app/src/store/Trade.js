@@ -1,6 +1,14 @@
 import { _, formatNumber, moment_helper, observable, computed, toJS, localSave, parseQueryString } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairs, getOrderPairsApi, getQuotations, putOrder, cancelOrder, getOrders } from '../services';
+import {
+  getOrderPairs,
+  getOrderPairsApi,
+  getQuotations,
+  getQuotationsApi,
+  putOrder,
+  cancelOrder,
+  getOrders,
+} from '../services';
 
 export default class Trade extends ModelExtend {
   constructor(rootStore) {
@@ -85,7 +93,24 @@ export default class Trade extends ModelExtend {
 
   getQuotations = async () => {
     const currentPair = this.currentPair;
-    const res = await getQuotations(currentPair.id, [0, 10]);
+    const count = 10;
+    const data = await getQuotationsApi({
+      id: currentPair.id,
+      count,
+    });
+    const reflectData = { buy: [], sell: [], id: '', piece: '' };
+    reflectData.buy = data.bids.reduce((sum, next = {}) => {
+      sum.push([next.price, next.amount]);
+      return sum;
+    }, []);
+    reflectData.sell = data.asks.reduce((sum, next = {}) => {
+      sum.push([next.price, next.amount]);
+      return sum;
+    }, []);
+    reflectData.id = currentPair.id;
+    reflectData.piece = count;
+    /*await getQuotations(currentPair.id, [0, 10])*/
+    const res = reflectData;
     // console.log(res, '-----------盘口列表');
     // res.buy = [[100, 100000], [101, 100001], [102, 100002], [103, 100003], [104, 100004]];
     // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];

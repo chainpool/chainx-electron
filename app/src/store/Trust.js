@@ -231,7 +231,7 @@ export default class Trust extends ModelExtend {
 
   fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
-      httpUrl: `/getTrustNodeStatus?ip=http://${url}`,
+      url: `/getTrustNodeStatus?ip=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       params: [6, 99999999, trusteeAddress],

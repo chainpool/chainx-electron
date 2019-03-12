@@ -91,9 +91,9 @@ export default class Configure extends ModelExtend {
       }).then(res => res.json());
     };
 
-    const fromWs = wsUrl => {
+    const fromWs = url => {
       return fetchFromWs({
-        wsUrl,
+        url,
         method: 'chain_getBlock',
       });
     };
@@ -119,9 +119,9 @@ export default class Configure extends ModelExtend {
       );
     };
 
-    const fetchSystemPeers = wsUrl => {
+    const fetchSystemPeers = url => {
       return fetchFromWs({
-        wsUrl,
+        url,
         method: 'system_peers',
       });
     };

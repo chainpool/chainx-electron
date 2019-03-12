@@ -64,14 +64,23 @@ export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity
 
 export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
 
-export const getOrderPairsApi = (...payload) =>
+export const getOrderPairsApi = payload =>
   fetchFromHttp({
-    httpUrl: `${API}/trade/pairs`,
+    url: `${API}/trade/pairs`,
     method: 'get',
     ...payload,
   });
 
 export const getQuotations = (...payload) => trade.getQuotations(...payload);
+
+export const getQuotationsApi = payload => {
+  const { id, count } = payload;
+  return fetchFromHttp({
+    url: `${API}/trade/handicap/${id}?count=${count}`,
+    method: 'get',
+    ...payload,
+  });
+};
 
 export const putOrder = (...payload) => trade.putOrder(...payload);
 
