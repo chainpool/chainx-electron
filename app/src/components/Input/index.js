@@ -235,7 +235,7 @@ class InputText extends Mixin {
             });
           }
 
-          _.isFunction(onChange) && onChange(e.target.value);
+          _.isFunction(onChange) && onChange(e.target.value.trim());
         }
       },
       onBlur: e => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Modal, Input } from '@components';
-import { Patterns } from '../../../utils';
+import { Button, Modal, Input } from '../../../components';
+import { RegEx, Patterns } from '../../../utils';
 
 class NodeSettingModal extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class NodeSettingModal extends Component {
   checkAll = {
     checkNode: () => {
       const { node } = this.state;
-      const errMsg = Patterns.check('required')(node);
+      const errMsg = Patterns.check('required')(node) || (RegEx.checkIsIP.test(node) ? '' : '不符合格式');
       this.setState({ nodeErrMsg: errMsg });
       return errMsg;
     },
@@ -82,6 +82,7 @@ class NodeSettingModal extends Component {
           <Input.Text
             label="节点地址"
             value={node}
+            placeholder="例 127.1.1.1:8000"
             errMsg={nodeErrMsg}
             onChange={value => {
               this.setState({ node: value });
