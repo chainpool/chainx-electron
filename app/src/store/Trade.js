@@ -1,4 +1,14 @@
-import { _, formatNumber, moment_helper, observable, computed, toJS, localSave, parseQueryString } from '../utils';
+import {
+  _,
+  formatNumber,
+  moment_helper,
+  observable,
+  computed,
+  toJS,
+  localSave,
+  parseQueryString,
+  ChainX,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -8,6 +18,7 @@ import {
   putOrder,
   cancelOrder,
   getOrders,
+  getOrdersApi,
 } from '../services';
 
 export default class Trade extends ModelExtend {
@@ -62,7 +73,15 @@ export default class Trade extends ModelExtend {
   getAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
+      const data = await getOrdersApi({
+        accountId: ChainX.account.decodeAddress(account.address),
+      });
+      const reflectData = data.map(item => ({
+        createTime: item.create_time,
+      }));
       const res = await getOrders(account.address, 0, 100);
+      console.log(data, '----------data');
+      console.log(res, '------------------res');
       if (res && res.data) {
         this.changeModel(
           {
