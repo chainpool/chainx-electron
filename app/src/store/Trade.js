@@ -53,10 +53,13 @@ export default class Trade extends ModelExtend {
   @observable currentOrderList = [];
 
   reload = () => {
-    this.getOrderPairs();
-    this.getQuotations();
-    this.getAccountAssets();
-    this.getAccountOrder();
+    clearTimeout(this.interval);
+    this.interval = setTimeout(() => {
+      this.getOrderPairs();
+      this.getQuotations();
+      this.getAccountAssets();
+      this.getAccountOrder();
+    }, 300);
   };
 
   showUnitPrecision = (precision, unitPrecision) => {

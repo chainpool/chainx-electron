@@ -1,5 +1,6 @@
 import React from 'react';
 import { _ } from '../../utils';
+import { AjaxCallTime } from '../../constants';
 
 class Mixin extends React.Component {
   constructor(props) {
@@ -35,6 +36,7 @@ class Mixin extends React.Component {
   componentWillUnmount() {
     this._isMounted = false;
     _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
+    this.fetchPoll();
   }
 
   changeState = (payload = {}, callback) => {
@@ -42,6 +44,14 @@ class Mixin extends React.Component {
       this.setState(payload, () => {
         _.isFunction(callback) && callback(payload);
       });
+    }
+  };
+
+  fetchPoll = callback => {
+    clearTimeout(this.interval);
+    if (!this._isMounted) return;
+    if (_.isFunction(callback)) {
+      this.interval = setTimeout(callback, AjaxCallTime);
     }
   };
 }

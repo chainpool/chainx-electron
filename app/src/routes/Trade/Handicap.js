@@ -8,11 +8,17 @@ import { classNames, observer, toJS } from '../../utils';
 @observer
 class Handicap extends SwitchPair {
   startInit = () => {
+    this.getQuotations();
+  };
+
+  getQuotations = () => {
     const {
       model: { dispatch },
     } = this.props;
     dispatch({
       type: 'getQuotations',
+    }).then(() => {
+      this.fetchPoll(this.getQuotations);
     });
   };
 

@@ -13,15 +13,6 @@ class PersonalOrder extends SwitchPair {
     activeIndex: 0,
   };
 
-  startInit = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-    dispatch({
-      type: 'getAccountOrder',
-    });
-  };
-
   render() {
     const { activeIndex } = this.state;
     const props = {

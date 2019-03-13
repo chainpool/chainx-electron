@@ -61,3 +61,5 @@ export const SCRYPT_PARAMS = {
   r: 4,
   p: 4,
 };
+
+export const AjaxCallTime = 2000;

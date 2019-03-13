@@ -19,10 +19,16 @@ class Trade extends SwitchPair {
   }
 
   startInit = async () => {
-    const { model: { dispatch } = {} } = this.props;
-    await dispatch({ type: 'getOrderPairs' });
+    await this.getOrderPairs();
     this.setState({
       show: true,
+    });
+  };
+
+  getOrderPairs = () => {
+    const { model: { dispatch } = {} } = this.props;
+    return dispatch({ type: 'getOrderPairs' }).then(() => {
+      this.fetchPoll(this.getOrderPairs);
     });
   };
 
