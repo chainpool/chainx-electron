@@ -274,7 +274,7 @@ class PutOrder extends SwitchPair {
                     name: 'SignModal',
                     data: {
                       description: [
-                        { name: '操作', value: '交易' },
+                        { name: '操作', value: '挂单' },
                         { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
                         { name: '方向', value: action === 'buy' ? '买入' : '卖出' },
                         { name: '报价', value: setBlankSpace(price, currentPair.currency) },

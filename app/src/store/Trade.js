@@ -106,11 +106,11 @@ export default class Trade extends ModelExtend {
     });
     const reflectData = { buy: [], sell: [], id: '', piece: '' };
     reflectData.buy = data.bids.reduce((sum, next = {}) => {
-      sum.push([next.price, next.amount]);
+      sum.push([next.price, next.amount, next.direction]);
       return sum;
     }, []);
     reflectData.sell = data.asks.reduce((sum, next = {}) => {
-      sum.push([next.price, next.amount]);
+      sum.push([next.price, next.amount, next.direction]);
       return sum;
     }, []);
     reflectData.id = currentPair.id;
@@ -138,6 +138,7 @@ export default class Trade extends ModelExtend {
           id: item.id,
           piece: item.piece,
           totalAmountShow: this.setPrecision(totalAmount, currentPair.assets),
+          direction: item[2],
         };
       });
     };

@@ -71,17 +71,7 @@ class SignModal extends Mixin {
       globalStore: {
         closeModal,
         nativeAssetName,
-        modal: {
-          data: {
-            description = [
-              { name: operation, value: '挂单' },
-              { name: '交易对', value: 'PCX /BTC' },
-              { name: '方向', value: '买入' },
-              { name: '报价', value: '0.00032424' },
-              { name: '账户', value: '5DeCxFFfGv5eR7JNDasJa6K2fiPuCVP8W2fiPuCVP8W' },
-            ],
-          } = {},
-        } = {},
+        modal: { data: { description = [{ name: operation, value: '操作' }] } = {} } = {},
       },
       model: { currentAccount },
     } = this.props;
@@ -137,7 +127,7 @@ class SignModal extends Mixin {
                     reCoverLoading(false);
                     _.isFunction(result.success) && result.success(res);
                     Toast.success(
-                      `${_.get(result, 'successToast.title') || operationItem.value || operation}已完成`,
+                      `${_.get(result, 'successToast.title') || operationItem.value || operation}成功`,
                       _.get(result, 'successToast.message')
                     );
                   };

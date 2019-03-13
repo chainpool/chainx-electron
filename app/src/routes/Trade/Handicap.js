@@ -3,6 +3,7 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './Handicap.less';
 import { Table } from '../../components';
+import { ColorProgress } from '../components';
 import { classNames, observer } from '../../utils';
 
 @observer
@@ -27,6 +28,11 @@ class Handicap extends SwitchPair {
       model: { buyList = [], sellList = [], currentPair = {} },
       refs,
     } = this.props;
+    sellList = sellList.slice(0, 6);
+    const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0).fill().concat(sellList);
+    const dataSourceBuy = buyList.concat(new Array(5 - buyList.length > 0 ? 5 - buyList.length : 0).fill());
+    const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
+    const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const setTableProps = color => ({
       onClickRow: item => {
         const setPrice = action => {
@@ -52,16 +58,22 @@ class Handicap extends SwitchPair {
         {
           title: `累计(${currentPair.assets})`,
           dataIndex: 'totalAmountShow',
+          render: (value, item = {}) => {
+            return (
+              <div className={styles.progressContainer}>
+                {value}
+                <ColorProgress
+                  value={value}
+                  dataSource={dataSourceSell.concat(dataSourceBuy)}
+                  direction={item.direction}
+                />
+              </div>
+            );
+          },
         },
       ],
       dataSource: [],
     });
-
-    sellList = sellList.slice(0, 6);
-    const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0).fill().concat(sellList);
-    const dataSourceBuy = buyList.concat(new Array(5 - buyList.length > 0 ? 5 - buyList.length : 0).fill());
-    const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
-    const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>
