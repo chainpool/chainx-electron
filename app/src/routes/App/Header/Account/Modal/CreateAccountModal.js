@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, ButtonGroup } from '../../../../../components';
-import { _, Patterns, ChainX, classNames } from '../../../../../utils';
+import { _, Patterns, ChainX, classNames, isRepeat } from '../../../../../utils';
 import { ErrMsg } from '../../../../../constants';
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {
   constructor(props) {
     super(props);
-    const generateMnemonic = ChainX.account.newMnemonic().split(' ');
+    const generateWords = () => {
+      const words = ChainX.account.newMnemonic().split(' ');
+      if (isRepeat(words)) {
+        return generateWords();
+      } else {
+        return words;
+      }
+    };
+    const generateMnemonic = generateWords();
     this.state = {
       step: 1,
       mnemonicWord: generateMnemonic,

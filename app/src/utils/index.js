@@ -304,3 +304,14 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }
       return res.json();
     });
 };
+
+export const isRepeat = arr => {
+  let hash = {};
+  for (let i in arr) {
+    if (hash[arr[i]]) {
+      return true;
+    }
+    hash[arr[i]] = true;
+  }
+  return false;
+};
