@@ -117,14 +117,12 @@ class CrossChainBindModal extends Mixin {
               目前支持的钱包有:{' '}
               {[
                 {
-                  href: 'https://token.im/',
                   content: 'imToken',
                   style: { left: -100 },
                   src: imtoken,
                   imgWidth: 244,
                 },
                 {
-                  href: 'https://www.parity.io/',
                   content: 'Parity',
                   style: { left: -150 },
                   src: parity,
