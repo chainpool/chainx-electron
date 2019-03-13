@@ -1,31 +1,8 @@
-import {
-  _,
-  formatNumber,
-  moment_helper,
-  observable,
-  computed,
-  toJS,
-  localSave,
-  parseQueryString,
-  ChainX,
-} from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, ChainX } from '../utils';
 import ModelExtend from './ModelExtend';
-import {
-  getOrderPairs,
-  getOrderPairsApi,
-  getQuotations,
-  getQuotationsApi,
-  putOrder,
-  cancelOrder,
-  getOrders,
-  getOrdersApi,
-} from '../services';
+import { getOrderPairsApi, getQuotationsApi, putOrder, cancelOrder, getOrdersApi } from '../services';
 
 export default class Trade extends ModelExtend {
-  constructor(rootStore) {
-    super(rootStore);
-  }
-
   @observable loading = {
     putOrderBuy: false,
     putOrderSell: false,

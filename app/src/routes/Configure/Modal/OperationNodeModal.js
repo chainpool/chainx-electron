@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal, Input, Button, Mixin } from '../../../components';
 import { Patterns, observer, _ } from '../../../utils';
 import * as styles from './OperationNodeModal.less';

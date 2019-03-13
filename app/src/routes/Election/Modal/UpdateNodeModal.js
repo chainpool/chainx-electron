@@ -41,7 +41,7 @@ class UpdateNodeModal extends Component {
       const errMsg =
         Patterns.check('required')(website) ||
         Patterns.check('smallerOrEqual')(website.length, 32, '不能超过32个字符') ||
-        /[:\/]/.test(website)
+        /[:/]/.test(website)
           ? '不能包含 : 或 /，请直接输入域名'
           : '';
       this.setState({ websiteErrMsg: errMsg });

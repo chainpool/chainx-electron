@@ -1,4 +1,4 @@
-import { ChainX, formatNumber, observable } from '../utils';
+import { ChainX, formatNumber, observable, computed } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
@@ -15,8 +15,6 @@ import {
   unnominate,
   voteClaim,
 } from '../services';
-import { computed } from 'mobx';
-import { Chainx } from '@utils/index';
 
 export default class Election extends ModelExtend {
   @observable name = 'election';

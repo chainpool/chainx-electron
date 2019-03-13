@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
 import { Modal, Button, Input, Mixin, Slider, Toast } from '../../../components';
 import { PlaceHolder } from '../../../constants';

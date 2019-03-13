@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal, Input, Button, Mixin } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';

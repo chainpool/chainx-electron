@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, formatNumber, observable, parseQueryString, stringifyQueryString } from '../utils';
+import { _, formatNumber, parseQueryString, stringifyQueryString } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {

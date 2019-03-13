@@ -3,7 +3,7 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './Handicap.less';
 import { Table } from '../../components';
-import { classNames, observer, toJS } from '../../utils';
+import { classNames, observer } from '../../utils';
 
 @observer
 class Handicap extends SwitchPair {

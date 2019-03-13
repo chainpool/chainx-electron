@@ -304,50 +304,6 @@ class InputText extends Mixin {
   }
 }
 
-class InputSelectPending extends React.Component {
-  state = {
-    expand: false,
-  };
-
-  componentDidMount() {
-    window.onclick = () => {
-      const { expand } = this.state;
-      if (expand) {
-        this.changeExpand(false);
-      }
-    };
-  }
-
-  changeExpand = status => {
-    const { expand } = this.state;
-    this.setState({
-      expand: _.isUndefined(status) ? !expand : status,
-    });
-  };
-
-  render() {
-    const { expand } = this.state;
-    const { changeExpand } = this;
-    const { options = [{ lebel: '1', value: 1 }, { lebel: '2', value: 2 }] } = this.props;
-    return (
-      <div
-        className={classNames(styles.select2, expand ? styles.expand : null)}
-        onClick={e => {
-          changeExpand();
-          e.nativeEvent.stopImmediatePropagation();
-          return false;
-        }}>
-        <div>fff</div>
-        <ul>
-          {options.map(({ label, value }, index) => (
-            <li key={index}>label</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-}
-
 class InputAddress extends React.Component {
   state = {
     errMsg: this.props.errMsg,

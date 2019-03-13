@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { RouterGo, routerGo } from '../../../components';
-import { _, getDeepPath } from '../../../utils';
+import { RouterGo } from '../../../components';
+import { getDeepPath } from '../../../utils';
 import routers from '../../App/routers';
 import * as styles from './index.less';
 

@@ -21,7 +21,7 @@ export default class Slider extends Component {
 
     /*解决slider组件marks相同值keys warning问题*/
     const keys = Object.keys(marks);
-    keys.map((item, index) => {
+    keys.forEach((item, index) => {
       const ins = keys.map(item2 => String(parseFloat(item2))).indexOf(String(parseFloat(item)));
       if (ins > -1 && ins !== index && index > 0) {
         delete marks[item];

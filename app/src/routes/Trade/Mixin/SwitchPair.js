@@ -1,12 +1,7 @@
-import React from 'react';
 import { Mixin } from '../../../components';
-import { _, toJS } from '@utils';
+import { _ } from '@utils';
 
 class SwitchPair extends Mixin {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
     const {

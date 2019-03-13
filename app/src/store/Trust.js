@@ -1,4 +1,4 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -252,7 +252,7 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this._trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    trusts.map(item => {
+    trusts.forEach(item => {
       if (item.node && item.trusteeAddress && item.address === address) {
         this.fetchNodeStatus(item.node, item.trusteeAddress)
           .then(res => {

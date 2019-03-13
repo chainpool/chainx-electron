@@ -1,7 +1,6 @@
-import { observable, autorun, localSave, formatNumber, _, toJS, fetchFromWs } from '../utils';
+import { observable, autorun, localSave, formatNumber, _, fetchFromWs } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork } from '../constants';
-import { pipe, startWith } from 'rxjs/operators';
 
 export default class Configure extends ModelExtend {
   constructor(rootStore) {
@@ -156,7 +155,7 @@ export default class Configure extends ModelExtend {
         const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
         if (bestNode && bestNode.block) {
           const max = _.get(_.cloneDeep(nodes).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
-          nodes.map((item = {}) => {
+          nodes.forEach((item = {}) => {
             if (item.block && max) {
               item.syncStatus = formatNumber.percent(item.block / max, 2);
             }
@@ -197,18 +196,14 @@ export default class Configure extends ModelExtend {
     const nodes = [...this.nodes];
     switch (action) {
       case 'add':
-        {
-          nodes.push({
-            type: '自定义',
-            name,
-            address,
-          });
-        }
+        nodes.push({
+          type: '自定义',
+          name,
+          address,
+        });
         break;
       case 'delete':
-        {
-          nodes.splice(index, 1);
-        }
+        nodes.splice(index, 1);
         break;
       case 'update': {
         const findOne = nodes.filter((item, ins) => ins === index)[0] || {};

@@ -1,4 +1,4 @@
-import { _, observable, resOk } from '../utils';
+import { _, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAddressByAccount,

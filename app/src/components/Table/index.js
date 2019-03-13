@@ -167,7 +167,7 @@ export default class TableComponent extends Component {
   };
 
   render() {
-    const { getPageData } = this;
+    // const { getPageData } = this;
     const {
       className = {},
       style = {},
@@ -175,7 +175,7 @@ export default class TableComponent extends Component {
       expandedRowRender,
       onClickRow,
       noDataTip,
-      pagination: { total: totalPage } = {},
+      // pagination: { total: totalPage } = {},
       showHead = true,
       activeTrIndex,
       children,
@@ -222,7 +222,10 @@ export default class TableComponent extends Component {
       scroll,
     };
 
-    const { dataSource = [], currentPage } = this.state;
+    const {
+      dataSource = [],
+      // currentPage
+    } = this.state;
     return (
       <div
         style={{ height: this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll }) }}

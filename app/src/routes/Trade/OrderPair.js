@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer, parseQueryString, toJS } from '../../utils';
+import { _, observer, parseQueryString } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {

@@ -57,13 +57,13 @@ class Modal extends Component {
         <div className={styles.modalcontainer}>
           <div className={styles.header}>
             <div className={styles.label}>{title}</div>
-            <a
+            <span
               className={styles.close}
               onClick={() => {
                 this.closeModal();
               }}>
               <i className="iconfont icon-icon-guanbi" />
-            </a>
+            </span>
           </div>
           {children}
           {button ? <div className={styles.button}>{button}</div> : null}
