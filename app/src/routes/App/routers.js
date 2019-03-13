@@ -45,7 +45,7 @@ export default [
     path: PATH.trust,
     component: lazy(() => import('../Trust')),
     authority: [1],
-    requireTrustee: true,
+    // requireTrustee: true,
   },
   {
     title: '币币交易',

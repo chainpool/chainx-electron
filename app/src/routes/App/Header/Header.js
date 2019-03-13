@@ -15,16 +15,9 @@ class Header extends Component {
       location: { pathname } = {},
       className,
       configureStore: { isLogin, isTestNet },
-      accountStore: { isTrustee },
     } = this.props;
 
-    const showRouters = routers.filter(item => {
-      if (item.show === false) {
-        return false;
-      }
-
-      return !(item.path === PATH.trust && !isTrustee);
-    });
+    const showRouters = routers.filter(item => item.show !== false);
 
     const txRecord = (
       <AuthorityComponent>
