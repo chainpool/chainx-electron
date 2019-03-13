@@ -71,7 +71,7 @@ class Header extends Component {
 
                 {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
                   return item === 0 ? (
-                    <li key={index}>
+                    <li key={index} className={styles.navli}>
                       <RouterGo
                         go={{ pathname: PATH.configure }}
                         className={pathname === PATH.configure ? styles.active : null}>
@@ -79,7 +79,7 @@ class Header extends Component {
                       </RouterGo>
                     </li>
                   ) : item === 1 ? (
-                    <li key={index}>
+                    <li key={index} className={styles.navli}>
                       <Account {...this.props} />
                     </li>
                   ) : null;
