@@ -39,7 +39,9 @@ class SettingTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {item.decodedHotPrivateKey ? null : (
+              {item.decodedHotPrivateKey ? (
+                <Button type="disabeld">已导入</Button>
+              ) : (
                 <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal', data: { chain: item.chain } })}>
                   导入热私钥
                 </Button>
