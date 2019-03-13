@@ -6,6 +6,12 @@ import { classNames, Inject, fetchFromHttp, _, Patterns } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
+import myEtherWallet from '../../../resource/myEtherWallet.png';
+import Jaxx from '../../../resource/Jaxx.png';
+import myCrypto from '../../../resource/myCrypto.png';
+import trust from '../../../resource/trust.png';
+import bitpie from '../../../resource/bitpie.png';
+import coinomi from '../../../resource/coinomi.png';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
@@ -114,7 +120,7 @@ class CrossChainBindModal extends Mixin {
         warn: (
           <Warn>
             <div className={styles.sdot}>
-              目前支持的钱包有:{' '}
+              目前支持Data的钱包有:{' '}
               {[
                 {
                   content: 'imToken',
@@ -127,6 +133,42 @@ class CrossChainBindModal extends Mixin {
                   style: { left: -150 },
                   src: parity,
                   imgWidth: 352,
+                },
+                {
+                  content: 'MyEtherWallet',
+                  style: { left: -120 },
+                  src: myEtherWallet,
+                  imgWidth: 352,
+                },
+                {
+                  content: 'Jaxx',
+                  style: { left: -100 },
+                  src: Jaxx,
+                  imgWidth: 244,
+                },
+                {
+                  content: 'MyCrypto',
+                  style: { left: -100 },
+                  src: myCrypto,
+                  imgWidth: 244,
+                },
+                {
+                  content: 'Trust',
+                  style: { left: -100 },
+                  src: trust,
+                  imgWidth: 244,
+                },
+                {
+                  content: 'Bitpie',
+                  style: { left: -100 },
+                  src: bitpie,
+                  imgWidth: 244,
+                },
+                {
+                  content: 'Coinomi',
+                  style: { left: -100 },
+                  src: coinomi,
+                  imgWidth: 244,
                 },
               ].map((item, index) => (
                 <a key={index} className={styles.anchor} href={''} rel="noopener noreferrer" target="_blank">
