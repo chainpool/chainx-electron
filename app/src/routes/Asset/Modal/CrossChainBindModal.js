@@ -64,8 +64,8 @@ class CrossChainBindModal extends Mixin {
       BTC: {
         desc1: (
           <span>
-            使用<strong>支持OP_Return</strong>
-            的BTC钱包向公共多签托管地址发起金额为0的转账交易，在OP_RETURN中输入下方十六进制 (Hex) 信息：
+            用户需使用 <strong>支持OP_RETURN</strong> 的BTC钱包向公共多签托管地址充值，并在<strong>OP_RETURN</strong>{' '}
+            中输入下方 <strong>十六进制 (Hex)</strong> 信息以完成与ChainX的绑定：
           </span>
         ),
         value1: chainxAddressHex,
@@ -74,27 +74,29 @@ class CrossChainBindModal extends Mixin {
         warn: (
           <Warn>
             <div>
-              <strong>其他钱包交易中的备注字段并不是OP_RETURN，无法发起跨链绑定交易。</strong>
-              <br />
-              目前支持的钱包有:{' '}
-              <a
-                className={styles.anchor}
-                rel="noopener noreferrer"
-                target="_blank"
-                onClick={() => {
-                  openModal({ name: 'BtcBindModal' });
-                }}>
-                ChainX绑定工具
-              </a>
-              、
-              <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
-                Trezor
-              </a>
-              、
-              <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
-                Coinb.in
-              </a>{' '}
-              等。
+              <strong>
+                目前支持的钱包有:{' '}
+                <a
+                  className={styles.anchor}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  onClick={() => {
+                    openModal({ name: 'BtcBindModal' });
+                  }}>
+                  ChainX绑定工具
+                </a>
+                、
+                <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
+                  Trezor
+                </a>
+                、
+                <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
+                  Coinb.in
+                </a>{' '}
+                等,
+                <br />
+                不添加OP_RETURN信息，充值无法到账
+              </strong>
             </div>
           </Warn>
         ),
@@ -147,7 +149,7 @@ class CrossChainBindModal extends Mixin {
     const findOne = show[token];
 
     return (
-      <Modal title={`跨链绑定（${token}）`}>
+      <Modal title={`跨链${token === 'SDOT' ? '映射' : '充值'}（${token}）`}>
         <div className={styles.crossChainBind}>
           {step === 0 ? (
             <div>
@@ -211,10 +213,13 @@ class CrossChainBindModal extends Mixin {
                 <>
                   <div className={styles.desc}>
                     <div />
-                    交易打包成功后，在下面输入<strong>交易ID (txid)</strong>，交易签名验证无误后，即可完成绑定
+                    交易打包成功后，在下面输入交易ID <strong>交易ID (Txid/TxHash)</strong>
+                    ，交易签名验证无误后，即可完成映射
                   </div>
                   <div className={styles.tradeid}>
                     <Input.Text
+                      isTextArea
+                      rows={2}
                       value={tradeId}
                       errMsg={tradeIdErrMsg}
                       placeholder={'输入交易ID'}

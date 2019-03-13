@@ -74,8 +74,9 @@ export default class Trade extends ModelExtend {
     const account = this.getCurrentAccount();
     if (account.address) {
       const data = await getOrdersApi({
-        accountId: ChainX.account.decodeAddress(account.address),
+        accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
       });
+
       const reflectData = data.items.map((item = {}) => ({
         index: item.id,
         pair: item.pairid,
@@ -97,7 +98,7 @@ export default class Trade extends ModelExtend {
               const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
                 ...item,
-                createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime * 1000) : '',
+                createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
                 priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
                 amountShow: this.setPrecision(item.amount, filterPair.assets),
                 hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
@@ -270,7 +271,7 @@ export default class Trade extends ModelExtend {
         );
       },
       loading: status => this.changeModel(`loading.cancelOrder`, status),
-      success: () => this.reload(),
+      success: this.reload,
     };
   };
 

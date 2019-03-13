@@ -145,6 +145,7 @@ class SignModal extends Mixin {
                   const fail = (err = {}) => {
                     reCoverLoading(false);
                     _.isFunction(result.fail) && result.fail(err);
+                    _.get(err, 'data') && console.log(_.get(err, 'data'));
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
                       _.get(result, 'failToast.message') || _.get(err, 'message')
