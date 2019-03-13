@@ -12,21 +12,17 @@ class Node extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       chainStore: { dispatch },
     } = this.props;
-    dispatch({
+    this.subscribeNewHead = await dispatch({
       type: 'subscribeNewHead',
     });
   }
 
   componentWillUnmount() {
-    const {
-      chainStore: { dispatch },
-    } = this.props;
-
-    dispatch({ type: 'unSubscribeNewHead' });
+    this.subscribeNewHead.unsubscribe();
   }
 
   render() {
