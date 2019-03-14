@@ -88,7 +88,7 @@ class CrossChainBindModal extends Mixin {
                   {
                     content: 'BitX',
                     style: { left: -100 },
-                    src: imtoken,
+                    // src: imtoken,
                     imgWidth: 244,
                     onClick: () => {
                       openModal({ name: 'BtcBindModal' });
