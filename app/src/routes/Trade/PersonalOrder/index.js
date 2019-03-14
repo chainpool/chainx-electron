@@ -11,7 +11,7 @@ import HistoryOrderTable from './HistoryOrderTable';
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 1,
+    activeIndex: 0,
   };
 
   startInit = () => {

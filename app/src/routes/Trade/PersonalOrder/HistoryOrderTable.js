@@ -150,7 +150,6 @@ class HistoryOrderTable extends SwitchPair {
               },
               {
                 title: '对手方',
-                width: 200,
                 dataIndex: 'maker_userShow',
                 render: value => {
                   return <div className={styles.otherFace}>对手方：{value}</div>;
