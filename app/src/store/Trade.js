@@ -67,6 +67,7 @@ export default class Trade extends ModelExtend {
         hasfillAmount: item.hasfill_amount,
         reserveLast: item.reserve_last,
         direction: item.direction,
+        status: item.status,
       }));
       /*await getOrders(account.address, 0, 100)*/
       const res = { data: reflectData };

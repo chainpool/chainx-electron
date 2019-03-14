@@ -20,9 +20,16 @@ class HistoryOrderTable extends SwitchPair {
   componentUpdate = prevProps => {
     const { historyOrderList: prevHistoryOrderList } = prevProps;
     const { historyOrderList } = this.props;
+    const { historyOrderList: stateHistoryOrderList } = this.state;
     if (!_.isEqual(prevHistoryOrderList, historyOrderList)) {
       this.changeState({
-        historyOrderList,
+        historyOrderList: historyOrderList.map((item = {}) => {
+          const findOne = stateHistoryOrderList.filter((one = {}) => one.index === item.index)[0] || {};
+          return {
+            ...findOne,
+            ...item,
+          };
+        }),
       });
     }
   };
@@ -93,7 +100,7 @@ class HistoryOrderTable extends SwitchPair {
         },
         {
           title: `成交总额`,
-          dataIndex: '',
+          dataIndex: 'status',
         },
         {
           width: 50,
