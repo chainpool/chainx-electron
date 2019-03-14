@@ -78,9 +78,9 @@ export const getOrderPairsApi = payload =>
 export const getQuotations = (...payload) => trade.getQuotations(...payload);
 
 export const getQuotationsApi = payload => {
-  const { id, count } = payload;
+  const { pairId, count } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/handicap/${id}?count=${count}`,
+    url: `${API}/trade/handicap/${pairId}?count=${count}`,
     method: 'get',
     ...payload,
   });
@@ -105,6 +105,15 @@ export const getFillOrdersApi = payload => {
   const { accountId } = payload;
   return fetchFromHttp({
     url: `${API}/trade/userorders/${accountId}`,
+    method: 'get',
+    ...payload,
+  });
+};
+
+export const getLatestOrderApi = payload => {
+  const { pairId } = payload;
+  return fetchFromHttp({
+    url: `${API}/trade/latestfills/${pairId}`,
     method: 'get',
     ...payload,
   });

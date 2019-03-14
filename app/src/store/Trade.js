@@ -1,6 +1,13 @@
 import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, ChainX } from '../utils';
 import ModelExtend from './ModelExtend';
-import { getOrderPairsApi, getQuotationsApi, putOrder, cancelOrder, getOrdersApi } from '../services';
+import {
+  getOrderPairsApi,
+  getQuotationsApi,
+  putOrder,
+  cancelOrder,
+  getOrdersApi,
+  getLatestOrderApi,
+} from '../services';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -29,6 +36,7 @@ export default class Trade extends ModelExtend {
   @observable sellList = [];
   @observable currentOrderList = [];
   @observable historyOrderList = [];
+  @observable latestOrderList = [];
 
   reload = () => {
     clearTimeout(this.interval);
@@ -37,6 +45,7 @@ export default class Trade extends ModelExtend {
       this.getQuotations();
       this.getAccountAssets();
       this.getAccountOrder();
+      this.getLatestOrder();
     }, 300);
   };
 
@@ -49,6 +58,22 @@ export default class Trade extends ModelExtend {
       const m = String(value).match(re);
       return m ? m[1] : 0;
     };
+  };
+
+  getLatestOrder = async () => {
+    const currentPair = this.currentPair;
+    let res = await getLatestOrderApi({ pairId: currentPair.id });
+    // console.log(res, '最新成交');
+    res = res.map((item = {}) => {
+      const filterPair = currentPair;
+      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      return {
+        ...item,
+        priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+        amountShow: this.setPrecision(item.amount, filterPair.assets),
+      };
+    });
+    this.changeModel('latestOrderList', res);
   };
 
   getAccountOrder = async () => {
@@ -74,7 +99,6 @@ export default class Trade extends ModelExtend {
       if (res && res.data) {
         const result = res.data.map((item = {}) => {
           const filterPair = this.getPair({ id: String(item.pair) });
-
           const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
           return {
             ...item,
@@ -105,7 +129,7 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     const count = 10;
     const data = await getQuotationsApi({
-      id: currentPair.id,
+      pairId: currentPair.id,
       count,
     });
     const reflectData = { buy: [], sell: [], id: '', piece: '' };
@@ -122,13 +146,14 @@ export default class Trade extends ModelExtend {
     /*await getQuotations(currentPair.id, [0, 10])*/
     const res = reflectData;
     // console.log(res, '-----------盘口列表');
-    // res.buy = [[100, 100000], [101, 100001], [102, 100002], [103, 100003], [104, 100004]];
-    // res.sell = [[105, 100005], [106, 100006], [107, 100007], [108, 100008], [109, 100009]];
+    // res.buy = new Array(14).fill().map((item, index) => [30000 + index, 80000 + index, 'Sell']);
+    // res.sell = new Array(14).fill().map((item, index) => [20000 + index, 70000 + index, 'Buy']);
     res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
     res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
 
     const formatList = (list, action) => {
-      const showUnit = this.showUnitPrecision(currentPair.precision, currentPair.unitPrecision);
+      const filterPair = currentPair;
+      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
       return list.map((item = [], index) => {
         let totalAmount = 0;
         if (action === 'sell') {
@@ -137,11 +162,11 @@ export default class Trade extends ModelExtend {
           totalAmount = list.slice(0, index + 1).reduce((sum, item = []) => sum + item[1], 0);
         }
         return {
-          priceShow: showUnit(this.setPrecision(item[0], currentPair.precision)),
-          amountShow: this.setPrecision(item[1], currentPair.assets),
+          priceShow: showUnit(this.setPrecision(item[0], filterPair.precision)),
+          amountShow: this.setPrecision(item[1], filterPair.assets),
           id: item.id,
           piece: item.piece,
-          totalAmountShow: this.setPrecision(totalAmount, currentPair.assets),
+          totalAmountShow: this.setPrecision(totalAmount, filterPair.assets),
           direction: item[2],
         };
       });

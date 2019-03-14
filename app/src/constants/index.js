@@ -63,3 +63,5 @@ export const SCRYPT_PARAMS = {
 };
 
 export const AjaxCallTime = 2000;
+
+export const TradeVersion = 1;

@@ -5,9 +5,11 @@ import * as styles from './Handicap.less';
 import { Table } from '../../components';
 import { ColorProgress } from '../components';
 import { classNames, observer } from '../../utils';
+import { TradeVersion } from '../../constants';
 
 @observer
 class Handicap extends SwitchPair {
+  static showTr = TradeVersion ? 14 : 5;
   startInit = () => {
     this.getQuotations();
   };
@@ -28,9 +30,12 @@ class Handicap extends SwitchPair {
       model: { buyList = [], sellList = [], currentPair = {} },
       refs,
     } = this.props;
-    sellList = sellList.slice(0, 6);
-    const dataSourceSell = new Array(5 - sellList.length > 0 ? 5 - sellList.length : 0).fill().concat(sellList);
-    const dataSourceBuy = buyList.concat(new Array(5 - buyList.length > 0 ? 5 - buyList.length : 0).fill());
+    const dataSourceSell = new Array(Handicap.showTr - sellList.length > 0 ? Handicap.showTr - sellList.length : 0)
+      .fill()
+      .concat(sellList);
+    const dataSourceBuy = buyList.concat(
+      new Array(Handicap.showTr - buyList.length > 0 ? Handicap.showTr - buyList.length : 0).fill()
+    );
     const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const setTableProps = color => ({
@@ -42,8 +47,8 @@ class Handicap extends SwitchPair {
         setPrice('buy');
         setPrice('sell');
       },
-      tableHeight: [36, 23, 1, 0, 0],
-      scroll: { tr: 5 },
+      tableHeight: [36, TradeVersion ? 22 : 23, 1, 0, 0],
+      scroll: { tr: Handicap.showTr },
       className: styles.tableContainer,
       columns: [
         {

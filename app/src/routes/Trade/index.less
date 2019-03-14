@@ -1,6 +1,79 @@
 @import '~@styles/index.less';
 @distance: 12px;
-.trade {
+
+.tradeAfter {
+  padding: 24px;
+  .top + .bottom {
+    margin-top: @distance;
+  }
+
+  .top {
+    height: 735px;
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    flex-shrink: 1;
+    > div + div {
+      margin-left: @distance;
+    }
+
+    .left,
+    .center,
+    .right {
+      > div + div {
+        margin-top: @distance;
+      }
+      > div {
+        border: 1px solid #dce0e2;
+      }
+    }
+
+    .left {
+      min-width: 280px;
+      max-width: 280px;
+      .handicap {
+        height: 100%;
+      }
+    }
+    .center {
+      overflow-x: hidden;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      width: 0;
+      .kline {
+        height: 376px;
+        min-height: 376px;
+      }
+      .putOrder {
+        height: 100%;
+      }
+    }
+    .right {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      min-width: 280px;
+      max-width: 280px;
+      .orderPair {
+        height: 100%;
+      }
+      .latestOrder {
+        height: 100%;
+        max-height: 100%;
+      }
+    }
+  }
+  .bottom {
+    .personalOrder {
+      min-height: 200px;
+      border: 1px solid #dce0e2;
+    }
+  }
+}
+.tradePrimary {
   padding: 24px;
   .top + .bottom {
     margin-top: @distance;
