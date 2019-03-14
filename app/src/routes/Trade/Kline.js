@@ -106,7 +106,7 @@ class Kline extends SwitchPair {
             volume: Number(item[5]),
           }));
 
-          onHistoryCallback([], { noData: true });
+          onHistoryCallback(data, { noData: true });
         },
         subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {},
         unsubscribeBars(subscriberUID) {},

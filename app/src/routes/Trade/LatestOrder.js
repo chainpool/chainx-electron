@@ -3,7 +3,7 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './LatestOrder.less';
 import { Table } from '../../components';
-import { _, observer } from '../../utils';
+import { observer } from '../../utils';
 
 @observer
 class LatestOrder extends SwitchPair {

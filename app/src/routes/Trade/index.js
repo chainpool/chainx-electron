@@ -5,6 +5,7 @@ import OrderPair from './OrderPair';
 import LatestOrder from './LatestOrder';
 import PutOrder from './PutOrder';
 import PersonalOrder from './PersonalOrder';
+import Kline from './Kline';
 
 import { Inject } from '../../utils';
 import { TradeVersion } from '../../constants';
@@ -50,6 +51,9 @@ class Trade extends SwitchPair {
               </div>
             </div>
             <div className={styles.center}>
+              <div className={styles.kline}>
+                <Kline {...props} data-desc="k线图" />
+              </div>
               <div className={styles.putOrder}>
                 <PutOrder {...props} data-desc="下单" ref={this.putOrderRef} />
               </div>

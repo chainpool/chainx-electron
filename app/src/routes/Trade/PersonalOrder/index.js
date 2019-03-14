@@ -4,13 +4,14 @@ import SwitchPair from '../Mixin/SwitchPair';
 import { Inject } from '../../../utils';
 import * as styles from './index.less';
 import { Tab } from '../../components';
+import { TradeVersion } from '../../../constants';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
 
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 1,
+    activeIndex: 0,
   };
 
   startInit = () => {
@@ -55,7 +56,7 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={['当前委托', '历史委托']}
+            tabs={TradeVersion ? ['当前委托', '历史委托'] : ['当前委托']}
             className={styles.tab}
           />
         </div>
