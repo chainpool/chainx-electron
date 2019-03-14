@@ -7,6 +7,7 @@ import {
   cancelOrder,
   getOrdersApi,
   getLatestOrderApi,
+  getFillOrdersApi,
 } from '../services';
 
 export default class Trade extends ModelExtend {
@@ -34,9 +35,14 @@ export default class Trade extends ModelExtend {
   @observable orderPairs = [];
   @observable buyList = [];
   @observable sellList = [];
-  @observable currentOrderList = [];
-  @observable historyOrderList = [];
   @observable latestOrderList = [];
+  @observable entrustOrderList = [];
+  @computed get currentOrderList() {
+    return this.entrustOrderList;
+  }
+  @computed get historyOrderList() {
+    return this.entrustOrderList;
+  }
 
   reload = () => {
     clearTimeout(this.interval);
@@ -84,6 +90,7 @@ export default class Trade extends ModelExtend {
       });
 
       const reflectData = data.items.map((item = {}) => ({
+        accountid: item.accountid,
         index: item.id,
         pair: item.pairid,
         createTime: item['block.time'],
@@ -116,13 +123,41 @@ export default class Trade extends ModelExtend {
         });
         this.changeModel(
           {
-            currentOrderList: result,
-            historyOrderList: result,
+            entrustOrderList: result,
           },
           []
         );
       }
     }
+  };
+
+  getFillAccountOrder = async ({ accountId, index }) => {
+    const res = await getFillOrdersApi({ accountId, index });
+    if (res && res.length) {
+      console.log(res, '--------------res');
+    }
+    const data = new Array(4).fill().map(() => ({
+      id: 1,
+      pairid: 0,
+      price: 1000,
+      maker_user: '',
+      taker_user: '',
+      maker_user_order_index: '',
+      taker_user_order_index: '',
+      amount: 3000,
+      time: Date.now(),
+    }));
+    const list = this.entrustOrderList.map(item => {
+      if (item.index === index) {
+        return {
+          ...item,
+          ...(res && res.length ? { expand: res } : { expand: data }),
+        };
+      }
+      return item;
+    });
+    this.changeModel('entrustOrderList', list);
+    return data;
   };
 
   getQuotations = async () => {
