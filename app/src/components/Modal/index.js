@@ -25,6 +25,7 @@ class Modal extends Component {
       button,
       onAfterOpen,
       style = {},
+      isOverflow = false,
     } = this.props;
 
     return (
@@ -39,8 +40,7 @@ class Modal extends Component {
             boxShadow: '0 6px 12px 0 rgba(0,0,0,0.20)',
             background: 'transparent',
             width: style.width || 580,
-            overflowX: 'hidden',
-            overflowY: 'hidden',
+            ...(isOverflow ? { overflowX: 'unset', overflowY: 'unset' } : { overflowX: 'hidden', overflowY: 'hidden' }),
             border: 'none',
             padding: 0,
             margin: 0,

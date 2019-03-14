@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button, Toast } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button, Toast, RouterGo } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject, fetchFromHttp, _, Patterns } from '../../../utils';
@@ -12,6 +12,8 @@ import myCrypto from '../../../resource/myCrypto.png';
 import trust from '../../../resource/trust.png';
 import bitpie from '../../../resource/bitpie.png';
 import coinomi from '../../../resource/coinomi.png';
+import trezor from '../../../resource/trezor.png';
+import coinbin from '../../../resource/coinbin.png';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class CrossChainBindModal extends Mixin {
@@ -79,29 +81,41 @@ class CrossChainBindModal extends Mixin {
         value2: btcTrusteeAddress,
         warn: (
           <Warn>
-            <div>
+            <div className={styles.hoverimg}>
               <strong>
-                目前支持的钱包有:{' '}
-                <a
-                  className={styles.anchor}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  onClick={() => {
-                    openModal({ name: 'BtcBindModal' });
-                  }}>
-                  ChainX绑定工具
-                </a>
-                、
-                <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
-                  Trezor
-                </a>
-                、
-                <a className={styles.anchor} href="javascript:;" rel="noopener noreferrer" target="_blank">
-                  Coinb.in
-                </a>{' '}
-                等,
-                <br />
-                不添加OP_RETURN信息，充值无法到账
+                目前支持OP_RETURN的钱包有:
+                {[
+                  {
+                    content: 'BitX',
+                    style: { left: -100 },
+                    src: imtoken,
+                    imgWidth: 244,
+                    onClick: () => {
+                      openModal({ name: 'BtcBindModal' });
+                    },
+                  },
+                  {
+                    content: 'Trezor',
+                    style: { left: -160 },
+                    src: trezor,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: 'Coinb.in',
+                    style: { left: -160 },
+                    src: coinbin,
+                    imgWidth: 352,
+                  },
+                ].map((item, index) => (
+                  <span key={index} className={styles.anchor} onClick={item.onClick}>
+                    {item.content}
+                    <span className={styles.hoverimg} style={item.style}>
+                      <img src={item.src} width={item.imgWidth} />
+                    </span>
+                    、
+                  </span>
+                ))}
+                等，不添加OP_RETURN信息，充值无法到账
               </strong>
             </div>
           </Warn>
@@ -119,7 +133,7 @@ class CrossChainBindModal extends Mixin {
         value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
         warn: (
           <Warn>
-            <div className={styles.sdot}>
+            <div className={styles.hoverimg}>
               目前支持Data的钱包有:{' '}
               {[
                 {
@@ -130,7 +144,7 @@ class CrossChainBindModal extends Mixin {
                 },
                 {
                   content: 'Parity',
-                  style: { left: -150 },
+                  style: { left: -160 },
                   src: parity,
                   imgWidth: 352,
                 },
@@ -142,21 +156,21 @@ class CrossChainBindModal extends Mixin {
                 },
                 {
                   content: 'Jaxx',
-                  style: { left: -100 },
+                  style: { left: -160 },
                   src: Jaxx,
-                  imgWidth: 244,
+                  imgWidth: 352,
                 },
                 {
                   content: 'MyCrypto',
-                  style: { left: -100 },
+                  style: { left: -160 },
                   src: myCrypto,
-                  imgWidth: 244,
+                  imgWidth: 352,
                 },
                 {
                   content: 'Trust',
-                  style: { left: -100 },
+                  style: { left: -160 },
                   src: trust,
-                  imgWidth: 244,
+                  imgWidth: 352,
                 },
                 {
                   content: 'Bitpie',
@@ -166,18 +180,18 @@ class CrossChainBindModal extends Mixin {
                 },
                 {
                   content: 'Coinomi',
-                  style: { left: -100 },
+                  style: { left: -160 },
                   src: coinomi,
-                  imgWidth: 244,
+                  imgWidth: 352,
                 },
               ].map((item, index) => (
-                <a key={index} className={styles.anchor} href={''} rel="noopener noreferrer" target="_blank">
+                <span key={index} className={styles.anchor}>
                   {item.content}
                   <span className={styles.hoverimg} style={item.style}>
                     <img src={item.src} width={item.imgWidth} />
                   </span>
                   、
-                </a>
+                </span>
               ))}{' '}
               等。
             </div>
@@ -189,7 +203,7 @@ class CrossChainBindModal extends Mixin {
     const findOne = show[token];
 
     return (
-      <Modal title={`跨链${token === 'SDOT' ? '映射' : '充值'}（${token}）`}>
+      <Modal title={`跨链${token === 'SDOT' ? '映射' : '充值'}（${token}）`} isOverflow>
         <div className={styles.crossChainBind}>
           {step === 0 ? (
             <div>
@@ -227,6 +241,15 @@ class CrossChainBindModal extends Mixin {
             </div>
           ) : (
             <>
+              {token === 'SDOT' && (
+                <div className={styles.grayblock1}>
+                  <div>
+                    <strong>参与了Polkadot第一期ICO的用户</strong>，可以将锁定的DOT
+                    1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。{' '}
+                    <RouterGo isOutSide>点击查看参与用户地址列表</RouterGo>
+                  </div>
+                </div>
+              )}
               <div className={styles.desc}>
                 <div />
                 {findOne.desc1}
@@ -262,7 +285,7 @@ class CrossChainBindModal extends Mixin {
                       rows={2}
                       value={tradeId}
                       errMsg={tradeIdErrMsg}
-                      placeholder={'输入交易ID'}
+                      placeholder={'0x002a3bfcf910ed48c3837c7293062caee146bb72ca1cfd0bd398315e3a07ce79'}
                       onChange={value => {
                         this.setState({
                           tradeId: value,
