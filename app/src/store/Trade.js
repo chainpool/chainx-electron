@@ -132,32 +132,34 @@ export default class Trade extends ModelExtend {
   };
 
   getFillAccountOrder = async ({ accountId, index }) => {
-    const res = await getFillOrdersApi({ accountId, index });
+    let res = await getFillOrdersApi({ accountId, index });
     if (res && res.length) {
       console.log(res, '--------------res');
     }
-    const data = new Array(4).fill().map(() => ({
-      id: 1,
-      pairid: 0,
-      price: 1000,
-      maker_user: '',
-      taker_user: '',
-      maker_user_order_index: '',
-      taker_user_order_index: '',
-      amount: 3000,
-      time: Date.now(),
-    }));
+    res = (res || []).map((item = {}) => {
+      const filterPair = this.getPair({ id: String(item.pairid) });
+      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      const amountShow = this.setPrecision(item.amount, filterPair.assets);
+      return {
+        ...item,
+        priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+        maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
+        amountShow,
+        totalShow: showUnit(this.setPrecision(item.price * amountShow, filterPair.precision)),
+        filterPair,
+      };
+    });
     const list = this.entrustOrderList.map(item => {
       if (item.index === index) {
         return {
           ...item,
-          ...(res && res.length ? { expand: res } : { expand: data }),
+          expand: res,
         };
       }
       return item;
     });
     this.changeModel('entrustOrderList', list);
-    return data;
+    return res;
   };
 
   getQuotations = async () => {

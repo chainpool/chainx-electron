@@ -62,7 +62,7 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: `实际成交/成交率`,
           dataIndex: 'hasfillAmountShow',
-          render: (value, item) => setBlankSpace(value, item.hasfillAmountPercent),
+          render: (value, item) => setBlankSpace(value, `(${item.hasfillAmountPercent})`),
         },
         {
           width: 50,

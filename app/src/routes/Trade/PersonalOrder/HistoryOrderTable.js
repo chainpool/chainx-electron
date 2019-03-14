@@ -93,9 +93,9 @@ class HistoryOrderTable extends SwitchPair {
             render: (value, item) => setBlankSpace(value, item.filterPair.assets),
           },
           {
-            title: `实际成交/成交率`,
+            title: `成交量/成交率`,
             dataIndex: 'hasfillAmountShow',
-            render: (value, item) => setBlankSpace(value, item.hasfillAmountPercent),
+            render: (value, item) => setBlankSpace(value, `(${item.hasfillAmountPercent})`),
           },
           {
             title: `成交均价`,
@@ -151,34 +151,34 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '对手方',
                 width: 200,
-                dataIndex: 'taker_user',
+                dataIndex: 'maker_userShow',
                 render: value => {
                   return <div className={styles.otherFace}>对手方：{value}</div>;
                 },
               },
               {
-                title: 'wu',
-                dataIndex: '_action',
+                title: 'none',
               },
               {
-                title: 'wu',
-                dataIndex: '_action',
+                title: 'none',
               },
               {
-                title: 'wu',
-                dataIndex: '_action',
+                title: 'none',
               },
               {
                 title: '成交量',
-                dataIndex: 'amount',
+                dataIndex: 'amountShow',
+                render: (value, item) => setBlankSpace(value, item.filterPair.assets),
               },
               {
                 title: '成交均价',
-                dataIndex: 'price',
+                dataIndex: 'priceShow',
+                render: (value, item) => setBlankSpace(value, item.filterPair.currency),
               },
               {
-                title: '成交总额(BTC)',
-                dataIndex: 'amount',
+                title: '成交总额',
+                dataIndex: 'totalShow',
+                render: (value, item) => setBlankSpace(value, item.filterPair.currency),
               },
               {
                 title: '',
