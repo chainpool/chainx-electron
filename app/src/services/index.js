@@ -101,6 +101,15 @@ export const getOrdersApi = payload => {
   });
 };
 
+export const getFillOrdersApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `${API}/trade/userorders/${accountId}`,
+    method: 'get',
+    ...payload,
+  });
+};
+
 export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...payload);
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);

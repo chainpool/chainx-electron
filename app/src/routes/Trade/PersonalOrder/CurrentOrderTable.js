@@ -6,32 +6,15 @@ import { observer, setBlankSpace } from '../../../utils';
 
 @observer
 class CurrentOrderTable extends SwitchPair {
-  state = {};
-
-  startInit = () => {
-    this.getAccountOrder();
-  };
-
-  getAccountOrder = () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-    dispatch({
-      type: 'getAccountOrder',
-    }).then(() => {
-      this.fetchPoll(this.getAccountOrder);
-    });
-  };
-
   render() {
     const {
       model: {
         openModal,
         dispatch,
-        currentOrderList = [],
         loading: { cancelOrder },
       },
       noDataTip,
+      currentOrderList = [],
     } = this.props;
     const tableProps = {
       noDataTip,

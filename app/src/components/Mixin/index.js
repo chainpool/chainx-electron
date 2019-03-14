@@ -20,7 +20,6 @@ class Mixin extends React.Component {
       location: { search },
       globalStore: { dispatch: dispatchGlobal },
     } = this.props;
-
     if (!_.isEqual(searchPrev, search)) {
       dispatchGlobal({
         type: 'setHistory',
@@ -31,6 +30,7 @@ class Mixin extends React.Component {
       _.isFunction(this.startInit) && this.startInit();
       _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
+    _.isFunction(this.componentUpdate) && this.componentUpdate(prevProps);
   }
 
   componentWillUnmount() {

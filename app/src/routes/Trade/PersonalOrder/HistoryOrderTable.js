@@ -1,67 +1,119 @@
 import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
-import { observer } from '../../../utils';
+import { _, observer, setBlankSpace } from '../../../utils';
 
 import * as styles from './index.less';
-import { Table } from '../../../components';
+import { Icon, Table } from '../../../components';
 
 @observer
 class HistoryOrderTable extends SwitchPair {
-  state = {};
+  constructor(props) {
+    super(props);
+    const { historyOrderList = [] } = props;
+    this.state = {
+      historyOrderList,
+    };
+  }
 
   startInit = () => {};
 
+  componentUpdate = prevProps => {
+    const { historyOrderList: prevHistoryOrderList } = prevProps;
+    const { historyOrderList } = this.props;
+    if (!_.isEqual(prevHistoryOrderList, historyOrderList)) {
+      this.changeState({
+        historyOrderList,
+      });
+    }
+  };
+
+  changeExpandIsOpen = index => {
+    const { historyOrderList = [] } = this.state;
+    const list = historyOrderList.map((item = {}) => {
+      if (item.index === index) {
+        return {
+          ...item,
+          expandIsOpen: !item.expandIsOpen,
+        };
+      }
+      return item;
+    });
+    this.changeState({
+      historyOrderList: list,
+    });
+  };
+
   render() {
+    const { changeExpandIsOpen } = this;
+    const { historyOrderList } = this.state;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
       columns: [
         {
           title: '时间',
-          dataIndex: 'data1',
+          dataIndex: 'createTimeShow',
         },
         {
-          title: '本链交易ID',
-          dataIndex: 'data2',
+          title: '委托编号',
+          ellipse: true,
+          dataIndex: 'index',
+        },
+        {
+          title: '交易对',
+          width: 100,
+          dataIndex: 'createTimeShow',
+          render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
         },
         {
           title: '方向',
-          width: 80,
-          dataIndex: 'data3',
+          width: 100,
+          dataIndex: 'direction',
+          render: value =>
+            value === 'Buy' ? <span className={'green'}>买入</span> : <span className={'red'}>卖出</span>,
         },
         {
-          title: '委托价格(BTC)',
-          dataIndex: 'data4',
+          title: `委托价格`,
+          dataIndex: 'priceShow',
+          render: (value, item) => setBlankSpace(value, item.filterPair.currency),
         },
         {
-          title: '委托数量(PCX)',
-          dataIndex: 'data5',
+          title: `委托数量`,
+          dataIndex: 'amountShow',
+          render: (value, item) => setBlankSpace(value, item.filterPair.assets),
         },
         {
-          title: '成交量(PCX)',
-          dataIndex: 'data5',
+          title: `实际成交/成交率`,
+          dataIndex: 'hasfillAmountShow',
+          render: (value, item) => setBlankSpace(value, item.hasfillAmountPercent),
         },
         {
-          title: '成交均价(BTC)',
-          dataIndex: 'data6',
+          title: `成交均价`,
+          dataIndex: '',
         },
         {
-          title: '成交总额(BTC)',
-          dataIndex: 'data7',
-        },
-        {
-          title: '',
-          width: 80,
-          dataIndex: '_action',
+          title: `成交总额`,
+          dataIndex: '',
         },
         {
           width: 50,
           title: '',
           dataIndex: '_action',
-          render: () => <span className="blue">撤销</span>,
+          render: (value, item) => (
+            <span
+              onClick={() => {
+                changeExpandIsOpen(item.index);
+              }}>
+              <Icon name={item.expandIsOpen ? 'triangle-bottom' : 'triangle-top'} className={styles.pull} />
+            </span>
+          ),
         },
       ],
-      dataSource: [],
+
+      dataSource: historyOrderList.map(item => ({
+        ...item,
+        expand: [{}, {}, {}],
+      })),
       noDataTip: this.props.noDataTip,
       expandedRowRender: item => {
         const props = {
@@ -110,7 +162,6 @@ class HistoryOrderTable extends SwitchPair {
               width: 50,
               title: '',
               dataIndex: '_action',
-              render: () => <span className="blue">子表格</span>,
             },
           ],
           dataSource: item.expand.map(() => ({

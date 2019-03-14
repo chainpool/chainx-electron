@@ -10,11 +10,29 @@ import HistoryOrderTable from './HistoryOrderTable';
 @Inject(({ tradeStore: model }) => ({ model }))
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 0,
+    activeIndex: 1,
+  };
+
+  startInit = () => {
+    this.getAccountOrder();
+  };
+
+  getAccountOrder = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getAccountOrder',
+    }).then(() => {
+      this.fetchPoll(this.getAccountOrder);
+    });
   };
 
   render() {
     const { activeIndex } = this.state;
+    const {
+      model: { currentOrderList = [], historyOrderList = [] },
+    } = this.props;
     const props = {
       ...this.props,
       noDataTip: () => {
@@ -37,11 +55,15 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={['当前委托']}
+            tabs={['当前委托', '历史委托']}
             className={styles.tab}
           />
         </div>
-        {activeIndex ? <HistoryOrderTable {...props} /> : <CurrentOrderTable {...props} />}
+        {activeIndex ? (
+          <HistoryOrderTable {...props} historyOrderList={historyOrderList} />
+        ) : (
+          <CurrentOrderTable currentOrderList={currentOrderList} {...props} />
+        )}
       </div>
     );
   }

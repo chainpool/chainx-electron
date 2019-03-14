@@ -28,6 +28,7 @@ export default class Trade extends ModelExtend {
   @observable buyList = [];
   @observable sellList = [];
   @observable currentOrderList = [];
+  @observable historyOrderList = [];
 
   reload = () => {
     clearTimeout(this.interval);
@@ -70,26 +71,28 @@ export default class Trade extends ModelExtend {
       /*await getOrders(account.address, 0, 100)*/
       const res = { data: reflectData };
       if (res && res.data) {
+        const result = res.data.map((item = {}) => {
+          const filterPair = this.getPair({ id: String(item.pair) });
+
+          const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+          return {
+            ...item,
+            createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
+            priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+            amountShow: this.setPrecision(item.amount, filterPair.assets),
+            hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
+            hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
+            reserveLastShow: this.setPrecision(
+              item.reserveLast,
+              item.direction === 'Buy' ? filterPair.currency : filterPair.assets
+            ),
+            filterPair,
+          };
+        });
         this.changeModel(
           {
-            currentOrderList: res.data.map((item = {}) => {
-              const filterPair = this.getPair({ id: String(item.pair) });
-
-              const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-              return {
-                ...item,
-                createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
-                priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
-                amountShow: this.setPrecision(item.amount, filterPair.assets),
-                hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
-                hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
-                reserveLastShow: this.setPrecision(
-                  item.reserveLast,
-                  item.direction === 'Buy' ? filterPair.currency : filterPair.assets
-                ),
-                filterPair,
-              };
-            }),
+            currentOrderList: result,
+            historyOrderList: result,
           },
           []
         );
