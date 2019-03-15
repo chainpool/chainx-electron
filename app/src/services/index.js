@@ -119,6 +119,15 @@ export const getLatestOrderApi = payload => {
   });
 };
 
+export const getKlineApi = payload => {
+  const { pairid, type, start_date, end_date } = payload;
+  return fetchFromHttp({
+    url: `${API}/kline?pairid=${pairid}&type=${type}&start_date=${start_date}&end_date=${end_date}`,
+    method: 'get',
+    ...payload,
+  });
+};
+
 export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...payload);
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);

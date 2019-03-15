@@ -8,6 +8,7 @@ import {
   getOrdersApi,
   getLatestOrderApi,
   getFillOrdersApi,
+  getKlineApi,
 } from '../services';
 
 export default class Trade extends ModelExtend {
@@ -64,6 +65,20 @@ export default class Trade extends ModelExtend {
       const m = String(value).match(re);
       return m ? m[1] : 0;
     };
+  };
+
+  getKline = async ({ interval, startTime, endTime }) => {
+    const currentPair = this.currentPair;
+    let res = await getKlineApi({
+      pairid: currentPair.id,
+      type: interval,
+      start_date: startTime,
+      end_date: endTime,
+    });
+    // res=res.map((item={})=>({
+    //
+    // }))
+    return res;
   };
 
   getLatestOrder = async () => {

@@ -24,7 +24,10 @@ class HistoryOrderTable extends SwitchPair {
     if (!_.isEqual(prevHistoryOrderList, historyOrderList)) {
       this.changeState({
         historyOrderList: historyOrderList.map((item = {}) => {
-          const findOne = stateHistoryOrderList.filter((one = {}) => one.index === item.index)[0] || {};
+          const findOne =
+            stateHistoryOrderList.filter(
+              (one = {}) => one.index === item.index && one.accountid === item.accountid
+            )[0] || {};
           return {
             ...findOne,
             ...item,

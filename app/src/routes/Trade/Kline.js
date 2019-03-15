@@ -12,6 +12,9 @@ class Kline extends SwitchPair {
   };
 
   startKline = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
     const TradingView = window.TradingView;
     const tradeView = document.getElementById('tradeView');
     if (!tradeView) return;
@@ -77,36 +80,20 @@ class Kline extends SwitchPair {
         getBars: (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest = true) => {
           const [startTime, endTime] = [String(Math.min(from, to)), String(Math.max(from, to))];
 
-          const getdays = (startTime, endTime, isInclude = false) => {
-            const days = Math.ceil(moment.duration(endTime - startTime).asDays());
-            const daysArray = [];
-            for (let i = 0; i < days - 2; i++) {
-              daysArray.push(startTime + (i + 1) * 1 * 24 * 60 * 60 * 1000);
-            }
-            return daysArray;
-          };
-
-          const periods = getdays(startTime * 1000, endTime * 1000);
-
-          let data = periods.map(item => {
-            const h = _.random(30, 40);
-            const o = _.random(10, 20);
-            const c = _.random(10, 30);
-            const l = _.random(10, 20);
-            const v = _.random(100, 3000);
-            return [item / 1000, o, c, h, l, v];
+          dispatch({
+            type: 'getKline',
+            payload: {
+              interval: 60,
+              startTime: startTime * 1000,
+              endTime: endTime * 1000,
+            },
+          }).then(res => {
+            const data = res.map((item = {}) => ({
+              ...item,
+              volume: _.random(100, 3000),
+            }));
+            onHistoryCallback(data, { noData: true });
           });
-
-          data = data.map(item => ({
-            time: Number(item[0]) * 1000,
-            open: Number(item[1]),
-            close: Number(item[2]),
-            high: Number(item[3]),
-            low: Number(item[4]),
-            volume: Number(item[5]),
-          }));
-
-          onHistoryCallback(data, { noData: true });
         },
         subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {},
         unsubscribeBars(subscriberUID) {},
