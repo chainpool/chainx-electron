@@ -107,9 +107,9 @@ export default class Trade extends ModelExtend {
   getAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
-      const data = await getOrdersApi({
+      const data = (await getOrdersApi({
         accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
-      });
+      })) || { items: [] };
 
       const reflectData = data.items.map((item = {}) => ({
         accountid: item.accountid,
@@ -248,7 +248,7 @@ export default class Trade extends ModelExtend {
   getOrderPairs = async () => {
     const update = async () => {
       const data = await getOrderPairsApi();
-      const reflectData = data
+      const reflectData = (data || [])
         .map((item = {}) => ({
           assets: item.currency_pair[0],
           currency: item.currency_pair[1],
@@ -257,6 +257,8 @@ export default class Trade extends ModelExtend {
           unitPrecision: item.unit_precision,
           online: item.online,
           lastPrice: item.price.last_price,
+          buyPrice: item.handicap.buy,
+          sellPrice: item.handicap.sell,
         }))
         .sort((a, b) => a.id - b.id);
       /*await getOrderPairs()*/
@@ -270,8 +272,8 @@ export default class Trade extends ModelExtend {
           ...item,
           precision,
           lastPriceShow: priceShow(item.lastPrice),
-          maxLastPriceShow: priceShow(item.lastPrice * 1.1),
-          minLastPriceShow: priceShow(item.lastPrice * 0.9),
+          maxLastPriceShow: priceShow(item.sellPrice * 1.1),
+          minLastPriceShow: priceShow(item.buyPrice * 0.9),
         };
       });
       this.changeModel('orderPairs', res, []);

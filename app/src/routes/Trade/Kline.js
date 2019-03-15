@@ -99,7 +99,7 @@ class Kline extends SwitchPair {
               startTime: startTime * 1000,
               endTime: endTime * 1000,
             },
-          }).then(res => {
+          }).then((res = []) => {
             const data = res.map((item = {}) => ({
               ...item,
               volume: _.random(100, 3000),
