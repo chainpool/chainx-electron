@@ -10,7 +10,9 @@ import * as styles from './index.less';
 
 @Inject(({ configureStore: model }) => ({ model }))
 class Configure extends Mixin {
-  startInit = () => {
+  startInit = () => {};
+
+  subscribe = () => {
     const {
       model: { dispatch },
       history: {

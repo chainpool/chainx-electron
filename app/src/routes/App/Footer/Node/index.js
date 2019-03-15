@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
 import { classNames, Inject, moment_helper } from '@utils/index';
+import { parseQueryString } from '../../../../utils';
 
 @Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
 class Node extends Component {
@@ -15,9 +16,21 @@ class Node extends Component {
   async componentDidMount() {
     const {
       chainStore: { dispatch },
+      configureStore: { dispatch: dispatchConfig },
+      history: {
+        location: { search },
+      },
     } = this.props;
     this.subscribeNewHead = await dispatch({
       type: 'subscribeNewHead',
+    });
+
+    const bestNode = parseQueryString(search).bestNode;
+    dispatchConfig({
+      type: 'subscribe',
+      payload: {
+        refresh: !bestNode,
+      },
     });
   }
 
