@@ -92,7 +92,7 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     let res = await getLatestOrderApi({ pairId: currentPair.id });
     // console.log(res, '最新成交');
-    res = res.map((item = {}) => {
+    res = (res || []).map((item = {}) => {
       const filterPair = currentPair;
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
       return {
@@ -187,10 +187,11 @@ export default class Trade extends ModelExtend {
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const count = 10;
-    const data = await getQuotationsApi({
-      pairId: currentPair.id,
-      count,
-    });
+    const data =
+      (await getQuotationsApi({
+        pairId: currentPair.id,
+        count,
+      })) || {};
     const reflectData = { buy: [], sell: [], id: '', piece: '' };
     reflectData.buy = (data.bids || []).reduce((sum, next = {}) => {
       sum.push([next.price, next.amount, next.direction]);

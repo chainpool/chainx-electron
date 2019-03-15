@@ -301,7 +301,7 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }
     .then(res => {
       return res.json();
     })
-    .catch(err => err);
+    .catch(err => console.log(err));
 };
 
 export const isRepeat = arr => {

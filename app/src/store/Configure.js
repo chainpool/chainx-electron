@@ -18,7 +18,7 @@ export default class Configure extends ModelExtend {
 
     this.refreshLocalNodes = () => {
       const nodes = localSave.get('nodes') || [];
-      const findOne = nodes.filter((item = {}) => item.isSystem)[0];
+      const findOne = nodes.filter((item = {}) => item.isSystem && item.Version === 1)[0];
       if (!findOne) {
         localSave.remove('nodes');
       }
@@ -45,6 +45,7 @@ export default class Configure extends ModelExtend {
             best: true,
             address: process.env.CHAINX_NODE_URL,
             isSystem: true,
+            Version: 1,
           },
           {
             type: '系统默认',
@@ -52,18 +53,21 @@ export default class Configure extends ModelExtend {
             address: 'ws://localhost:8097',
             isSystem: true,
             isLocalhost: true,
+            Version: 1,
           },
           {
             type: '系统默认',
             name: 'w1',
             isSystem: true,
             address: 'wss://w1.chainx.org/ws',
+            Version: 1,
           },
           {
             type: '系统默认',
             name: 'w2',
             isSystem: true,
             address: 'wss://w2.chainx.org/ws',
+            Version: 1,
           },
         ]
   );

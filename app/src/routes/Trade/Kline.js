@@ -7,18 +7,18 @@ class Kline extends SwitchPair {
   state = {};
 
   startInit = () => {
-    // const {
-    //   model: { getQueryParams },
-    // } = this.props;
-    // const { id } = getQueryParams();
-    // console.log(id, '-------');
-    // if (this.widget) {
-    //   this.widget.chart().setSymbol(String(id), (...params) => {
-    //     console.log(params, '------');
-    //   });
-    // } else {
-    //   this.startKline();
-    // }
+    const {
+      model: { getQueryParams },
+    } = this.props;
+    const { id } = getQueryParams();
+    console.log(id, '-------');
+    if (this.widget) {
+      this.widget.chart().setSymbol(String(id), (...params) => {
+        console.log(params, '------');
+      });
+    } else {
+      this.startKline();
+    }
     // this.startKline();
   };
 
