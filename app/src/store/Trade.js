@@ -1,4 +1,14 @@
-import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, ChainX } from '../utils';
+import {
+  _,
+  formatNumber,
+  moment_helper,
+  observable,
+  computed,
+  localSave,
+  parseQueryString,
+  ChainX,
+  toJS,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairsApi,
@@ -69,15 +79,12 @@ export default class Trade extends ModelExtend {
 
   getKline = async ({ interval, startTime, endTime }) => {
     const currentPair = this.currentPair;
-    let res = await getKlineApi({
+    const res = await getKlineApi({
       pairid: currentPair.id,
       type: interval,
       start_date: startTime,
       end_date: endTime,
     });
-    // res=res.map((item={})=>({
-    //
-    // }))
     return res;
   };
 
@@ -185,11 +192,11 @@ export default class Trade extends ModelExtend {
       count,
     });
     const reflectData = { buy: [], sell: [], id: '', piece: '' };
-    reflectData.buy = data.bids.reduce((sum, next = {}) => {
+    reflectData.buy = (data.bids || []).reduce((sum, next = {}) => {
       sum.push([next.price, next.amount, next.direction]);
       return sum;
     }, []);
-    reflectData.sell = data.asks.reduce((sum, next = {}) => {
+    reflectData.sell = (data.asks || []).reduce((sum, next = {}) => {
       sum.push([next.price, next.amount, next.direction]);
       return sum;
     }, []);
@@ -289,9 +296,10 @@ export default class Trade extends ModelExtend {
     id = id || parseQueryString(search).id;
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
+    // console.log(toJS(this.orderPairs), toJS(findOne), id, typeof +id, '----');
     if (findOne) {
       currentPair = findOne;
-    } else {
+    } else if (this.orderPairs[0]) {
       currentPair = this.orderPairs[0];
     }
     return {

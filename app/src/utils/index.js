@@ -295,14 +295,13 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }
       if (res.status >= 200 && res.status < 300) {
         return res;
       } else {
-        let error = new Error(res.statusText);
-        error.response = res;
-        throw error;
+        throw new Error(res.statusText);
       }
     })
     .then(res => {
       return res.json();
-    });
+    })
+    .catch(err => err);
 };
 
 export const isRepeat = arr => {

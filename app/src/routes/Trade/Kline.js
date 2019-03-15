@@ -1,14 +1,25 @@
 import React from 'react';
-import moment from 'moment';
 import SwitchPair from './Mixin/SwitchPair';
-import { _ } from '../../utils';
+import { _, toJS } from '../../utils';
 
 import * as styles from './Kline.less';
 class Kline extends SwitchPair {
   state = {};
 
   startInit = () => {
-    this.startKline();
+    // const {
+    //   model: { getQueryParams },
+    // } = this.props;
+    // const { id } = getQueryParams();
+    // console.log(id, '-------');
+    // if (this.widget) {
+    //   this.widget.chart().setSymbol(String(id), (...params) => {
+    //     console.log(params, '------');
+    //   });
+    // } else {
+    //   this.startKline();
+    // }
+    // this.startKline();
   };
 
   startKline = () => {
@@ -37,7 +48,7 @@ class Kline extends SwitchPair {
         'chart_property_page_background',
       ],
       toolbar_bg: 'transparent',
-      symbol: 'Chainx',
+      symbol: '0',
       library_path: '/',
       width: '100%',
       height: '100%',
@@ -72,7 +83,8 @@ class Kline extends SwitchPair {
               has_no_volume: false, //布尔表示商品是否拥有成交量数据
               has_empty_bars: true,
               type: 'stock',
-              supported_resolutions: ['1', '5', '15', '30', '60', '240', 'D', '5D', 'W', 'M'], // 分辨率选择器中启用一个分辨率数组
+              supported_resolutions: ['60'], // 分辨率选择器中启用一个分辨率数组
+              // supported_resolutions: ['1', '5', '15', '30', '60', '240', 'D', '5D', 'W', 'M'], // 分辨率选择器中启用一个分辨率数组
               data_status: 'streaming', //数据状态码。状态显示在图表的右上角。streaming(实时)endofday(已收盘)pulsed(脉冲)
             });
           });

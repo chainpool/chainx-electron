@@ -125,7 +125,7 @@ class CrossChainBindModal extends Mixin {
         desc1: (
           <span>
             使用<strong>支持Data</strong>的以太坊钱包，向任意地址发起任意金额 (建议为0) 的转账交易，并在{' '}
-            <strong>Data</strong> 中输入下方<strong>十六进制 (Hex)</strong> 信息：：
+            <strong>Data</strong> 中输入下方<strong>十六进制 (Hex)</strong> 信息：
           </span>
         ),
         value1: chainxAddressHex,

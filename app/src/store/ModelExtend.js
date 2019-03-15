@@ -81,6 +81,12 @@ export default class ModelExtend {
     };
   };
 
+  getQueryParams = () => {
+    const history = this.getHistory();
+    const { location: { search } = {} } = history;
+    return parseQueryString(search);
+  };
+
   isLogin = () => {
     return !_.isEmpty(this.rootStore.accountStore.currentAccount) || !!this.rootStore.accountStore.accounts.length;
   };
