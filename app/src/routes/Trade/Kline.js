@@ -7,19 +7,19 @@ class Kline extends SwitchPair {
   state = {};
 
   startInit = () => {
+    if (this.widget) {
+      this.widget.chart().setSymbol(this.getId());
+    } else {
+      this.startKline();
+    }
+  };
+
+  getId = () => {
     const {
       model: { getQueryParams },
     } = this.props;
     const { id } = getQueryParams();
-    console.log(id, '-------');
-    if (this.widget) {
-      this.widget.chart().setSymbol(String(id), (...params) => {
-        console.log(params, '------');
-      });
-    } else {
-      this.startKline();
-    }
-    // this.startKline();
+    return id;
   };
 
   startKline = () => {
@@ -48,7 +48,7 @@ class Kline extends SwitchPair {
         'chart_property_page_background',
       ],
       toolbar_bg: 'transparent',
-      symbol: '0',
+      symbol: this.getId(),
       library_path: '/',
       width: '100%',
       height: '100%',
@@ -66,11 +66,11 @@ class Kline extends SwitchPair {
             callback({});
           });
         },
-        searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {},
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
           setTimeout(() => {
             onSymbolResolvedCallback({
-              name: '',
+              name: 'chainX',
+              ticker: symbolName,
               timezone: 'Asia/Shanghai',
               description: '',
               exchange: '', //交易所的略称
@@ -91,7 +91,6 @@ class Kline extends SwitchPair {
         },
         getBars: (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest = true) => {
           const [startTime, endTime] = [String(Math.min(from, to)), String(Math.max(from, to))];
-
           dispatch({
             type: 'getKline',
             payload: {

@@ -8,6 +8,7 @@ import {
   parseQueryString,
   ChainX,
   toJS,
+  generateKlineData,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -85,7 +86,7 @@ export default class Trade extends ModelExtend {
       start_date: startTime,
       end_date: endTime,
     });
-    return res;
+    return generateKlineData(startTime, endTime);
   };
 
   getLatestOrder = async () => {

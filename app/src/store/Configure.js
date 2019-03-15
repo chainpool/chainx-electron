@@ -1,6 +1,6 @@
 import { observable, autorun, localSave, formatNumber, _, fetchFromWs } from '../utils';
 import ModelExtend from './ModelExtend';
-import { NetWork } from '../constants';
+import { NetWork, ConfigureVersion } from '../constants';
 
 export default class Configure extends ModelExtend {
   constructor(rootStore) {
@@ -18,7 +18,7 @@ export default class Configure extends ModelExtend {
 
     this.refreshLocalNodes = () => {
       const nodes = localSave.get('nodes') || [];
-      const findOne = nodes.filter((item = {}) => item.isSystem && item.Version === 3)[0];
+      const findOne = nodes.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
       if (!findOne) {
         localSave.remove('nodes');
       }
@@ -45,7 +45,7 @@ export default class Configure extends ModelExtend {
             best: true,
             address: process.env.CHAINX_NODE_URL,
             isSystem: true,
-            Version: 3,
+            Version: ConfigureVersion,
           },
           {
             type: '系统默认',

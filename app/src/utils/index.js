@@ -317,7 +317,7 @@ export const isRepeat = arr => {
 
 export const generateKlineData = (startTime, endTime) => {
   const getdays = (startTime, endTime, isInclude = false) => {
-    const days = Math.ceil(moment.duration(endTime - startTime).asDays());
+    const days = Math.ceil(moment.moment.duration(endTime - startTime).asDays());
     const daysArray = [];
     for (let i = 0; i < days - 2; i++) {
       daysArray.push(startTime + (i + 1) * 1 * 24 * 60 * 60 * 1000);
@@ -325,7 +325,7 @@ export const generateKlineData = (startTime, endTime) => {
     return daysArray;
   };
 
-  const periods = getdays(startTime * 1000, endTime * 1000);
+  const periods = getdays(startTime, endTime);
 
   let data = periods.map(item => {
     const h = _.random(30, 40);
@@ -344,5 +344,6 @@ export const generateKlineData = (startTime, endTime) => {
     low: Number(item[4]),
     volume: Number(item[5]),
   }));
+
   return data;
 };

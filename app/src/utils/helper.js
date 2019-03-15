@@ -106,4 +106,5 @@ export const moment_helper = {
     return daysArray;
   },
   diff: (a, b = Date.now(), type = 'minutes') => Math.abs(moment(a).diff(b, type)),
+  moment,
 };
