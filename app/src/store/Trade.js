@@ -8,6 +8,7 @@ import {
   parseQueryString,
   ChainX,
   toJS,
+  moment,
   generateKlineData,
 } from '../utils';
 import ModelExtend from './ModelExtend';
@@ -98,6 +99,7 @@ export default class Trade extends ModelExtend {
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
       return {
         ...item,
+        time: moment_helper.format(item['block.time'], 'HH:mm:ss'),
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
       };
@@ -165,6 +167,7 @@ export default class Trade extends ModelExtend {
       const amountShow = this.setPrecision(item.amount, filterPair.assets);
       return {
         ...item,
+        time: moment_helper.formatHMS(item['block.time']),
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
         amountShow,

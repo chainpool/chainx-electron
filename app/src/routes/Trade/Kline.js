@@ -8,8 +8,10 @@ class Kline extends SwitchPair {
 
   startInit = () => {
     if (this.widget) {
+      console.log('hhhhhhh');
       this.widget.chart().setSymbol(this.getId());
     } else {
+      console.log('bbbbbbbb');
       this.startKline();
     }
   };
@@ -30,10 +32,9 @@ class Kline extends SwitchPair {
     const tradeView = document.getElementById('tradeView');
     if (!tradeView) return;
     const widget = new TradingView.widget({
+      enabled_features: ['keep_left_toolbar_visible_on_small_screens', 'hide_left_toolbar_by_default'],
       disabled_features: [
         'volume_force_overlay',
-        'hide_left_toolbar_by_default',
-        //
         'go_to_date',
         'use_localstorage_for_settings',
         'save_chart_properties_to_local_storage',
@@ -43,7 +44,6 @@ class Kline extends SwitchPair {
         'adaptive_logo',
         'show_logo_on_all_charts',
         'display_market_status',
-
         'timeframes_toolbar',
         'chart_property_page_background',
       ],
@@ -52,6 +52,7 @@ class Kline extends SwitchPair {
       library_path: '/',
       width: '100%',
       height: '100%',
+      autosize: false,
       timezone: 'Asia/Hong_Kong',
       custom_css_url: '/override.css',
       container_id: 'tradeView',
@@ -113,8 +114,6 @@ class Kline extends SwitchPair {
     widget.onChartReady(() => {
       if (widget) {
         this.widget = widget;
-        this.changeState({ loaded: true });
-        // this.widget.chart().executeActionById('drawingToolbarAction');
         this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
           'Plot.color': '#684A95',
         });

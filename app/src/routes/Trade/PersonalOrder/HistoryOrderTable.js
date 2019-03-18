@@ -125,7 +125,7 @@ class HistoryOrderTable extends SwitchPair {
                   });
                 }}>
                 <Icon
-                  name={item.expandIsOpen && item.expand && item.expand.length ? 'triangle-bottom' : 'triangle-top'}
+                  name={item.expandIsOpen && item.expand && item.expand.length ? 'triangle-top' : 'triangle-bottom'}
                   className={styles.pull}
                 />
               </span>
