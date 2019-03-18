@@ -18,6 +18,7 @@ import {
   getQuotations,
   putOrder,
   cancelOrder,
+  getOrders,
   getOrdersApi,
   getLatestOrderApi,
   getFillOrdersApi,
@@ -114,49 +115,67 @@ export default class Trade extends ModelExtend {
   getAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
-      const data = (await getOrdersApi({
-        accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
-      })) || { items: [] };
+      combineLatest(
+        getOrders(account.address, 0, 100),
+        getOrdersApi({
+          accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
+        })
+      )
+        .pipe(startWith([{ data: [] }, { items: [] }]))
+        .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+          const dataRpc = resRpc.data.map((item = {}) => ({
+            accountid: item.props[0],
+            index: item.props[5],
+            pair: item.props[1],
+            createTime: item.props[7],
+            amount: item.props[4],
+            price: item.props[3],
+            hasfillAmount: '',
+            reserveLast: '',
+            direction: item.props[2],
+            status: '',
+          }));
 
-      const reflectData = data.items.map((item = {}) => ({
-        accountid: item.accountid,
-        index: item.id,
-        pair: item.pairid,
-        createTime: item['block.time'],
-        amount: item.amount,
-        price: item.price,
-        hasfillAmount: item.hasfill_amount,
-        reserveLast: item.reserve_last,
-        direction: item.direction,
-        status: item.status,
-      }));
-      /*await getOrders(account.address, 0, 100)*/
-      const res = { data: reflectData };
-      if (res && res.data) {
-        const result = res.data.map((item = {}) => {
-          const filterPair = this.getPair({ id: String(item.pair) });
-          const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-          return {
-            ...item,
-            createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
-            priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
-            amountShow: this.setPrecision(item.amount, filterPair.assets),
-            hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
-            hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
-            reserveLastShow: this.setPrecision(
-              item.reserveLast,
-              item.direction === 'Buy' ? filterPair.currency : filterPair.assets
-            ),
-            filterPair,
-          };
+          const dataApi = resApi.items.map((item = {}) => ({
+            accountid: item.accountid,
+            index: item.id,
+            pair: item.pairid,
+            createTime: item['block.time'],
+            amount: item.amount,
+            price: item.price,
+            hasfillAmount: item.hasfill_amount,
+            reserveLast: item.reserve_last,
+            direction: item.direction,
+            status: item.status,
+          }));
+
+          const data = _.unionBy(dataRpc.concat(dataApi), 'index');
+          if (data) {
+            const result = data.map((item = {}) => {
+              const filterPair = this.getPair({ id: String(item.pair) });
+              const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+              return {
+                ...item,
+                createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
+                priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+                amountShow: this.setPrecision(item.amount, filterPair.assets),
+                hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
+                hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
+                reserveLastShow: this.setPrecision(
+                  item.reserveLast,
+                  item.direction === 'Buy' ? filterPair.currency : filterPair.assets
+                ),
+                filterPair,
+              };
+            });
+            this.changeModel(
+              {
+                entrustOrderList: result,
+              },
+              []
+            );
+          }
         });
-        this.changeModel(
-          {
-            entrustOrderList: result,
-          },
-          []
-        );
-      }
     }
   };
 
@@ -239,9 +258,7 @@ export default class Trade extends ModelExtend {
 
         res.buy = _.orderBy(res.buy, (item = []) => item.price, ['desc']);
         res.sell = _.orderBy(res.sell, (item = []) => item.price, ['desc']);
-
-        console.log(res, '-----------盘口列表');
-
+        //console.log(res, '-----------盘口列表');
         const formatList = (list, action) => {
           const filterPair = currentPair;
           const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
@@ -279,20 +296,6 @@ export default class Trade extends ModelExtend {
 
   getOrderPairs = async () => {
     const update = async () => {
-      const data = await getOrderPairsApi();
-      const reflectData = (data || [])
-        .map((item = {}) => ({
-          assets: item.currency_pair[0],
-          currency: item.currency_pair[1],
-          id: item.pairid,
-          precision: item.precision,
-          unitPrecision: item.unit_precision,
-          online: item.online,
-          lastPrice: item.price.last_price,
-          buyPrice: item.handicap.buy,
-          sellPrice: item.handicap.sell,
-        }))
-        .sort((a, b) => a.id - b.id);
       /*await getOrderPairs()*/
       let res = await getOrderPairs();
       res = (res || []).sort((a, b) => a.id - b.id);
