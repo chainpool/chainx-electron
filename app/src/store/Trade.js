@@ -196,7 +196,7 @@ export default class Trade extends ModelExtend {
     const currentPair = this.currentPair;
     const count = 10;
 
-    combineLatest(
+    return combineLatest(
       getQuotations(currentPair.id, [0, count]),
       getQuotationsApi({
         pairId: currentPair.id,

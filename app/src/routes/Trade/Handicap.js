@@ -14,15 +14,20 @@ class Handicap extends SwitchPair {
     this.getQuotations();
   };
 
-  getQuotations = () => {
+  getQuotations = async () => {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({
+    this.subscribeQuotations = await dispatch({
       type: 'getQuotations',
-    }).then(() => {
+    }).then(res => {
       this.fetchPoll(this.getQuotations);
+      return res;
     });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeQuotations.unsubscribe();
   };
 
   render() {
