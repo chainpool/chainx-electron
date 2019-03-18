@@ -56,7 +56,7 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={TradeVersion ? ['当前委托', '历史委托'] : ['当前委托']}
+            tabs={TradeVersion && false ? ['当前委托', '历史委托'] : ['当前委托']}
             className={styles.tab}
           />
         </div>

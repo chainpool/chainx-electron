@@ -87,7 +87,8 @@ export default class Trade extends ModelExtend {
       start_date: startTime,
       end_date: endTime,
     });
-    return generateKlineData(startTime, endTime);
+    return res;
+    //return generateKlineData(startTime, endTime);
   };
 
   getLatestOrder = async () => {

@@ -1,8 +1,35 @@
 @import './Mixin/common.less';
 .kline {
+  position:relative;
   height:100%;
+  width:100%;
+  .tools{
+    display: flex;
+    align-items: center;
+    padding:0 10px;
+    height:30px;
+    ul{
+      display: flex;
+      li+li{
+        margin-left: 6px;
+      }
+      li{
+        &.active{
+          background: #e1eaf8;
+          color:@fontgray;
+        }
+        cursor: pointer;
+        padding:3px 6px;
+        border-radius: 1px;
+        color: #9ca8c1;
+        font-size: 12px;
+      }
+    }
+  }
 }
 
 .tradeView {
-  height: 100%;
+  // border:1px solid red;
+  position:absolute;
+  width:100%;
 }
