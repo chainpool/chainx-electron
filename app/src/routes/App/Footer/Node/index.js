@@ -25,13 +25,13 @@ class Node extends Component {
       type: 'subscribeNewHead',
     });
 
-    const bestNode = parseQueryString(search).bestNode;
-    dispatchConfig({
-      type: 'subscribe',
-      payload: {
-        refresh: !bestNode,
-      },
-    });
+    // const bestNode = parseQueryString(search).bestNode;
+    // dispatchConfig({
+    //   type: 'subscribe',
+    //   payload: {
+    //     refresh: !bestNode,
+    //   },
+    // });
   }
 
   componentWillUnmount() {

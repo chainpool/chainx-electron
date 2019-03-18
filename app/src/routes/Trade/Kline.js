@@ -203,6 +203,7 @@ class Kline extends SwitchPair {
                 className={interval === item.value ? styles.active : null}
                 key={index}
                 onClick={() => {
+                  if (!this.widget) return;
                   this.setState({
                     interval: item.value,
                   });
