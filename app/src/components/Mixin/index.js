@@ -48,6 +48,7 @@ class Mixin extends React.Component {
   };
 
   fetchPoll = callback => {
+    return false;
     clearTimeout(this.interval);
     if (!this._isMounted) return;
     if (_.isFunction(callback)) {

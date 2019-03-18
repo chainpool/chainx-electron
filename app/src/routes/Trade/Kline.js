@@ -22,7 +22,6 @@ class Kline extends SwitchPair {
     this.state = {
       interval: this.getDefaultInterval(),
     };
-    console.log(this.getDefaultInterval());
   }
 
   startInit = () => {

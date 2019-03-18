@@ -8,13 +8,14 @@ import {
   parseQueryString,
   ChainX,
   toJS,
-  moment,
   generateKlineData,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
+  getOrderPairs,
   getOrderPairsApi,
   getQuotationsApi,
+  getQuotations,
   putOrder,
   cancelOrder,
   getOrdersApi,
@@ -22,6 +23,8 @@ import {
   getFillOrdersApi,
   getKlineApi,
 } from '../services';
+import { from, combineLatest } from 'rxjs';
+import { map, tap, takeWhile, startWith } from 'rxjs/operators';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -192,62 +195,86 @@ export default class Trade extends ModelExtend {
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const count = 10;
-    const data =
-      (await getQuotationsApi({
+
+    combineLatest(
+      getQuotations(currentPair.id, [0, count]),
+      getQuotationsApi({
         pairId: currentPair.id,
         count,
-      })) || {};
-    const reflectData = { buy: [], sell: [], id: '', piece: '' };
-    reflectData.buy = (data.bids || []).reduce((sum, next = {}) => {
-      sum.push([next.price, next.amount, next.direction]);
-      return sum;
-    }, []);
-    reflectData.sell = (data.asks || []).reduce((sum, next = {}) => {
-      sum.push([next.price, next.amount, next.direction]);
-      return sum;
-    }, []);
-    reflectData.id = currentPair.id;
-    reflectData.piece = count;
-    /*await getQuotations(currentPair.id, [0, 10])*/
-    const res = reflectData;
-    // console.log(res, '-----------盘口列表');
-    // res.buy = new Array(14).fill().map((item, index) => [30000 + index, 80000 + index, 'Sell']);
-    // res.sell = new Array(14).fill().map((item, index) => [20000 + index, 70000 + index, 'Buy']);
-    res.buy = _.orderBy(res.buy, (item = []) => item[0], ['desc']);
-    res.sell = _.orderBy(res.sell, (item = []) => item[0], ['desc']);
+      })
+    )
+      .pipe(startWith([{ buy: [], sell: [] }, { bids: [], asks: [] }]))
+      .subscribe(([resRpc = { buy: [], sell: [] }, resApi = { bids: [], asks: [] }]) => {
+        const [dataRpc, dataApi, common] = [
+          {},
+          {},
+          {
+            id: currentPair.id,
+            piece: count,
+          },
+        ];
 
-    const formatList = (list, action) => {
-      const filterPair = currentPair;
-      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-      return list.map((item = [], index) => {
-        let totalAmount = 0;
-        if (action === 'sell') {
-          totalAmount = list.slice(index, list.length).reduce((sum, item = []) => sum + item[1], 0);
-        } else {
-          totalAmount = list.slice(0, index + 1).reduce((sum, item = []) => sum + item[1], 0);
-        }
-        return {
-          priceShow: showUnit(this.setPrecision(item[0], filterPair.precision)),
-          amountShow: this.setPrecision(item[1], filterPair.assets),
-          id: item.id,
-          piece: item.piece,
-          totalAmountShow: this.setPrecision(totalAmount, filterPair.assets),
-          direction: item[2],
+        dataRpc.buy = resRpc.buy.map((item = []) => ({ price: item[0], amount: item[1], direction: 'Buy', ...common }));
+        dataRpc.sell = resRpc.sell.map((item = []) => ({
+          price: item[0],
+          amount: item[1],
+          direction: 'Sell',
+          ...common,
+        }));
+
+        dataApi.buy = resApi.bids.reduce((sum, next = {}) => {
+          sum.push({ price: next.price, amount: next.amount, direction: next.direction, ...common });
+          return sum;
+        }, []);
+        dataApi.sell = resApi.asks.reduce((sum, next = {}) => {
+          sum.push({ price: next.price, amount: next.amount, direction: next.direction, ...common });
+          return sum;
+        }, []);
+        const buy = _.unionBy(dataRpc.buy.concat(dataApi.buy), 'price');
+        const sell = _.unionBy(dataRpc.sell.concat(dataApi.sell), 'price');
+        const res = {
+          buy,
+          sell,
         };
+
+        res.buy = _.orderBy(res.buy, (item = []) => item.price, ['desc']);
+        res.sell = _.orderBy(res.sell, (item = []) => item.price, ['desc']);
+
+        console.log(res, '-----------盘口列表');
+
+        const formatList = (list, action) => {
+          const filterPair = currentPair;
+          const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+          return list.map((item = [], index) => {
+            let totalAmount = 0;
+            if (action === 'sell') {
+              totalAmount = list.slice(index, list.length).reduce((sum, item = []) => sum + item.amount, 0);
+            } else {
+              totalAmount = list.slice(0, index + 1).reduce((sum, item = []) => sum + item.amount, 0);
+            }
+            return {
+              priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+              amountShow: this.setPrecision(item.amount, filterPair.assets),
+              id: item.id,
+              piece: item.piece,
+              totalAmountShow: this.setPrecision(totalAmount, filterPair.assets),
+              direction: item.direction,
+            };
+          });
+        };
+        if (res) {
+          let { buy: buyList = [], sell: sellList = [] } = res;
+          buyList = formatList(buyList, 'buy');
+          sellList = formatList(sellList, 'sell');
+          this.changeModel(
+            {
+              buyList,
+              sellList,
+            },
+            []
+          );
+        }
       });
-    };
-    if (res) {
-      let { buy: buyList = [], sell: sellList = [] } = res;
-      buyList = formatList(buyList, 'buy');
-      sellList = formatList(sellList, 'sell');
-      this.changeModel(
-        {
-          buyList,
-          sellList,
-        },
-        []
-      );
-    }
   };
 
   getOrderPairs = async () => {
@@ -267,7 +294,8 @@ export default class Trade extends ModelExtend {
         }))
         .sort((a, b) => a.id - b.id);
       /*await getOrderPairs()*/
-      let res = reflectData;
+      let res = await getOrderPairs();
+      res = (res || []).sort((a, b) => a.id - b.id);
       res = res.map((item = {}) => {
         const precision = item.precision;
         const priceShow = price =>
@@ -277,8 +305,8 @@ export default class Trade extends ModelExtend {
           ...item,
           precision,
           lastPriceShow: priceShow(item.lastPrice),
-          maxLastPriceShow: priceShow(item.sellPrice * 1.1),
-          minLastPriceShow: priceShow(item.buyPrice * 0.9),
+          maxLastPriceShow: priceShow(item.sellOne * 1.1),
+          minLastPriceShow: priceShow(item.buyOne * 0.9),
         };
       });
       this.changeModel('orderPairs', res, []);
