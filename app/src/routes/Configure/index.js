@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Input, Icon, Mixin } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
-import { Inject, parseQueryString } from '../../utils';
+import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
 import ApiManageTable from './ApiManageTable';
 import OperationApiModal from './Modal/OperationApiModal';
@@ -10,27 +10,6 @@ import * as styles from './index.less';
 
 @Inject(({ configureStore: model }) => ({ model }))
 class Configure extends Mixin {
-  startInit = () => {
-    this.subscribe();
-  };
-
-  subscribe = () => {
-    const {
-      model: { dispatch },
-      history: {
-        location: { search },
-      },
-    } = this.props;
-    const bestNode = parseQueryString(search).bestNode;
-    dispatch({
-      type: 'subscribeNodeOrApi',
-      payload: {
-        refresh: !bestNode,
-        target: 'Node',
-      },
-    });
-  };
-
   render() {
     const {
       model: { netWork = [], currentNetWork = {}, dispatch, openModal },

@@ -1,10 +1,30 @@
 import React, { Component } from 'react';
-import { observer, setColumnsWidth } from '../../utils';
+import { observer, parseQueryString, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button, ButtonGroup } from '../../components';
+import { Table, Button, ButtonGroup, Mixin } from '../../components';
 
 @observer
-class ApiManageTable extends Component {
+class ApiManageTable extends Mixin {
+  startInit = () => {
+    this.subscribe();
+  };
+
+  subscribe = () => {
+    const {
+      model: { dispatch },
+      history: {
+        location: { search },
+      },
+    } = this.props;
+    const bestNode = parseQueryString(search).bestNode;
+    dispatch({
+      type: 'subscribeNodeOrApi',
+      payload: {
+        refresh: !bestNode,
+        target: 'Api',
+      },
+    });
+  };
   render() {
     const {
       model: { api = [], openModal, dispatch },

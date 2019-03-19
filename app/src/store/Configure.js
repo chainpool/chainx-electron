@@ -134,29 +134,17 @@ export default class Configure extends ModelExtend {
     const list = target === 'Node' ? this.nodes : this.api;
     this.resetNodesOrApi(target);
     const changeNodesOrApi = (ins, key, value = '') => {
-      if (target === 'Node') {
-        this.changeModel(
-          'nodes',
-          this.nodes.map((item, index) => {
-            if (index !== ins) return item;
-            return {
-              ...item,
-              [key]: value,
-            };
-          })
-        );
-      } else {
-        this.changeModel(
-          'api',
-          this.api.map((item, index) => {
-            if (index !== ins) return item;
-            return {
-              ...item,
-              [key]: value,
-            };
-          })
-        );
-      }
+      const data = target === 'Node' ? this.nodes : this.api;
+      this.changeModel(
+        target === 'Node' ? 'nodes' : 'api',
+        data.map((item, index) => {
+          if (index !== ins) return item;
+          return {
+            ...item,
+            [key]: value,
+          };
+        })
+      );
     };
 
     const fetchSystemPeers = url => {
@@ -207,26 +195,25 @@ export default class Configure extends ModelExtend {
     };
 
     for (let i = 0; i < list.length; i++) {
-      const getIntentions = async () => {
-        const startTime = Date.now();
-        const res = await fetchSystemPeers(list[i].address);
-        const endTime = Date.now();
-        if (res && res.length) {
-          changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
-          changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
-        }
-      };
-
-      const getBlockNumber = () => {
-        this.getBestNodeNumber(list[i].address).then(res => {
-          if (res) {
-            changeNodesOrApi(i, 'block', res);
-            caculatePercent();
-          }
-        });
-      };
-
       if (target === 'Node') {
+        const getIntentions = async () => {
+          const startTime = Date.now();
+          const res = await fetchSystemPeers(list[i].address);
+          const endTime = Date.now();
+          if (res && res.length) {
+            changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
+            changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
+          }
+        };
+
+        const getBlockNumber = () => {
+          this.getBestNodeNumber(list[i].address).then(res => {
+            if (res) {
+              changeNodesOrApi(i, 'block', res);
+              caculatePercent();
+            }
+          });
+        };
         getIntentions();
         getBlockNumber();
       } else {
@@ -237,7 +224,7 @@ export default class Configure extends ModelExtend {
 
   updateNodeOrApi = ({ action, ...rest }) => {
     const { name, address, index, target } = rest;
-    if (target !== 'Node' || target !== 'Api') {
+    if (target !== 'Node' && target !== 'Api') {
       throw new Error('增删该查target必须时Node或Api');
     }
     const list = target === 'Node' ? [...this.nodes] : [...this.api];
