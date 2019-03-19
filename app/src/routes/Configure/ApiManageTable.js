@@ -7,7 +7,7 @@ import { Table, Button, ButtonGroup } from '../../components';
 class ApiManageTable extends Component {
   render() {
     const {
-      model: { openModal, dispatch },
+      model: { api = [], openModal, dispatch },
       widths = [],
     } = this.props;
 
@@ -17,67 +17,88 @@ class ApiManageTable extends Component {
         [
           {
             title: '类别',
-            dataIndex: 'data1',
+            dataIndex: 'type',
           },
           {
             title: '名称',
-            dataIndex: 'data2',
+            dataIndex: 'name',
           },
           {
             title: 'API地址',
-            dataIndex: 'data3',
+            dataIndex: 'address',
           },
           {
             title: '网络延迟',
-            dataIndex: 'data4',
+            dataIndex: 'delay',
+            render: value => <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>,
           },
           {
             title: '同步状态',
-            dataIndex: 'data6',
+            dataIndex: 'syncStatus',
+            render: value => <span className={value !== '100.00%' ? 'red' : null}>{value}</span>,
           },
           {
             title: '',
             dataIndex: '_action',
-            width: 200,
-            render: (value, item, s, index) => (
+            render: (value, item, index) => (
               <ButtonGroup>
-                <Button onClick={() => {}}>修改</Button>
-                <Button
-                  onClick={() => {
-                    openModal({
-                      name: 'DeleteApiModal',
-                      data: {
-                        title: '删除API',
-                        callback: () => {
-                          dispatch({
-                            type: 'updateNode',
-                            payload: {
-                              action: 'delete',
-                              index,
+                {!item.isSystem ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'OperationApiModal',
+                          data: {
+                            action: 'update',
+                            name: item.name,
+                            address: item.address,
+                            callback: ({ action, name, address }) => {
+                              dispatch({
+                                type: 'updateNodeOrApi',
+                                payload: {
+                                  target: 'Api',
+                                  action,
+                                  index,
+                                  name,
+                                  address,
+                                },
+                              });
                             },
-                          });
-                        },
-                      },
-                    });
-                  }}>
-                  删除
-                </Button>
+                          },
+                        });
+                      }}>
+                      修改
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'DeleteApiModal',
+                          data: {
+                            title: '删除节点',
+                            callback: () => {
+                              dispatch({
+                                type: 'updateNodeOrApi',
+                                payload: {
+                                  target: 'Api',
+                                  action: 'delete',
+                                  index,
+                                },
+                              });
+                            },
+                          },
+                        });
+                      }}>
+                      删除
+                    </Button>
+                  </>
+                ) : null}
               </ButtonGroup>
             ),
           },
         ],
         widths
       ),
-      dataSource: [
-        {
-          data1: '系统默认',
-          data2: '本机私有',
-          data3: 'ws://localhost:6789',
-          data4: '1ms',
-          data5: '5个',
-          data6: '88.88%',
-        },
-      ],
+      dataSource: api,
     };
     return <Table {...tableProps} />;
   }

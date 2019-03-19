@@ -23,7 +23,7 @@ class Configure extends Mixin {
     } = this.props;
     const bestNode = parseQueryString(search).bestNode;
     dispatch({
-      type: 'subscribe',
+      type: 'subscribeNode',
       payload: {
         refresh: !bestNode,
       },
@@ -80,8 +80,9 @@ class Configure extends Mixin {
                   action: 'add',
                   callback: ({ action, name, address }) => {
                     dispatch({
-                      type: 'updateNode',
+                      type: 'updateNodeOrApi',
                       payload: {
+                        target: 'Node',
                         action,
                         name,
                         address,
@@ -97,34 +98,41 @@ class Configure extends Mixin {
         </TableTitle>
         <NodeManageTable {...tableProps} />
 
-        {false ? (
-          <>
-            <TableTitle
-              style={{ marginTop: 32 }}
-              title="API管理"
-              helpTitle={
-                <Button type="blank">
-                  <Icon name="icon-APIbushuwendang" />
-                  查看API部署文档
-                </Button>
-              }>
-              <Button
-                type="blank"
-                onClick={() => {
-                  openModal({
-                    name: 'OperationApiModal',
-                    data: {
-                      action: 'add',
-                    },
-                  });
-                }}>
-                <Icon name="icon-tianjia" />
-                添加API
-              </Button>
-            </TableTitle>
-            <ApiManageTable {...tableProps} />
-          </>
-        ) : null}
+        <TableTitle
+          style={{ marginTop: 32 }}
+          title="API管理"
+          helpTitle={
+            <Button type="blank">
+              <Icon name="icon-APIbushuwendang" />
+              查看API部署文档
+            </Button>
+          }>
+          <Button
+            type="blank"
+            onClick={() => {
+              openModal({
+                name: 'OperationApiModal',
+                data: {
+                  action: 'add',
+                  callback: ({ action, name, address }) => {
+                    dispatch({
+                      type: 'updateNodeOrApi',
+                      payload: {
+                        target: 'Api',
+                        action,
+                        name,
+                        address,
+                      },
+                    });
+                  },
+                },
+              });
+            }}>
+            <Icon name="icon-tianjia" />
+            添加API
+          </Button>
+        </TableTitle>
+        <ApiManageTable {...tableProps} />
         {name === 'OperationNodeModal' ? <OperationNodeModal {...this.props} /> : null}
         {name === 'OperationApiModal' ? <OperationApiModal {...this.props} /> : null}
         {name === 'DeleteNodeModal' ? <ConfirmAndCancelModal {...this.props} /> : null}

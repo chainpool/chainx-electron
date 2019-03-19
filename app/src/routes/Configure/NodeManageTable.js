@@ -59,8 +59,9 @@ class NodeManageTable extends Component {
                             address: item.address,
                             callback: ({ action, name, address }) => {
                               dispatch({
-                                type: 'updateNode',
+                                type: 'updateNodeOrApi',
                                 payload: {
+                                  target: 'Node',
                                   action,
                                   index,
                                   name,
@@ -81,8 +82,9 @@ class NodeManageTable extends Component {
                             title: '删除节点',
                             callback: () => {
                               dispatch({
-                                type: 'updateNode',
+                                type: 'updateNodeOrApi',
                                 payload: {
+                                  target: 'Node',
                                   action: 'delete',
                                   index,
                                 },

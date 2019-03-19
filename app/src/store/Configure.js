@@ -1,4 +1,4 @@
-import { observable, computed, autorun, localSave, formatNumber, _, fetchFromWs } from '../utils';
+import { observable, computed, autorun, localSave, formatNumber, _, fetchFromWs, fetchFromHttp } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork, ConfigureVersion } from '../constants';
 
@@ -38,6 +38,7 @@ export default class Configure extends ModelExtend {
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
+  @observable api = [];
   @observable nodes = this.reset(
     this.refreshLocalNodes()
       ? localSave.get('nodes')
@@ -72,7 +73,7 @@ export default class Configure extends ModelExtend {
         ]
   );
   @computed get TradeVersion() {
-    return this.autoSwitchBestApi;
+    return true;
   }
 
   resetNodes = () => {
@@ -83,17 +84,12 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  getBestNumber = url => {
-    const id = _.uniqueId();
-    const message = JSON.stringify({ id, jsonrpc: '2.0', method: 'chain_getBlock', params: [] });
+  getBestNodeNumber = url => {
     const fromHttp = httpUrl => {
-      return fetch(httpUrl, {
+      return fetchFromHttp({
+        url: httpUrl,
         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: message,
+        methodAlias: 'chain_getBlock',
       }).then(res => res.json());
     };
 
@@ -108,7 +104,7 @@ export default class Configure extends ModelExtend {
     return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
   };
 
-  subscribe = async ({ refresh }) => {
+  subscribeNode = async ({ refresh }) => {
     const nodes = this.nodes;
     this.resetNodes();
 
@@ -132,14 +128,14 @@ export default class Configure extends ModelExtend {
       });
     };
 
-    for (let j = 0; j < nodes.length; j++) {
+    for (let i = 0; i < nodes.length; i++) {
       const getIntentions = async () => {
         const startTime = Date.now();
-        const res = await fetchSystemPeers(nodes[j].address);
+        const res = await fetchSystemPeers(nodes[i].address);
         const endTime = Date.now();
         if (res && res.length) {
-          changeNodes(j, 'links', res && res.length ? res.length : '');
-          changeNodes(j, 'delay', res ? endTime - startTime : '');
+          changeNodes(i, 'links', res && res.length ? res.length : '');
+          changeNodes(i, 'delay', res ? endTime - startTime : '');
         }
       };
 
@@ -157,7 +153,7 @@ export default class Configure extends ModelExtend {
         const nodes = _.cloneDeep(this.nodes) || [];
         const sortedNodes = nodes
           .filter((item = {}) => item.block && item.delay)
-          .sort((a = {}, b = {}) => Number(a.delay) - Number(b.delay));
+          .sort((a = {}, b = {}) => a.delay - b.delay);
         const bestNode = sortedNodes[0] || {};
         const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
         if (bestNode && bestNode.block) {
@@ -184,9 +180,10 @@ export default class Configure extends ModelExtend {
       };
 
       const getBlockNumber = () => {
-        this.getBestNumber(nodes[j].address).then(res => {
+        this.getBestNodeNumber(nodes[i].address).then(res => {
           if (res) {
-            changeNodes(j, 'block', res);
+            console.log(res, `${i}---------------block`);
+            changeNodes(i, 'block', res);
             caculatePercent();
           }
         });
@@ -197,28 +194,32 @@ export default class Configure extends ModelExtend {
     }
   };
 
-  updateNode = ({ action, ...rest }) => {
-    this.subs && this.subs.unsubscribe();
-    const { name, address, index } = rest;
-    const nodes = [...this.nodes];
+  updateNodeOrApi = ({ action, ...rest }) => {
+    const { name, address, index, target } = rest;
+    const list = target === 'Node' ? [...this.nodes] : [...this.api];
     switch (action) {
       case 'add':
-        nodes.push({
+        list.push({
           type: '自定义',
           name,
           address,
         });
         break;
       case 'delete':
-        nodes.splice(index, 1);
+        list.splice(index, 1);
         break;
       case 'update': {
-        const findOne = nodes.filter((item, ins) => ins === index)[0] || {};
-        nodes.splice(index, 1, { ...findOne, address, name });
+        const findOne = list.filter((item, ins) => ins === index)[0] || {};
+        list.splice(index, 1, { ...findOne, address, name });
       }
     }
-    this.changeModel('nodes', nodes);
-    this.subscribe({ refresh: false });
+
+    if (target === 'Node') {
+      this.changeModel('nodes', list);
+      this.subscribeNode({ refresh: false });
+    } else {
+      this.changeModel('api', list);
+    }
   };
 
   updateAutoSwitchBestNode = ({ autoSwitchBestNode }) => {

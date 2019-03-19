@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
-import { Patterns } from '../../../utils';
+import { _, Patterns } from '../../../utils';
 import * as styles from './OperationApiModal.less';
 
 class OperationApiModal extends Component {
-  state = {
-    name: '',
-    nameErrMsg: '',
-    address: '',
-    addressErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      globalStore: {
+        modal: { data: { name = '', address = '' } = {} },
+      },
+    } = this.props;
+    this.state = {
+      name: name,
+      nameErrMsg: '',
+      address: address,
+      addressErrMsg: '',
+    };
+  }
   checkAll = {
     checkName: () => {
       const { name } = this.state;
@@ -33,6 +41,9 @@ class OperationApiModal extends Component {
     const { name, nameErrMsg, address, addressErrMsg } = this.state;
     const {
       model: { closeModal },
+      globalStore: {
+        modal: { data: { action, callback } = {} },
+      },
     } = this.props;
     return (
       <Modal
@@ -43,7 +54,15 @@ class OperationApiModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                closeModal();
+                if (checkAll.confirm()) {
+                  _.isFunction(callback) &&
+                    callback({
+                      action,
+                      name,
+                      address,
+                    });
+                  closeModal();
+                }
               }
             }}>
             确定
@@ -61,7 +80,7 @@ class OperationApiModal extends Component {
             onBlur={checkAll.checkName}
           />
           <Input.Text
-            placeholder="wss://abcd.com:6789"
+            placeholder=""
             label={
               <div>
                 API地址<span className={styles.listData}>(提供列表详情数据)</span>
