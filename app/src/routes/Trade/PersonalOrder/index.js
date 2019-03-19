@@ -18,15 +18,20 @@ class PersonalOrder extends SwitchPair {
     this.getAccountOrder();
   };
 
-  getAccountOrder = () => {
+  getAccountOrder = async () => {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({
+    this.subscribeAccountOrder = await dispatch({
       type: 'getAccountOrder',
-    }).then(() => {
+    }).then(res => {
       this.fetchPoll(this.getAccountOrder);
+      return res;
     });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeAccountOrder.unsubscribe();
   };
 
   render() {
@@ -56,7 +61,7 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={TradeVersion && false ? ['当前委托', '历史委托'] : ['当前委托']}
+            tabs={TradeVersion ? ['当前委托', '历史委托'] : ['当前委托']}
             className={styles.tab}
           />
         </div>

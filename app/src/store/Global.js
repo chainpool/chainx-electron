@@ -15,6 +15,8 @@ export default class Global extends ModelExtend {
 
   @observable history = null;
 
+  @observable autoSwitchBestApi = true;
+
   @observable
   modal = {
     status: true,

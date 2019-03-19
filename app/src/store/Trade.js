@@ -24,8 +24,8 @@ import {
   getFillOrdersApi,
   getKlineApi,
 } from '../services';
-import { from, combineLatest } from 'rxjs';
-import { map, tap, takeWhile, startWith } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { combineLatest } from 'rxjs/operators';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -115,13 +115,18 @@ export default class Trade extends ModelExtend {
   getAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
-      combineLatest(
-        getOrders(account.address, 0, 100),
-        getOrdersApi({
-          accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
-        })
-      )
-        .pipe(startWith([{ data: [] }, { items: [] }]))
+      return from(getOrders(account.address, 0, 100))
+        .pipe(
+          combineLatest(
+            from(
+              this.isApiSwitch(
+                getOrdersApi({
+                  accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
+                })
+              )
+            )
+          )
+        )
         .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
           const dataRpc = resRpc.data.map((item = {}) => ({
             accountid: item.props[0],
@@ -214,15 +219,19 @@ export default class Trade extends ModelExtend {
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const count = 10;
-
-    return combineLatest(
-      getQuotations(currentPair.id, [0, count]),
-      getQuotationsApi({
-        pairId: currentPair.id,
-        count,
-      })
-    )
-      .pipe(startWith([{ buy: [], sell: [] }, { bids: [], asks: [] }]))
+    return from(getQuotations(currentPair.id, [0, count]))
+      .pipe(
+        combineLatest(
+          from(
+            this.isApiSwitch(
+              getQuotationsApi({
+                pairId: currentPair.id,
+                count,
+              })
+            )
+          )
+        )
+      )
       .subscribe(([resRpc = { buy: [], sell: [] }, resApi = { bids: [], asks: [] }]) => {
         const [dataRpc, dataApi, common] = [
           {},
@@ -391,5 +400,13 @@ export default class Trade extends ModelExtend {
     this.rootStore.assetStore.changeModel({
       accountAssets: [],
     });
+  };
+
+  isApiSwitch = (promise, defaultValue = of(undefined)) => {
+    if (this.rootStore.globalStore.autoSwitchBestApi) {
+      return promise;
+    } else {
+      return defaultValue;
+    }
   };
 }
