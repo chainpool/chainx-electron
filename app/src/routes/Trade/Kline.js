@@ -37,7 +37,7 @@ class Kline extends SwitchPair {
       model: { getQueryParams },
     } = this.props;
     const { id } = getQueryParams();
-    return id;
+    return String(id);
   };
 
   getInterval = resolution => {
