@@ -5,28 +5,37 @@ import { NetWork, ConfigureVersion } from '../constants';
 export default class Configure extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
-    this.reset = nodes => {
+    this.resetNode = nodes => {
       return nodes.map(item => ({
         ...item,
         syncStatus: '',
         links: '',
         delay: '',
         block: '',
-        times: [],
+      }));
+    };
+    this.resetApi = api => {
+      return api.map(item => ({
+        ...item,
+        syncStatus: '',
+        delay: '',
+        block: '',
       }));
     };
 
-    this.refreshLocalNodes = () => {
-      const nodes = localSave.get('nodes') || [];
-      const findOne = nodes.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
+    this.refreshLocalNodesOrApi = target => {
+      const localTarget = target === 'Node' ? 'nodes' : 'api';
+      const list = localSave.get(localTarget) || [];
+      const findOne = list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
       if (!findOne) {
-        localSave.remove('nodes');
+        localSave.remove(localTarget);
       }
-      return localSave.get('nodes') && localSave.get('nodes').length;
+      return localSave.get(localTarget) && localSave.get(localTarget).length;
     };
 
     autorun(() => {
       localSave.set('nodes', this.nodes);
+      localSave.set('api', this.api);
       localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
       localSave.set('autoSwitchBestApi', this.autoSwitchBestApi);
     });
@@ -38,9 +47,22 @@ export default class Configure extends ModelExtend {
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
-  @observable api = [];
-  @observable nodes = this.reset(
-    this.refreshLocalNodes()
+  @observable api = this.resetApi(
+    this.refreshLocalNodesOrApi('Api')
+      ? localSave.get('api')
+      : [
+          {
+            type: '系统默认',
+            name: 'api.chainx.org',
+            best: true,
+            address: 'api.chainx.org',
+            isSystem: true,
+            Version: ConfigureVersion,
+          },
+        ]
+  );
+  @observable nodes = this.resetNode(
+    this.refreshLocalNodesOrApi('Node')
       ? localSave.get('nodes')
       : [
           {
@@ -76,8 +98,12 @@ export default class Configure extends ModelExtend {
     return true;
   }
 
-  resetNodes = () => {
-    this.changeModel('nodes', this.reset(this.nodes));
+  resetNodesOrApi = target => {
+    if (target === 'Node') {
+      this.changeModel('nodes', this.resetNode(this.nodes));
+    } else {
+      this.changeModel('api', this.resetApi(this.api));
+    }
   };
 
   setCurrentNetWork({ name, ip }) {
@@ -104,21 +130,33 @@ export default class Configure extends ModelExtend {
     return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
   };
 
-  subscribeNode = async ({ refresh }) => {
-    const nodes = this.nodes;
-    this.resetNodes();
-
-    const changeNodes = (ins, key, value = '') => {
-      this.changeModel(
-        'nodes',
-        this.nodes.map((item, index) => {
-          if (index !== ins) return item;
-          return {
-            ...item,
-            [key]: value,
-          };
-        })
-      );
+  subscribeNodeOrApi = async ({ refresh, target }) => {
+    const list = target === 'Node' ? this.nodes : this.api;
+    this.resetNodesOrApi(target);
+    const changeNodesOrApi = (ins, key, value = '') => {
+      if (target === 'Node') {
+        this.changeModel(
+          'nodes',
+          this.nodes.map((item, index) => {
+            if (index !== ins) return item;
+            return {
+              ...item,
+              [key]: value,
+            };
+          })
+        );
+      } else {
+        this.changeModel(
+          'api',
+          this.api.map((item, index) => {
+            if (index !== ins) return item;
+            return {
+              ...item,
+              [key]: value,
+            };
+          })
+        );
+      }
     };
 
     const fetchSystemPeers = url => {
@@ -128,74 +166,80 @@ export default class Configure extends ModelExtend {
       });
     };
 
-    for (let i = 0; i < nodes.length; i++) {
+    const reloadPage = () => {
+      clearInterval(this.interval);
+      this.interval = setTimeout(() => {
+        const { pathname, search } = this.setQueryParams('bestNode', true);
+        if (refresh) {
+          window.location.href = `${pathname}${search}`;
+        }
+      }, 60 * 1000);
+    };
+
+    const caculatePercent = () => {
+      const nodes = _.cloneDeep(this.nodes) || [];
+      const sortedNodes = nodes
+        .filter((item = {}) => item.block && item.delay)
+        .sort((a = {}, b = {}) => a.delay - b.delay);
+      const bestNode = sortedNodes[0] || {};
+      const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
+      if (bestNode && bestNode.block) {
+        const max = _.get(_.cloneDeep(nodes).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
+        nodes.forEach((item = {}) => {
+          if (item.block && max) {
+            item.syncStatus = formatNumber.percent(item.block / max, 2);
+          }
+        });
+        if (prevBestNode.address !== bestNode.address) {
+          if (this.autoSwitchBestNode) {
+            prevBestNode.best = false;
+            bestNode.best = true;
+            console.log(sortedNodes, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
+            reloadPage();
+          } else {
+            console.log('用户未允许自动切换功能');
+          }
+        } else {
+          console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
+        }
+        this.changeModel('nodes', nodes);
+      }
+    };
+
+    for (let i = 0; i < list.length; i++) {
       const getIntentions = async () => {
         const startTime = Date.now();
-        const res = await fetchSystemPeers(nodes[i].address);
+        const res = await fetchSystemPeers(list[i].address);
         const endTime = Date.now();
         if (res && res.length) {
-          changeNodes(i, 'links', res && res.length ? res.length : '');
-          changeNodes(i, 'delay', res ? endTime - startTime : '');
-        }
-      };
-
-      const switchWs = () => {
-        clearInterval(this.interval);
-        this.interval = setTimeout(() => {
-          const { pathname, search } = this.setQueryParams('bestNode', true);
-          if (refresh) {
-            window.location.href = `${pathname}${search}`;
-          }
-        }, 60 * 1000);
-      };
-
-      const caculatePercent = () => {
-        const nodes = _.cloneDeep(this.nodes) || [];
-        const sortedNodes = nodes
-          .filter((item = {}) => item.block && item.delay)
-          .sort((a = {}, b = {}) => a.delay - b.delay);
-        const bestNode = sortedNodes[0] || {};
-        const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
-        if (bestNode && bestNode.block) {
-          const max = _.get(_.cloneDeep(nodes).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
-          nodes.forEach((item = {}) => {
-            if (item.block && max) {
-              item.syncStatus = formatNumber.percent(item.block / max, 2);
-            }
-          });
-          if (prevBestNode.address !== bestNode.address) {
-            if (this.autoSwitchBestNode) {
-              prevBestNode.best = false;
-              bestNode.best = true;
-              console.log(sortedNodes, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
-              switchWs();
-            } else {
-              console.log('用户未允许自动切换功能');
-            }
-          } else {
-            console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
-          }
-          this.changeModel('nodes', nodes);
+          changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
+          changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
         }
       };
 
       const getBlockNumber = () => {
-        this.getBestNodeNumber(nodes[i].address).then(res => {
+        this.getBestNodeNumber(list[i].address).then(res => {
           if (res) {
-            console.log(res, `${i}---------------block`);
-            changeNodes(i, 'block', res);
+            changeNodesOrApi(i, 'block', res);
             caculatePercent();
           }
         });
       };
 
-      getIntentions();
-      getBlockNumber();
+      if (target === 'Node') {
+        getIntentions();
+        getBlockNumber();
+      } else {
+        console.log('jj');
+      }
     }
   };
 
   updateNodeOrApi = ({ action, ...rest }) => {
     const { name, address, index, target } = rest;
+    if (target !== 'Node' || target !== 'Api') {
+      throw new Error('增删该查target必须时Node或Api');
+    }
     const list = target === 'Node' ? [...this.nodes] : [...this.api];
     switch (action) {
       case 'add':
@@ -216,10 +260,10 @@ export default class Configure extends ModelExtend {
 
     if (target === 'Node') {
       this.changeModel('nodes', list);
-      this.subscribeNode({ refresh: false });
     } else {
       this.changeModel('api', list);
     }
+    this.subscribeNodeOrApi({ refresh: false, target });
   };
 
   updateAutoSwitchBestNode = ({ autoSwitchBestNode }) => {

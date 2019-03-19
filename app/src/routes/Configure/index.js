@@ -23,9 +23,10 @@ class Configure extends Mixin {
     } = this.props;
     const bestNode = parseQueryString(search).bestNode;
     dispatch({
-      type: 'subscribeNode',
+      type: 'subscribeNodeOrApi',
       payload: {
         refresh: !bestNode,
+        target: 'Node',
       },
     });
   };
