@@ -98,6 +98,12 @@ export default class Configure extends ModelExtend {
     return true;
   }
 
+  getBestNodeAndApi = () => {
+    const bestNode = this.nodes.filter(item => item.best)[0];
+    const bestApi = this.api.filter(item => item.best)[0];
+    return [bestNode, bestApi];
+  };
+
   resetNodesOrApi = target => {
     if (target === 'Node') {
       this.changeModel('nodes', this.resetNode(this.nodes));
@@ -176,29 +182,34 @@ export default class Configure extends ModelExtend {
       const sortedList = list
         .filter((item = {}) => item.block && item.delay)
         .sort((a = {}, b = {}) => a.delay - b.delay);
-      const bestNode = sortedList[0] || {};
+      const bestNodeOrApi = sortedList[0] || {};
       const prevBestNodeOrApi = list.filter((item = {}) => item.best)[0] || {};
-      if (bestNode && bestNode.block) {
+      if (bestNodeOrApi && bestNodeOrApi.block) {
         const max = _.get(_.cloneDeep(list).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
         list.forEach((item = {}) => {
           if (item.block && max) {
             item.syncStatus = formatNumber.percent(item.block / max, 2);
           }
         });
-        if (prevBestNodeOrApi.address !== bestNode.address) {
+        if (prevBestNodeOrApi.address !== bestNodeOrApi.address) {
           if (this.autoSwitchBestNode) {
             prevBestNodeOrApi.best = false;
-            bestNode.best = true;
-            console.log(sortedList, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
+            bestNodeOrApi.best = true;
+            console.log(
+              sortedList,
+              bestNodeOrApi.address,
+              bestNodeOrApi.name,
+              `---------------1分钟后切换到最优${target === 'Node' ? '节点' : 'Api'}`
+            );
             reloadPage();
           } else {
-            console.log('用户未允许自动切换功能');
+            console.log(`用户未允许自动切换${target === 'Node' ? '节点' : 'Api'}功能`);
           }
         } else {
           console.log(
-            bestNode.address,
+            bestNodeOrApi.address,
             prevBestNodeOrApi.address,
-            '=========bestNode.address与prevBestNode.address相等'
+            `最优${target === 'Node' ? '节点' : 'Api'}相等，不切换`
           );
         }
         this.changeModel(target === 'Node' ? 'nodes' : 'api', list);

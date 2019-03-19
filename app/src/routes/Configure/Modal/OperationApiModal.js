@@ -28,7 +28,7 @@ class OperationApiModal extends Component {
     },
     checkAddress: () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
+      const errMsg = Patterns.check('required')(address) || Patterns.check('isHttpAddress')(address);
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -80,7 +80,7 @@ class OperationApiModal extends Component {
             onBlur={checkAll.checkName}
           />
           <Input.Text
-            placeholder=""
+            placeholder="https://api.chainx.org"
             label={
               <div>
                 API地址<span className={styles.listData}>(提供列表详情数据)</span>

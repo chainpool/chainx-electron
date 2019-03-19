@@ -63,11 +63,22 @@
         > ul {
           border-radius: 4px;
           background: white;
-          padding: 8px 24px 0 24px;
+          padding-top: 8px;
           box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
           li {
+            cursor: pointer;
+            padding: 16px 24px;
+            &:hover{
+              background: #f6f3f1;
+            }
             display: flex;
             white-space:nowrap;
+            .name{
+              width: 160px;
+              max-width: 160px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
 
             &.api {
               align-items: center;
@@ -75,13 +86,12 @@
             }
             &.header {
               border-top: 1px solid #dce0e2;
-              margin: 0 -24px;
               padding: 16px 24px;
             }
             &.footer {
-              margin: 0 -24px;
-              padding: 8px 24px;
-              padding-top: 16px;
+              // margin: 0 -24px;
+              // padding: 8px 24px;
+              // padding-top: 16px;
               display: flex;
               justify-content: center;
               border-top: 1px solid #dce0e2;
@@ -90,7 +100,6 @@
               margin-left: 24px;
             }
             color: #555555;
-            padding: 16px 0;
             .check {
               height: unset;
             }

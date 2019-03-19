@@ -39,75 +39,74 @@ class Node extends Component {
   render() {
     const {
       chainStore: { normalizedBlockNumber, blockTime },
-      configureStore: { nodes = [], autoSwitchBestNode, autoSwitchBestApi, dispatch },
+      configureStore: { nodes = [], api = [], autoSwitchBestNode, autoSwitchBestApi, dispatch, getBestNodeAndApi },
     } = this.props;
+    const [bestNode = {}, bestApi = {}] = getBestNodeAndApi();
     const nodeList = (
       <ul>
-        <li>
-          <Icon name="icon-xinhao" className={styles.xinhao} />
-          杭州节点
-          <div className={styles.triangle} />
-          <div className={classNames(styles.switchNode, styles.switchfirst)}>
-            <ul>
-              {nodes.map(item => (
-                <li key={item.name}>
-                  <div style={{ width: 150 }}>{item.name}</div>
-                  <span className={classNames(styles.time, item.delay > 300 ? 'yellow' : 'green')}>{`${
-                    item.delay
-                  } /ms`}</span>
-                </li>
-              ))}
-              <li key={'best'} className={classNames(styles.api, styles.header)}>
-                <Input.Checkbox
-                  style={{ width: 14, height: 14 }}
-                  className={styles.check}
-                  value={autoSwitchBestNode}
-                  onClick={() => {
-                    dispatch({
-                      type: 'updateAutoSwitchBestNode',
-                      payload: {
-                        autoSwitchBestNode: !autoSwitchBestNode,
-                      },
-                    });
-                  }}
-                />
-                自动切换最优节点
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <Icon name="icon-xinhao" className={styles.xinhao} />
-          杭州API
-          <div className={styles.triangle} />
-          <div className={classNames(styles.switchNode, styles.switchsecond)}>
-            <ul>
-              {[{ name: '杭州公共', time: 'ms' }].map(item => (
-                <li key={item.name}>
-                  {item.name}
-                  <span className={styles.time}>{item.time}</span>
-                </li>
-              ))}
-              <li key={'best'} className={classNames(styles.api, styles.header)}>
-                <Input.Checkbox
-                  style={{ width: 14, height: 14 }}
-                  className={styles.check}
-                  value={autoSwitchBestApi}
-                  onClick={() => {
-                    dispatch({
-                      type: 'updateAutoSwitchBestApi',
-                      payload: {
-                        autoSwitchBestApi: !autoSwitchBestApi,
-                      },
-                    });
-                    // window.location.reload();
-                  }}
-                />
-                自动切换最优API
-              </li>
-            </ul>
-          </div>
-        </li>
+        {[nodes, api].map((one = [], index) => (
+          <li>
+            <Icon name="icon-xinhao" className={styles.xinhao} />
+            {index ? bestNode.name : bestApi.name}
+            <div className={styles.triangle} />
+            <div className={classNames(styles.switchNode, index ? styles.switchsecond : styles.switchfirst)}>
+              <ul>
+                {one.map(item => (
+                  <li key={item.name}>
+                    <div className={styles.name}>{item.name}</div>
+                    {item.delay === 'timeOut' ? (
+                      <span className={'red'}>延时</span>
+                    ) : (
+                      <span className={classNames(styles.time, item.delay > 300 ? 'yellow' : 'green')}>{`${
+                        item.delay
+                      } /ms`}</span>
+                    )}
+                  </li>
+                ))}
+                {index ? (
+                  <li
+                    key={'best'}
+                    className={classNames(styles.api, styles.header)}
+                    onClick={() => {
+                      dispatch({
+                        type: 'updateAutoSwitchBestApi',
+                        payload: {
+                          autoSwitchBestApi: !autoSwitchBestApi,
+                        },
+                      });
+                      // window.location.reload();
+                    }}>
+                    <Input.Checkbox
+                      style={{ width: 14, height: 14 }}
+                      className={styles.check}
+                      value={autoSwitchBestApi}
+                    />
+                    自动切换最优API
+                  </li>
+                ) : (
+                  <li
+                    key={'best'}
+                    className={classNames(styles.api, styles.header)}
+                    onClick={() => {
+                      dispatch({
+                        type: 'updateAutoSwitchBestNode',
+                        payload: {
+                          autoSwitchBestNode: !autoSwitchBestNode,
+                        },
+                      });
+                    }}>
+                    <Input.Checkbox
+                      style={{ width: 14, height: 14 }}
+                      className={styles.check}
+                      value={autoSwitchBestNode}
+                    />
+                    自动切换最优节点
+                  </li>
+                )}
+              </ul>
+            </div>
+          </li>
+        ))}
       </ul>
     );
 

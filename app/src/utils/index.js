@@ -88,6 +88,9 @@ export const Patterns = {
   isWsAddress: (address, errMsg = '地址格式错误') => {
     return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
   },
+  isHttpAddress: (address, errMsg = '地址格式错误') => {
+    return /(http|https):\/\/([\w.]+\/?)\S*/.test(address) ? '' : errMsg;
+  },
   isPublicKey: (pubkey, errMsg = '格式错误') => {
     try {
       Buffer.from(pubkey, 'hex');
