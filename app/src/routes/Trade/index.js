@@ -8,10 +8,10 @@ import PersonalOrder from './PersonalOrder';
 import Kline from './Kline';
 
 import { Inject } from '../../utils';
-import { TradeVersion } from '../../constants';
+
 import * as styles from './index.less';
 
-@Inject(({ tradeStore: model, assetStore }) => ({ model, assetStore }))
+@Inject(({ tradeStore: model, configureStore, assetStore }) => ({ model, configureStore, assetStore }))
 class Trade extends SwitchPair {
   constructor(props) {
     super(props);
@@ -37,6 +37,9 @@ class Trade extends SwitchPair {
 
   render() {
     const { show } = this.state;
+    const {
+      configureStore: { TradeVersion },
+    } = this.props;
     const props = {
       ...this.props,
     };

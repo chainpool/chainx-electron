@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Input } from '../../../../components';
 import * as styles from './index.less';
-import { classNames, Inject, moment_helper } from '@utils/index';
-import { parseQueryString } from '../../../../utils';
-
+import { classNames, Inject, moment_helper, parseQueryString } from '../../../../utils';
 @Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
 class Node extends Component {
   constructor(props) {
@@ -41,7 +39,7 @@ class Node extends Component {
   render() {
     const {
       chainStore: { normalizedBlockNumber, blockTime },
-      configureStore: { nodes = [], autoSwitchBestNode, dispatch },
+      configureStore: { nodes = [], autoSwitchBestNode, autoSwitchBestApi, dispatch },
     } = this.props;
     const nodeList = (
       <ul>
@@ -78,34 +76,38 @@ class Node extends Component {
             </ul>
           </div>
         </li>
-        {false && (
-          <li>
-            <Icon name="icon-xinhao" className={styles.xinhao} />
-            杭州API
-            <div className={styles.triangle} />
-            <div className={styles.switchNode}>
-              <ul>
-                <li key={0} className={classNames(styles.api, styles.header)}>
-                  <Input.Checkbox style={{ width: 14, height: 14 }} className={styles.check} />
-                  自动切换最优API
+        <li>
+          <Icon name="icon-xinhao" className={styles.xinhao} />
+          杭州API
+          <div className={styles.triangle} />
+          <div className={classNames(styles.switchNode, styles.switchsecond)}>
+            <ul>
+              {[{ name: '杭州公共', time: 'ms' }].map(item => (
+                <li key={item.name}>
+                  {item.name}
+                  <span className={styles.time}>{item.time}</span>
                 </li>
-                {[
-                  { name: '杭州公共', time: '56ms' },
-                  { name: '北京公共', time: '超时' },
-                  { name: '本机私有', time: '80.88%' },
-                ].map(item => (
-                  <li key={item.name}>
-                    {item.name}
-                    <span className={styles.time}>{item.time}</span>
-                  </li>
-                ))}
-                <li key="foot" className={styles.footer}>
-                  不连接
-                </li>
-              </ul>
-            </div>
-          </li>
-        )}
+              ))}
+              <li key={'best'} className={classNames(styles.api, styles.header)}>
+                <Input.Checkbox
+                  style={{ width: 14, height: 14 }}
+                  className={styles.check}
+                  value={autoSwitchBestApi}
+                  onClick={() => {
+                    dispatch({
+                      type: 'updateAutoSwitchBestApi',
+                      payload: {
+                        autoSwitchBestApi: !autoSwitchBestApi,
+                      },
+                    });
+                    // window.location.reload();
+                  }}
+                />
+                自动切换最优API
+              </li>
+            </ul>
+          </div>
+        </li>
       </ul>
     );
 

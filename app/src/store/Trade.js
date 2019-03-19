@@ -403,7 +403,7 @@ export default class Trade extends ModelExtend {
   };
 
   isApiSwitch = (promise, defaultValue = of(undefined)) => {
-    if (this.rootStore.globalStore.autoSwitchBestApi) {
+    if (this.rootStore.configureStore.autoSwitchBestApi) {
       return promise;
     } else {
       return defaultValue;

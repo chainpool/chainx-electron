@@ -1,4 +1,4 @@
-import { observable, autorun, localSave, formatNumber, _, fetchFromWs } from '../utils';
+import { observable, computed, autorun, localSave, formatNumber, _, fetchFromWs } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork, ConfigureVersion } from '../constants';
 
@@ -28,10 +28,13 @@ export default class Configure extends ModelExtend {
     autorun(() => {
       localSave.set('nodes', this.nodes);
       localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
+      localSave.set('autoSwitchBestApi', this.autoSwitchBestApi);
     });
   }
 
   @observable autoSwitchBestNode = localSave.get('autoSwitchBestNode') || false;
+  @observable autoSwitchBestApi =
+    localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
   @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
@@ -68,6 +71,9 @@ export default class Configure extends ModelExtend {
           },
         ]
   );
+  @computed get TradeVersion() {
+    return this.autoSwitchBestApi;
+  }
 
   resetNodes = () => {
     this.changeModel('nodes', this.reset(this.nodes));
@@ -217,5 +223,9 @@ export default class Configure extends ModelExtend {
 
   updateAutoSwitchBestNode = ({ autoSwitchBestNode }) => {
     this.changeModel('autoSwitchBestNode', autoSwitchBestNode);
+  };
+
+  updateAutoSwitchBestApi = ({ autoSwitchBestApi }) => {
+    this.changeModel('autoSwitchBestApi', autoSwitchBestApi);
   };
 }

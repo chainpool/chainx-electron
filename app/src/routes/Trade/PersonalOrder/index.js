@@ -1,14 +1,13 @@
 import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
 
-import { Inject } from '../../../utils';
 import * as styles from './index.less';
 import { Tab } from '../../components';
-import { TradeVersion } from '../../../constants';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
+import { observer } from '../../../utils';
 
-@Inject(({ tradeStore: model }) => ({ model }))
+@observer
 class PersonalOrder extends SwitchPair {
   state = {
     activeIndex: 0,
@@ -38,6 +37,7 @@ class PersonalOrder extends SwitchPair {
     const { activeIndex } = this.state;
     const {
       model: { currentOrderList = [], historyOrderList = [] },
+      configureStore: { TradeVersion },
     } = this.props;
     const props = {
       ...this.props,
