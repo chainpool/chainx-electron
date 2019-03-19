@@ -50,12 +50,19 @@ class ApiManageTable extends Mixin {
           {
             title: '网络延迟',
             dataIndex: 'delay',
-            render: value => <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>,
+            render: value => {
+              if (value === 'timeOut') return <span className={'red'}>超时</span>;
+              return <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>;
+            },
           },
           {
             title: '同步状态',
             dataIndex: 'syncStatus',
-            render: value => <span className={value !== '100.00%' ? 'red' : null}>{value}</span>,
+            render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,
+          },
+          {
+            title: '块高',
+            dataIndex: 'block',
           },
           {
             title: '',

@@ -53,9 +53,9 @@ export default class Configure extends ModelExtend {
       : [
           {
             type: '系统默认',
-            name: 'api.chainx.org',
+            name: 'https://api.chainx.org',
             best: true,
-            address: 'api.chainx.org',
+            address: 'https://api.chainx.org',
             isSystem: true,
             Version: ConfigureVersion,
           },
@@ -110,26 +110,6 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  getBestNodeNumber = url => {
-    const fromHttp = httpUrl => {
-      return fetchFromHttp({
-        url: httpUrl,
-        method: 'POST',
-        methodAlias: 'chain_getBlock',
-      }).then(res => res.json());
-    };
-
-    const fromWs = url => {
-      return fetchFromWs({
-        url,
-        method: 'chain_getBlock',
-      });
-    };
-
-    const isHttp = /^[http|https]/.test(url);
-    return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
-  };
-
   subscribeNodeOrApi = async ({ refresh, target }) => {
     const list = target === 'Node' ? this.nodes : this.api;
     this.resetNodesOrApi(target);
@@ -154,6 +134,33 @@ export default class Configure extends ModelExtend {
       });
     };
 
+    const getBestNodeNumber = url => {
+      const fromHttp = httpUrl => {
+        return fetchFromHttp({
+          url: httpUrl,
+          method: 'POST',
+          methodAlias: 'chain_getBlock',
+        });
+      };
+
+      const fromWs = url => {
+        return fetchFromWs({
+          url,
+          method: 'chain_getBlock',
+        });
+      };
+
+      const isHttp = /^[http|https]/.test(url);
+      return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
+    };
+
+    const getBestApiNumber = url => {
+      return fetchFromHttp({
+        url: `${url}/chain/height`,
+        method: 'GET',
+      });
+    };
+
     const reloadPage = () => {
       clearInterval(this.interval);
       this.interval = setTimeout(() => {
@@ -165,32 +172,36 @@ export default class Configure extends ModelExtend {
     };
 
     const caculatePercent = () => {
-      const nodes = _.cloneDeep(this.nodes) || [];
-      const sortedNodes = nodes
+      const list = _.cloneDeep(target === 'Node' ? this.nodes : this.api) || [];
+      const sortedList = list
         .filter((item = {}) => item.block && item.delay)
         .sort((a = {}, b = {}) => a.delay - b.delay);
-      const bestNode = sortedNodes[0] || {};
-      const prevBestNode = nodes.filter((item = {}) => item.best)[0] || {};
+      const bestNode = sortedList[0] || {};
+      const prevBestNodeOrApi = list.filter((item = {}) => item.best)[0] || {};
       if (bestNode && bestNode.block) {
-        const max = _.get(_.cloneDeep(nodes).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
-        nodes.forEach((item = {}) => {
+        const max = _.get(_.cloneDeep(list).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
+        list.forEach((item = {}) => {
           if (item.block && max) {
             item.syncStatus = formatNumber.percent(item.block / max, 2);
           }
         });
-        if (prevBestNode.address !== bestNode.address) {
+        if (prevBestNodeOrApi.address !== bestNode.address) {
           if (this.autoSwitchBestNode) {
-            prevBestNode.best = false;
+            prevBestNodeOrApi.best = false;
             bestNode.best = true;
-            console.log(sortedNodes, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
+            console.log(sortedList, bestNode.address, bestNode.name, '---------------1分钟后切换到最优链节');
             reloadPage();
           } else {
             console.log('用户未允许自动切换功能');
           }
         } else {
-          console.log(bestNode.address, prevBestNode.address, '=========bestNode.address与prevBestNode.address相等');
+          console.log(
+            bestNode.address,
+            prevBestNodeOrApi.address,
+            '=========bestNode.address与prevBestNode.address相等'
+          );
         }
-        this.changeModel('nodes', nodes);
+        this.changeModel(target === 'Node' ? 'nodes' : 'api', list);
       }
     };
 
@@ -198,26 +209,52 @@ export default class Configure extends ModelExtend {
       if (target === 'Node') {
         const getIntentions = async () => {
           const startTime = Date.now();
-          const res = await fetchSystemPeers(list[i].address);
-          const endTime = Date.now();
-          if (res && res.length) {
-            changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
-            changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
-          }
+          fetchSystemPeers(list[i].address)
+            .then(res => {
+              const endTime = Date.now();
+              if (res && res.length) {
+                changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
+                changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
+              }
+            })
+            .catch(() => {
+              changeNodesOrApi(i, 'links', '--');
+              changeNodesOrApi(i, 'delay', 'timeOut');
+            });
         };
 
         const getBlockNumber = () => {
-          this.getBestNodeNumber(list[i].address).then(res => {
-            if (res) {
-              changeNodesOrApi(i, 'block', res);
-              caculatePercent();
-            }
-          });
+          getBestNodeNumber(list[i].address)
+            .then(res => {
+              if (res) {
+                changeNodesOrApi(i, 'block', res);
+                caculatePercent();
+              }
+            })
+            .catch(() => {
+              changeNodesOrApi(i, 'syncStatus', '--');
+            });
         };
         getIntentions();
         getBlockNumber();
       } else {
-        console.log('jj');
+        const getBlockNumber = () => {
+          const startTime = Date.now();
+          getBestApiNumber(list[i].address)
+            .then(res => {
+              const endTime = Date.now();
+              if (res) {
+                changeNodesOrApi(i, 'block', res.height);
+                changeNodesOrApi(i, 'delay', endTime - startTime);
+                caculatePercent();
+              }
+            })
+            .catch(() => {
+              changeNodesOrApi(i, 'delay', 'timeOut');
+              changeNodesOrApi(i, 'syncStatus', '--');
+            });
+        };
+        getBlockNumber();
       }
     }
   };

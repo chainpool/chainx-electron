@@ -289,19 +289,18 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    ...(method === 'get' ? {} : { body: message }),
+    ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
   })
     .then(res => {
       if (res.status >= 200 && res.status < 300) {
-        return res;
+        return res.json();
       } else {
         throw new Error(res.statusText);
       }
     })
-    .then(res => {
-      return res.json();
-    })
-    .catch(err => console.log(err));
+    .catch(err => {
+      return Promise.reject(err);
+    });
 };
 
 export const isRepeat = arr => {
