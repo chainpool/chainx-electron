@@ -15,7 +15,25 @@ class HistoryOrderTable extends SwitchPair {
     };
   }
 
-  startInit = () => {};
+  startInit = () => {
+    this.getAccountOrder();
+  };
+
+  getAccountOrder = async () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    this.subscribeAccountOrder = await dispatch({
+      type: 'getAccountOrder',
+    }).then(res => {
+      this.fetchPoll(this.getAccountOrder);
+      return res;
+    });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeAccountOrder.unsubscribe();
+  };
 
   componentUpdate = prevProps => {
     const { historyOrderList: prevHistoryOrderList } = prevProps;
@@ -54,7 +72,7 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   render() {
-    const widths = [undefined, undefined, 100, 100, undefined, undefined, undefined, undefined, undefined, 50];
+    const widths = [undefined, 100, 100, 100, undefined, undefined, 200, undefined, undefined, 50];
     const { changeExpandIsOpen } = this;
     const { historyOrderList } = this.state;
     const {
@@ -98,7 +116,8 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: `成交量/成交率`,
             dataIndex: 'hasfillAmountShow',
-            render: (value, item) => setBlankSpace(value, `(${item.hasfillAmountPercent})`),
+            render: (value, item) =>
+              setBlankSpace(setBlankSpace(value, item.filterPair.assets), `(${item.hasfillAmountPercent})`),
           },
           {
             title: `成交均价`,
@@ -114,20 +133,23 @@ class HistoryOrderTable extends SwitchPair {
             render: (value, item) => (
               <span
                 onClick={() => {
-                  dispatch({
-                    type: 'getFillAccountOrder',
-                    payload: {
-                      accountId: item.accountid,
-                      index: item.index,
-                    },
-                  }).then(() => {
-                    changeExpandIsOpen(item.index);
-                  });
+                  changeExpandIsOpen(item.index);
+                  // dispatch({
+                  //   type: 'getFillAccountOrder',
+                  //   payload: {
+                  //     accountId: item.accountid,
+                  //     index: item.index,
+                  //   },
+                  // }).then(() => {
+                  //   changeExpandIsOpen(item.index);
+                  // });
                 }}>
-                <Icon
-                  name={item.expandIsOpen && item.expand && item.expand.length ? 'triangle-top' : 'triangle-bottom'}
-                  className={styles.pull}
-                />
+                {item.expand && item.expand.length && (
+                  <Icon
+                    name={item.expandIsOpen && item.expand && item.expand.length ? 'triangle-top' : 'triangle-bottom'}
+                    className={styles.pull}
+                  />
+                )}
               </span>
             ),
           },

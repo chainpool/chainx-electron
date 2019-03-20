@@ -78,6 +78,7 @@ class Trust extends Mixin {
           </Button>
         </TableTitle>
         <SettingTable {...this.props} />
+        <div />
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>

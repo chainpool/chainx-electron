@@ -10,27 +10,7 @@ import { observer } from '../../../utils';
 @observer
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 0,
-  };
-
-  startInit = () => {
-    this.getAccountOrder();
-  };
-
-  getAccountOrder = async () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-    this.subscribeAccountOrder = await dispatch({
-      type: 'getAccountOrder',
-    }).then(res => {
-      this.fetchPoll(this.getAccountOrder);
-      return res;
-    });
-  };
-
-  componentWillUnsubscribe = () => {
-    this.subscribeAccountOrder.unsubscribe();
+    activeIndex: 1,
   };
 
   render() {
