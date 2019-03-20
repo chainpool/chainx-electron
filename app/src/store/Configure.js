@@ -175,7 +175,10 @@ export default class Configure extends ModelExtend {
 
       const isHttp = /^[http|https]/.test(url);
       return (isHttp ? fromHttp(url) : fromWs(url)).then(r => {
-        return Number(r.block.header.number);
+        return {
+          data: Number(r.data.block.header.number),
+          wastTime: r.wastTime,
+        };
       });
     };
 
@@ -246,13 +249,12 @@ export default class Configure extends ModelExtend {
     for (let i = 0; i < list.length; i++) {
       if (target === 'Node') {
         const getIntentions = async () => {
-          const startTime = Date.now();
           fetchSystemPeers(list[i].address)
-            .then(res => {
-              const endTime = Date.now();
+            .then((result = {}) => {
+              const res = result.data;
               if (res && res.length) {
                 changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
-                changeNodesOrApi(i, 'delay', res ? endTime - startTime : '');
+                changeNodesOrApi(i, 'delay', res ? result.wastTime : '');
               }
             })
             .catch(() => {
@@ -263,7 +265,8 @@ export default class Configure extends ModelExtend {
 
         const getBlockNumber = () => {
           getBestNodeNumber(list[i].address)
-            .then(res => {
+            .then((result = {}) => {
+              const res = result.data;
               if (res) {
                 changeNodesOrApi(i, 'block', res);
                 caculatePercent();

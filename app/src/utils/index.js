@@ -259,13 +259,19 @@ export const setBlankSpace = (value, unit) => {
 export const fetchFromWs = ({ url, method, params = [] }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method, params });
+  let startTime;
+  let endTime;
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(url);
     ws.onmessage = m => {
       try {
         const data = JSON.parse(m.data);
         if (data.id === id) {
-          resolve(data.result);
+          endTime = Date.now();
+          resolve({
+            data: data.result,
+            wastTime: endTime - startTime,
+          });
           ws.close();
         }
       } catch (err) {
@@ -273,6 +279,7 @@ export const fetchFromWs = ({ url, method, params = [] }) => {
       }
     };
     ws.onopen = () => {
+      startTime = Date.now();
       ws.send(message);
     };
     ws.onerror = err => {

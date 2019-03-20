@@ -317,8 +317,8 @@ export default class Trade extends ModelExtend {
           ...item,
           precision,
           lastPriceShow: priceShow(item.lastPrice),
-          maxLastPriceShow: priceShow(item.sellOne * 1.1),
-          minLastPriceShow: priceShow(item.buyOne * 0.9),
+          maxLastPriceShow: item.sellOne > 0 ? priceShow(item.sellOne * 1.1) : Infinity,
+          minLastPriceShow: item.buyOne > 0 ? priceShow(item.buyOne * 0.9) : -Infinity,
         };
       });
       this.changeModel('orderPairs', res, []);
