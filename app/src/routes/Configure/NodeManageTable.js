@@ -65,6 +65,10 @@ class NodeManageTable extends Mixin {
             render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,
           },
           {
+            title: '块高',
+            dataIndex: 'block',
+          },
+          {
             title: '',
             dataIndex: '_action',
             render: (value, item, index) => (

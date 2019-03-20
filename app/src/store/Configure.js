@@ -174,7 +174,9 @@ export default class Configure extends ModelExtend {
       };
 
       const isHttp = /^[http|https]/.test(url);
-      return (isHttp ? fromHttp(url) : fromWs(url)).then(r => Number(r.block.header.number));
+      return (isHttp ? fromHttp(url) : fromWs(url)).then(r => {
+        return Number(r.block.header.number);
+      });
     };
 
     const getBestApiNumber = url => {
@@ -196,16 +198,27 @@ export default class Configure extends ModelExtend {
 
     const caculatePercent = () => {
       const list = _.cloneDeep(target === 'Node' ? this.nodes : this.api) || [];
-      const sortedList = list
+      const sortedMaxBlockList = [...list].sort((a, b) => b.block - a.block);
+      const maxBlock = sortedMaxBlockList[0] || {};
+      const sortedList = [...list]
         .filter((item = {}) => item.block && item.delay)
-        .sort((a = {}, b = {}) => a.delay - b.delay);
+        .sort((a = {}, b = {}) => {
+          if (maxBlock.block - a.block <= 2 && maxBlock.block - b.block <= 2) {
+            return a.delay - b.delay;
+          }
+          return b.block - a.block;
+        });
       const bestNodeOrApi = sortedList[0] || {};
       const prevBestNodeOrApi = list.filter((item = {}) => item.best)[0] || {};
+      // console.log(bestNodeOrApi, `最优${target === 'Node' ? '节点' : 'Api'}`);
       if (bestNodeOrApi && bestNodeOrApi.block) {
-        const max = _.get(_.cloneDeep(list).sort((a = {}, b = {}) => b.block - a.block)[0], 'block');
+        const max = _.get(maxBlock, 'block');
         list.forEach((item = {}) => {
           if (item.block && max) {
-            item.syncStatus = formatNumber.percent(item.block / max, 2);
+            item.syncStatus =
+              maxBlock.block - item.block <= 2
+                ? '100.00%'
+                : Number(((item.block / max) * 100).toString().match(/^\d+(?:.\d{0,2})?/)) + '%';
           }
         });
         if (prevBestNodeOrApi.address !== bestNodeOrApi.address) {
@@ -213,21 +226,18 @@ export default class Configure extends ModelExtend {
             prevBestNodeOrApi.best = false;
             bestNodeOrApi.best = true;
             console.log(
-              sortedList,
-              bestNodeOrApi.address,
-              bestNodeOrApi.name,
-              `---------------1分钟后切换到最优${target === 'Node' ? '节点' : 'Api'}`
+              `---------------1分钟后切换到最优${target === 'Node' ? '节点' : 'Api'}，最优结果：${bestNodeOrApi.name}`,
+              bestNodeOrApi
             );
             reloadPage();
           } else {
-            console.log(`用户未允许自动切换${target === 'Node' ? '节点' : 'Api'}功能`);
+            console.log(
+              `用户未允许自动切换${target === 'Node' ? '节点' : 'Api'}功能，最优结果：${bestNodeOrApi.name}`,
+              bestNodeOrApi
+            );
           }
         } else {
-          console.log(
-            bestNodeOrApi.address,
-            prevBestNodeOrApi.address,
-            `最优${target === 'Node' ? '节点' : 'Api'}相等，不切换`
-          );
+          console.log(`最优${target === 'Node' ? '节点' : 'Api'}相等，不切换,最优结果：${bestNodeOrApi.name}`);
         }
         this.changeModel(target === 'Node' ? 'nodes' : 'api', list);
       }
