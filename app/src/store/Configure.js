@@ -53,7 +53,7 @@ export default class Configure extends ModelExtend {
       : [
           {
             type: '系统默认',
-            name: 'https://api.chainx.org',
+            name: 'api.chainx.org',
             best: true,
             address: 'https://api.chainx.org',
             isSystem: true,
@@ -102,6 +102,23 @@ export default class Configure extends ModelExtend {
     const bestNode = this.nodes.filter(item => item.best)[0];
     const bestApi = this.api.filter(item => item.best)[0];
     return [bestNode, bestApi];
+  };
+
+  setBestNodeOrApi = ({ target, index }) => {
+    const list = target === 'Node' ? this.nodes : this.api;
+    const data = list.map((item, ins) => {
+      if (ins === index) {
+        return {
+          ...item,
+          best: true,
+        };
+      }
+      return {
+        ...item,
+        best: false,
+      };
+    });
+    this.changeModel(target === 'Node' ? 'nodes' : 'api', data);
   };
 
   resetNodesOrApi = target => {

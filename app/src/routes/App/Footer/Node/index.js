@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Input } from '../../../../components';
+import { Icon, Input, Toast } from '../../../../components';
 import * as styles from './index.less';
 import { classNames, Inject, moment_helper, parseQueryString } from '../../../../utils';
 @Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
@@ -45,17 +45,39 @@ class Node extends Component {
     const nodeList = (
       <ul>
         {[nodes, api].map((one = [], index) => (
-          <li>
+          <li key={index}>
             <Icon name="icon-xinhao" className={styles.xinhao} />
-            {index ? bestNode.name : bestApi.name}
+            {index ? bestApi.name : bestNode.name}
             <div className={styles.triangle} />
             <div className={classNames(styles.switchNode, index ? styles.switchsecond : styles.switchfirst)}>
               <ul>
-                {one.map(item => (
-                  <li key={item.name}>
+                {one.map((item, ins) => (
+                  <li
+                    className={item.best ? styles.active : null}
+                    key={item.name}
+                    onClick={() => {
+                      if (!item.block) {
+                        return Toast.warn(`当前${index ? 'Api' : '节点'}无法连接`);
+                      }
+                      if (item.best) return false;
+                      dispatch({
+                        type: 'setBestNodeOrApi',
+                        payload: {
+                          target: index ? 'Api' : 'Node',
+                          index: ins,
+                        },
+                      });
+                      dispatch({
+                        type: index ? 'autoSwitchBestApi' : 'updateAutoSwitchBestNode',
+                        payload: {
+                          ...(index ? { autoSwitchBestApi: false } : { autoSwitchBestNode: false }),
+                        },
+                      });
+                      window.location.reload();
+                    }}>
                     <div className={styles.name}>{item.name}</div>
                     {item.delay === 'timeOut' ? (
-                      <span className={'red'}>延时</span>
+                      <span className={'red'}>超时</span>
                     ) : (
                       <span className={classNames(styles.time, item.delay > 300 ? 'yellow' : 'green')}>{`${
                         item.delay

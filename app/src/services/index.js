@@ -1,4 +1,4 @@
-import { ChainX, fetchFromHttp } from '../utils';
+import { ChainX, fetchFromHttp, localSave } from '../utils';
 import { default as store } from '../store';
 
 const checkLogin = func => {
@@ -12,8 +12,14 @@ const checkLogin = func => {
   }
 };
 
+const getBestApi = () => {
+  const nodes = localSave.get('api') || [];
+  return nodes.filter((item = {}) => item.best)[0] || {};
+};
+
 const { stake, asset, chain, trade } = ChainX;
-const API = 'http://localhost:3001';
+
+const API = getBestApi().address;
 
 export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
