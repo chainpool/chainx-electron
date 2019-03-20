@@ -305,7 +305,7 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }
       if (res.status >= 200 && res.status < 300) {
         return res.json();
       } else {
-        throw new Error(res.statusText);
+        return Promise.reject(res.statusText);
       }
     })
     .catch(err => {

@@ -13,7 +13,6 @@ import {
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
-  getOrderPairsApi,
   getQuotationsApi,
   getQuotations,
   putOrder,
@@ -54,12 +53,8 @@ export default class Trade extends ModelExtend {
   @observable sellList = [];
   @observable latestOrderList = [];
   @observable entrustOrderList = [];
-  @computed get currentOrderList() {
-    return this.entrustOrderList;
-  }
-  @computed get historyOrderList() {
-    return this.entrustOrderList;
-  }
+  @observable currentOrderList = [];
+  @observable historyOrderList = [];
 
   reload = () => {
     clearTimeout(this.interval);
@@ -153,10 +148,8 @@ export default class Trade extends ModelExtend {
             direction: item.direction,
             status: item.status,
           }));
-
-          const data = _.unionBy(dataRpc.concat(dataApi), 'index');
-          if (data) {
-            const result = data.map((item = {}) => {
+          const processData = data => {
+            return data.map((item = {}) => {
               const filterPair = this.getPair({ id: String(item.pair) });
               const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
               return {
@@ -173,13 +166,17 @@ export default class Trade extends ModelExtend {
                 filterPair,
               };
             });
-            this.changeModel(
-              {
-                entrustOrderList: result,
-              },
-              []
-            );
-          }
+          };
+          const currentOrderList = processData(dataRpc);
+          const historyOrderList = processData(dataApi);
+
+          this.changeModel(
+            {
+              currentOrderList,
+              historyOrderList,
+            },
+            []
+          );
         });
     }
   };
@@ -258,8 +255,16 @@ export default class Trade extends ModelExtend {
           sum.push({ price: next.price, amount: next.amount, direction: next.direction, ...common });
           return sum;
         }, []);
-        const buy = _.unionBy(dataRpc.buy.concat(dataApi.buy), 'price');
-        const sell = _.unionBy(dataRpc.sell.concat(dataApi.sell), 'price');
+        let [buy, sell] = [[], []];
+        if ((dataApi.buy && dataApi.buy.length) || (dataApi.sell && dataApi.sell.length)) {
+          buy = dataApi.buy;
+          sell = dataApi.sell;
+        } else {
+          buy = dataRpc.buy;
+          sell = dataRpc.sell;
+        }
+        // buy = _.unionBy(dataRpc.buy.concat(dataApi.buy), 'price');
+        // sell = _.unionBy(dataRpc.sell.concat(dataApi.sell), 'price');
         const res = {
           buy,
           sell,
@@ -403,7 +408,7 @@ export default class Trade extends ModelExtend {
   };
 
   isApiSwitch = (promise, defaultValue = of(undefined)) => {
-    if (this.rootStore.configureStore.autoSwitchBestApi) {
+    if (true || this.rootStore.configureStore.autoSwitchBestApi) {
       return promise;
     } else {
       return defaultValue;
