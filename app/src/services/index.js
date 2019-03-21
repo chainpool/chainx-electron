@@ -147,7 +147,7 @@ export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
 
-export const getTrusteeAddress = (...payload) => asset.getTrusteeAddress(...payload);
+export const getTrusteeAddress = (...payload) => asset.getTrusteeSessionInfo(...payload);
 
 export const getBlockPeriod = (...payload) => chain.getBlockPeriod(...payload);
 
