@@ -61,7 +61,8 @@ export default class Trade extends ModelExtend {
       this.getOrderPairs();
       this.getQuotations();
       this.getAccountAssets();
-      this.getAccountOrder();
+      this.getCurrentAccountOrder();
+      this.getHistoryAccountOrder();
       this.getLatestOrder();
     }, 300);
   };
