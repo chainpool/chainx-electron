@@ -7,17 +7,17 @@ import { observer, setBlankSpace } from '../../../utils';
 @observer
 class CurrentOrderTable extends SwitchPair {
   startInit = () => {
-    this.getAccountOrder();
+    this.getCurrentAccountOrder();
   };
 
-  getAccountOrder = async () => {
+  getCurrentAccountOrder = async () => {
     const {
       model: { dispatch },
     } = this.props;
     dispatch({
       type: 'getCurrentAccountOrder',
     }).then(() => {
-      this.fetchPoll(this.getAccountOrder);
+      this.fetchPoll(this.getCurrentAccountOrder);
     });
   };
 

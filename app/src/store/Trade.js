@@ -111,11 +111,15 @@ export default class Trade extends ModelExtend {
     return data.map((item = {}) => {
       const filterPair = this.getPair({ id: String(item.pair) });
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      const amountShow = this.setPrecision(item.amount, filterPair.assets);
+      const sumShow = this.setPrecision(item.sum, filterPair.currency);
       return {
         ...item,
         createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
+        sumShow: this.setPrecision(item.sum, filterPair.currency),
+        averagePriceShow: this.setPrecision(item.sum / amountShow, filterPair.currency),
         hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
         hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
         reserveLastShow: this.setPrecision(
@@ -153,7 +157,7 @@ export default class Trade extends ModelExtend {
     );
   };
 
-  getAccountOrder = async () => {
+  getHistoryAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
       return from(
@@ -168,25 +172,28 @@ export default class Trade extends ModelExtend {
           mergeMap(items => {
             return combine(
               items.map((item1 = {}) => {
+                let sum = 0;
                 return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
                   map((item2 = []) => {
                     const res = (item2 || []).map((item = {}) => {
                       const filterPair = this.getPair({ id: String(item.pairid) });
-
-                      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+                      // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
                       const amountShow = this.setPrecision(item.amount, filterPair.assets);
+                      const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
+                      sum += item.price * amountShow;
                       return {
                         ...item,
                         time: moment_helper.formatHMS(item['block.time']),
-                        priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
+                        priceShow: this.setPrecision(item.price, filterPair.assets),
                         maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
                         amountShow,
-                        totalShow: this.setPrecision(item.price * amountShow, filterPair.currency),
+                        totalShow,
                         filterPair,
                       };
                     });
                     return {
                       ...item1,
+                      sum,
                       expand: res,
                     };
                   })
@@ -213,6 +220,7 @@ export default class Trade extends ModelExtend {
             direction: item.direction,
             status: item.status,
             expand: item.expand,
+            sum: item.sum,
           }));
 
           const historyOrderList = this.processOrderData(dataApi);

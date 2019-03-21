@@ -16,23 +16,23 @@ class HistoryOrderTable extends SwitchPair {
   }
 
   startInit = () => {
-    this.getAccountOrder();
+    this.getHistoryAccountOrder();
   };
 
-  getAccountOrder = async () => {
+  getHistoryAccountOrder = async () => {
     const {
       model: { dispatch },
     } = this.props;
-    this.subscribeAccountOrder = await dispatch({
-      type: 'getAccountOrder',
+    this.subscribeHistoryAccountOrder = await dispatch({
+      type: 'getHistoryAccountOrder',
     }).then(res => {
-      this.fetchPoll(this.getAccountOrder);
+      this.fetchPoll(this.getHistoryAccountOrder);
       return res;
     });
   };
 
   componentWillUnsubscribe = () => {
-    this.subscribeAccountOrder.unsubscribe();
+    this.subscribeHistoryAccountOrder.unsubscribe();
   };
 
   componentUpdate = prevProps => {
@@ -121,11 +121,13 @@ class HistoryOrderTable extends SwitchPair {
           },
           {
             title: `成交均价`,
-            dataIndex: '',
+            dataIndex: 'averagePriceShow',
+            render: (value, item) => setBlankSpace(value, item.filterPair.currency),
           },
           {
             title: `成交总额`,
-            dataIndex: 'status',
+            dataIndex: 'sumShow',
+            render: (value, item) => setBlankSpace(value, item.filterPair.currency),
           },
           {
             title: '',
