@@ -6,6 +6,7 @@ import {
   getDepositList,
   getTrusteeAddress,
   getWithdrawalList,
+  getWithdrawalListApi,
   transfer,
   verifyAddressValidity,
   withdraw,
@@ -170,6 +171,12 @@ export default class Asset extends ModelExtend {
 
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
+    // const data = await getWithdrawalListApi({
+    //   chain: 1,
+    //   accountId: 'f4a03666cceb90cb1d50c7d17e87da34fee209550d65c7622c924e82c95aee43', //this.decodeAddressAccountId(account),
+    //   token: 'BTC',
+    // });
+    // console.log(data, '-----data');
     const withdrawList = await getWithdrawalList('Bitcoin', 0, 100);
 
     this.changeModel(

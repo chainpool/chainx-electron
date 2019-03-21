@@ -68,6 +68,15 @@ export const getWithdrawalListByAccount = (...payload) =>
 
 export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payload);
 
+export const getWithdrawalListApi = payload => {
+  const { accountId, chain, token } = payload;
+  return fetchFromHttp({
+    url: `${API}/account/${accountId}/withdrawals?chain=${chain}&token=${token}`,
+    method: 'get',
+    ...payload,
+  });
+};
+
 export const getDepositList = (...payload) => asset.getDepositList(...payload);
 
 export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity(...payload);

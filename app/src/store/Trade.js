@@ -6,7 +6,6 @@ import {
   computed,
   localSave,
   parseQueryString,
-  ChainX,
   toJS,
   generateKlineData,
 } from '../utils';
@@ -111,15 +110,15 @@ export default class Trade extends ModelExtend {
     return data.map((item = {}) => {
       const filterPair = this.getPair({ id: String(item.pair) });
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-      const amountShow = this.setPrecision(item.amount, filterPair.assets);
+      const hasfillAmountShow = this.setPrecision(item.hasfillAmount, filterPair.assets);
       return {
         ...item,
         createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
         sumShow: this.setPrecision(item.sum, filterPair.currency),
-        averagePriceShow: this.setPrecision(item.sum / amountShow, filterPair.currency),
-        hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
+        averagePriceShow: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
+        hasfillAmountShow,
         hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 2),
         reserveLastShow: this.setPrecision(
           item.reserveLast,
@@ -162,7 +161,7 @@ export default class Trade extends ModelExtend {
       return from(
         this.isApiSwitch(
           getOrdersApi({
-            accountId: ChainX.account.decodeAddress(account.address).replace(/^0x/, ''),
+            accountId: this.decodeAddressAccountId(account),
           })
         )
       )
@@ -185,8 +184,8 @@ export default class Trade extends ModelExtend {
                           ...item,
                           time: item.time,
                           priceShow: this.setPrecision(item.price, filterPair.assets),
-                          maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
-                          hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
+                          maker_userShow: this.encodeAddressAccountId(item.maker_user),
+                          hasfillAmountPercent: formatNumber.percent(item.amount / item1.amount, 2),
                           amountShow,
                           totalShow,
                           filterPair,
@@ -268,7 +267,7 @@ export default class Trade extends ModelExtend {
         ...item,
         time: moment_helper.formatHMS(item['block.time']),
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
-        maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
+        maker_userShow: this.encodeAddressAccountId(item.maker_user),
         amountShow,
         totalShow: this.setPrecision(item.price * amountShow, filterPair.currency),
         filterPair,

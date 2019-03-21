@@ -79,41 +79,39 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
-        {false && (
-          <div className={styles.signStatus}>
-            <TableTitle title={'响应列表'}>
-              <div id="copy" style={{ width: 0, height: 0, overFlow: 'hidden' }}>
-                {tx}
-              </div>
-              {tx ? (
-                <ButtonGroup>
-                  <Button>
-                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
+        <div className={styles.signStatus}>
+          <TableTitle title={'响应列表'}>
+            <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
+              <span>{tx}</span>
+            </div>
+            {tx ? (
+              <ButtonGroup>
+                <Button>
+                  <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
+                </Button>
+                {isShowWithdraw ? (
+                  <Button
+                    type="success"
+                    onClick={() => {
+                      openModal({ name: 'WithdrawSignModal' });
+                    }}>
+                    响应多签提现
                   </Button>
-                  {isShowWithdraw ? (
-                    <Button
-                      type="success"
-                      onClick={() => {
-                        openModal({ name: 'WithdrawSignModal' });
-                      }}>
-                      响应多签提现
-                    </Button>
-                  ) : null}
-                </ButtonGroup>
-              ) : null}
-            </TableTitle>
-            <ul>
-              <li>
-                <Icon name="icon-wancheng" className={styles.success} />
-                <span>已签名</span>
-                <ul>
-                  <li>name1</li>
-                  <li>name2</li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        )}
+                ) : null}
+              </ButtonGroup>
+            ) : null}
+          </TableTitle>
+          <ul>
+            <li>
+              <Icon name="icon-wancheng" className={styles.success} />
+              <span>已签名</span>
+              <ul>
+                <li>name1</li>
+                <li>name2</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>

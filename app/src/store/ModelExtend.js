@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, formatNumber, parseQueryString, stringifyQueryString } from '../utils';
+import { _, ChainX, formatNumber, parseQueryString, stringifyQueryString } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -93,6 +93,14 @@ export default class ModelExtend {
 
   getCurrentAccount = () => {
     return this.rootStore.accountStore.currentAccount;
+  };
+
+  decodeAddressAccountId = account => {
+    return ChainX.account.decodeAddress(account.address).replace(/^0x/, '');
+  };
+
+  encodeAddressAccountId = accountId => {
+    return ChainX.account.encodeAddress(`0x${accountId}`);
   };
 
   getAllAssets = () => {
