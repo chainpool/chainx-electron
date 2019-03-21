@@ -4,6 +4,7 @@ import { _, observer, setBlankSpace, setColumnsWidth } from '../../../utils';
 
 import * as styles from './index.less';
 import { Icon, Table } from '../../../components';
+import { BlockTime } from '../../components';
 
 @observer
 class HistoryOrderTable extends SwitchPair {
@@ -82,7 +83,8 @@ class HistoryOrderTable extends SwitchPair {
         [
           {
             title: '时间',
-            dataIndex: 'createTimeShow',
+            dataIndex: 'createTime',
+            render: value => <BlockTime value={value} {...this.props} />,
           },
           {
             title: '委托编号',
@@ -91,7 +93,7 @@ class HistoryOrderTable extends SwitchPair {
           },
           {
             title: '交易对',
-            dataIndex: 'createTimeShow',
+            dataIndex: 'index',
             render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
           },
           {
@@ -171,6 +173,7 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '时间',
                 dataIndex: 'time',
+                render: value => <BlockTime value={value} {...this.props} />,
               },
               {
                 title: '本链交易ID',

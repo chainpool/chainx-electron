@@ -79,6 +79,19 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
+        <div className={styles.signStatus}>
+          <TableTitle title={'响应列表'}>
+            <ButtonGroup>
+              <Button>复制待签原文</Button>
+              <Button>响应多签提现</Button>
+            </ButtonGroup>
+          </TableTitle>
+          <ul>
+            <li>
+              <Icon name="icon-wancheng" />
+            </li>
+          </ul>
+        </div>
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>

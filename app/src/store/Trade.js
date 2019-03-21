@@ -173,45 +173,39 @@ export default class Trade extends ModelExtend {
               combine(
                 items.map((item1 = {}) => {
                   let sum = 0;
-                  if (
-                    item1.status === 'AllExecuted' ||
-                    item1.status === 'ParitialExecutedAndCanceled' ||
-                    item1.status === 'Canceled'
-                  ) {
-                    return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
-                      map((item2 = []) => {
-                        const res = (item2 || []).map((item = {}) => {
-                          const filterPair = this.getPair({ id: String(item.pairid) });
-                          // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-                          const amountShow = this.setPrecision(item.amount, filterPair.assets);
-                          const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
-                          sum += item.price * amountShow;
-                          return {
-                            ...item,
-                            time: moment_helper.formatHMS(item['block.time']),
-                            priceShow: this.setPrecision(item.price, filterPair.assets),
-                            maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
-                            hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
-                            amountShow,
-                            totalShow,
-                            filterPair,
-                          };
-                        });
+                  return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
+                    map((item2 = []) => {
+                      const res = (item2 || []).map((item = {}) => {
+                        const filterPair = this.getPair({ id: String(item.pairid) });
+                        // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+                        const amountShow = this.setPrecision(item.amount, filterPair.assets);
+                        const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
+                        sum += item.price * amountShow;
                         return {
-                          ...item1,
-                          sum,
-                          expand: res,
+                          ...item,
+                          time: item.time,
+                          priceShow: this.setPrecision(item.price, filterPair.assets),
+                          maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
+                          hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
+                          amountShow,
+                          totalShow,
+                          filterPair,
                         };
-                      }),
-                      catchError(() => {
-                        return of({
-                          ...item1,
-                          sum,
-                          expand: [],
-                        });
-                      })
-                    );
-                  }
+                      });
+                      return {
+                        ...item1,
+                        sum,
+                        expand: res,
+                      };
+                    }),
+                    catchError(() => {
+                      return of({
+                        ...item1,
+                        sum,
+                        expand: [],
+                      });
+                    })
+                  );
                 })
               )
             );
@@ -223,22 +217,30 @@ export default class Trade extends ModelExtend {
           })
         )
         .subscribe((resApi = { items: [] }) => {
-          const dataApi = resApi.items.map((item = {}) => {
-            return {
-              accountid: item.accountid,
-              index: item.id,
-              pair: item.pairid,
-              createTime: item['block.time'],
-              amount: item.amount,
-              price: item.price,
-              hasfillAmount: item.hasfill_amount,
-              reserveLast: item.reserve_last,
-              direction: item.direction,
-              status: item.status,
-              expand: item.expand,
-              sum: item.sum,
-            };
-          });
+          const dataApi = resApi.items
+            .filter((item = {}) => {
+              return (
+                item.status === 'AllExecuted' ||
+                item.status === 'ParitialExecutedAndCanceled' ||
+                item.status === 'Canceled'
+              );
+            })
+            .map((item = {}) => {
+              return {
+                accountid: item.accountid,
+                index: item.id,
+                pair: item.pairid,
+                createTime: item.height,
+                amount: item.amount,
+                price: item.price,
+                hasfillAmount: item.hasfill_amount,
+                reserveLast: item.reserve_last,
+                direction: item.direction,
+                status: item.status,
+                expand: item.expand,
+                sum: item.sum,
+              };
+            });
 
           const historyOrderList = this.processOrderData(dataApi);
 
