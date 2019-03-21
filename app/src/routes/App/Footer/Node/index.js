@@ -76,7 +76,7 @@ class Node extends Component {
                         },
                       });
                       dispatch({
-                        type: index ? 'autoSwitchBestApi' : 'updateAutoSwitchBestNode',
+                        type: index ? 'updateAutoSwitchBestApi' : 'updateAutoSwitchBestNode',
                         payload: {
                           ...(index ? { autoSwitchBestApi: false } : { autoSwitchBestNode: false }),
                         },

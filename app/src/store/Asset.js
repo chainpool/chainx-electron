@@ -1,4 +1,3 @@
-import { _, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getAddressByAccount,
@@ -13,8 +12,10 @@ import {
 } from '../services';
 import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
-import { moment, formatNumber } from '@utils/index';
+import { moment, formatNumber, _, observable } from '../utils/index';
 import { Chain } from '@constants';
+import { from, of } from 'rxjs';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
 
 function getAssetWithZeroBalance(info) {
   return {
@@ -143,6 +144,7 @@ export default class Asset extends ModelExtend {
       return {
         date: moment.formatHMS(withdraw.time * 1000), // 申请时间
         balance: withdraw.balance, // 数量
+        balanceShow: this.setPrecision(withdraw.balance, withdraw.token),
         token: withdraw.token, // 币种
         addr: withdraw.addr, // 地址
         memo: withdraw.memo,
@@ -171,18 +173,37 @@ export default class Asset extends ModelExtend {
 
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
-    // const data = await getWithdrawalListApi({
-    //   chain: 1,
-    //   accountId: 'f4a03666cceb90cb1d50c7d17e87da34fee209550d65c7622c924e82c95aee43', //this.decodeAddressAccountId(account),
-    //   token: 'BTC',
-    // });
-    // console.log(data, '-----data');
-    const withdrawList = await getWithdrawalList('Bitcoin', 0, 100);
-
-    this.changeModel(
-      'onChainAccountWithdrawList',
-      withdrawList.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address)
-    );
+    from(getWithdrawalList('Bitcoin', 0, 100))
+      .pipe(
+        combineLatest(
+          from(
+            getWithdrawalListApi({
+              chain: 1,
+              accountId: 'f4a03666cceb90cb1d50c7d17e87da34fee209550d65c7622c924e82c95aee43', //this.decodeAddressAccountId(account),
+              token: 'BTC',
+            })
+          )
+        )
+      )
+      .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+        console.log(resRpc, resApi, '---');
+        const dataRpc = resRpc.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address);
+        const dataApi = resApi.items.map((item = {}) => ({
+          ...item,
+          time: item.height,
+          originChainTxId: item.txid,
+          addr: item.address,
+        }));
+        let data = [];
+        if (dataApi && dataApi.length) {
+          data = dataApi;
+        } else {
+          data = dataRpc;
+        }
+        this.changeModel({
+          onChainAccountWithdrawList: data,
+        });
+      });
   }
 
   async getDepositRecords() {

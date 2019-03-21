@@ -42,7 +42,7 @@ class WithDrawTable extends Mixin {
         },
         {
           title: '数量',
-          dataIndex: 'balance',
+          dataIndex: 'balanceShow',
         },
         {
           title: '备注',

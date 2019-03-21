@@ -121,12 +121,12 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: `成交均价`,
             dataIndex: 'averagePriceShow',
-            render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+            render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
           },
           {
             title: `成交总额`,
             dataIndex: 'sumShow',
-            render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+            render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
           },
           {
             title: '',
