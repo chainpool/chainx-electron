@@ -1,8 +1,8 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon } from '../../components';
+import { Mixin, ButtonGroup, Button, Icon, Clipboard } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
-import { Inject } from '../../utils';
+import { Inject, classNames } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -79,19 +79,41 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
-        <div className={styles.signStatus}>
-          <TableTitle title={'响应列表'}>
-            <ButtonGroup>
-              <Button>复制待签原文</Button>
-              <Button>响应多签提现</Button>
-            </ButtonGroup>
-          </TableTitle>
-          <ul>
-            <li>
-              <Icon name="icon-wancheng" />
-            </li>
-          </ul>
-        </div>
+        {false && (
+          <div className={styles.signStatus}>
+            <TableTitle title={'响应列表'}>
+              <div id="copy" style={{ width: 0, height: 0, overFlow: 'hidden' }}>
+                {tx}
+              </div>
+              {tx ? (
+                <ButtonGroup>
+                  <Button>
+                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
+                  </Button>
+                  {isShowWithdraw ? (
+                    <Button
+                      type="success"
+                      onClick={() => {
+                        openModal({ name: 'WithdrawSignModal' });
+                      }}>
+                      响应多签提现
+                    </Button>
+                  ) : null}
+                </ButtonGroup>
+              ) : null}
+            </TableTitle>
+            <ul>
+              <li>
+                <Icon name="icon-wancheng" className={styles.success} />
+                <span>已签名</span>
+                <ul>
+                  <li>name1</li>
+                  <li>name2</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        )}
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
@@ -104,15 +126,6 @@ class Trust extends Mixin {
                     }}>
                     <Icon name="icon-goujiantixian" />
                     构造多签提现
-                  </Button>
-                ) : null}
-                {tx ? (
-                  <Button
-                    onClick={() => {
-                      openModal({ name: 'WithdrawSignModal' });
-                    }}>
-                    <Icon name="icon-xiangyingtixian" />
-                    响应多签提现
                   </Button>
                 ) : null}
               </ButtonGroup>

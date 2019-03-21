@@ -45,7 +45,9 @@ class Handicap extends SwitchPair {
       onClickRow: item => {
         const setPrice = action => {
           const price = { price: item.priceShow };
-          refs.current.changeBS(action, price, () => refs.current.checkAll.checkPrice(action));
+          if (price.price) {
+            refs.current.changeBS(action, price, () => refs.current.checkAll.checkPrice(action));
+          }
         };
         setPrice('buy');
         setPrice('sell');

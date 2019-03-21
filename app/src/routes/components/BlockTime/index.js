@@ -14,13 +14,15 @@ class BlockTime extends Mixin {
 
   startInit = () => {
     const { value } = this.props;
-    getBlockTime({ height: value }).then((res = {}) => {
-      if (res.time) {
-        this.changeState({
-          timeAfter: res.time,
-        });
-      }
-    });
+    getBlockTime({ height: value })
+      .then((res = {}) => {
+        if (res.time) {
+          this.changeState({
+            timeAfter: res.time,
+          });
+        }
+      })
+      .catch(() => {});
   };
 
   render() {

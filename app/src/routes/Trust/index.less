@@ -44,6 +44,34 @@
     border:1px solid @yellow;
     padding:20px;
     margin:40px 0;
+    >ul{
+      li{
+        i{
+          &.success{
+            color:@yellow;
+          }
+        }
+        display: flex;
+        align-items: center;
+        span{
+          margin-left: 8px;
+          margin-right: 20px;
+        }
+        ul{
+          display: flex;
+          li+li{
+            margin-left: 10px;
+          }
+          li{
+            font-size: 12px;
+            padding:6px 12px;
+            background: #F5F5F5;
+            border: 1px solid #E3E3E3;
+            border-radius: 14px;
+          }
+        }
+      }
+    }
   }
 
   .withdrawTitle {
