@@ -10,7 +10,7 @@ import { observer } from '../../../utils';
 @observer
 class PersonalOrder extends SwitchPair {
   state = {
-    activeIndex: 1,
+    activeIndex: 0,
   };
 
   render() {

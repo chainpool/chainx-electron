@@ -72,12 +72,9 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   render() {
-    const widths = [undefined, 100, 100, 100, undefined, undefined, 200, undefined, undefined, 50];
+    const widths = [150, 100, 100, 100, undefined, undefined, 200, undefined, undefined, 80];
     const { changeExpandIsOpen } = this;
     const { historyOrderList } = this.state;
-    const {
-      model: { dispatch },
-    } = this.props;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
@@ -132,28 +129,32 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: '',
             dataIndex: '_action',
-            render: (value, item) => (
-              <span
-                onClick={() => {
-                  changeExpandIsOpen(item.index);
-                  // dispatch({
-                  //   type: 'getFillAccountOrder',
-                  //   payload: {
-                  //     accountId: item.accountid,
-                  //     index: item.index,
-                  //   },
-                  // }).then(() => {
-                  //   changeExpandIsOpen(item.index);
-                  // });
-                }}>
-                {item.expand && item.expand.length && (
-                  <Icon
-                    name={item.expandIsOpen && item.expand && item.expand.length ? 'triangle-top' : 'triangle-bottom'}
-                    className={styles.pull}
-                  />
-                )}
-              </span>
-            ),
+            render: (value, item) => {
+              let statusShow = '未知';
+              switch (item.status) {
+                case 'AllExecuted':
+                  statusShow = '完全成交';
+                  break;
+                case 'ParitialExecutedAndCanceled':
+                  statusShow = '部分成交已撤销';
+                  break;
+                case 'Canceled':
+                  statusShow = '已撤销';
+                  break;
+              }
+              return (
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    changeExpandIsOpen(item.index);
+                  }}>
+                  {statusShow}
+                  {item.expand && item.expand.length ? (
+                    <Icon name={item.expandIsOpen ? 'triangle-top' : 'triangle-bottom'} className={styles.pull} />
+                  ) : null}
+                </span>
+              );
+            },
           },
         ],
         widths

@@ -24,7 +24,7 @@ import {
   getKlineApi,
 } from '../services';
 import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll } from 'rxjs/operators';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -112,7 +112,6 @@ export default class Trade extends ModelExtend {
       const filterPair = this.getPair({ id: String(item.pair) });
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
       const amountShow = this.setPrecision(item.amount, filterPair.assets);
-      const sumShow = this.setPrecision(item.sum, filterPair.currency);
       return {
         ...item,
         createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
@@ -134,7 +133,6 @@ export default class Trade extends ModelExtend {
   getCurrentAccountOrder = async () => {
     const account = this.getCurrentAccount();
     const res = await getOrders(account.address, 0, 100);
-    console.log(res, '--res');
     const data = (res.data || []).map((item = {}) => ({
       accountid: item.submitter,
       index: item.index,
@@ -169,61 +167,78 @@ export default class Trade extends ModelExtend {
         )
       )
         .pipe(
-          map(res => res.items),
-          mergeMap(items => {
-            return combine(
-              items.map((item1 = {}) => {
-                let sum = 0;
-                return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
-                  map((item2 = []) => {
-                    const res = (item2 || []).map((item = {}) => {
-                      const filterPair = this.getPair({ id: String(item.pairid) });
-                      // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-                      const amountShow = this.setPrecision(item.amount, filterPair.assets);
-                      const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
-                      sum += item.price * amountShow;
-                      return {
-                        ...item,
-                        time: moment_helper.formatHMS(item['block.time']),
-                        priceShow: this.setPrecision(item.price, filterPair.assets),
-                        maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
-                        hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
-                        amountShow,
-                        totalShow,
-                        filterPair,
-                      };
-                    });
-                    return {
-                      ...item1,
-                      sum,
-                      expand: res,
-                    };
-                  })
-                );
-              })
+          map((res = {}) => res.items),
+          mergeMap((items = []) => {
+            return this.isApiSwitch(
+              combine(
+                items.map((item1 = {}) => {
+                  let sum = 0;
+                  if (
+                    item1.status === 'AllExecuted' ||
+                    item1.status === 'ParitialExecutedAndCanceled' ||
+                    item1.status === 'Canceled'
+                  ) {
+                    return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
+                      map((item2 = []) => {
+                        const res = (item2 || []).map((item = {}) => {
+                          const filterPair = this.getPair({ id: String(item.pairid) });
+                          // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+                          const amountShow = this.setPrecision(item.amount, filterPair.assets);
+                          const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
+                          sum += item.price * amountShow;
+                          return {
+                            ...item,
+                            time: moment_helper.formatHMS(item['block.time']),
+                            priceShow: this.setPrecision(item.price, filterPair.assets),
+                            maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
+                            hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
+                            amountShow,
+                            totalShow,
+                            filterPair,
+                          };
+                        });
+                        return {
+                          ...item1,
+                          sum,
+                          expand: res,
+                        };
+                      }),
+                      catchError(() => {
+                        return of({
+                          ...item1,
+                          sum,
+                          expand: [],
+                        });
+                      })
+                    );
+                  }
+                })
+              )
             );
           }),
-          map(res => {
+          map((res = []) => {
             return {
               items: res,
             };
           })
         )
         .subscribe((resApi = { items: [] }) => {
-          const dataApi = resApi.items.map((item = {}) => ({
-            accountid: item.accountid,
-            index: item.id,
-            pair: item.pairid,
-            createTime: item['block.time'],
-            amount: item.amount,
-            price: item.price,
-            hasfillAmount: item.hasfill_amount,
-            reserveLast: item.reserve_last,
-            direction: item.direction,
-            status: item.status,
-            expand: item.expand,
-            sum: item.sum,
-          }));
+          const dataApi = resApi.items.map((item = {}) => {
+            return {
+              accountid: item.accountid,
+              index: item.id,
+              pair: item.pairid,
+              createTime: item['block.time'],
+              amount: item.amount,
+              price: item.price,
+              hasfillAmount: item.hasfill_amount,
+              reserveLast: item.reserve_last,
+              direction: item.direction,
+              status: item.status,
+              expand: item.expand,
+              sum: item.sum,
+            };
+          });
 
           const historyOrderList = this.processOrderData(dataApi);
 
@@ -283,6 +298,11 @@ export default class Trade extends ModelExtend {
                 count,
               })
             )
+          ).pipe(
+            catchError(err => {
+              console.log(err, 'getQuotationsApi错误');
+              return of({ bids: [], asks: [] });
+            })
           )
         )
       )
@@ -312,6 +332,7 @@ export default class Trade extends ModelExtend {
           sum.push({ price: next.price, amount: next.amount, direction: next.direction, ...common });
           return sum;
         }, []);
+        console.log(dataRpc, dataApi, '-----dataRpc,dataApi');
         let [buy, sell] = [[], []];
         if ((dataApi.buy && dataApi.buy.length) || (dataApi.sell && dataApi.sell.length)) {
           buy = dataApi.buy;

@@ -13,8 +13,8 @@ const checkLogin = func => {
 };
 
 const getBestApi = () => {
-  const nodes = localSave.get('api') || [];
-  return nodes.filter((item = {}) => item.best)[0] || {};
+  const api = localSave.get('api') || [];
+  return api.filter((item = {}) => item.best)[0] || {};
 };
 
 const { stake, asset, chain, trade } = ChainX;
@@ -145,3 +145,12 @@ export const getBlockPeriod = (...payload) => chain.getBlockPeriod(...payload);
 export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);
 
 export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);
+
+export const getBlockTime = payload => {
+  const { height } = payload;
+  return fetchFromHttp({
+    url: `${API}/block/${height}?fields=time`,
+    method: 'get',
+    ...payload,
+  });
+};

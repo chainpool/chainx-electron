@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Table } from '../../../components';
+import { BlockTime } from '../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
 import { observer, setBlankSpace } from '../../../utils';
@@ -38,7 +39,8 @@ class CurrentOrderTable extends SwitchPair {
       columns: [
         {
           title: '时间',
-          dataIndex: 'createTimeShow',
+          dataIndex: 'createTime',
+          render: value => <BlockTime value={value} {...this.props} />,
         },
         {
           title: '委托编号',
