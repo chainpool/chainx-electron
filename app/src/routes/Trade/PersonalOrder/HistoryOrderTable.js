@@ -194,7 +194,8 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '成交量',
                 dataIndex: 'amountShow',
-                render: (value, item) => setBlankSpace(value, item.filterPair.assets),
+                render: (value, item) =>
+                  setBlankSpace(setBlankSpace(value, item.filterPair.assets), `(${item.hasfillAmountPercent})`),
               },
               {
                 title: '成交均价',

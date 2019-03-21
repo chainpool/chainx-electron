@@ -121,7 +121,7 @@ export default class Trade extends ModelExtend {
         sumShow: this.setPrecision(item.sum, filterPair.currency),
         averagePriceShow: this.setPrecision(item.sum / amountShow, filterPair.currency),
         hasfillAmountShow: this.setPrecision(item.hasfillAmount, filterPair.assets),
-        hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 1),
+        hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 2),
         reserveLastShow: this.setPrecision(
           item.reserveLast,
           item.direction === 'Buy' ? filterPair.currency : filterPair.assets
@@ -134,15 +134,16 @@ export default class Trade extends ModelExtend {
   getCurrentAccountOrder = async () => {
     const account = this.getCurrentAccount();
     const res = await getOrders(account.address, 0, 100);
+    console.log(res, '--res');
     const data = (res.data || []).map((item = {}) => ({
-      accountid: item.accountid,
-      index: item.id,
-      pair: item.pairid,
-      createTime: item['block.time'],
+      accountid: item.submitter,
+      index: item.index,
+      pair: item.pairIndex,
+      createTime: item.createdAt,
       amount: item.amount,
       price: item.price,
-      hasfillAmount: item.hasfill_amount,
-      reserveLast: item.reserve_last,
+      hasfillAmount: item.alreadyFilled,
+      reserveLast: item.remaining,
       direction: item.direction,
       status: item.status,
       expand: item.expand,
@@ -186,6 +187,7 @@ export default class Trade extends ModelExtend {
                         time: moment_helper.formatHMS(item['block.time']),
                         priceShow: this.setPrecision(item.price, filterPair.assets),
                         maker_userShow: ChainX.account.encodeAddress(`0x${item.maker_user}`),
+                        hasfillAmountPercent: formatNumber.percent(item.amount / item1.hasfill_amount, 2),
                         amountShow,
                         totalShow,
                         filterPair,
