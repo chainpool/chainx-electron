@@ -1,7 +1,8 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, Table } from '../../components';
-import { observer } from '@utils';
+import { BlockTime } from '../components';
+import { observer } from '../../utils';
 
 @observer
 class WithDrawTable extends Mixin {
@@ -24,6 +25,7 @@ class WithDrawTable extends Mixin {
         {
           title: '申请时间',
           dataIndex: 'date',
+          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : value),
         },
         {
           title: '原链交易ID',

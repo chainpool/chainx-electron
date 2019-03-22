@@ -3,6 +3,7 @@ import {
   getAddressByAccount,
   getAsset,
   getDepositList,
+  getDepositListApi,
   getTrusteeAddress,
   getWithdrawalList,
   getWithdrawalListApi,
@@ -13,7 +14,7 @@ import {
 import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
 import { moment, formatNumber, _, observable } from '../utils/index';
-import { Chain } from '@constants';
+import { Chain } from '../constants';
 import { from, of } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
 
@@ -142,6 +143,7 @@ export default class Asset extends ModelExtend {
       }
 
       return {
+        height: withdraw.height,
         date: moment.formatHMS(withdraw.time * 1000), // 申请时间
         balance: withdraw.balance, // 数量
         balanceShow: this.setPrecision(withdraw.balance, withdraw.token),
@@ -179,7 +181,7 @@ export default class Asset extends ModelExtend {
           from(
             getWithdrawalListApi({
               chain: 1,
-              accountId: 'f4a03666cceb90cb1d50c7d17e87da34fee209550d65c7622c924e82c95aee43', //this.decodeAddressAccountId(account),
+              accountId: this.decodeAddressAccountId(account),
               token: 'BTC',
             })
           ).pipe(
@@ -195,7 +197,7 @@ export default class Asset extends ModelExtend {
         const dataRpc = resRpc.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address);
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
-          time: item.height,
+          height: item.height,
           originChainTxId: item.txid,
           addr: item.address,
         }));
@@ -213,13 +215,61 @@ export default class Asset extends ModelExtend {
 
   async getDepositRecords() {
     const account = this.getCurrentAccount();
-    // TODO: 暂时写死BTC
-    const records = await getDepositList('Bitcoin', 0, 100);
-
-    this.changeModel(
-      'depositRecords',
-      records.data.filter(record => encodeAddress(record.accountid) === account.address)
-    );
+    from(getDepositList('Bitcoin', 0, 100))
+      .pipe(
+        combineLatest(
+          from(
+            getDepositListApi({
+              chain: 1,
+              accountId: this.decodeAddressAccountId(account),
+              token: 'BTC',
+            })
+          ).pipe(
+            catchError(() => {
+              return of({
+                items: [],
+              });
+            })
+          )
+        )
+      )
+      .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+        const dataRpc = resRpc.data
+          .filter(record => encodeAddress(record.accountid) === account.address)
+          .map(record => {
+            return {
+              address: record.address, //充值地址
+              time: moment.formatHMS(new Date(record.time * 1000)),
+              token: record.token,
+              txid: record.txid,
+              amount: this.setPrecision(record.balance, record.token),
+              status:
+                record.totalConfirm > record.confirm ? `(${record.confirm}/${record.totalConfirm})确认中` : '已确认',
+              memo: record.memo,
+            };
+          });
+        const dataApi = resApi.items.map((record = {}) => {
+          return {
+            time: '',
+            address: record.address,
+            height: record.height,
+            token: record.token,
+            txid: record.txid,
+            amount: this.setPrecision(record.balance, record.token),
+            status: '未知',
+            memo: record.memo,
+          };
+        });
+        let data = [];
+        if (dataApi && dataApi.length) {
+          data = dataApi;
+        } else {
+          data = dataRpc;
+        }
+        this.changeModel({
+          depositRecords: data,
+        });
+      });
   }
 
   async getTrusteeAddress({ chain }) {
@@ -229,7 +279,6 @@ export default class Asset extends ModelExtend {
   }
 
   transfer = ({ dest, token, amount, remark }) => {
-    console.log(dest, token, amount, remark);
     amount = this.setPrecision(amount, token, true);
     const extrinsic = transfer(dest, token, Number(amount), remark);
     return {

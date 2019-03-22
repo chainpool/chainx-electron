@@ -1,9 +1,10 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, Table } from '../../components';
-import { Inject, moment, formatNumber } from '@utils';
+import { Inject } from '../../utils';
+import { BlockTime } from '../components';
 
-@Inject(({ assetStore, globalStore }) => ({ assetStore, globalStore }))
+@Inject(({ assetStore }) => ({ assetStore }))
 class DepositTable extends Mixin {
   startInit() {
     const {
@@ -15,26 +16,8 @@ class DepositTable extends Mixin {
 
   render() {
     const {
-      assetStore: { depositRecords },
-      globalStore: { assets },
+      assetStore: { depositRecords = [] },
     } = this.props;
-
-    const records = depositRecords.map(record => {
-      const info = assets.find(asset => asset.name === record.token);
-      if (!info) {
-        throw Error(`can not find record asset ${record.token} definition`);
-      }
-
-      return {
-        address: record.address, //充值地址
-        time: moment.formatHMS(new Date(record.time * 1000)),
-        token: record.token,
-        txid: record.txid,
-        amount: formatNumber.toPrecision(record.balance, info.precision),
-        status: record.totalConfirm > record.confirm ? `(${record.confirm}/${record.totalConfirm})确认中` : '已确认',
-        memo: record.memo,
-      };
-    });
 
     const tableProps = {
       className: styles.tableContainer,
@@ -42,10 +25,12 @@ class DepositTable extends Mixin {
         {
           title: '发起时间',
           dataIndex: 'time',
+          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : value),
         },
         {
           title: '原链交易ID',
           dataIndex: 'txid',
+          ellipse: true,
         },
         {
           title: '币种',
@@ -63,6 +48,7 @@ class DepositTable extends Mixin {
         },
         {
           title: '备注',
+          ellipse: true,
           dataIndex: 'memo',
         },
         {
@@ -71,7 +57,7 @@ class DepositTable extends Mixin {
           dataIndex: 'status',
         },
       ],
-      dataSource: records,
+      dataSource: depositRecords,
     };
     return <Table {...tableProps} />;
   }
