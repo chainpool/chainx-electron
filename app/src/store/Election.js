@@ -1,4 +1,4 @@
-import { ChainX, formatNumber, observable, computed } from '../utils';
+import { ChainX, formatNumber, observable, computed, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
@@ -145,7 +145,7 @@ export default class Election extends ModelExtend {
 
   // 信托节点
   @computed get trustIntentions() {
-    return [...this.validatorsWithRecords].filter(validator => validator.isTrustee);
+    return [...this.validatorsWithRecords].filter(validator => validator.isTrustee && validator.isTrustee.length);
   }
 
   @computed get backupValidators() {

@@ -41,7 +41,7 @@ class NodeTable extends Component {
                   {value}
                 </RouterGo>
               </HoverTip>
-              {item.isTrustee ? <img src={trusteeImg} alt="" /> : null}
+              {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
             </div>
           ),
         },
