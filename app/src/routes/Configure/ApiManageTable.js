@@ -56,6 +56,11 @@ class ApiManageTable extends Mixin {
             },
           },
           {
+            title: '块高',
+            dataIndex: 'block',
+            render: value => value || '--',
+          },
+          {
             title: '同步状态',
             dataIndex: 'syncStatus',
             render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,

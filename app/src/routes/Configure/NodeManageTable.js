@@ -60,20 +60,20 @@ class NodeManageTable extends Mixin {
             dataIndex: 'links',
           },
           {
+            title: '块高',
+            dataIndex: 'block',
+            render: value => value || '--',
+          },
+          {
             title: '同步状态',
             dataIndex: 'syncStatus',
             render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,
-          },
-          {
-            title: '块高',
-            dataIndex: 'block',
           },
           {
             title: '',
             dataIndex: '_action',
             render: (value, item, index) => (
               <ButtonGroup>
-                {item.isLocalhost ? <Button onClick={() => {}}>停止同步</Button> : null}
                 {!item.isSystem ? (
                   <>
                     <Button
