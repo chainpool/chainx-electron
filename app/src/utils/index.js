@@ -62,7 +62,7 @@ export const Patterns = {
   },
   isPrivateKey: (privateKey, errMsg = ErrMsg.privateKeyNotFormat) => {
     try {
-      return /^0x[0-9a-fA-F]{170}$/.test(privateKey) ? '' : errMsg;
+      return /^0x[0-9a-fA-F]{64}$/.test(privateKey) || /^0x[0-9a-fA-F]{170}$/.test(privateKey) ? '' : errMsg;
     } catch (err) {
       return errMsg;
     }

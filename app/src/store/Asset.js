@@ -182,11 +182,16 @@ export default class Asset extends ModelExtend {
               accountId: 'f4a03666cceb90cb1d50c7d17e87da34fee209550d65c7622c924e82c95aee43', //this.decodeAddressAccountId(account),
               token: 'BTC',
             })
+          ).pipe(
+            catchError(() => {
+              return of({
+                items: [],
+              });
+            })
           )
         )
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
-        console.log(resRpc, resApi, '---');
         const dataRpc = resRpc.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address);
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,

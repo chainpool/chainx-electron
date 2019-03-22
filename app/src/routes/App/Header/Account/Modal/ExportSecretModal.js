@@ -43,7 +43,7 @@ class ExportSecretModal extends Component {
               type="confirm"
               onClick={() => {
                 if (checkAll.confirm()) {
-                  this.setState({ showResult: ChainX.account.fromKeyStore(encoded, password).pkcs8() });
+                  this.setState({ showResult: ChainX.account.fromKeyStore(encoded, password).privateKey() });
                 }
               }}>
               确定
