@@ -69,7 +69,7 @@ class NodeSettingModal extends Component {
                   payload: {
                     node,
                     chain,
-                    trusteeAddress: trusteeAddress ? [trusteeAddress] : '',
+                    trusteeAddress: trusteeAddress ? [trusteeAddress] : [],
                   },
                 });
                 closeModal();
