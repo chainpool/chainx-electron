@@ -94,6 +94,10 @@ export default class Trust extends ModelExtend {
     });
   }
 
+  @computed get signTrusteeList() {
+    return this.rootStore.electionStore.originIntentions;
+  }
+
   reload = () => {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
@@ -213,7 +217,7 @@ export default class Trust extends ModelExtend {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
       const res = (await getWithdrawTx(findOne.chain)) || {};
-      const { tx, signStatus, redeemScript } = res;
+      const { tx, signStatus, redeemScript, trusteeList = [] } = res;
       this.changeModel({
         tx,
         signStatus,

@@ -1,4 +1,4 @@
-import { observable, computed, autorun, localSave, formatNumber, _, fetchFromWs, fetchFromHttp } from '../utils';
+import { observable, computed, autorun, localSave, _, fetchFromWs, fetchFromHttp } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork, ConfigureVersion } from '../constants';
 

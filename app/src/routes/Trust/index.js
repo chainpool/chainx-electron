@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
-import { Inject, classNames } from '../../utils';
+import { Inject, toJS } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -36,7 +36,7 @@ class Trust extends Mixin {
 
   render() {
     const {
-      model: { tx, signStatus },
+      model: { tx, signStatus, signTrusteeList = [] },
     } = this.props;
     const {
       accountStore: {
@@ -65,6 +65,8 @@ class Trust extends Mixin {
 
     const isAnyUseableWithdraws = normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying');
 
+    // console.log(toJS(signTrusteeList), '---signTrusteeList');
+
     return (
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
@@ -79,39 +81,41 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
-        <div className={styles.signStatus}>
-          <TableTitle title={'响应列表'}>
-            <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
-              <span>{tx}</span>
-            </div>
-            {tx ? (
-              <ButtonGroup>
-                <Button>
-                  <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
-                </Button>
-                {isShowWithdraw ? (
-                  <Button
-                    type="success"
-                    onClick={() => {
-                      openModal({ name: 'WithdrawSignModal' });
-                    }}>
-                    响应多签提现
+        {signTrusteeList.length && 0 ? (
+          <div className={styles.signStatus}>
+            <TableTitle title={'响应列表'}>
+              <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
+                <span>{tx}</span>
+              </div>
+              {tx ? (
+                <ButtonGroup>
+                  <Button>
+                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
                   </Button>
-                ) : null}
-              </ButtonGroup>
-            ) : null}
-          </TableTitle>
-          <ul>
-            <li>
-              <Icon name="icon-wancheng" className={styles.success} />
-              <span>已签名</span>
-              <ul>
-                <li>name1</li>
-                <li>name2</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+                  {isShowWithdraw ? (
+                    <Button
+                      type="success"
+                      onClick={() => {
+                        openModal({ name: 'WithdrawSignModal' });
+                      }}>
+                      响应多签提现
+                    </Button>
+                  ) : null}
+                </ButtonGroup>
+              ) : null}
+            </TableTitle>
+            <ul>
+              <li>
+                <Icon name="icon-wancheng" className={styles.success} />
+                <span>已签名</span>
+                <ul>
+                  <li>name1</li>
+                  <li>name2</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        ) : null}
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>

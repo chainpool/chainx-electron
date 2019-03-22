@@ -100,7 +100,11 @@ export default class ModelExtend {
   };
 
   encodeAddressAccountId = accountId => {
-    return ChainX.account.encodeAddress(`0x${accountId}`);
+    if (/^0x/.test(accountId)) {
+      return ChainX.account.encodeAddress(accountId);
+    } else {
+      return ChainX.account.encodeAddress(`0x${accountId}`);
+    }
   };
 
   getAllAssets = () => {

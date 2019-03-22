@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, toJS } from '../../utils';
+import { _, moment_helper, toJS } from '../../utils';
 
 import * as styles from './Kline.less';
 
@@ -66,7 +66,7 @@ class Kline extends SwitchPair {
         break;
       case 'W':
         {
-          interval = 6 * dayMinutes;
+          interval = 7 * dayMinutes;
         }
         break;
       case 'M':
@@ -151,6 +151,7 @@ class Kline extends SwitchPair {
         },
         getBars: (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest = true) => {
           const [startTime, endTime] = [String(Math.min(from, to)), String(Math.max(from, to))];
+          console.log(moment_helper.formatHMS(startTime * 1000), moment_helper.formatHMS(endTime * 1000));
           const interval = this.getInterval(resolution);
           dispatch({
             type: 'getKline',
