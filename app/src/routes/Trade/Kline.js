@@ -174,19 +174,23 @@ class Kline extends SwitchPair {
     });
     widget.onChartReady(() => {
       if (widget) {
-        this.widget = widget;
-        this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
-          'Plot.color': '#684A95',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [10, 'close', 0], null, {
-          'Plot.color': '#5677A4',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [30, 'close', 0], null, {
-          'Plot.color': '#417D57',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [60, 'close', 0], null, {
-          'Plot.color': '#782C6C',
-        });
+        try {
+          this.widget = widget;
+          this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
+            'Plot.color': '#684A95',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [10, 'close', 0], null, {
+            'Plot.color': '#5677A4',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [30, 'close', 0], null, {
+            'Plot.color': '#417D57',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [60, 'close', 0], null, {
+            'Plot.color': '#782C6C',
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }
     });
   };

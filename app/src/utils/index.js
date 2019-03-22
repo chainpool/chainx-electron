@@ -289,28 +289,41 @@ export const fetchFromWs = ({ url, method, params = [] }) => {
   });
 };
 
-export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }) => {
+export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], timeOut = 5000 }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
-  return fetch(url, {
-    method: method,
-    headers: {
-      method,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
-  })
-    .then(res => {
-      if (res.status >= 200 && res.status < 300) {
-        return res.json();
-      } else {
-        return Promise.reject(res.statusText);
-      }
+  const request = () =>
+    fetch(url, {
+      method: method,
+      headers: {
+        method,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
     })
-    .catch(err => {
-      return Promise.reject(err);
-    });
+      .then(res => {
+        if (res.status >= 200 && res.status < 300) {
+          return res.json();
+        } else {
+          return Promise.reject(res.statusText);
+        }
+      })
+      .catch(err => {
+        return Promise.reject(err);
+      });
+  if (timeOut) {
+    return Promise.race([
+      request(),
+      new Promise((resovle, reject) => {
+        setTimeout(() => {
+          reject(new Error('请求超时'));
+        }, timeOut);
+      }),
+    ]);
+  } else {
+    return request();
+  }
 };
 
 export const isRepeat = arr => {

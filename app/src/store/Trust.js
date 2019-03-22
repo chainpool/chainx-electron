@@ -251,6 +251,7 @@ export default class Trust extends ModelExtend {
       url: `/getTrustNodeStatus?ip=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
+      timeOut: 2000,
       params: [6, 99999999, trusteeAddress],
     })
       .then(res => {
