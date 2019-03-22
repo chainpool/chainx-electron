@@ -252,10 +252,15 @@ export default class Trust extends ModelExtend {
       methodAlias: 'listunspent',
       method: 'POST',
       params: [6, 99999999, trusteeAddress],
-    }).then(res => {
-      this.reload();
-      return res;
-    });
+    })
+      .then(res => {
+        if (res && !res.error) {
+          return res;
+        } else {
+          return Promise.reject(res);
+        }
+      })
+      .catch(err => Promise.reject(err));
   };
 
   subScribeNodeStatus = () => {
