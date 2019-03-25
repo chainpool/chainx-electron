@@ -20,8 +20,15 @@ class SettingTable extends Component {
         {
           title: '节点状态',
           dataIndex: 'connected',
-          render: connected => {
-            return connected ? '已连接' : '未连接';
+          render: value => {
+            switch (value) {
+              case true:
+                return '已连接';
+              case false:
+                return <span className="red">超时</span>;
+              default:
+                return <span className="red">未连接</span>;
+            }
           },
         },
         {

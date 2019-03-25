@@ -174,7 +174,9 @@ class Kline extends SwitchPair {
               ...item,
               volume: _.random(100, 3000),
             }));
-            onHistoryCallback(data, { noData: true });
+            try {
+              onHistoryCallback(data, { noData: true });
+            } catch {}
           });
         },
         subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {},
