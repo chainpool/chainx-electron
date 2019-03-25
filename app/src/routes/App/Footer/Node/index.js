@@ -67,7 +67,7 @@ class Node extends Component {
                     key={item.name}
                     onClick={() => {
                       if (!item.block) {
-                        return Toast.warn(`当前${index ? 'Api' : '节点'}未获取到块高，无法连接`);
+                        return Toast.warn(`未获取到当前${index ? 'Api' : '节点'}同步状态，无法连接`);
                       }
                       if (item.best) return false;
                       dispatch({
