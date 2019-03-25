@@ -89,7 +89,7 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
-        {signTrusteeList.length ? (
+        {signTrusteeList.length && tx ? (
           <div className={styles.signStatus}>
             <TableTitle title={'响应列表'}>
               <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>

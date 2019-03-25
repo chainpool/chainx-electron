@@ -120,6 +120,7 @@ export default class Trust extends ModelExtend {
   reload = () => {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
+    this.rootStore.electionStore.getIntentions();
   };
 
   sign = ({ withdrawList, tx, redeemScript, privateKey }) => {
@@ -224,7 +225,6 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     const ids = withdrawList.map((item = {}) => item.id);
-    console.log(ids, tx, '---ids, tx');
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
@@ -236,7 +236,6 @@ export default class Trust extends ModelExtend {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
       const res = (await getWithdrawTx(findOne.chain)) || {};
-      console.log(res, '------------res');
       const { tx, signStatus, redeemScript, trusteeList = [] } = res;
       this.changeModel({
         tx,
