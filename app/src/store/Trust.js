@@ -1,4 +1,4 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -38,6 +38,7 @@ export default class Trust extends ModelExtend {
   @observable tx = '';
   @observable signStatus = '';
   @observable redeemScript = '';
+  @observable trusteeList = []; //已签名的节点列表
 
   @computed
   get trusts() {
@@ -95,7 +96,25 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signTrusteeList() {
-    return this.rootStore.electionStore.originIntentions;
+    const currentAccount = this.getCurrentAccount();
+    return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
+      const newItem = {
+        ...item,
+        isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
+      };
+      const findOne = this.trusteeList.filter((one = []) => {
+        if (one[0]) {
+          return `0x${this.decodeAddressAccountId(one[0])}` === item.account;
+        }
+      })[0];
+      if (findOne) {
+        return {
+          ...newItem,
+          trusteeSign: true,
+        };
+      }
+      return newItem;
+    });
   }
 
   reload = () => {
@@ -223,6 +242,7 @@ export default class Trust extends ModelExtend {
         tx,
         signStatus,
         redeemScript,
+        trusteeList,
       });
       return res;
     } else {
@@ -230,6 +250,7 @@ export default class Trust extends ModelExtend {
         tx: '',
         signStatus: '',
         redeemScript: '',
+        trusteeList: [],
       });
     }
   };

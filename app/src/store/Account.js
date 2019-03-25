@@ -1,5 +1,5 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave } from '../utils';
+import { _, localSave, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { ipc as ipcMsg } from '@constants';
 
@@ -66,7 +66,7 @@ export default class Store extends ModelExtend {
     // 是否信托节点
     const intentions = this.rootStore.electionStore.validatorsWithAddress || [];
     const targetIntention = intentions.find(intention => intention.address === this.currentAccount.address);
-    return !!targetIntention && targetIntention.isTrustee;
+    return !!targetIntention && targetIntention.isTrustee && targetIntention.isTrustee.length;
   }
 
   @computed get currentAddress() {

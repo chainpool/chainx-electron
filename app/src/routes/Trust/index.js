@@ -63,11 +63,17 @@ class Trust extends Mixin {
       currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.length > 0;
 
-    console.log(isShowWithdraw, '----isShowWithdraw');
-
     const isAnyUseableWithdraws = normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying');
+    const isSelfSign = signTrusteeList.filter((item = {}) => item.trusteeSign && item.isSelf)[0];
 
-    // console.log(toJS(signTrusteeList), '---signTrusteeList');
+    const renderSignLi = (one, index) => {
+      return (
+        <li key={index}>
+          {one.name}
+          {one.isSelf && ' (本人)'}
+        </li>
+      );
+    };
 
     return (
       <div className={styles.trust}>
@@ -94,7 +100,7 @@ class Trust extends Mixin {
                   <Button>
                     <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
                   </Button>
-                  {isShowWithdraw ? (
+                  {isShowWithdraw && !isSelfSign ? (
                     <Button
                       type="success"
                       onClick={() => {
@@ -108,11 +114,30 @@ class Trust extends Mixin {
             </TableTitle>
             <ul>
               <li>
-                <Icon name="icon-wancheng" className={styles.success} />
+                <Icon name="icon-wancheng" className={'green'} />
                 <span>已签名</span>
                 <ul>
-                  <li>name1</li>
-                  <li>name2</li>
+                  {signTrusteeList
+                    .filter((item = {}) => item.trusteeSign)
+                    .map((one, index) => renderSignLi(one, index))}
+                </ul>
+              </li>
+              <li>
+                <Icon name="icon-cuowu" className={'red'} />
+                <span>已否决</span>
+                <ul>
+                  {signTrusteeList
+                    .filter((item = {}) => item.trusteeSign === false)
+                    .map((one, index) => renderSignLi(one, index))}
+                </ul>
+              </li>
+              <li>
+                <Icon name="weixiangying" className={'yellow'} />
+                <span>未响应</span>
+                <ul>
+                  {signTrusteeList
+                    .filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)
+                    .map((one, index) => renderSignLi(one, index))}
                 </ul>
               </li>
             </ul>
