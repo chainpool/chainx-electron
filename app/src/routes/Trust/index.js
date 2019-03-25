@@ -61,7 +61,9 @@ class Trust extends Mixin {
       currentTrustNode &&
       currentTrustNode.connected &&
       currentTrustNode.decodedHotPrivateKey &&
-      normalizedOnChainAllWithdrawList.length;
+      normalizedOnChainAllWithdrawList.length > 0;
+
+    console.log(isShowWithdraw, '----isShowWithdraw');
 
     const isAnyUseableWithdraws = normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying');
 
@@ -81,7 +83,7 @@ class Trust extends Mixin {
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
-        {signTrusteeList.length && 0 ? (
+        {signTrusteeList.length ? (
           <div className={styles.signStatus}>
             <TableTitle title={'响应列表'}>
               <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>

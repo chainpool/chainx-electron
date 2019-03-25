@@ -2,7 +2,6 @@
   "name": "mobx",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
   "scripts": {
     "start": "node config/scripts/start.js",
     "build": "yarn && node config/scripts/build.js",

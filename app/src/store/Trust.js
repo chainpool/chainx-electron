@@ -217,6 +217,7 @@ export default class Trust extends ModelExtend {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
       const res = (await getWithdrawTx(findOne.chain)) || {};
+      console.log(res, '------------res');
       const { tx, signStatus, redeemScript, trusteeList = [] } = res;
       this.changeModel({
         tx,
