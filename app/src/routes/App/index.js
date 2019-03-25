@@ -10,10 +10,11 @@ import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ globalStore, accountStore, electionStore }) => ({
+@Inject(({ globalStore, accountStore, electionStore, configureStore }) => ({
   globalStore,
   accountStore,
   electionStore,
+  configureStore,
 }))
 class Main extends Component {
   state = {
@@ -34,29 +35,54 @@ class Main extends Component {
       globalStore: { dispatch: dispatchGlobal },
       accountStore: { dispatch: dispatchAccount },
       electionStore: { dispatch: dispatchElection },
+      configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
       history: {
         location: { search },
       },
     } = this.props;
     const address = parseQueryString(search).address;
-    await ChainX.isRpcReady();
-    await dispatchGlobal({
-      type: 'setHistory',
-      payload: {
-        history: this.props.history,
-      },
-    });
-    await dispatchAccount({
-      type: 'switchAccount',
-      payload: {
-        address,
-      },
-    });
-    await dispatchGlobal({ type: 'getAllAssets' });
-    await dispatchElection({ type: 'getIntentions' });
-    this.setState({
-      ready: true,
-    });
+    const wsPromise = () =>
+      Promise.race([
+        ChainX.isRpcReady(),
+        new Promise((resovle, reject) => {
+          setTimeout(() => {
+            reject(new Error('请求超时'));
+          }, 8000);
+        }),
+      ]);
+    wsPromise()
+      .then(async () => {
+        await dispatchGlobal({
+          type: 'setHistory',
+          payload: {
+            history: this.props.history,
+          },
+        });
+        await dispatchAccount({
+          type: 'switchAccount',
+          payload: {
+            address,
+          },
+        });
+        await dispatchGlobal({ type: 'getAllAssets' });
+        await dispatchElection({ type: 'getIntentions' });
+        this.setState({
+          ready: true,
+        });
+      })
+      .catch(err => {
+        console.log('当前节点连接超时，切换节点', err);
+        subscribeNodeOrApi({
+          refresh: false,
+          target: 'Node',
+          callback: index => {
+            setBestNodeOrApi({
+              target: 'Node',
+              index,
+            });
+          },
+        });
+      });
   };
 
   render() {

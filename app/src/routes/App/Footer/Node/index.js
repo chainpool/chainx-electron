@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Input, Toast } from '../../../../components';
 import * as styles from './index.less';
 import { classNames, Inject, moment_helper, parseQueryString } from '../../../../utils';
+import { PATH } from '../../../../constants';
 @Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
 class Node extends Component {
   constructor(props) {
@@ -16,28 +17,29 @@ class Node extends Component {
       chainStore: { dispatch },
       configureStore: { dispatch: dispatchConfig },
       history: {
-        location: { search },
+        location: { pathname, search },
       },
     } = this.props;
     this.subscribeNewHead = await dispatch({
       type: 'subscribeNewHead',
     });
-
     const bestNode = parseQueryString(search).bestNode;
-    dispatchConfig({
-      type: 'subscribeNodeOrApi',
-      payload: {
-        refresh: !bestNode,
-        target: 'Node',
-      },
-    });
-    dispatchConfig({
-      type: 'subscribeNodeOrApi',
-      payload: {
-        refresh: !bestNode,
-        target: 'Api',
-      },
-    });
+    if (pathname !== PATH.configure) {
+      dispatchConfig({
+        type: 'subscribeNodeOrApi',
+        payload: {
+          refresh: !bestNode,
+          target: 'Node',
+        },
+      });
+      dispatchConfig({
+        type: 'subscribeNodeOrApi',
+        payload: {
+          refresh: !bestNode,
+          target: 'Api',
+        },
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -65,7 +67,7 @@ class Node extends Component {
                     key={item.name}
                     onClick={() => {
                       if (!item.block) {
-                        return Toast.warn(`当前${index ? 'Api' : '节点'}无法连接`);
+                        return Toast.warn(`当前${index ? 'Api' : '节点'}未获取到块高，无法连接`);
                       }
                       if (item.best) return false;
                       dispatch({
@@ -81,7 +83,6 @@ class Node extends Component {
                           ...(index ? { autoSwitchBestApi: false } : { autoSwitchBestNode: false }),
                         },
                       });
-                      window.location.reload();
                     }}>
                     <div className={styles.name}>{item.name}</div>
                     {item.delay === 'timeOut' ? (

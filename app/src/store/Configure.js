@@ -1,4 +1,4 @@
-import { observable, computed, autorun, localSave, _, fetchFromWs, fetchFromHttp } from '../utils';
+import { observable, computed, autorun, localSave, _, fetchFromWs, fetchFromHttp, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { NetWork, ConfigureVersion } from '../constants';
 
@@ -119,6 +119,7 @@ export default class Configure extends ModelExtend {
       };
     });
     this.changeModel(target === 'Node' ? 'nodes' : 'api', data);
+    window.location.reload();
   };
 
   resetNodesOrApi = target => {
@@ -133,7 +134,7 @@ export default class Configure extends ModelExtend {
     this.changeModel('currentNetWork', { name, ip });
   }
 
-  subscribeNodeOrApi = async ({ refresh, target }) => {
+  subscribeNodeOrApi = async ({ refresh, target, callback }) => {
     const list = target === 'Node' ? this.nodes : this.api;
     this.resetNodesOrApi(target);
     const changeNodesOrApi = (ins, key, value = '') => {
@@ -199,7 +200,7 @@ export default class Configure extends ModelExtend {
       }, 60 * 1000);
     };
 
-    const caculatePercent = () => {
+    const caculatePercent = currentIndex => {
       const list = _.cloneDeep(target === 'Node' ? this.nodes : this.api) || [];
       const sortedMaxBlockList = [...list].sort((a, b) => b.block - a.block);
       const maxBlock = sortedMaxBlockList[0] || {};
@@ -242,8 +243,10 @@ export default class Configure extends ModelExtend {
         } else {
           console.log(`最优${target === 'Node' ? '节点' : 'Api'}相等，不切换,最优结果：${bestNodeOrApi.name}`);
         }
+        /*初始websocket连接失败用下面这行重新连接 最可靠的节点*/
         this.changeModel(target === 'Node' ? 'nodes' : 'api', list);
       }
+      if (target === 'Node' && bestNodeOrApi.address && _.isFunction(callback)) callback(currentIndex);
     };
 
     for (let i = 0; i < list.length; i++) {
@@ -269,7 +272,7 @@ export default class Configure extends ModelExtend {
               const res = result.data;
               if (res) {
                 changeNodesOrApi(i, 'block', res);
-                caculatePercent();
+                caculatePercent(i);
               }
             })
             .catch(() => {
@@ -287,7 +290,7 @@ export default class Configure extends ModelExtend {
               if (res) {
                 changeNodesOrApi(i, 'block', res.height);
                 changeNodesOrApi(i, 'delay', endTime - startTime);
-                caculatePercent();
+                caculatePercent(i);
               }
             })
             .catch(() => {

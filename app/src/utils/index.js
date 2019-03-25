@@ -24,6 +24,7 @@ const getBestNode = () => {
   const findOne = nodes.filter((item = {}) => item.best)[0] || {};
   return findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';
 };
+
 export const ChainX = new Chainx(getBestNode());
 
 export const resOk = result => {
