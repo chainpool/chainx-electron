@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Inject } from '@utils';
+import { Inject } from '../../utils';
 import { Button, ButtonGroup, Table } from '../../components';
 import * as styles from './index.less';
 

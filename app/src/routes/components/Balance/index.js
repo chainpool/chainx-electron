@@ -8,12 +8,12 @@ const zeroStyle = {
   color: '#c2c2c2',
 };
 
-class Asset extends Component {
+class Balance extends Component {
   render() {
     const { value } = this.props;
 
-    return <span style={parseFloat(value) > 0 ? nonZeroStyle : zeroStyle}>{value}</span>;
+    return <span style={parseFloat(value) > 0 ? nonZeroStyle : zeroStyle}>{parseFloat(value) > 0 ? value : '-'}</span>;
   }
 }
 
-export default Asset;
+export default Balance;

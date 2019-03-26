@@ -200,9 +200,7 @@ class Kline extends SwitchPair {
           this.widget.chart().createStudy('Moving Average', true, false, [60, 'close', 0], null, {
             'Plot.color': '#782C6C',
           });
-        } catch (err) {
-          console.log(err);
-        }
+        } catch {}
       }
     });
   };

@@ -2,8 +2,7 @@ import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
 import { observer } from '../../utils';
-import Balance from '../components/Balance';
-import { HoverTip } from '@routes/components';
+import { Balance, HoverTip } from '../components';
 
 @observer
 class DepositMineTable extends Mixin {
@@ -12,7 +11,7 @@ class DepositMineTable extends Mixin {
       model: { dispatch },
     } = this.props;
 
-    this.getPseduIntentions$ = await dispatch({
+    dispatch({
       type: 'getPseduIntentions',
     });
   };
@@ -59,20 +58,17 @@ class DepositMineTable extends Mixin {
         {
           title: '奖池金额(PCX)',
           dataIndex: 'jackpot',
+          render: value => <Balance value={value} />,
         },
         {
           title: '我的总余额',
           dataIndex: 'balance',
-          render: value => {
-            return value ? <Balance value={value} /> : '-';
-          },
+          render: value => <Balance value={value} />,
         },
         {
           title: '待领利息(PCX)',
           dataIndex: 'interest',
-          render: value => {
-            return value ? <Balance value={value} /> : '-';
-          },
+          render: value => <Balance value={value} />,
         },
         {
           title: '',
