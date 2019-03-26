@@ -67,6 +67,10 @@ export default class Trade extends ModelExtend {
     }, 300);
   };
 
+  getAccountAssets = () => {
+    return this.rootStore.assetStore.getAccountAssets();
+  };
+
   showUnitPrecision = (precision, unitPrecision) => {
     return value => {
       const show = precision - unitPrecision;
