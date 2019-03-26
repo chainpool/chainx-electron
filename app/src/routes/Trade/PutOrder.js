@@ -81,11 +81,9 @@ class PutOrder extends SwitchPair {
 
   startInit = () => {
     const {
-      model: { currentPair, setPrecision, dispatch, showUnitPrecision },
+      model: { currentPair, setPrecision, showUnitPrecision },
     } = this.props;
-    dispatch({
-      type: 'getAccountAssets',
-    });
+    this.getAccountAssets();
     const prev = {
       amount: '',
       priceErrMsg: '',
@@ -103,6 +101,17 @@ class PutOrder extends SwitchPair {
         setPrecision(currentPair.lastPrice, currentPair.precision)
       ),
       ...prev,
+    });
+  };
+
+  getAccountAssets = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getAccountAssets',
+    }).then(() => {
+      this.fetchPoll(this.getAccountAssets);
     });
   };
 
