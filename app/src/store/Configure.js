@@ -46,7 +46,7 @@ export default class Configure extends ModelExtend {
     localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
   @observable currentNetWork = NetWork[0];
-  @observable isTestNet = (process.env.CHAINX_NET || '') !== 'main';
+  @observable isTestNet = true || (process.env.CHAINX_NET || '') !== 'main';
   @observable api = this.resetApi(
     this.refreshLocalNodesOrApi('Api')
       ? localSave.get('api')
