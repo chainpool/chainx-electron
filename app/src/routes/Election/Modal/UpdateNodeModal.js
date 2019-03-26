@@ -19,7 +19,6 @@ class UpdateNodeModal extends Component {
     const {
       electionStore: { accountValidator = {} },
     } = this.props;
-
     this.setState({
       address: accountValidator.sessionAddress,
       website: accountValidator.url,
@@ -39,9 +38,7 @@ class UpdateNodeModal extends Component {
     checkWebsite: () => {
       const { website } = this.state;
       const errMsg =
-        Patterns.check('required')(website) ||
-        Patterns.check('smallerOrEqual')(website.length, 32, '不能超过32个字符') ||
-        /[:/]/.test(website)
+        Patterns.check('smallerOrEqual')(website.length, 32, '不能超过32个字符') || /[:/]/.test(website)
           ? '不能包含 : 或 /，请直接输入域名'
           : '';
       this.setState({ websiteErrMsg: errMsg });
@@ -50,9 +47,8 @@ class UpdateNodeModal extends Component {
 
     checkAbout: () => {
       const { about } = this.state;
-      const errMsg =
-        Patterns.check('required')(about) || Patterns.check('smallerOrEqual')(about.length, 256, '不能超过256个字符');
-      this.setState({ websiteErrMsg: errMsg });
+      const errMsg = Patterns.check('smallerOrEqual')(about.length, 256, '不能超过256个字符');
+      this.setState({ aboutErrMsg: errMsg });
       return errMsg;
     },
 

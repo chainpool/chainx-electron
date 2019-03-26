@@ -231,7 +231,7 @@ export default class Election extends ModelExtend {
 
   /*更新节点*/
   refresh = ({ url, participating, address, about }) => {
-    const extrinsic = refresh(url, participating, address, about);
+    const extrinsic = refresh(url || null, participating, address, about);
     return {
       extrinsic,
       success: () => this.reload(),
