@@ -57,7 +57,7 @@ class Node extends Component {
         {[nodes, api].map((one = [], index) => (
           <li key={index}>
             <Icon name="icon-xinhao" className={styles.xinhao} />
-            {index ? bestApi.name : bestNode.name}
+            <span className={styles.apiornodename}>{index ? bestApi.name : bestNode.name}</span>
             <div className={styles.triangle} />
             <div className={classNames(styles.switchNode, index ? styles.switchsecond : styles.switchfirst)}>
               <ul>
