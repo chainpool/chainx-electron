@@ -2,7 +2,7 @@ import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
-import { Inject, toJS } from '../../utils';
+import { Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -79,13 +79,15 @@ class Trust extends Mixin {
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
           <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
-          <Button
-            onClick={() => {
-              openModal({ name: 'TrustSetting' });
-            }}>
-            <Icon name="icon-shezhixintuo" />
-            <span>设置信托</span>
-          </Button>
+          {isTrustee && (
+            <Button
+              onClick={() => {
+                openModal({ name: 'TrustSetting' });
+              }}>
+              <Icon name="icon-shezhixintuo" />
+              <span>设置信托</span>
+            </Button>
+          )}
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
