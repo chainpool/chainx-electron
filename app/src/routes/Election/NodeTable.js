@@ -24,11 +24,16 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 85,
+          width: 60,
           ellipse: 20,
           dataIndex: 'name',
-          render: (value, record, index) => {
-            return `${index + 1}${record.isActive ? '' : '（退选）'}`;
+          render: (value, item, index) => {
+            return (
+              <div className={styles.trustee}>
+                {index + 1}
+                {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
+              </div>
+            );
           },
         },
         {
@@ -41,7 +46,7 @@ class NodeTable extends Component {
                   {value}
                 </RouterGo>
               </HoverTip>
-              {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
+              <span className={styles.leaveOut}>{item.isActive ? '' : '（已退选)'}</span>
             </div>
           ),
         },
