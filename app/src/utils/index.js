@@ -294,7 +294,7 @@ export const fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
       request(),
       new Promise((resovle, reject) => {
         setTimeout(() => {
-          reject(new Error('请求超时'));
+          reject('请求超时');
         }, timeOut);
       }),
     ]);
@@ -331,7 +331,7 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], 
       request(),
       new Promise((resovle, reject) => {
         setTimeout(() => {
-          reject(new Error('请求超时'));
+          reject('请求超时');
         }, timeOut);
       }),
     ]);
