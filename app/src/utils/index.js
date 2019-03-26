@@ -24,6 +24,7 @@ const getBestNode = () => {
   const findOne = nodes.filter((item = {}) => item.best)[0] || {};
   return findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';
 };
+
 export const ChainX = new Chainx(getBestNode());
 
 export const resOk = result => {
@@ -256,61 +257,87 @@ export const setBlankSpace = (value, unit) => {
   return `${value} ${unit}`;
 };
 
-export const fetchFromWs = ({ url, method, params = [] }) => {
+export const fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method, params });
   let startTime;
   let endTime;
-  return new Promise((resolve, reject) => {
-    const ws = new WebSocket(url);
-    ws.onmessage = m => {
-      try {
-        const data = JSON.parse(m.data);
-        if (data.id === id) {
-          endTime = Date.now();
-          resolve({
-            data: data.result,
-            wastTime: endTime - startTime,
-          });
-          ws.close();
+  const request = () =>
+    new Promise((resolve, reject) => {
+      const ws = new WebSocket(url);
+      ws.onmessage = m => {
+        try {
+          const data = JSON.parse(m.data);
+          if (data.id === id) {
+            endTime = Date.now();
+            resolve({
+              data: data.result,
+              wastTime: endTime - startTime,
+            });
+            ws.close();
+          }
+        } catch (err) {
+          reject(err);
         }
-      } catch (err) {
+      };
+      ws.onopen = () => {
+        startTime = Date.now();
+        ws.send(message);
+      };
+      ws.onerror = err => {
+        ws.close();
         reject(err);
-      }
-    };
-    ws.onopen = () => {
-      startTime = Date.now();
-      ws.send(message);
-    };
-    ws.onerror = err => {
-      ws.close();
-      reject(err);
-    };
-  });
+      };
+    });
+  if (timeOut) {
+    return Promise.race([
+      request(),
+      new Promise((resovle, reject) => {
+        setTimeout(() => {
+          reject('请求超时');
+        }, timeOut);
+      }),
+    ]);
+  } else {
+    return request();
+  }
 };
 
-export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [] }) => {
+export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], timeOut = 5000 }) => {
   const id = _.uniqueId();
   const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
-  return fetch(url, {
-    method: method,
-    headers: {
-      method,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
-  })
-    .then(res => {
-      if (res.status >= 200 && res.status < 300) {
-        return res.json();
-      } else {
-        return Promise.reject(res.statusText);
-      }
+  const request = () =>
+    fetch(url, {
+      method: method,
+      headers: {
+        method,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
     })
-    .catch(err => {
-      return Promise.reject(err);
-    });
+      .then(res => {
+        if (res.status >= 200 && res.status < 300) {
+          return res.json();
+        } else {
+          return Promise.reject(res.statusText);
+        }
+      })
+      .catch(err => {
+        return Promise.reject(err);
+      });
+  if (timeOut) {
+    return Promise.race([
+      request(),
+      new Promise((resovle, reject) => {
+        setTimeout(() => {
+          reject('请求超时');
+        }, timeOut);
+      }),
+    ]);
+  } else {
+    return request();
+  }
 };
 
 export const isRepeat = arr => {
@@ -355,4 +382,14 @@ export const generateKlineData = (startTime, endTime) => {
   }));
 
   return data;
+};
+
+export const SetFullScreen = Ele => {
+  if (document.documentElement.requestFullscreen) {
+    Ele.requestFullscreen();
+  } else if (document.documentElement.mozRequestFullScreen) {
+    Ele.mozRequestFullScreen();
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    Ele.webkitRequestFullscreen();
+  }
 };

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button, Input, Mixin, Modal, RadioGroup } from '../../../components';
-import { InputHorizotalList } from '../../components';
+import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import * as styles from './VoteModal.less';
-import { FreeBalance } from '@routes/components';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
 class VoteModal extends Mixin {
@@ -107,20 +106,28 @@ class VoteModal extends Mixin {
         }>
         <div className={styles.voteModal}>
           {myTotalVote ? (
-            <RadioGroup>
-              {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map(item => (
-                <Input.Radio
-                  active={action === item.value}
-                  key={item.value}
-                  label={item.label}
-                  value={action}
-                  onClick={() => this.setState({ action: item.value })}>
-                  {item.value === 'cancel' ? (
-                    <span className={styles.lockweek}>{`(锁定期${bondingSeconds}分钟)`}</span>
-                  ) : null}
-                </Input.Radio>
-              ))}
-            </RadioGroup>
+            <>
+              <ul className={styles.changeVote}>
+                {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map((item, index) => (
+                  <li
+                    key={index}
+                    className={action === item.value ? styles.active : null}
+                    onClick={() => this.setState({ action: item.value })}>
+                    {item.label}
+                    {item.value === 'cancel' && (
+                      <span className={styles.lockweek}>{`(锁定期${bondingSeconds}分钟)`}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+
+              <div className={styles.afterchange}>
+                修改后投票数：
+                {action === 'add'
+                  ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
+                  : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+              </div>
+            </>
           ) : null}
 
           {action === 'add' ? (
@@ -132,14 +139,8 @@ class VoteModal extends Mixin {
                   value={amount}
                   errMsg={amountErrMsg}
                   onChange={value => this.setState({ amount: value })}
-                  onBlur={checkAll.checkAmount}>
-                  <span>
-                    修改后投票数：
-                    {action === 'add'
-                      ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
-                      : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
-                  </span>
-                </Input.Text>
+                  onBlur={checkAll.checkAmount}
+                />
               }
               right={<FreeBalance value={freeShow} unit={token} />}
             />
@@ -150,14 +151,8 @@ class VoteModal extends Mixin {
               value={amount}
               errMsg={amountErrMsg}
               onChange={value => this.setState({ amount: value })}
-              onBlur={checkAll.checkAmount}>
-              <span>
-                修改后投票数：
-                {action === 'add'
-                  ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
-                  : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
-              </span>
-            </Input.Text>
+              onBlur={checkAll.checkAmount}
+            />
           )}
 
           <Input.Text

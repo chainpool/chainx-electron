@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table } from '../../components';
-import { HoverTip } from '../components';
-import { formatNumber, Inject, isEmpty } from '../../utils';
+import { HoverTip, Balance } from '../components';
+import { Inject } from '../../utils';
 import trusteeImg from '../../resource/trustee.png';
-
-const zeroPlaceHolder = '-';
 
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {
   render() {
     const {
       activeIndex,
-      model: { dispatch, openModal, validators = [], backupValidators = [], validatorsWithMyNomination = [] },
+      model: {
+        dispatch,
+        openModal,
+        validators = [],
+        backupValidators = [],
+        validatorsWithMyNomination = [],
+        setDefaultPrecision,
+      },
       accountStore: { currentAccount = {}, currentAddress },
-      globalStore: { nativeAssetPrecision = 0 },
     } = this.props;
 
     const dataSources = [validators, backupValidators, validatorsWithMyNomination];
@@ -24,11 +28,16 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 85,
+          width: 60,
           ellipse: 20,
           dataIndex: 'name',
-          render: (value, record, index) => {
-            return `${index + 1}${record.isActive ? '' : '（退选）'}`;
+          render: (value, item, index) => {
+            return (
+              <div className={styles.trustee}>
+                {index + 1}
+                {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
+              </div>
+            );
           },
         },
         {
@@ -41,7 +50,7 @@ class NodeTable extends Component {
                   {value}
                 </RouterGo>
               </HoverTip>
-              {item.isTrustee ? <img src={trusteeImg} alt="" /> : null}
+              <span className={styles.leaveOut}>{item.isActive ? '' : '（已退选)'}</span>
             </div>
           ),
         },
@@ -55,41 +64,32 @@ class NodeTable extends Component {
           title: '自抵押数',
           ellipse: true,
           dataIndex: 'selfVote',
-          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => setDefaultPrecision(value),
         },
         {
           title: '总得票数',
           dataIndex: 'totalNomination',
-          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => setDefaultPrecision(value),
         },
         {
           title: '奖池金额',
           dataIndex: 'jackpot',
-          render: value => formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => setDefaultPrecision(value),
         },
         {
           title: '我的投票',
           dataIndex: 'myTotalVote',
-          render: value =>
-            isEmpty(value) || parseFloat(value) <= 0
-              ? zeroPlaceHolder
-              : formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
           title: '赎回冻结',
           dataIndex: 'myRevocation',
-          render: value =>
-            isEmpty(value) || parseFloat(value) <= 0
-              ? zeroPlaceHolder
-              : formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
           title: '待领利息',
           dataIndex: 'myInterest',
-          render: value =>
-            isEmpty(value) || parseFloat(value) <= 0
-              ? zeroPlaceHolder
-              : formatNumber.toPrecision(value, nativeAssetPrecision),
+          render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
           title: '',

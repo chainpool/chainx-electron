@@ -9,4 +9,5 @@ export { default as ConfirmAndCancelModal } from './ConfirmAndCancelModal';
 export { default as SignModal } from './SignModal';
 export { default as ColorProgress } from './ColorProgress';
 export { default as BlockTime } from './BlockTime';
+export { default as Balance } from './Balance';
 // export { default as IncreaseTime } from './IncreaseTime';

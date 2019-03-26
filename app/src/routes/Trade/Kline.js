@@ -1,6 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, moment_helper, toJS } from '../../utils';
+import { _, moment_helper, toJS, SetFullScreen } from '../../utils';
+import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
 
 import * as styles from './Kline.less';
 
@@ -29,6 +30,14 @@ class Kline extends SwitchPair {
       this.widget.chart().setSymbol(this.getId());
     } else {
       this.startKline();
+    }
+  };
+
+  changeTheme = () => {
+    if (_.get(window, 'frames[0].document')) {
+      const iframe = window.frames[0].document.getElementsByTagName('html')[0];
+      /*theme-dark*/
+      iframe.setAttribute('class', '');
     }
   };
 
@@ -165,7 +174,9 @@ class Kline extends SwitchPair {
               ...item,
               volume: _.random(100, 3000),
             }));
-            onHistoryCallback(data, { noData: true });
+            try {
+              onHistoryCallback(data, { noData: true });
+            } catch {}
           });
         },
         subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {},
@@ -174,26 +185,59 @@ class Kline extends SwitchPair {
     });
     widget.onChartReady(() => {
       if (widget) {
-        this.widget = widget;
-        this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
-          'Plot.color': '#684A95',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [10, 'close', 0], null, {
-          'Plot.color': '#5677A4',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [30, 'close', 0], null, {
-          'Plot.color': '#417D57',
-        });
-        this.widget.chart().createStudy('Moving Average', true, false, [60, 'close', 0], null, {
-          'Plot.color': '#782C6C',
-        });
+        try {
+          this.changeTheme();
+          this.widget = widget;
+          this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
+            'Plot.color': '#684A95',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [10, 'close', 0], null, {
+            'Plot.color': '#5677A4',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [30, 'close', 0], null, {
+            'Plot.color': '#417D57',
+          });
+          this.widget.chart().createStudy('Moving Average', true, false, [60, 'close', 0], null, {
+            'Plot.color': '#782C6C',
+          });
+        } catch {}
       }
     });
   };
 
   render() {
     const { interval } = this.state;
-    const tools = [...intervals];
+    // chartProperties, insertIndicator, fullScreen
+    const tools = [
+      {
+        name: insertIndicator,
+        onClick: () => {
+          this.widget && this.widget.chart().executeActionById('insertIndicator');
+        },
+      },
+      {
+        name: '分时',
+        onClick: () => {
+          this.widget.chart().setResolution('1', () => {
+            this.widget.chart().setChartType(3);
+          });
+        },
+      },
+      ...intervals,
+      {
+        name: chartProperties,
+        onClick: () => {
+          this.widget.chart().executeActionById('chartProperties');
+        },
+      },
+      {
+        name: fullScreen,
+        onClick: () => {
+          const ifra = document.getElementsByTagName('iframe')[0];
+          ifra && SetFullScreen(ifra);
+        },
+      },
+    ];
     return (
       <div className={styles.kline}>
         <div className={styles.tools}>
@@ -204,10 +248,15 @@ class Kline extends SwitchPair {
                 key={index}
                 onClick={() => {
                   if (!this.widget) return;
-                  this.setState({
-                    interval: item.value,
-                  });
-                  this.widget.chart().setResolution(item.value, () => {});
+                  if (item.value) {
+                    this.setState({
+                      interval: item.value,
+                    });
+                    this.widget.chart().setResolution(item.value, () => {});
+                  }
+                  if (item.onClick) {
+                    item.onClick();
+                  }
                 }}>
                 {item.name}
               </li>

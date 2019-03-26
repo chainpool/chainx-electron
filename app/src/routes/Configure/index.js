@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Icon, Mixin } from '../../components';
+import { Button, Input, Icon, Mixin, ButtonGroup } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
@@ -43,74 +43,71 @@ class Configure extends Mixin {
           </div>
         </div>
 
-        <TableTitle
-          title="节点管理"
-          helpTitle={
+        <TableTitle title="节点管理">
+          <ButtonGroup className={styles.settingButton}>
             <Button type="blank">
               <Icon name="icon-jiedianbushuwendang" />
               查看节点部署文档
             </Button>
-          }>
-          <Button
-            type="blank"
-            onClick={() => {
-              openModal({
-                name: 'OperationNodeModal',
-                data: {
-                  action: 'add',
-                  callback: ({ action, name, address }) => {
-                    dispatch({
-                      type: 'updateNodeOrApi',
-                      payload: {
-                        target: 'Node',
-                        action,
-                        name,
-                        address,
-                      },
-                    });
+            <Button
+              type="blank"
+              onClick={() => {
+                openModal({
+                  name: 'OperationNodeModal',
+                  data: {
+                    action: 'add',
+                    callback: ({ action, name, address }) => {
+                      dispatch({
+                        type: 'updateNodeOrApi',
+                        payload: {
+                          target: 'Node',
+                          action,
+                          name,
+                          address,
+                        },
+                      });
+                    },
                   },
-                },
-              });
-            }}>
-            <Icon name="icon-tianjia" />
-            添加节点
-          </Button>
+                });
+              }}>
+              <Icon name="icon-tianjia" />
+              添加节点
+            </Button>
+          </ButtonGroup>
         </TableTitle>
         <NodeManageTable {...tableProps} />
 
-        <TableTitle
-          style={{ marginTop: 32 }}
-          title="API管理"
-          helpTitle={
+        <TableTitle style={{ marginTop: 32 }} title="API管理">
+          <ButtonGroup className={styles.settingButton}>
             <Button type="blank">
               <Icon name="icon-APIbushuwendang" />
               查看API部署文档
             </Button>
-          }>
-          <Button
-            type="blank"
-            onClick={() => {
-              openModal({
-                name: 'OperationApiModal',
-                data: {
-                  action: 'add',
-                  callback: ({ action, name, address }) => {
-                    dispatch({
-                      type: 'updateNodeOrApi',
-                      payload: {
-                        target: 'Api',
-                        action,
-                        name,
-                        address,
-                      },
-                    });
+            <Button
+              type="blank"
+              onClick={() => {
+                openModal({
+                  name: 'OperationApiModal',
+                  data: {
+                    action: 'add',
+                    callback: ({ action, name, address }) => {
+                      dispatch({
+                        type: 'updateNodeOrApi',
+                        payload: {
+                          target: 'Api',
+                          action,
+                          name,
+                          address,
+                        },
+                      });
+                    },
                   },
-                },
-              });
-            }}>
-            <Icon name="icon-tianjia" />
-            添加API
-          </Button>
+                });
+              }}>
+              <Icon name="icon-tianjia" />
+              添加API
+            </Button>
+          </ButtonGroup>
         </TableTitle>
         <ApiManageTable {...tableProps} />
         {name === 'OperationNodeModal' ? <OperationNodeModal {...this.props} /> : null}
