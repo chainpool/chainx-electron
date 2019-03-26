@@ -19,6 +19,7 @@ class NodeTable extends Component {
         setDefaultPrecision,
       },
       accountStore: { currentAccount = {}, currentAddress },
+      globalStore: { nativeAssetName },
     } = this.props;
 
     const dataSources = [validators, backupValidators, validatorsWithMyNomination];
@@ -132,7 +133,7 @@ class NodeTable extends Component {
                     openModal({
                       name: 'SignModal',
                       data: {
-                        description: [{ name: '操作', value: '提息' }],
+                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: nativeAssetName }],
                         callback: () => {
                           return dispatch({
                             type: 'voteClaim',
