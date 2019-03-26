@@ -1,10 +1,10 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
-import { observer } from '../../utils';
+import { Inject } from '../../utils';
 import { Balance, HoverTip } from '../components';
 
-@observer
+@Inject(({ globalStore }) => ({ globalStore }))
 class DepositMineTable extends Mixin {
   startInit = async () => {
     const {
@@ -19,6 +19,7 @@ class DepositMineTable extends Mixin {
   render() {
     const {
       model: { openModal, dispatch, normalizedPseduIntentions = [] },
+      globalStore: { nativeAssetName },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -81,7 +82,7 @@ class DepositMineTable extends Mixin {
                     openModal({
                       name: 'SignModal',
                       data: {
-                        description: [{ name: '操作', value: '提息' }],
+                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: nativeAssetName }],
                         callback: () => {
                           return dispatch({
                             type: 'depositClaim',
