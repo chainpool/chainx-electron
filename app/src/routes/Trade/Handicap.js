@@ -41,6 +41,10 @@ class Handicap extends SwitchPair {
     const dataSourceBuy = buyList.concat(new Array(showTr - buyList.length > 0 ? showTr - buyList.length : 0).fill());
     const isInSell = sellList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
     const isInBuy = buyList.find((one = {}) => one.priceShow === currentPair.lastPriceShow);
+
+    const colorMax = [...dataSourceSell.concat(dataSourceBuy)].sort(
+      (a = {}, b = {}) => b.totalAmountShow - a.totalAmountShow
+    )[0];
     const setTableProps = color => ({
       onClickRow: item => {
         const setPrice = action => {
@@ -72,11 +76,7 @@ class Handicap extends SwitchPair {
             return (
               <div className={styles.progressContainer}>
                 {value}
-                <ColorProgress
-                  value={value}
-                  dataSource={dataSourceSell.concat(dataSourceBuy)}
-                  direction={item.direction}
-                />
+                <ColorProgress value={value} max={colorMax} direction={item.direction} />
               </div>
             );
           },
@@ -84,6 +84,7 @@ class Handicap extends SwitchPair {
       ],
       dataSource: [],
     });
+
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>

@@ -5,8 +5,7 @@ import * as styles from './index.less';
 const width = 190;
 class ColorProgress extends Component {
   render() {
-    const { value, dataSource = [], direction = '' } = this.props;
-    const max = dataSource.sort((a = {}, b = {}) => b.totalAmountShow - a.totalAmountShow)[0] || {};
+    const { value, max = {}, direction = '' } = this.props;
     let percent = '';
     if (max.totalAmountShow) {
       percent = value / max.totalAmountShow;
