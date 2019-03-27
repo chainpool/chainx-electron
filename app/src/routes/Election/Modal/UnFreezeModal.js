@@ -14,7 +14,6 @@ class UnFreezeModal extends Component {
         modal: { data: { account = '', myRevocations = [] } = {} },
       },
     } = this.props;
-
     const normalizedRevocations = myRevocations.map(revocation => {
       return {
         canUnFreeze: revocation.revocationHeight <= blockNumber,

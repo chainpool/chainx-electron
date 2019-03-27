@@ -107,7 +107,7 @@ export default class Election extends ModelExtend {
       const myTotalVote = record.nomination;
       const myRevocations = record.revocations.map(revocation => {
         return {
-          revocationHeight: revocation.blockNumer,
+          revocationHeight: revocation.blockNumber,
           amount: revocation.value,
         };
       });
