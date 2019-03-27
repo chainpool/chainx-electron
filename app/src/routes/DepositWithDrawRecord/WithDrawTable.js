@@ -52,7 +52,6 @@ class WithDrawTable extends Mixin {
         },
         {
           title: '状态',
-          width: 100,
           dataIndex: 'state',
         },
       ],

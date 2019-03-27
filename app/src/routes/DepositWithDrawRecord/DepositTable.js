@@ -53,7 +53,7 @@ class DepositTable extends Mixin {
         },
         {
           title: '状态',
-          width: 100,
+          // width: 100,
           dataIndex: 'status',
         },
       ],

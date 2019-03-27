@@ -256,7 +256,7 @@ export default class Asset extends ModelExtend {
             token: record.token,
             txid: record.txid,
             amount: this.setPrecision(record.balance, record.token),
-            status: '未知',
+            status: record.txstate,
             memo: record.memo,
           };
         });

@@ -177,7 +177,7 @@ export default class Trade extends ModelExtend {
               combine(
                 items.map((item1 = {}) => {
                   let sum = 0;
-                  return from(getFillOrdersApi({ accountId: item1.accountid, index: item1.id })).pipe(
+                  return from(getFillOrdersApi({ id: (item1.fill_index || []).join(',') })).pipe(
                     map((item2 = []) => {
                       const res = (item2 || []).map((item = {}) => {
                         const filterPair = this.getPair({ id: String(item.pairid) });
