@@ -11,7 +11,7 @@ class TrustSettingModal extends Component {
     hotPubKeyErrMsg: '',
     coldPubKey: '',
     coldPubKeyErrMsg: '',
-    options: [],
+    options: [{ label: 'Bitcoin', value: 'Bitcoin' }],
   };
 
   componentDidMount() {
