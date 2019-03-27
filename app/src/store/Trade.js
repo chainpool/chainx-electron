@@ -103,7 +103,6 @@ export default class Trade extends ModelExtend {
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
       return {
         ...item,
-        time: moment_helper.format(item['block.time'], 'HH:mm:ss'),
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
       };

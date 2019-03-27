@@ -27,7 +27,8 @@ class BlockTime extends Mixin {
 
   render() {
     const { time, timeAfter } = this.state;
-    return <span>{timeAfter ? moment_helper.formatHMS(timeAfter) : time}</span>;
+    const { format } = this.props;
+    return <span>{timeAfter ? moment_helper.formatHMS(timeAfter, format) : time}</span>;
   }
 }
 
