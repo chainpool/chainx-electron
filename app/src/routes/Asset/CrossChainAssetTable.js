@@ -117,7 +117,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      绑定
+                      {isBTC ? '充值' : '映射'}
                     </Button>
                   )}
                   {!isSDOT ? (
