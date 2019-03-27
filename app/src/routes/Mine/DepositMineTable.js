@@ -41,7 +41,7 @@ class DepositMineTable extends Mixin {
           dataIndex: 'circulation',
         },
         {
-          title: '挖矿算力',
+          title: '挖矿算力(PCX)',
           ellipse: true,
           dataIndex: 'price',
           render: (value, item) => {

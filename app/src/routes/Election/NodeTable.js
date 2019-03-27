@@ -62,7 +62,7 @@ class NodeTable extends Component {
           render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
-          title: '自抵押数',
+          title: '节点抵押',
           ellipse: true,
           dataIndex: 'selfVote',
           render: value => setDefaultPrecision(value),
