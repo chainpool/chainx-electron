@@ -23,7 +23,7 @@ import {
   getKlineApi,
 } from '../services';
 import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -171,6 +171,7 @@ export default class Trade extends ModelExtend {
       )
         .pipe(
           map((res = {}) => res.items),
+          tap(res => console.log(res, '------------历史成交')),
           mergeMap((items = []) => {
             return this.isApiSwitch(
               combine(
@@ -337,7 +338,7 @@ export default class Trade extends ModelExtend {
           sum.push({ price: next.price, amount: next.amount, direction: next.direction, ...common });
           return sum;
         }, []);
-        console.log(dataRpc, dataApi, '-----dataRpc,dataApi');
+        console.log(dataRpc, dataApi, '盘口-----dataRpc,dataApi');
         let [buy, sell] = [[], []];
         if ((dataApi.buy && dataApi.buy.length) || (dataApi.sell && dataApi.sell.length)) {
           buy = dataApi.buy;
