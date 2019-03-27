@@ -147,24 +147,40 @@ class SignModal extends Mixin {
                   closeModal();
                   _.isFunction(result.beforeSend) && result.beforeSend();
                   try {
-                    extrinsic.signAndSend(
-                      ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                      { acceleration },
-                      (err, res) => {
-                        if (!err) {
-                          if (resOk(res)) {
-                            success(res);
-                          } else if (resFail(res)) {
-                            fail(err);
+                    const promise = () =>
+                      new Promise((resolve, reject) => {
+                        extrinsic.signAndSend(
+                          ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                          { acceleration },
+                          (err, res) => {
+                            if (!err) {
+                              if (resOk(res)) {
+                                success(res);
+                                resolve();
+                              } else if (resFail(res)) {
+                                fail(err);
+                                reject();
+                              }
+                            } else {
+                              fail(err);
+                              reject();
+                            }
                           }
-                        } else {
-                          fail(err);
-                        }
-                        if (resOk(res) || resFail(res)) {
-                          _.isFunction(result.loading) && result.loading(false);
-                        }
+                        );
+                      });
+
+                    Promise.race([
+                      promise(),
+                      new Promise((resovle, reject) => {
+                        setTimeout(() => {
+                          reject(new Error('timeOut'));
+                        }, 7000);
+                      }),
+                    ]).catch(err => {
+                      if (err && err.message === 'timeOut') {
+                        reCoverLoading(false);
                       }
-                    );
+                    });
                   } catch (err) {
                     fail(err);
                   }

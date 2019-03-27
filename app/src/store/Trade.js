@@ -262,39 +262,6 @@ export default class Trade extends ModelExtend {
     }
   };
 
-  getFillAccountOrder = async ({ accountId, index }) => {
-    let res = await getFillOrdersApi({ accountId, index });
-    if (res && res.length) {
-      console.log(res, '--------------res');
-    }
-    res = (res || []).map((item = {}) => {
-      const filterPair = this.getPair({ id: String(item.pairid) });
-
-      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-      const amountShow = this.setPrecision(item.amount, filterPair.assets);
-      return {
-        ...item,
-        time: moment_helper.formatHMS(item['block.time']),
-        priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
-        maker_userShow: this.encodeAddressAccountId(item.maker_user),
-        amountShow,
-        totalShow: this.setPrecision(item.price * amountShow, filterPair.currency),
-        filterPair,
-      };
-    });
-    const list = this.historyOrderList.map(item => {
-      if (item.index === index) {
-        return {
-          ...item,
-          expand: res,
-        };
-      }
-      return item;
-    });
-    this.changeModel('historyOrderList', list);
-    return res;
-  };
-
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const count = 10;
