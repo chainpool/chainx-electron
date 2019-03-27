@@ -92,8 +92,8 @@ export const moment_helper = {
   format: (time = Date.now(), format = 'YYYY-MM-DD') => {
     return moment.utc(time).format(format);
   },
-  formatHMS: (time = Date.now()) => {
-    return moment(time).format('YYYY-MM-DD HH:mm:ss');
+  formatHMS: (time = Date.now(), format = 'YYYY-MM-DD HH:mm:ss') => {
+    return moment(time).format(format);
   },
   formatHMSFromSeconds: time => {
     return moment_helper.formatHMS(String(time).split('.')[0] * 1000);

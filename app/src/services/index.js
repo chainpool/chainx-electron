@@ -119,16 +119,16 @@ export const getOrders = (...payload) => trade.getOrders(...payload);
 export const getOrdersApi = payload => {
   const { accountId } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/userorders/${accountId}`,
+    url: `${API}/trade/userorders/${accountId}?page_size=20`,
     method: 'get',
     ...payload,
   });
 };
 
 export const getFillOrdersApi = payload => {
-  const { accountId, index } = payload;
+  const { id } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/userorder/fills/${accountId}/${index}`,
+    url: `${API}/trade/fill_orders?id=${id}`,
     method: 'get',
     ...payload,
   });

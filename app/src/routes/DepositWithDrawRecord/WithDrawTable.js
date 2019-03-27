@@ -16,7 +16,7 @@ class WithDrawTable extends Mixin {
 
   render() {
     const {
-      model: { normalizedAccountWithdrawList },
+      model: { onChainAccountWithdrawList },
     } = this.props;
 
     const tableProps = {
@@ -24,8 +24,8 @@ class WithDrawTable extends Mixin {
       columns: [
         {
           title: '申请时间',
-          dataIndex: 'date',
-          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : value),
+          dataIndex: 'txid',
+          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : item.time),
         },
         {
           title: '原链交易ID',
@@ -40,7 +40,7 @@ class WithDrawTable extends Mixin {
         {
           title: '地址',
           ellipse: true,
-          dataIndex: 'addr',
+          dataIndex: 'address',
         },
         {
           title: '数量',
@@ -52,11 +52,10 @@ class WithDrawTable extends Mixin {
         },
         {
           title: '状态',
-          width: 100,
-          dataIndex: 'state',
+          dataIndex: 'status',
         },
       ],
-      dataSource: normalizedAccountWithdrawList,
+      dataSource: onChainAccountWithdrawList,
     };
     return <Table {...tableProps} />;
   }

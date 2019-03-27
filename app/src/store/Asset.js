@@ -127,35 +127,6 @@ export default class Asset extends ModelExtend {
     return [...this.crossChainAccountAssets, ...zeroAssets];
   }
 
-  @computed get normalizedAccountWithdrawList() {
-    return this.onChainAccountWithdrawList.map(withdraw => {
-      let state = '';
-      switch (withdraw.state) {
-        case 'applying':
-          state = '申请中';
-          break;
-        case 'signing':
-          state = '签名中';
-          break;
-        case 'unknown':
-        default:
-          state = '未知错误';
-      }
-
-      return {
-        height: withdraw.height,
-        date: moment.formatHMS(withdraw.time * 1000), // 申请时间
-        balance: withdraw.balance, // 数量
-        balanceShow: this.setPrecision(withdraw.balance, withdraw.token),
-        token: withdraw.token, // 币种
-        addr: withdraw.addr, // 地址
-        memo: withdraw.memo,
-        state, // 状态
-        originChainTxId: undefined, // TODO: 目前通过rpc返回均为正在进行中的提现，无法获取原链交易ID
-      };
-    });
-  }
-
   reload = () => {
     this.getAccountAssets();
   };
@@ -171,6 +142,34 @@ export default class Asset extends ModelExtend {
     const accountAssetsResp = await getAsset(currentAccount.address, 0, 100);
     const names = this.rootStore.globalStore.chainNames;
     this.changeModel('accountAssets', accountAssetsResp.data.filter(asset => names.includes(asset.name)));
+  };
+
+  processTxState = txstate => {
+    switch (txstate) {
+      case '0':
+      case 'NotApplying':
+        return '未申请';
+      case '1':
+      case 'Applying':
+        return '申请中';
+      case '2':
+      case 'Signing':
+        return '签名中';
+      case '3':
+      case 'Broadcasting':
+        return '广播中';
+      case '4':
+      case 'Processing':
+        return '处理中';
+      case '5':
+      case 'Confirming':
+        return '确认中';
+      case '6':
+      case 'Confirmed':
+        return '已确认';
+      default:
+        return '未知';
+    }
   };
 
   async getWithdrawalListByAccount() {
@@ -194,12 +193,15 @@ export default class Asset extends ModelExtend {
         )
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
-        const dataRpc = resRpc.data.filter(withdraw => encodeAddress(withdraw.accountid) === account.address);
+        const dataRpc = resRpc.data
+          .filter(withdraw => encodeAddress(withdraw.accountid) === account.address)
+          .map((item = {}) => ({
+            ...item,
+            time: moment.formatHMS(new Date(item.time * 1000)),
+          }));
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
-          height: item.height,
           originChainTxId: item.txid,
-          addr: item.address,
         }));
         let data = [];
         if (dataApi && dataApi.length) {
@@ -208,7 +210,13 @@ export default class Asset extends ModelExtend {
           data = dataRpc;
         }
         this.changeModel({
-          onChainAccountWithdrawList: data,
+          onChainAccountWithdrawList: data.map((item = {}) => {
+            return {
+              ...item,
+              balanceShow: this.setPrecision(item.balance, item.token),
+              status: this.processTxState(item.txstate),
+            };
+          }),
         });
       });
   }
@@ -238,28 +246,11 @@ export default class Asset extends ModelExtend {
           .filter(record => encodeAddress(record.accountid) === account.address)
           .map(record => {
             return {
-              address: record.address, //充值地址
+              ...record,
               time: moment.formatHMS(new Date(record.time * 1000)),
-              token: record.token,
-              txid: record.txid,
-              amount: this.setPrecision(record.balance, record.token),
-              status:
-                record.totalConfirm > record.confirm ? `(${record.confirm}/${record.totalConfirm})确认中` : '已确认',
-              memo: record.memo,
             };
           });
-        const dataApi = resApi.items.map((record = {}) => {
-          return {
-            time: '',
-            address: record.address,
-            height: record.height,
-            token: record.token,
-            txid: record.txid,
-            amount: this.setPrecision(record.balance, record.token),
-            status: '未知',
-            memo: record.memo,
-          };
-        });
+        const dataApi = resApi.items;
         let data = [];
         if (dataApi && dataApi.length) {
           data = dataApi;
@@ -267,7 +258,11 @@ export default class Asset extends ModelExtend {
           data = dataRpc;
         }
         this.changeModel({
-          depositRecords: data,
+          depositRecords: data.map(item => ({
+            ...item,
+            amount: this.setPrecision(item.balance, item.token),
+            status: this.processTxState(item.txstate),
+          })),
         });
       });
   }

@@ -4,6 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './LatestOrder.less';
 import { Table } from '../../components';
 import { observer } from '../../utils';
+import { BlockTime } from '../components';
 
 @observer
 class LatestOrder extends SwitchPair {
@@ -41,6 +42,7 @@ class LatestOrder extends SwitchPair {
         {
           title: '时间',
           dataIndex: 'time',
+          render: value => <BlockTime value={value} {...this.props} format={'HH:mm:ss'} />,
         },
         {
           title: `数量(${currentPair.assets})`,

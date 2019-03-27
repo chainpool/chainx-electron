@@ -44,7 +44,7 @@ class CurrentOrderTable extends SwitchPair {
         },
         {
           title: '委托编号',
-          ellipse: true,
+          width: 90,
           dataIndex: 'index',
         },
         {
