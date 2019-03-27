@@ -28,6 +28,7 @@ export default class Tooltip extends PureComponent {
               {children}
             </span>
             <ReactTooltip
+              effect="solid"
               offset={offset}
               multiline
               id={uid}
@@ -65,6 +66,7 @@ export default class Tooltip extends PureComponent {
             <ReactTooltip
               className={styles.content}
               event="none"
+              effect="solid"
               isCapture={true}
               delayShow={150}
               afterShow={() => {
