@@ -24,8 +24,8 @@ class DepositTable extends Mixin {
       columns: [
         {
           title: '发起时间',
-          dataIndex: 'time',
-          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : value),
+          dataIndex: 'txid',
+          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : item.time),
         },
         {
           title: '原链交易ID',
@@ -53,7 +53,6 @@ class DepositTable extends Mixin {
         },
         {
           title: '状态',
-          // width: 100,
           dataIndex: 'status',
         },
       ],
