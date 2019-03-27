@@ -173,6 +173,7 @@ export default class Trade extends ModelExtend {
           map((res = {}) => res.items),
           tap(res => console.log(res, '------------历史成交')),
           mergeMap((items = []) => {
+            if (!items.length) return of(items);
             return this.isApiSwitch(
               combine(
                 items.map((item1 = {}) => {
