@@ -252,7 +252,8 @@ class CrossChainBindModal extends Mixin {
                     <RouterGo
                       isOutSide
                       go={{
-                        pathname: 'https://etherscan.io/token/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907#balances',
+                        pathname:
+                          'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
                       }}>
                       点击查看参与用户地址列表
                     </RouterGo>
