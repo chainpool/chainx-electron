@@ -6,6 +6,7 @@ import { default as AccountStore } from './Account';
 import { default as Configure } from './Configure';
 import { default as Trust } from './Trust';
 import { default as AddressManage } from './AddressManage';
+import { default as TradeRecord } from './TradeRecord';
 import Chain from './Chain';
 
 class RootStore {
@@ -19,6 +20,7 @@ class RootStore {
     this.trustStore = new Trust(this);
     this.chainStore = new Chain(this);
     this.addressManageStore = new AddressManage(this);
+    this.tradeRecordStore = new TradeRecord(this);
   }
 }
 

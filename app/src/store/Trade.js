@@ -1,14 +1,4 @@
-import {
-  _,
-  formatNumber,
-  moment_helper,
-  observable,
-  computed,
-  localSave,
-  parseQueryString,
-  toJS,
-  generateKlineData,
-} from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -272,7 +262,7 @@ export default class Trade extends ModelExtend {
             this.isApiSwitch(
               getQuotationsApi({
                 pairId: currentPair.id,
-                count,
+                count: 10,
               })
             )
           ).pipe(

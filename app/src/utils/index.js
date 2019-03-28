@@ -15,6 +15,7 @@ export const _ = lodash_helper;
 export const moment = moment_helper;
 export { localSave, moment_helper, Rx } from './helper';
 export { default as classNames } from 'classnames';
+export { default as translation } from './translation';
 // export { default as io } from './io';
 
 // ----------------------------项目适用

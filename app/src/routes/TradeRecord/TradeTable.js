@@ -1,45 +1,52 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table } from '../../components';
+import { Table, Mixin } from '../../components';
+import { observer } from '../../utils';
 
-class TradeTable extends Component {
+@observer
+class TradeTable extends Mixin {
+  startInit = async () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    this.getTradeRecordApi$ = await dispatch({
+      type: 'getTradeRecordApi',
+    });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.getTradeRecordApi$.unsubscribe();
+  };
+
   render() {
+    const {
+      model: { tradeRecords = [] },
+    } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
           title: '时间',
-          dataIndex: 'data1',
+          width: 200,
+          dataIndex: 'timeShow',
         },
         {
-          title: '原链交易ID',
+          title: '本链交易ID',
           ellipse: true,
-          dataIndex: 'data2',
+          dataIndex: 'id',
         },
         {
           title: '操作',
-          dataIndex: 'data3',
+          width: 100,
+          dataIndex: 'operation',
         },
         {
           title: '参数信息',
-          ellipse: true,
-          dataIndex: 'data4',
-        },
-
-        {
-          title: '手续费',
-          dataIndex: 'data5',
+          ellipse: 0,
+          dataIndex: 'info',
         },
       ],
-      dataSource: [
-        {
-          data1: '2018-04-13 16:56:34',
-          data2: '19zdMbaZnD8ze6XUZuVTYtVQ419zdMbaZnD8ze6XUZuVTYtVQ4',
-          data3: '转账',
-          data4: '交易对:PCX/BTC; 方向:买入；报价:0.00043527; 数量:3.74638923',
-          data5: '0.001 PCX',
-        },
-      ],
+      dataSource: tradeRecords,
     };
     return <Table {...tableProps} />;
   }

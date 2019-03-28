@@ -25,7 +25,9 @@ class SignModal extends Mixin {
     const token = targetToken || 'PCX';
     if (_.isFunction(callback)) {
       this.result = await callback({ token });
-      this.getFee();
+      if (this.result && this.result.extrinsic) {
+        this.getFee();
+      }
     }
   };
 

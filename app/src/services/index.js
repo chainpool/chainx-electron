@@ -172,3 +172,21 @@ export const getBlockTime = payload => {
     ...payload,
   });
 };
+
+export const getTradeRecordApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `${API}/account/${accountId}/txs?page_size=10`,
+    method: 'get',
+    ...payload,
+  });
+};
+
+export const getTradeDetailApi = payload => {
+  const { txhash } = payload;
+  return fetchFromHttp({
+    url: `${API}/tx/${txhash}`,
+    method: 'get',
+    ...payload,
+  });
+};

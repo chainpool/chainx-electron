@@ -285,9 +285,11 @@ export default class TableComponent extends Component {
                                   key={index2}
                                   {...getTdThProp(item2)}
                                   className={classNames(item2.className, className)}>
-                                  {(item2.width || item2.ellipse) && key !== this.action ? (
+                                  {(item2.width || item2.ellipse !== 'undefined') && key !== this.action ? (
                                     <div
-                                      className={classNames(_.isNumber(item2.ellipse) ? null : styles.ellipse)}
+                                      className={classNames(
+                                        _.isNumber(item2.ellipse) ? styles.ellipse : styles.ellipseRight
+                                      )}
                                       style={{ marginRight: _.isNumber(item2.ellipse) ? item2.ellipse : null }}>
                                       {result}
                                     </div>
