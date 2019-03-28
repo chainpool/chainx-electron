@@ -10,11 +10,12 @@ import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ globalStore, accountStore, electionStore, configureStore }) => ({
+@Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore }) => ({
   globalStore,
   accountStore,
   electionStore,
   configureStore,
+  tradeStore,
 }))
 class Main extends Component {
   state = {
@@ -36,6 +37,7 @@ class Main extends Component {
       accountStore: { dispatch: dispatchAccount },
       electionStore: { dispatch: dispatchElection },
       configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
+      tradeStore: { dispatch: dispatchTrade },
       history: {
         location: { search },
       },
@@ -66,6 +68,7 @@ class Main extends Component {
         });
         await dispatchGlobal({ type: 'getAllAssets' });
         await dispatchElection({ type: 'getIntentions' });
+        await dispatchTrade({ type: 'getOrderPairs' });
         this.setState({
           ready: true,
         });

@@ -23,6 +23,7 @@ export default class TradeRecord extends ModelExtend {
       .pipe(
         map((res = {}) => res.items),
         mergeMap((items = []) => {
+          if (!items.length) return of([]);
           return combine(
             items.map((item = {}) => {
               return from(getTradeDetailApi({ txhash: item.hash })).pipe(
@@ -56,6 +57,9 @@ export default class TradeRecord extends ModelExtend {
             ...translation({
               ...item,
               setPrecision: this.setPrecision,
+              setDefaultPrecision: this.setDefaultPrecision,
+              getPair: this.rootStore.tradeStore.getPair,
+              showUnitPrecision: this.rootStore.tradeStore.showUnitPrecision,
             }),
           }))
         );
