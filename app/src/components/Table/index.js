@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { _, classNames } from '../../../src/utils';
-import { Scroller } from '../../components';
+import { Scroller, Pagination } from '../../components';
 import * as styles from './index.less';
 
 const createElement = _className => {
@@ -49,7 +49,7 @@ export default class TableComponent extends Component {
     const { currentPage } = this.state;
     const { pagination: { onPageChange } = {} } = this.props;
     if (_.isFunction(onPageChange)) {
-      onPageChange(currentPage + 1);
+      onPageChange(currentPage);
     }
   };
 
@@ -71,7 +71,10 @@ export default class TableComponent extends Component {
         dataSource,
       });
     }
-    if (!_.isEqual(JSON.stringify(prevColumns), JSON.stringify(columns))) {
+    if (
+      !_.isEqual(JSON.stringify(prevColumns), JSON.stringify(columns)) ||
+      !_.isEqual(_.get(prevProps, 'location.search'), _.get(this.props, 'location.search'))
+    ) {
       this.changeState(
         {
           currentPage: 0,
@@ -167,7 +170,6 @@ export default class TableComponent extends Component {
   };
 
   render() {
-    // const { getPageData } = this;
     const {
       className = {},
       style = {},
@@ -175,7 +177,7 @@ export default class TableComponent extends Component {
       expandedRowRender,
       onClickRow,
       noDataTip,
-      // pagination: { total: totalPage } = {},
+      pagination: { total: totalPage } = {},
       showHead = true,
       activeTrIndex,
       children,
@@ -222,10 +224,7 @@ export default class TableComponent extends Component {
       scroll,
     };
 
-    const {
-      dataSource = [],
-      // currentPage
-    } = this.state;
+    const { dataSource = [], currentPage } = this.state;
     return (
       <div
         style={{ height: this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll }) }}
@@ -316,20 +315,20 @@ export default class TableComponent extends Component {
                   {/*loadingMore ? (<div className={styles.loadingmore} >加载更多......</div >) : null*/}
                   {/*}*/}
                 </Scroller>
-                {/*{totalPage && dataSource.length ? (*/}
-                {/*<Pagination*/}
-                {/*total={totalPage}*/}
-                {/*currentPage={currentPage}*/}
-                {/*onPageChange={value => {*/}
-                {/*this.setState(*/}
-                {/*{*/}
-                {/*currentPage: value,*/}
-                {/*},*/}
-                {/*getPageData*/}
-                {/*);*/}
-                {/*}}*/}
-                {/*/>*/}
-                {/*) : null}*/}
+                {totalPage && dataSource.length ? (
+                  <Pagination
+                    total={totalPage}
+                    currentPage={currentPage}
+                    onPageChange={value => {
+                      this.setState(
+                        {
+                          currentPage: value,
+                        },
+                        this.getPageData
+                      );
+                    }}
+                  />
+                ) : null}
               </div>
             </div>
           </Table>

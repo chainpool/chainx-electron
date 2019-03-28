@@ -5,22 +5,13 @@ import { observer } from '../../utils';
 
 @observer
 class TradeTable extends Mixin {
-  startInit = async () => {
-    const {
-      model: { dispatch },
-    } = this.props;
-    this.getTradeRecordApi$ = await dispatch({
-      type: 'getTradeRecordApi',
-    });
-  };
-
   componentWillUnsubscribe = () => {
     this.getTradeRecordApi$.unsubscribe();
   };
 
   render() {
     const {
-      model: { tradeRecords = [] },
+      model: { tradeRecords = [], tradeRecordsPageTotal, dispatch },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -48,7 +39,23 @@ class TradeTable extends Mixin {
       ],
       dataSource: tradeRecords,
     };
-    return <Table {...tableProps} />;
+
+    const pagination = {
+      total: tradeRecordsPageTotal,
+      onPageChange: async page => {
+        this.getTradeRecordApi$ = await dispatch({
+          type: 'getTradeRecordApi',
+          payload: {
+            page,
+          },
+        });
+      },
+    };
+    return (
+      <>
+        <Table {...tableProps} location={this.props.location} pagination={pagination} />
+      </>
+    );
   }
 }
 

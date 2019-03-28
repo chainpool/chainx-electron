@@ -174,9 +174,9 @@ export const getBlockTime = payload => {
 };
 
 export const getTradeRecordApi = payload => {
-  const { accountId } = payload;
+  const { accountId, page } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/txs?page_size=20`,
+    url: `${API}/account/${accountId}/txs?page_size=10&&page=${page}`,
     method: 'get',
     ...payload,
   });

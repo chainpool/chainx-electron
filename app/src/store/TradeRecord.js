@@ -10,18 +10,24 @@ export default class TradeRecord extends ModelExtend {
     super(...args);
   }
 
+  @observable tradeRecordsPageTotal = 1;
   @observable tradeRecords = [];
 
-  getTradeRecordApi = async () => {
+  getTradeRecordApi = async ({ page }) => {
     const account = this.getCurrentAccount();
 
     return from(
       getTradeRecordApi({
         accountId: this.decodeAddressAccountId(account),
+        page,
       })
     )
       .pipe(
-        map((res = {}) => res.items),
+        map((res = {}) => {
+          const pageTotal = Math.ceil(res.total / 10);
+          this.changeModel('tradeRecordsPageTotal', pageTotal);
+          return res.items;
+        }),
         mergeMap((items = []) => {
           if (!items.length) return of([]);
           return combine(
@@ -49,7 +55,7 @@ export default class TradeRecord extends ModelExtend {
         })
       )
       .subscribe(res => {
-        console.log(res, '-----------combine');
+        console.log(res, `-----------tradeRecords,页码：${page}`);
         this.changeModel(
           'tradeRecords',
           res.map(item => ({
