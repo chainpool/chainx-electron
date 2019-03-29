@@ -8,6 +8,7 @@ import {
   getNominationRecords,
   getPseduIntentions,
   getPseduNominationRecords,
+  getTokenDiscount,
   nominate,
   refresh,
   register,
@@ -24,6 +25,7 @@ export default class Election extends ModelExtend {
   @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
+  @observable tokenDiscount = '';
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
@@ -172,6 +174,13 @@ export default class Election extends ModelExtend {
     const [intentions, records] = await Promise.all([getPseduIntentions(), this.getPseduNominationRecords()]);
     this.changeModel('originPseduIntentions', intentions);
     this.changeModel('originPseduRecords', records || []);
+  };
+
+  getTokenDiscount = async () => {
+    const res = await getTokenDiscount();
+    if (res) {
+      this.changeModel('tokenDiscount', `${res}%`);
+    }
   };
 
   getPseduNominationRecords = async () => {

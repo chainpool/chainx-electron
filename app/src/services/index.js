@@ -164,6 +164,8 @@ export const getBondingDuration = (...payload) => stake.getBondingDuration(...pa
 
 export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);
 
+export const getTokenDiscount = (...payload) => stake.getTokenDiscount(...payload);
+
 export const getBlockTime = payload => {
   const { height } = payload;
   return fetchFromHttp({
