@@ -20,17 +20,14 @@ class HistoryOrderTable extends SwitchPair {
     //this.getHistoryAccountOrder();
   };
 
-  getHistoryAccountOrder = async page => {
+  getHistoryAccountOrder = async () => {
     const {
       model: { dispatch },
     } = this.props;
     this.subscribeHistoryAccountOrder = await dispatch({
       type: 'getHistoryAccountOrder',
-      payload: {
-        page,
-      },
     }).then(res => {
-      this.fetchPoll(() => this.getHistoryAccountOrder(page));
+      this.fetchPoll(this.getHistoryAccountOrder);
       return res;
     });
   };
@@ -80,7 +77,7 @@ class HistoryOrderTable extends SwitchPair {
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {
-      model: { historyAccountPageTotal },
+      model: { historyAccountPageTotal, dispatch },
     } = this.props;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
@@ -235,7 +232,15 @@ class HistoryOrderTable extends SwitchPair {
 
     const pagination = {
       total: historyAccountPageTotal,
-      onPageChange: getHistoryAccountOrder,
+      onPageChange: async page => {
+        await dispatch({
+          type: 'changeModel',
+          payload: {
+            historyAccountCurrentPage: page,
+          },
+        });
+        getHistoryAccountOrder();
+      },
     };
     return <Table {...tableProps} pagination={pagination} location={this.props.location} />;
   }

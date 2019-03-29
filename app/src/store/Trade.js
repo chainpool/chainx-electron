@@ -44,6 +44,7 @@ export default class Trade extends ModelExtend {
   @observable entrustOrderList = [];
   @observable currentOrderList = [];
   @observable historyAccountPageTotal = 1;
+  @observable historyAccountCurrentPage = 1;
   @observable historyOrderList = [];
 
   reload = () => {
@@ -152,14 +153,14 @@ export default class Trade extends ModelExtend {
     );
   };
 
-  getHistoryAccountOrder = async ({ page }) => {
+  getHistoryAccountOrder = async () => {
     const account = this.getCurrentAccount();
     if (account.address) {
       return from(
         this.isApiSwitch(
           getOrdersApi({
             accountId: this.decodeAddressAccountId(account),
-            page,
+            page: this.historyAccountCurrentPage,
           })
         )
       )
