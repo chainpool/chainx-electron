@@ -265,7 +265,6 @@ export default class Configure extends ModelExtend {
               changeNodesOrApi(i, 'delay', 'timeOut');
             });
         };
-
         const getBlockNumber = () => {
           getBestNodeNumber(list[i].address)
             .then((result = {}) => {

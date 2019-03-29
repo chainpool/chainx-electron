@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Icon, Input, Toast } from '../../../../components';
 import * as styles from './index.less';
-import { classNames, Inject, moment_helper, parseQueryString } from '../../../../utils';
+import { classNames, Inject, parseQueryString } from '../../../../utils';
 import { PATH } from '../../../../constants';
-@Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
+@Inject(({ configureStore }) => ({ configureStore }))
 class Node extends Component {
   constructor(props) {
     super(props);
@@ -12,17 +12,15 @@ class Node extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {}
+
   async componentDidMount() {
     const {
-      chainStore: { dispatch },
       configureStore: { dispatch: dispatchConfig },
       history: {
         location: { pathname, search },
       },
     } = this.props;
-    this.subscribeNewHead = await dispatch({
-      type: 'subscribeNewHead',
-    });
     const bestNode = parseQueryString(search).bestNode;
     if (pathname !== PATH.configure) {
       dispatchConfig({
@@ -42,13 +40,8 @@ class Node extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.subscribeNewHead.unsubscribe();
-  }
-
   render() {
     const {
-      chainStore: { normalizedBlockNumber, blockTime },
       configureStore: { nodes = [], api = [], autoSwitchBestNode, autoSwitchBestApi, dispatch, getBestNodeAndApi },
     } = this.props;
     const [bestNode = {}, bestApi = {}] = getBestNodeAndApi();
@@ -141,16 +134,7 @@ class Node extends Component {
       </ul>
     );
 
-    return (
-      <div className={styles.node}>
-        <div>
-          <span>{moment_helper.formatHMS(blockTime)}</span>
-          <span>最新高度:{normalizedBlockNumber}</span>
-        </div>
-        {/*TODO: 暂时隐藏节点及api选择*/}
-        {nodeList}
-      </div>
-    );
+    return <div className={styles.node}>{nodeList}</div>;
   }
 }
 
