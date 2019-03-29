@@ -24,11 +24,6 @@ class Main extends Component {
 
   async componentDidMount() {
     await this.ready();
-    const {
-      electionStore: { dispatch },
-    } = this.props;
-    // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
-    dispatch({ type: 'getIntentions' });
   }
 
   ready = async () => {
