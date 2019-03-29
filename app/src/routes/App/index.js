@@ -49,7 +49,7 @@ class Main extends Component {
         new Promise((resovle, reject) => {
           setTimeout(() => {
             reject(new Error('请求超时'));
-          }, 8000);
+          }, 10000);
         }),
       ]);
     wsPromise()
