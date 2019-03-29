@@ -154,12 +154,12 @@ export default class Trade extends ModelExtend {
   };
 
   getHistoryAccountOrder = async () => {
-    const account = this.getCurrentAccount();
-    if (account.address) {
+    const currentAccount = this.getCurrentAccount();
+    if (currentAccount.address) {
       return from(
         this.isApiSwitch(
           getOrdersApi({
-            accountId: this.decodeAddressAccountId(account),
+            accountId: this.decodeAddressAccountId(currentAccount),
             page: this.historyAccountCurrentPage,
           })
         )
@@ -188,11 +188,15 @@ export default class Trade extends ModelExtend {
                         const amountShow = this.setPrecision(item.amount, filterPair.assets);
                         const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
                         sum += item.price * amountShow;
+                        const maker_userShow = this.encodeAddressAccountId(item.maker_user);
+                        const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
                           time: item.time,
                           priceShow: this.setPrecision(item.price, filterPair.assets),
-                          maker_userShow: this.encodeAddressAccountId(item.maker_user),
+                          other_userShow: [maker_userShow, taker_userShow].filter(
+                            item => item !== currentAccount.address
+                          )[0],
                           hasfillAmountPercent: formatNumber.percent(item.amount / item1.amount, 2),
                           amountShow,
                           totalShow,
