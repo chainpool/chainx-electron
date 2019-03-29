@@ -78,7 +78,7 @@ class UpdateNodeModal extends Component {
                   data: {
                     description: [
                       { name: '操作', value: '更新节点' },
-                      { name: '出块地址', value: address },
+                      { name: '出块地址', value: address, totalShow: false },
                       { name: '官网域名', value: website },
                       { name: '参选状态', value: willParticipating ? '参选' : '退选' },
                       { name: '简介', value: about },
