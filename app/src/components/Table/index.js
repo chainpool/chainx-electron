@@ -225,113 +225,116 @@ export default class TableComponent extends Component {
     };
 
     const { dataSource = [], currentPage } = this.state;
+    const height = this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll });
     return (
       <div
-        style={{ height: this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll }) }}
+        // style={{ height: totalPage ? 52 + height : height }}
         className={classNames(styles.tableContainer, className)}>
         {_.isFunction(noDataTip) && noDataTip() && !dataSource.length ? (
           <div className="default">{noDataTip()}</div>
         ) : (
-          <Table className={style.table}>
-            {showHead ? (
-              <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
-                <Tr style={{ height: tableHeight[0] }}>
-                  {columns.map((item = {}, index) => (
-                    <Th key={index} {...getTdThProp(item)}>
-                      {_.isFunction(item.title) ? item.title() : item.title}
-                    </Th>
-                  ))}
-                </Tr>
-              </Thead>
-            ) : null}
-            <div className={styles._scrollerTableContainer}>
-              <div className={styles._scrollerTable}>
-                <Scroller {...scrollerConfig}>
-                  {children}
-                  <Tbody>
-                    {dataSource.map((item = {}, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          <Tr
-                            style={{ height: tableHeight[1] }}
-                            className={classNames(
-                              index % 2 === 0 ? 'even' : 'odd',
-                              activeTrIndex === index ? 'activeTr' : null
-                            )}
-                            onClick={e => {
-                              _.isFunction(onClickRow) && onClickRow(item, e);
-                            }}>
-                            {columns.map((item2 = {}, index2) => {
-                              let result = '';
-                              let className;
-                              const key = item2.dataIndex;
-                              let value = item[key];
-                              if (key !== this.action && (_.isNaN(value) || _.isUndefined(value))) {
-                                result = <span style={{ opacity: 0.5 }} />;
-                              } else {
-                                if (_.isFunction(item2.render)) {
-                                  value = item2.render(value, item, index, dataSource);
-                                }
-                                if (_.isObject(value) && !_.has(value, '$$typeof')) {
-                                  result = value.value;
-                                  className = value.className;
+          <>
+            <Table className={style.table} style={{ height: height }}>
+              {showHead ? (
+                <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
+                  <Tr style={{ height: tableHeight[0] }}>
+                    {columns.map((item = {}, index) => (
+                      <Th key={index} {...getTdThProp(item)}>
+                        {_.isFunction(item.title) ? item.title() : item.title}
+                      </Th>
+                    ))}
+                  </Tr>
+                </Thead>
+              ) : null}
+              <div className={styles._scrollerTableContainer}>
+                <div className={styles._scrollerTable}>
+                  <Scroller {...scrollerConfig}>
+                    {children}
+                    <Tbody>
+                      {dataSource.map((item = {}, index) => {
+                        return (
+                          <React.Fragment key={index}>
+                            <Tr
+                              style={{ height: tableHeight[1] }}
+                              className={classNames(
+                                index % 2 === 0 ? 'even' : 'odd',
+                                activeTrIndex === index ? 'activeTr' : null
+                              )}
+                              onClick={e => {
+                                _.isFunction(onClickRow) && onClickRow(item, e);
+                              }}>
+                              {columns.map((item2 = {}, index2) => {
+                                let result = '';
+                                let className;
+                                const key = item2.dataIndex;
+                                let value = item[key];
+                                if (key !== this.action && (_.isNaN(value) || _.isUndefined(value))) {
+                                  result = <span style={{ opacity: 0.5 }} />;
                                 } else {
-                                  result = value;
+                                  if (_.isFunction(item2.render)) {
+                                    value = item2.render(value, item, index, dataSource);
+                                  }
+                                  if (_.isObject(value) && !_.has(value, '$$typeof')) {
+                                    result = value.value;
+                                    className = value.className;
+                                  } else {
+                                    result = value;
+                                  }
                                 }
-                              }
-                              return (
-                                <Td
-                                  key={index2}
-                                  {...getTdThProp(item2)}
-                                  className={classNames(item2.className, className)}>
-                                  {(item2.width || item2.ellipse || item2.ellipse === 0) && key !== this.action ? (
-                                    <div
-                                      className={classNames(
-                                        _.isNumber(item2.ellipse) ? styles.ellipse : styles.ellipseRight
-                                      )}
-                                      style={{ marginRight: _.isNumber(item2.ellipse) ? item2.ellipse : null }}>
-                                      {result}
-                                    </div>
-                                  ) : (
-                                    result
-                                  )}
-                                </Td>
-                              );
-                            })}
-                          </Tr>
-                          {expandedRowRender && _.isFunction(expandedRowRender) && item.expandIsOpen
-                            ? expandedRowRender(item)
-                            : null}
-                        </React.Fragment>
-                      );
-                    })}
-                  </Tbody>
-                  {/*{*/}
-                  {/*loading ? (*/}
-                  {/*<Loading.Circle loading={loading} isGlobal color={'#c1c1c1'} backgroundOpacity={0.01} />*/}
-                  {/*) : null*/}
-                  {/*}*/}
-                  {/*{*/}
-                  {/*loadingMore ? (<div className={styles.loadingmore} >加载更多......</div >) : null*/}
-                  {/*}*/}
-                </Scroller>
-                {totalPage && dataSource.length ? (
-                  <Pagination
-                    total={totalPage}
-                    currentPage={currentPage}
-                    onPageChange={value => {
-                      this.setState(
-                        {
-                          currentPage: value,
-                        },
-                        this.getPageData
-                      );
-                    }}
-                  />
-                ) : null}
+                                return (
+                                  <Td
+                                    key={index2}
+                                    {...getTdThProp(item2)}
+                                    className={classNames(item2.className, className)}>
+                                    {(item2.width || item2.ellipse || item2.ellipse === 0) && key !== this.action ? (
+                                      <div
+                                        className={classNames(
+                                          _.isNumber(item2.ellipse) ? styles.ellipse : styles.ellipseRight
+                                        )}
+                                        style={{ marginRight: _.isNumber(item2.ellipse) ? item2.ellipse : null }}>
+                                        {result}
+                                      </div>
+                                    ) : (
+                                      result
+                                    )}
+                                  </Td>
+                                );
+                              })}
+                            </Tr>
+                            {expandedRowRender && _.isFunction(expandedRowRender) && item.expandIsOpen
+                              ? expandedRowRender(item)
+                              : null}
+                          </React.Fragment>
+                        );
+                      })}
+                    </Tbody>
+                    {/*{*/}
+                    {/*loading ? (*/}
+                    {/*<Loading.Circle loading={loading} isGlobal color={'#c1c1c1'} backgroundOpacity={0.01} />*/}
+                    {/*) : null*/}
+                    {/*}*/}
+                    {/*{*/}
+                    {/*loadingMore ? (<div className={styles.loadingmore} >加载更多......</div >) : null*/}
+                    {/*}*/}
+                  </Scroller>
+                </div>
               </div>
-            </div>
-          </Table>
+            </Table>
+            {totalPage && dataSource.length ? (
+              <Pagination
+                total={totalPage}
+                currentPage={currentPage}
+                onPageChange={value => {
+                  this.setState(
+                    {
+                      currentPage: value,
+                    },
+                    this.getPageData
+                  );
+                }}
+              />
+            ) : null}
+          </>
         )}
       </div>
     );

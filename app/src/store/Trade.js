@@ -43,6 +43,7 @@ export default class Trade extends ModelExtend {
   @observable latestOrderList = [];
   @observable entrustOrderList = [];
   @observable currentOrderList = [];
+  @observable historyAccountPageTotal = 1;
   @observable historyOrderList = [];
 
   reload = () => {
@@ -95,6 +96,7 @@ export default class Trade extends ModelExtend {
         ...item,
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
+        timeShow: moment_helper.formatHMS(item['block.time'], 'HH:mm:ss'),
       };
     });
     this.changeModel('latestOrderList', res);
@@ -138,6 +140,7 @@ export default class Trade extends ModelExtend {
       direction: item.direction,
       status: item.status,
       expand: item.expand,
+      timeShow: moment_helper.formatHMS(item['block.time']),
     }));
     const currentOrderList = this.processOrderData(data);
 
@@ -149,18 +152,23 @@ export default class Trade extends ModelExtend {
     );
   };
 
-  getHistoryAccountOrder = async () => {
+  getHistoryAccountOrder = async ({ page }) => {
     const account = this.getCurrentAccount();
     if (account.address) {
       return from(
         this.isApiSwitch(
           getOrdersApi({
             accountId: this.decodeAddressAccountId(account),
+            page,
           })
         )
       )
         .pipe(
-          map((res = {}) => res.items),
+          map((res = {}) => {
+            const pageTotal = Math.ceil(res.total / 10);
+            this.changeModel('historyAccountPageTotal', pageTotal);
+            return res.items;
+          }),
           tap(res => console.log(res, '------------历史成交')),
           mergeMap((items = []) => {
             if (!items.length) return of(items);
@@ -237,6 +245,7 @@ export default class Trade extends ModelExtend {
                 status: item.status,
                 expand: item.expand,
                 sum: item.sum,
+                timeShow: moment_helper.formatHMS(item['block.time']),
               };
             });
 

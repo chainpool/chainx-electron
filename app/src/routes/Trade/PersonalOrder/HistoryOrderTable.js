@@ -17,17 +17,20 @@ class HistoryOrderTable extends SwitchPair {
   }
 
   startInit = () => {
-    this.getHistoryAccountOrder();
+    //this.getHistoryAccountOrder();
   };
 
-  getHistoryAccountOrder = async () => {
+  getHistoryAccountOrder = async page => {
     const {
       model: { dispatch },
     } = this.props;
     this.subscribeHistoryAccountOrder = await dispatch({
       type: 'getHistoryAccountOrder',
+      payload: {
+        page,
+      },
     }).then(res => {
-      this.fetchPoll(this.getHistoryAccountOrder);
+      this.fetchPoll(() => this.getHistoryAccountOrder(page));
       return res;
     });
   };
@@ -74,8 +77,11 @@ class HistoryOrderTable extends SwitchPair {
 
   render() {
     const widths = [150, 90, 100, 60, undefined, undefined, 200, undefined, undefined, 80];
-    const { changeExpandIsOpen } = this;
+    const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
+    const {
+      model: { historyAccountPageTotal },
+    } = this.props;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
@@ -83,8 +89,7 @@ class HistoryOrderTable extends SwitchPair {
         [
           {
             title: '时间',
-            dataIndex: 'createTime',
-            render: value => <BlockTime value={value} {...this.props} />,
+            dataIndex: 'timeShow',
           },
           {
             title: '委托编号',
@@ -227,7 +232,12 @@ class HistoryOrderTable extends SwitchPair {
         );
       },
     };
-    return <Table {...tableProps} />;
+
+    const pagination = {
+      total: historyAccountPageTotal,
+      onPageChange: page => getHistoryAccountOrder(page),
+    };
+    return <Table {...tableProps} pagination={pagination} />;
   }
 }
 

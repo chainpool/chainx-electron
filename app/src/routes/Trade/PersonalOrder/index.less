@@ -27,9 +27,19 @@
     align-items: center;
     justify-content: center;
   }
+  .title{
+    border: 1px solid #dce0e2;
+    border-bottom: none;
+  }
 
   :global {
     .table {
+      border: 1px solid #dce0e2;
+      min-height: 182px;
+      .table{
+        border:unset;
+        min-height:unset;
+      }
       .thead {
         .tr {
           .th {

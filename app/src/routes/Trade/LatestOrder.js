@@ -41,8 +41,7 @@ class LatestOrder extends SwitchPair {
         },
         {
           title: '时间',
-          dataIndex: 'time',
-          render: value => <BlockTime value={value} {...this.props} format={'HH:mm:ss'} />,
+          dataIndex: 'timeShow',
         },
         {
           title: `数量(${currentPair.assets})`,
