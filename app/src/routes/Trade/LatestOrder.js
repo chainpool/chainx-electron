@@ -4,7 +4,6 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './LatestOrder.less';
 import { Table } from '../../components';
 import { observer } from '../../utils';
-import { BlockTime } from '../components';
 
 @observer
 class LatestOrder extends SwitchPair {
