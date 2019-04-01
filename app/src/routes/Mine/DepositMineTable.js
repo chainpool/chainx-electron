@@ -88,7 +88,7 @@ class DepositMineTable extends Mixin {
                     openModal({
                       name: 'SignModal',
                       data: {
-                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: nativeAssetName }],
+                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: item.id }],
                         callback: () => {
                           return dispatch({
                             type: 'depositClaim',
