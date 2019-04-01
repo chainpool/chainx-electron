@@ -141,7 +141,19 @@ class WithdrawConstructModal extends Component {
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
+          <Input.Text
+            errMsgIsOutside
+            value={tx}
+            errMsg={txErrMsg}
+            onChange={value => {
+              this.setState({
+                tx: value,
+              });
+            }}
+            isTextArea
+            label="待签原文"
+            rows={5}
+          />
         </div>
       </Modal>
     );
