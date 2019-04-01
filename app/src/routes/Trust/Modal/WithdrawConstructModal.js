@@ -40,21 +40,10 @@ class WithdrawConstructModal extends Component {
       this.setState({ txErrMsg: errMsg });
       return errMsg;
     },
-    checkPassword: () => {
-      const { password } = this.state;
-      const { currentTrustNode } = this.props;
-      const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
-      const errMsg =
-        Patterns.check('required')(password) ||
-        Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password);
-      this.setState({ passwordErrMsg: errMsg });
-      return errMsg;
-    },
     confirm: async () => {
       const result1 = await this.checkAll['checkWithDrawIndexSignList']();
       const result2 = await this.checkAll['checkTx']();
-      const result3 = await this.checkAll['checkPassword']();
-      return !result1 && !result2 && !result3;
+      return !result1 && !result2;
     },
   };
 
@@ -72,15 +61,7 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const {
-      withDrawIndexSignList,
-      withDrawIndexSignListErrMsg,
-      password,
-      passwordErrMsg,
-      tx,
-      txErrMsg,
-      redeemScript,
-    } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, redeemScript } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
@@ -161,18 +142,6 @@ class WithdrawConstructModal extends Component {
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
           <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
-          <Input.Text
-            errMsg={passwordErrMsg}
-            value={password}
-            isPassword
-            placeholder="输入热私钥密码"
-            onChange={value => {
-              this.setState({
-                password: value,
-              });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
         </div>
       </Modal>
     );

@@ -110,7 +110,7 @@ export default class Trust extends ModelExtend {
       if (findOne) {
         return {
           ...newItem,
-          trusteeSign: true,
+          trusteeSign: findOne[1],
         };
       }
       return newItem;

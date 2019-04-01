@@ -31,7 +31,7 @@ class BlockInfo extends Component {
     return (
       <div className={styles.blockinfo}>
         <span>最新高度:{normalizedBlockNumber}</span>
-        <span>{moment_helper.formatHMS(blockTime)}</span>
+        <span>出块时间:{moment_helper.formatHMS(blockTime)}</span>
       </div>
     );
   }
