@@ -194,9 +194,9 @@ export default class Trade extends ModelExtend {
                           ...item,
                           time: item.time,
                           priceShow: this.setPrecision(item.price, filterPair.assets),
-                          other_userShow: [maker_userShow, taker_userShow].filter(
-                            item => item !== currentAccount.address
-                          )[0],
+                          other_userShow:
+                            [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
+                            maker_userShow,
                           hasfillAmountPercent: formatNumber.percent(item.amount / item1.amount, 2),
                           amountShow,
                           totalShow,
