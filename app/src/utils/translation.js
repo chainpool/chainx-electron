@@ -47,6 +47,7 @@ const argvs = {
   ethereum_signature: 'ethereum_signature',
   sign_data: 'sign_data',
   input_data: 'input_data',
+  header: '块头',
 };
 
 const values = {
@@ -208,6 +209,10 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
     }
     case 'XStaking|register': {
       info = merge(args, [{ name: 'name', nameTrans: '节点名称' }]);
+      break;
+    }
+    case 'XBridgeOfBTC|push_header': {
+      info = merge(args, [{ name: 'header' }]);
       break;
     }
   }
