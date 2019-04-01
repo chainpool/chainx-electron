@@ -137,6 +137,7 @@ export default class Trust extends ModelExtend {
     const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = 40000;
+
     const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
@@ -172,6 +173,7 @@ export default class Trust extends ModelExtend {
         if (targetUtxos.length <= 0) {
           throw new Error('构造失败，账户余额不足');
         }
+
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
             .exponentiatedBy(8)
