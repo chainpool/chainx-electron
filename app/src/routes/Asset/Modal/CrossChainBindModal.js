@@ -310,7 +310,7 @@ class CrossChainBindModal extends Mixin {
                         if (checkAll.confirm()) {
                           const params = this.getTradeId();
                           fetchFromHttp({
-                            url: '/bindTxid',
+                            url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
                             methodAlias: 'tx_hash',
                             params: [params],
                           })

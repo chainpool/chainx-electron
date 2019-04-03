@@ -275,7 +275,7 @@ export default class Trust extends ModelExtend {
 
   fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
-      url: `/getTrustNodeStatus?ip=http://${url}`,
+      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       timeOut: 2000,
