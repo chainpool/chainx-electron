@@ -65,25 +65,21 @@ export default class Configure extends ModelExtend {
     this.refreshLocalNodesOrApi('Node')
       ? localSave.get('nodes')
       : [
-          {
-            type: '系统默认',
-            name: 'wallet-server',
-            best: true,
-            address: process.env.CHAINX_NODE_URL,
-            isSystem: true,
-            Version: ConfigureVersion,
-          },
-          {
-            type: '系统默认',
-            name: '本机',
-            address: 'ws://localhost:8097',
-            isSystem: true,
-            isLocalhost: true,
-          },
+          // {
+          //   type: '系统默认',
+          //   name: 'wallet-server',
+          //   best: true,
+          //   address: process.env.CHAINX_NODE_URL,
+          //   isSystem: true,
+          //   Version: ConfigureVersion,
+          // },
+
           {
             type: '系统默认',
             name: 'w1',
+            best: true,
             isSystem: true,
+            Version: ConfigureVersion,
             address: 'wss://w1.chainx.org/ws',
           },
           {
@@ -91,6 +87,19 @@ export default class Configure extends ModelExtend {
             name: 'w2',
             isSystem: true,
             address: 'wss://w2.chainx.org/ws',
+          },
+          {
+            type: '系统默认',
+            name: 'w3',
+            isSystem: true,
+            address: 'wss://w3.chainx.org/ws',
+          },
+          {
+            type: '系统默认',
+            name: '本机',
+            address: 'ws://localhost:8087',
+            isSystem: true,
+            isLocalhost: true,
           },
         ]
   );

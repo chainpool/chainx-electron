@@ -152,7 +152,7 @@ class NodeTable extends Component {
           ),
         },
       ],
-      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => b.selfVote - a.selfVote),
+      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => b.totalNomination - a.totalNomination),
     };
     return <Table {...tableProps} />;
   }
