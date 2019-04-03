@@ -73,7 +73,7 @@ class TransferModal extends Component {
                     description: [
                       { name: '操作', value: '转账' },
                       { name: '转账数量', value: `${setBlankSpace(amount, token)}` },
-                      { name: '接收人地址', value: address },
+                      { name: '接收人地址', value: address, toastShow: false },
                       { name: '备注', value: remark },
                     ],
                     callback: ({ token }) => {

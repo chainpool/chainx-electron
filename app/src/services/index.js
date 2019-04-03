@@ -117,9 +117,9 @@ export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 export const getOrders = (...payload) => trade.getOrders(...payload);
 
 export const getOrdersApi = payload => {
-  const { accountId } = payload;
+  const { accountId, page } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/userorders/${accountId}?page_size=20`,
+    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}`,
     method: 'get',
     ...payload,
   });
@@ -164,10 +164,30 @@ export const getBondingDuration = (...payload) => stake.getBondingDuration(...pa
 
 export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);
 
+export const getTokenDiscount = (...payload) => stake.getTokenDiscount(...payload);
+
 export const getBlockTime = payload => {
   const { height } = payload;
   return fetchFromHttp({
     url: `${API}/block/${height}?fields=time`,
+    method: 'get',
+    ...payload,
+  });
+};
+
+export const getTradeRecordApi = payload => {
+  const { accountId, page } = payload;
+  return fetchFromHttp({
+    url: `${API}/account/${accountId}/txs?page_size=10&&page=${page}`,
+    method: 'get',
+    ...payload,
+  });
+};
+
+export const getTradeDetailApi = payload => {
+  const { txhash } = payload;
+  return fetchFromHttp({
+    url: `${API}/tx/${txhash}`,
     method: 'get',
     ...payload,
   });

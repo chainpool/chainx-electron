@@ -62,7 +62,7 @@ class NodeTable extends Component {
           render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
-          title: '自抵押数',
+          title: '节点抵押',
           ellipse: true,
           dataIndex: 'selfVote',
           render: value => setDefaultPrecision(value),
@@ -152,7 +152,7 @@ class NodeTable extends Component {
           ),
         },
       ],
-      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => b.selfVote - a.selfVote),
+      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => b.totalNomination - a.totalNomination),
     };
     return <Table {...tableProps} />;
   }

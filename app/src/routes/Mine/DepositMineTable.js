@@ -1,10 +1,10 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table } from '../../components';
-import { Inject } from '../../utils';
+import { observer } from '../../utils';
 import { Balance, HoverTip } from '../components';
 
-@Inject(({ globalStore }) => ({ globalStore }))
+@observer
 class DepositMineTable extends Mixin {
   startInit = async () => {
     const {
@@ -14,11 +14,14 @@ class DepositMineTable extends Mixin {
     dispatch({
       type: 'getPseduIntentions',
     });
+    dispatch({
+      type: 'getTokenDiscount',
+    });
   };
 
   render() {
     const {
-      model: { openModal, dispatch, normalizedPseduIntentions = [] },
+      model: { openModal, dispatch, normalizedPseduIntentions = [], tokenDiscount },
       globalStore: { nativeAssetName },
     } = this.props;
     const tableProps = {
@@ -41,13 +44,16 @@ class DepositMineTable extends Mixin {
           dataIndex: 'circulation',
         },
         {
-          title: '挖矿算力',
+          title: '挖矿算力(PCX)',
           ellipse: true,
           dataIndex: 'price',
           render: (value, item) => {
             return (
               <span>
-                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : '每日均价 * 50%'}> {`1: ${value}`}</HoverTip>
+                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : `每日均价 * ${tokenDiscount}`}>
+                  {' '}
+                  {`1: ${value}`}
+                </HoverTip>
               </span>
             );
           },
@@ -82,7 +88,7 @@ class DepositMineTable extends Mixin {
                     openModal({
                       name: 'SignModal',
                       data: {
-                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: nativeAssetName }],
+                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: item.id }],
                         callback: () => {
                           return dispatch({
                             type: 'depositClaim',

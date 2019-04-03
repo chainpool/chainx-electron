@@ -10,11 +10,12 @@ import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ globalStore, accountStore, electionStore, configureStore }) => ({
+@Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore }) => ({
   globalStore,
   accountStore,
   electionStore,
   configureStore,
+  tradeStore,
 }))
 class Main extends Component {
   state = {
@@ -23,11 +24,6 @@ class Main extends Component {
 
   async componentDidMount() {
     await this.ready();
-    const {
-      electionStore: { dispatch },
-    } = this.props;
-    // 程序启动时，需要获取这些信息，以保证页面正确显示，如'信托'tab的显示
-    dispatch({ type: 'getIntentions' });
   }
 
   ready = async () => {
@@ -36,6 +32,7 @@ class Main extends Component {
       accountStore: { dispatch: dispatchAccount },
       electionStore: { dispatch: dispatchElection },
       configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
+      tradeStore: { dispatch: dispatchTrade },
       history: {
         location: { search },
       },
@@ -47,7 +44,7 @@ class Main extends Component {
         new Promise((resovle, reject) => {
           setTimeout(() => {
             reject(new Error('请求超时'));
-          }, 8000);
+          }, 10000);
         }),
       ]);
     wsPromise()
@@ -66,6 +63,7 @@ class Main extends Component {
         });
         await dispatchGlobal({ type: 'getAllAssets' });
         await dispatchElection({ type: 'getIntentions' });
+        await dispatchTrade({ type: 'getOrderPairs' });
         this.setState({
           ready: true,
         });

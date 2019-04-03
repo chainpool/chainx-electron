@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Icon, Input, Toast } from '../../../../components';
+import { Warn } from '../../../components';
 import * as styles from './index.less';
-import { classNames, Inject, moment_helper, parseQueryString } from '../../../../utils';
+import { classNames, observer, parseQueryString, _ } from '../../../../utils';
 import { PATH } from '../../../../constants';
-@Inject(({ chainStore, configureStore }) => ({ chainStore, configureStore }))
+
+@observer
 class Node extends Component {
   constructor(props) {
     super(props);
@@ -12,27 +14,44 @@ class Node extends Component {
     };
   }
 
+  filterBestNode = nodes => {
+    return nodes.filter(item => item.best)[0];
+  };
+
+  componentDidUpdate(prevProps) {
+    const { nodes: nodesPrev } = prevProps;
+    const { nodes } = this.props;
+    const prevBest = this.filterBestNode(nodesPrev);
+    const bestNode = this.filterBestNode(nodes);
+    if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && prevBest.syncStatus === '' && bestNode.syncStatus !== '') {
+      this.isFirst = true;
+      if (bestNode.syncStatus && ['100.00%', '100%'].indexOf(bestNode.syncStatus) === -1) {
+        Toast.warn('节点未完全同步', <Warn>所选节点未完全同步，页面数据不是最新。请切换至其他已同步节点。</Warn>, {
+          position: 'top-left',
+          autoClose: 4000,
+          showStatusIcon: false,
+        });
+      }
+    }
+  }
+
   async componentDidMount() {
     const {
-      chainStore: { dispatch },
-      configureStore: { dispatch: dispatchConfig },
+      configureStore: { dispatch },
       history: {
         location: { pathname, search },
       },
     } = this.props;
-    this.subscribeNewHead = await dispatch({
-      type: 'subscribeNewHead',
-    });
     const bestNode = parseQueryString(search).bestNode;
     if (pathname !== PATH.configure) {
-      dispatchConfig({
+      dispatch({
         type: 'subscribeNodeOrApi',
         payload: {
           refresh: !bestNode,
           target: 'Node',
         },
       });
-      dispatchConfig({
+      dispatch({
         type: 'subscribeNodeOrApi',
         payload: {
           refresh: !bestNode,
@@ -42,13 +61,8 @@ class Node extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.subscribeNewHead.unsubscribe();
-  }
-
   render() {
     const {
-      chainStore: { normalizedBlockNumber, blockTime },
       configureStore: { nodes = [], api = [], autoSwitchBestNode, autoSwitchBestApi, dispatch, getBestNodeAndApi },
     } = this.props;
     const [bestNode = {}, bestApi = {}] = getBestNodeAndApi();
@@ -105,7 +119,6 @@ class Node extends Component {
                           autoSwitchBestApi: !autoSwitchBestApi,
                         },
                       });
-                      // window.location.reload();
                     }}>
                     <Input.Checkbox
                       style={{ width: 14, height: 14 }}
@@ -141,16 +154,7 @@ class Node extends Component {
       </ul>
     );
 
-    return (
-      <div className={styles.node}>
-        <div>
-          <span>{moment_helper.formatHMS(blockTime)}</span>
-          <span>最新高度:{normalizedBlockNumber}</span>
-        </div>
-        {/*TODO: 暂时隐藏节点及api选择*/}
-        {nodeList}
-      </div>
-    );
+    return <div className={styles.node}>{nodeList}</div>;
   }
 }
 

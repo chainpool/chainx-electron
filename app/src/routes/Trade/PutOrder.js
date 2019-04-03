@@ -288,7 +288,7 @@ class PutOrder extends SwitchPair {
                         { name: '方向', value: action === 'buy' ? '买入' : '卖出' },
                         { name: '报价', value: setBlankSpace(price, currentPair.currency) },
                         { name: '数量', value: setBlankSpace(amount, currentPair.assets) },
-                        { name: '账户', value: currentAccount.address },
+                        { name: '账户', value: currentAccount.address, toastShow: false },
                       ],
                       callback: () => {
                         return dispatch({
@@ -299,12 +299,6 @@ class PutOrder extends SwitchPair {
                             direction: action === 'buy' ? 'Buy' : 'Sell',
                             price,
                             amount,
-                            successToast: {
-                              message: content,
-                            },
-                            failToast: {
-                              message: content,
-                            },
                           },
                         });
                       },

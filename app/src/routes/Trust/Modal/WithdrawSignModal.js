@@ -26,7 +26,8 @@ class WithdrawSignModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      const result3 = this.checkAll['checkPassword']();
+      const { activeIndex } = this.state;
+      const result3 = !activeIndex ? this.checkAll['checkPassword']() : '';
       return !result3;
     },
   };
@@ -55,16 +56,23 @@ class WithdrawSignModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const decryptedKey = this.decryptedKey;
-                const privateKey = wif.encode(
-                  BitcoinTestNet ? 0xef : 0x80,
-                  decryptedKey.privateKey,
-                  decryptedKey.compressed
-                );
+                let privateKey = '';
+                if (!activeIndex) {
+                  const decryptedKey = this.decryptedKey;
+                  privateKey = wif.encode(
+                    BitcoinTestNet ? 0xef : 0x80,
+                    decryptedKey.privateKey,
+                    decryptedKey.compressed
+                  );
+                }
+
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: `响应多签提现${!activeIndex ? '签名' : '否决'}` }],
+                    description: [
+                      { name: '操作', value: '响应多签提现' },
+                      { name: '是否签名', value: !activeIndex ? '是' : '否' },
+                    ],
                     callback: () => {
                       return dispatch({
                         type: 'signWithdrawTx',
@@ -108,18 +116,20 @@ class WithdrawSignModal extends Component {
               </Button>
             ))}
           </ButtonGroup>
-          <Input.Text
-            isPassword
-            value={password}
-            errMsg={passwordErrMsg}
-            placeholder="输入热私钥密码"
-            onChange={value => {
-              this.setState({
-                password: value,
-              });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
+          {!activeIndex ? (
+            <Input.Text
+              isPassword
+              value={password}
+              errMsg={passwordErrMsg}
+              placeholder="输入热私钥密码"
+              onChange={value => {
+                this.setState({
+                  password: value,
+                });
+              }}
+              onBlur={checkAll.checkPassword}
+            />
+          ) : null}
         </div>
       </Modal>
     );

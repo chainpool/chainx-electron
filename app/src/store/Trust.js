@@ -110,7 +110,7 @@ export default class Trust extends ModelExtend {
       if (findOne) {
         return {
           ...newItem,
-          trusteeSign: true,
+          trusteeSign: findOne[1],
         };
       }
       return newItem;
@@ -123,7 +123,7 @@ export default class Trust extends ModelExtend {
     this.rootStore.electionStore.getIntentions();
   };
 
-  sign = ({ withdrawList, tx, redeemScript, privateKey }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (!findOne) {
       throw new Error('未设置节点');
@@ -134,9 +134,14 @@ export default class Trust extends ModelExtend {
     if (!findOne.trusteeAddress && !findOne.trusteeAddress[0]) {
       throw new Error('当前节点未设置信托地址');
     }
-    const multisigAddress = findOne.trusteeAddress[0];
+    const multisigAddress = await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+    if (!multisigAddress) {
+      throw new Error('未获取到信托地址');
+    }
+    // const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = 40000;
+
     const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async (url, multisigAddress) =>
       this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
@@ -172,6 +177,7 @@ export default class Trust extends ModelExtend {
         if (targetUtxos.length <= 0) {
           throw new Error('构造失败，账户余额不足');
         }
+
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
             .exponentiatedBy(8)
@@ -269,7 +275,7 @@ export default class Trust extends ModelExtend {
 
   fetchNodeStatus = (url, trusteeAddress) => {
     return fetchFromHttp({
-      url: `/getTrustNodeStatus?ip=http://${url}`,
+      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       timeOut: 2000,

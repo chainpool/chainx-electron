@@ -90,7 +90,7 @@ class WithdrawModal extends Mixin {
                   data: {
                     description: [
                       { name: '操作', value: '提现' },
-                      { name: '收款地址', value: address },
+                      { name: '收款地址', value: address, toastShow: false },
                       { name: '数量', value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],

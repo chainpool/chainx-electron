@@ -17,7 +17,7 @@ class HistoryOrderTable extends SwitchPair {
   }
 
   startInit = () => {
-    this.getHistoryAccountOrder();
+    //this.getHistoryAccountOrder();
   };
 
   getHistoryAccountOrder = async () => {
@@ -73,9 +73,12 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   render() {
-    const widths = [150, 90, 100, 60, undefined, undefined, 200, undefined, undefined, 80];
-    const { changeExpandIsOpen } = this;
+    const widths = [150, 90, 100, 60, undefined, undefined, 200, undefined, undefined, 100];
+    const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
+    const {
+      model: { historyAccountPageTotal, dispatch },
+    } = this.props;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
@@ -83,8 +86,7 @@ class HistoryOrderTable extends SwitchPair {
         [
           {
             title: '时间',
-            dataIndex: 'createTime',
-            render: value => <BlockTime value={value} {...this.props} />,
+            dataIndex: 'timeShow',
           },
           {
             title: '委托编号',
@@ -181,7 +183,7 @@ class HistoryOrderTable extends SwitchPair {
               },
               {
                 title: '对手方',
-                dataIndex: 'maker_userShow',
+                dataIndex: 'other_userShow',
                 render: value => {
                   return <div className={styles.otherFace}>对手方：{value}</div>;
                 },
@@ -227,7 +229,20 @@ class HistoryOrderTable extends SwitchPair {
         );
       },
     };
-    return <Table {...tableProps} />;
+
+    const pagination = {
+      total: historyAccountPageTotal,
+      onPageChange: async page => {
+        await dispatch({
+          type: 'changeModel',
+          payload: {
+            historyAccountCurrentPage: page,
+          },
+        });
+        getHistoryAccountOrder();
+      },
+    };
+    return <Table {...tableProps} pagination={pagination} location={this.props.location} />;
   }
 }
 

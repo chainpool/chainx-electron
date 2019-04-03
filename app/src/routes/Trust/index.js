@@ -38,6 +38,7 @@ class Trust extends Mixin {
     const {
       model: { tx, signStatus, signTrusteeList = [] },
     } = this.props;
+
     const {
       accountStore: {
         isTrustee,
@@ -57,14 +58,20 @@ class Trust extends Mixin {
       currentTrustNode,
     };
 
-    const isShowWithdraw =
+    const isSelfSign = signTrusteeList.filter(
+      (item = {}) => (item.trusteeSign === true || item.trusteeSign === false) && item.isSelf
+    )[0];
+
+    const isShowResponseWithdraw =
       currentTrustNode &&
       currentTrustNode.connected &&
       currentTrustNode.decodedHotPrivateKey &&
-      normalizedOnChainAllWithdrawList.length > 0;
+      normalizedOnChainAllWithdrawList.length > 0 &&
+      !isSelfSign;
 
-    const isAnyUseableWithdraws = normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying');
-    const isSelfSign = signTrusteeList.filter((item = {}) => item.trusteeSign && item.isSelf)[0];
+    const isShowConstructureWithdraw =
+      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'signing' || item.status === 'processing')
+        .length === 0 && normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying').length > 0;
 
     const renderSignLi = (one, index) => {
       return (
@@ -79,15 +86,13 @@ class Trust extends Mixin {
       <div className={styles.trust}>
         <TableTitle title={`信托设置`} className={styles.title}>
           <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
-          {isTrustee && (
-            <Button
-              onClick={() => {
-                openModal({ name: 'TrustSetting' });
-              }}>
-              <Icon name="icon-shezhixintuo" />
-              <span>设置信托</span>
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              openModal({ name: 'TrustSetting' });
+            }}>
+            <Icon name="icon-shezhixintuo" />
+            <span>设置信托</span>
+          </Button>
         </TableTitle>
         <SettingTable {...this.props} />
         <div />
@@ -102,7 +107,7 @@ class Trust extends Mixin {
                   <Button>
                     <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
                   </Button>
-                  {isShowWithdraw && !isSelfSign ? (
+                  {isShowResponseWithdraw ? (
                     <Button
                       type="success"
                       onClick={() => {
@@ -148,17 +153,15 @@ class Trust extends Mixin {
 
         <div className={styles.withdraw}>
           <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
-            {isShowWithdraw ? (
+            {isShowConstructureWithdraw ? (
               <ButtonGroup>
-                {signStatus === false ? null : isAnyUseableWithdraws.length ? (
-                  <Button
-                    onClick={() => {
-                      openModal({ name: 'WithdrawConstructModal' });
-                    }}>
-                    <Icon name="icon-goujiantixian" />
-                    构造多签提现
-                  </Button>
-                ) : null}
+                <Button
+                  onClick={() => {
+                    openModal({ name: 'WithdrawConstructModal' });
+                  }}>
+                  <Icon name="icon-goujiantixian" />
+                  构造多签提现
+                </Button>
               </ButtonGroup>
             ) : null}
           </TableTitle>

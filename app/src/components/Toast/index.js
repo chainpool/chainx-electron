@@ -38,7 +38,8 @@ class Toast {
     }, interval);
   };
 
-  message = (status = 'success', title = 'title', message) => {
+  message = (status = 'success', title = 'title', message, options = {}) => {
+    const { showStatusIcon = true } = options;
     toast(
       <div className={styles.toast_message}>
         <div
@@ -48,11 +49,13 @@ class Toast {
             status === 'warn' ? styles.warn : null
           )}>
           <div />
-          {status === 'success' ? (
-            <i className="iconfont icon-icon-wancheng" />
-          ) : (
-            <i className="iconfont icon-icon-cuowu" />
-          )}
+          {showStatusIcon ? (
+            status === 'success' ? (
+              <i className="iconfont icon-icon-wancheng" />
+            ) : (
+              <i className="iconfont icon-icon-cuowu" />
+            )
+          ) : null}
           {title}
         </div>
         {message ? <div className={styles.desc}>{message}</div> : null}
@@ -62,16 +65,17 @@ class Toast {
         autoClose: 2000,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
+        ...options,
       }
     );
   };
 
-  success = (title, message) => {
-    this.message('success', title, message);
+  success = (title, message, options) => {
+    this.message('success', title, message, options);
   };
 
-  warn = (title, message) => {
-    this.message('warn', title, message);
+  warn = (title, message, options) => {
+    this.message('warn', title, message, options);
   };
 }
 

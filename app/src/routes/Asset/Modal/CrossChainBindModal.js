@@ -67,7 +67,10 @@ class CrossChainBindModal extends Mixin {
     } = this.props;
 
     const channel = recommendChannel ? `@${recommendChannel}` : '';
-    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`));
+    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`)).replace(
+      /^0x/,
+      ''
+    );
     const show = {
       BTC: {
         desc1: (
@@ -112,7 +115,7 @@ class CrossChainBindModal extends Mixin {
                     <span className={styles.hoverimg} style={item.style}>
                       <img src={item.src} width={item.imgWidth} />
                     </span>
-                    、
+                    {index === 2 ? null : '、'}
                   </span>
                 ))}
                 等，不添加OP_RETURN信息，充值无法到账
@@ -124,8 +127,8 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            使用<strong>支持Data</strong>的以太坊钱包，向任意地址发起任意金额 (建议为0) 的转账交易，并在{' '}
-            <strong>Data</strong> 中输入下方<strong>十六进制 (Hex)</strong> 信息：
+            由持有DOT的地址向任意地址 (建议向自己) 发起任意金额 (建议为0) 的转账交易，并在 <strong>Data</strong>{' '}
+            中输入下方<strong>十六进制 (Hex)</strong> 信息：
           </span>
         ),
         value1: chainxAddressHex,
@@ -190,7 +193,7 @@ class CrossChainBindModal extends Mixin {
                   <span className={styles.hoverimg} style={item.style}>
                     <img src={item.src} width={item.imgWidth} />
                   </span>
-                  、
+                  {index === 7 ? null : '、'}
                 </span>
               ))}{' '}
               等。
@@ -246,7 +249,14 @@ class CrossChainBindModal extends Mixin {
                   <div>
                     <strong>参与了Polkadot第一期ICO的用户</strong>，可以将锁定的DOT
                     1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。{' '}
-                    <RouterGo isOutSide>点击查看参与用户地址列表</RouterGo>
+                    <RouterGo
+                      isOutSide
+                      go={{
+                        pathname:
+                          'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
+                      }}>
+                      点击查看参与用户地址列表
+                    </RouterGo>
                   </div>
                 </div>
               )}
@@ -277,7 +287,7 @@ class CrossChainBindModal extends Mixin {
                   <div className={styles.desc}>
                     <div />
                     交易打包成功后，在下面输入交易ID <strong>交易ID (Txid/TxHash)</strong>
-                    ，交易签名验证无误后，即可完成映射
+                    ，交易签名验证无误后，完成映射, SDOT会立即发放
                   </div>
                   <div className={styles.tradeid}>
                     <Input.Text
@@ -300,7 +310,7 @@ class CrossChainBindModal extends Mixin {
                         if (checkAll.confirm()) {
                           const params = this.getTradeId();
                           fetchFromHttp({
-                            url: '/bindTxid',
+                            url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
                             methodAlias: 'tx_hash',
                             params: [params],
                           })

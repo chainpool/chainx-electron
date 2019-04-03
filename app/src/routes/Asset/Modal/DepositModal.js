@@ -34,6 +34,9 @@ class DepositModal extends Mixin {
               onClick={() => {
                 openModal({
                   name: 'CrossChainBindModal',
+                  data: {
+                    token: 'BTC',
+                  },
                 });
               }}>
               绑定新地址

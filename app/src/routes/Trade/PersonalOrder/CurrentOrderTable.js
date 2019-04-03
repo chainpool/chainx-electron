@@ -39,8 +39,7 @@ class CurrentOrderTable extends SwitchPair {
       columns: [
         {
           title: '时间',
-          dataIndex: 'createTime',
-          render: value => <BlockTime value={value} {...this.props} />,
+          dataIndex: 'timeShow',
         },
         {
           title: '委托编号',

@@ -25,7 +25,9 @@ class SignModal extends Mixin {
     const token = targetToken || 'PCX';
     if (_.isFunction(callback)) {
       this.result = await callback({ token });
-      this.getFee();
+      if (this.result && this.result.extrinsic) {
+        this.getFee();
+      }
     }
   };
 
@@ -118,6 +120,14 @@ class SignModal extends Mixin {
                     globalStore: { modal: { data: { description = [] } = {} } = {} },
                   } = this.props;
                   const operationItem = description.filter((item = {}) => item.name === operation)[0] || {};
+                  const toastOperation = description.filter(
+                    (item = {}) => item.name !== operation && item.toastShow !== false
+                  );
+                  const toastMessage = toastOperation.reduce(
+                    (sum, next, index) =>
+                      `${sum}${next.name}${' '}${next.value}${index === toastOperation.length - 1 ? '' : '; '}`,
+                    ''
+                  );
 
                   const reCoverLoading = status => {
                     _.isFunction(result.loading) && result.loading(status);
@@ -128,17 +138,17 @@ class SignModal extends Mixin {
                     _.isFunction(result.success) && result.success(res);
                     Toast.success(
                       `${_.get(result, 'successToast.title') || operationItem.value || operation}成功`,
-                      _.get(result, 'successToast.message')
+                      toastMessage
                     );
                   };
 
                   const fail = (err = {}) => {
                     reCoverLoading(false);
                     _.isFunction(result.fail) && result.fail(err);
-                    _.get(err, 'data') && console.log(_.get(err, 'data'));
+                    _.get(err, 'data') && console.log(_.get(err, 'data'), _.get(err, 'message'));
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
-                      _.get(result, 'failToast.message') || _.get(err, 'message')
+                      toastMessage
                     );
                   };
 
@@ -147,24 +157,40 @@ class SignModal extends Mixin {
                   closeModal();
                   _.isFunction(result.beforeSend) && result.beforeSend();
                   try {
-                    extrinsic.signAndSend(
-                      ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                      { acceleration },
-                      (err, res) => {
-                        if (!err) {
-                          if (resOk(res)) {
-                            success(res);
-                          } else if (resFail(res)) {
-                            fail(err);
+                    const promise = () =>
+                      new Promise((resolve, reject) => {
+                        extrinsic.signAndSend(
+                          ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                          { acceleration },
+                          (err, res) => {
+                            if (!err) {
+                              if (resOk(res)) {
+                                success(res);
+                                resolve();
+                              } else if (resFail(res)) {
+                                fail(err);
+                                reject();
+                              }
+                            } else {
+                              fail(err);
+                              reject();
+                            }
                           }
-                        } else {
-                          fail(err);
-                        }
-                        if (resOk(res) || resFail(res)) {
-                          _.isFunction(result.loading) && result.loading(false);
-                        }
+                        );
+                      });
+
+                    Promise.race([
+                      promise(),
+                      new Promise((resovle, reject) => {
+                        setTimeout(() => {
+                          reject(new Error('timeOut'));
+                        }, 7000);
+                      }),
+                    ]).catch(err => {
+                      if (err && err.message === 'timeOut') {
+                        reCoverLoading(false);
                       }
-                    );
+                    });
                   } catch (err) {
                     fail(err);
                   }

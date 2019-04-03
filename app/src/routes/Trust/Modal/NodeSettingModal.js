@@ -27,12 +27,31 @@ class NodeSettingModal extends Component {
       },
     }).then(res => {
       if (res) {
-        this.setState({
-          trusteeAddress: res,
-        });
+        this.setState(
+          {
+            trusteeAddress: res,
+          },
+          this.updateTrust
+        );
       }
     });
   }
+
+  updateTrust = () => {
+    const { node, trusteeAddress } = this.state;
+    const {
+      model: { dispatch },
+      globalStore: { modal: { data: { chain } = {} } = {} },
+    } = this.props;
+    dispatch({
+      type: 'updateTrust',
+      payload: {
+        node,
+        chain,
+        trusteeAddress: trusteeAddress ? [trusteeAddress] : [],
+      },
+    });
+  };
 
   checkAll = {
     checkNode: () => {
@@ -49,10 +68,9 @@ class NodeSettingModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { node, nodeErrMsg, trusteeAddress } = this.state;
+    const { node, nodeErrMsg } = this.state;
     const {
-      model: { dispatch, closeModal },
-      globalStore: { modal: { data: { chain } = {} } = {} },
+      model: { closeModal },
     } = this.props;
 
     return (
@@ -64,14 +82,7 @@ class NodeSettingModal extends Component {
             type="confirm"
             onClick={() => {
               if (this.checkAll.confirm()) {
-                dispatch({
-                  type: 'updateTrust',
-                  payload: {
-                    node,
-                    chain,
-                    trusteeAddress: trusteeAddress ? [trusteeAddress] : [],
-                  },
-                });
+                this.updateTrust();
                 closeModal();
               }
             }}>

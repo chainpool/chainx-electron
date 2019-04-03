@@ -15,6 +15,7 @@ export const _ = lodash_helper;
 export const moment = moment_helper;
 export { localSave, moment_helper, Rx } from './helper';
 export { default as classNames } from 'classnames';
+export { default as translation } from './translation';
 // export { default as io } from './io';
 
 // ----------------------------项目适用
@@ -304,9 +305,9 @@ export const fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
   }
 };
 
-export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], timeOut = 5000 }) => {
+export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], body, timeOut = 5000 }) => {
   const id = _.uniqueId();
-  const message = JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
+  const message = body ? JSON.stringify(body) : JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
   const request = () =>
     fetch(url, {
       method: method,
@@ -317,11 +318,15 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], 
       },
       ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
     })
-      .then(res => {
+      .then(async res => {
         if (res.status >= 200 && res.status < 300) {
           return res.json();
         } else {
-          return Promise.reject(res.statusText);
+          const result = await res.json();
+          return Promise.reject({
+            status: res.status,
+            message: result,
+          });
         }
       })
       .catch(err => {

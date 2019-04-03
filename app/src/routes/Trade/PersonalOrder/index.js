@@ -25,7 +25,7 @@ class PersonalOrder extends SwitchPair {
         return (
           <div style={{ position: 'relative' }}>
             <div className={styles.nodata} style={{ top: 20 }}>
-              暂无当前委托
+              <div>暂无当前委托</div>
             </div>
           </div>
         );

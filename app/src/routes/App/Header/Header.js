@@ -19,19 +19,6 @@ class Header extends Component {
 
     const showRouters = routers.filter(item => item.show !== false);
 
-    const txRecord = (
-      <AuthorityComponent>
-        <li>
-          <RouterGo
-            go={{ pathname: PATH.tradeRecord }}
-            className={pathname === PATH.tradeRecord ? styles.active : null}>
-            <Icon name="icon-caozuojilu" />
-            <span style={{ marginLeft: 9 }}>交易记录</span>
-          </RouterGo>
-        </li>
-      </AuthorityComponent>
-    );
-
     return (
       <header className={className}>
         <div>
@@ -66,8 +53,16 @@ class Header extends Component {
           <div className={styles.right}>
             <div>
               <ul>
-                {/*TODO: 没有API服务器，暂时隐藏交易记录*/}
-                {false && txRecord}
+                <AuthorityComponent>
+                  <li>
+                    <RouterGo
+                      go={{ pathname: PATH.tradeRecord }}
+                      className={pathname === PATH.tradeRecord ? styles.active : null}>
+                      <Icon name="icon-caozuojilu" />
+                      <span style={{ marginLeft: 9 }}>交易记录</span>
+                    </RouterGo>
+                  </li>
+                </AuthorityComponent>
 
                 {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
                   return item === 0 ? (

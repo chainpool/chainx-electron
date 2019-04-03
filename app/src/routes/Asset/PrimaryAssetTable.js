@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { formatNumber, Inject, setColumnsWidth } from '../../utils';
+import { formatNumber, Inject, setColumnsWidth, fetchFromHttp } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
 import { HoverTip } from '../components';
@@ -8,27 +8,20 @@ import Asset from './components/Asset';
 
 function drawCandies(address) {
   if (!address) return;
-  fetch('https://wallet.chainx.org/server-api/faucet', {
-    body: JSON.stringify({
-      address,
-    }),
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    cache: 'no-cache',
+  fetchFromHttp({
+    url: 'https://wallet.chainx.org/server-api/faucet',
+    body: { address },
     method: 'POST',
   })
-    .then(resp => {
-      if (resp.status === 200) {
-        alert('领取成功，等待打包');
-      } else if (resp.status === 429) {
+    .then(() => {
+      alert('领取成功，等待打包');
+    })
+    .catch((err = {}) => {
+      if (err.status === 429) {
         alert('请不要重复点击，十分钟后领取');
       } else {
-        alert('领取失败');
+        alert(`领取失败${err.message.error_message ? `,${err.message.error_message}` : ''}`);
       }
-    })
-    .catch(() => {
-      alert('领取失败');
     });
 }
 

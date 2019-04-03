@@ -1,14 +1,4 @@
-import {
-  _,
-  formatNumber,
-  moment_helper,
-  observable,
-  computed,
-  localSave,
-  parseQueryString,
-  toJS,
-  generateKlineData,
-} from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -53,6 +43,8 @@ export default class Trade extends ModelExtend {
   @observable latestOrderList = [];
   @observable entrustOrderList = [];
   @observable currentOrderList = [];
+  @observable historyAccountPageTotal = 1;
+  @observable historyAccountCurrentPage = 1;
   @observable historyOrderList = [];
 
   reload = () => {
@@ -105,6 +97,7 @@ export default class Trade extends ModelExtend {
         ...item,
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
+        timeShow: moment_helper.formatHMS(item['block.time'], 'HH:mm:ss'),
       };
     });
     this.changeModel('latestOrderList', res);
@@ -148,6 +141,7 @@ export default class Trade extends ModelExtend {
       direction: item.direction,
       status: item.status,
       expand: item.expand,
+      timeShow: moment_helper.formatHMS(item['block.time']),
     }));
     const currentOrderList = this.processOrderData(data);
 
@@ -160,17 +154,22 @@ export default class Trade extends ModelExtend {
   };
 
   getHistoryAccountOrder = async () => {
-    const account = this.getCurrentAccount();
-    if (account.address) {
+    const currentAccount = this.getCurrentAccount();
+    if (currentAccount.address) {
       return from(
         this.isApiSwitch(
           getOrdersApi({
-            accountId: this.decodeAddressAccountId(account),
+            accountId: this.decodeAddressAccountId(currentAccount),
+            page: this.historyAccountCurrentPage,
           })
         )
       )
         .pipe(
-          map((res = {}) => res.items),
+          map((res = {}) => {
+            const pageTotal = Math.ceil(res.total / 10);
+            this.changeModel('historyAccountPageTotal', pageTotal);
+            return res.items;
+          }),
           tap(res => console.log(res, '------------历史成交')),
           mergeMap((items = []) => {
             if (!items.length) return of(items);
@@ -189,11 +188,15 @@ export default class Trade extends ModelExtend {
                         const amountShow = this.setPrecision(item.amount, filterPair.assets);
                         const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
                         sum += item.price * amountShow;
+                        const maker_userShow = this.encodeAddressAccountId(item.maker_user);
+                        const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
                           time: item.time,
                           priceShow: this.setPrecision(item.price, filterPair.assets),
-                          maker_userShow: this.encodeAddressAccountId(item.maker_user),
+                          other_userShow:
+                            [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
+                            maker_userShow,
                           hasfillAmountPercent: formatNumber.percent(item.amount / item1.amount, 2),
                           amountShow,
                           totalShow,
@@ -247,6 +250,7 @@ export default class Trade extends ModelExtend {
                 status: item.status,
                 expand: item.expand,
                 sum: item.sum,
+                timeShow: moment_helper.formatHMS(item['block.time']),
               };
             });
 
@@ -262,39 +266,6 @@ export default class Trade extends ModelExtend {
     }
   };
 
-  getFillAccountOrder = async ({ accountId, index }) => {
-    let res = await getFillOrdersApi({ accountId, index });
-    if (res && res.length) {
-      console.log(res, '--------------res');
-    }
-    res = (res || []).map((item = {}) => {
-      const filterPair = this.getPair({ id: String(item.pairid) });
-
-      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-      const amountShow = this.setPrecision(item.amount, filterPair.assets);
-      return {
-        ...item,
-        time: moment_helper.formatHMS(item['block.time']),
-        priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
-        maker_userShow: this.encodeAddressAccountId(item.maker_user),
-        amountShow,
-        totalShow: this.setPrecision(item.price * amountShow, filterPair.currency),
-        filterPair,
-      };
-    });
-    const list = this.historyOrderList.map(item => {
-      if (item.index === index) {
-        return {
-          ...item,
-          expand: res,
-        };
-      }
-      return item;
-    });
-    this.changeModel('historyOrderList', list);
-    return res;
-  };
-
   getQuotations = async () => {
     const currentPair = this.currentPair;
     const count = 10;
@@ -305,7 +276,7 @@ export default class Trade extends ModelExtend {
             this.isApiSwitch(
               getQuotationsApi({
                 pairId: currentPair.id,
-                count,
+                count: 10,
               })
             )
           ).pipe(
@@ -449,7 +420,7 @@ export default class Trade extends ModelExtend {
     };
   };
 
-  putOrder = ({ pairId, orderType, direction, amount, price, successToast, failToast }) => {
+  putOrder = ({ pairId, orderType, direction, amount, price }) => {
     const currentPair = this.currentPair;
     price = this.setPrecision(price, currentPair.precision, true);
     amount = this.setPrecision(amount, currentPair.assets, true);
@@ -458,8 +429,6 @@ export default class Trade extends ModelExtend {
       extrinsic,
       loading: status => this.changeModel(`loading[putOrder${direction}]`, status),
       success: () => this.reload(),
-      successToast,
-      failToast,
     };
   };
 

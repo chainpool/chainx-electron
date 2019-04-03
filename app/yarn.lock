@@ -783,12 +783,12 @@
     bs58 "^4.0.1"
     tweetnacl "^1.0.0"
 
-"@chainx/extrinsics@^2.5.35":
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/@chainx/extrinsics/-/extrinsics-2.5.35.tgz#65bd382c7eb98f3d0f0414638df21e64412e57f2"
-  integrity sha512-QlsGcNyJZu9IBjYgg03RMA7eNkal658C0dA6xJAk8WUz0kI+902Gr9HVuwmQzcPPsKE4a4XMapMDEFrxwDwn3Q==
+"@chainx/extrinsics@^2.5.36":
+  version "2.5.36"
+  resolved "https://registry.yarnpkg.com/@chainx/extrinsics/-/extrinsics-2.5.36.tgz#5e7e92d62754aa5cd9b83a4a98ebc81adede9f4e"
+  integrity sha512-LuYU8YUeRDdqrasmblE9IvTheYamtkJrN1iag7qxxH3kI2He00gumLXsA7JFtlenX0+Xl/kRu7dC49i3UmcUjw==
   dependencies:
-    "@chainx/types" "^2.5.35"
+    "@chainx/types" "^2.5.36"
     "@polkadot/keyring" "^0.34.37"
     "@polkadot/util" "^0.34.37"
 
@@ -808,15 +808,15 @@
     pbkdf2 "^3.0.17"
     randombytes "^2.0.6"
 
-"@chainx/rpc-core@^2.5.35":
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/@chainx/rpc-core/-/rpc-core-2.5.35.tgz#d629b747213cdc01c8f7a535fb8accb2774467c8"
-  integrity sha512-JkhwerzuFrbVsctqKGu2j63WJGDtPeiKESFqy4QwoHA90dJXqDKkASq2naCHCE11dCnPhA1pBpheszR75EU7lw==
+"@chainx/rpc-core@^2.5.36":
+  version "2.5.36"
+  resolved "https://registry.yarnpkg.com/@chainx/rpc-core/-/rpc-core-2.5.36.tgz#a236fb885e42a299b06187a90aca68ae43b2be57"
+  integrity sha512-kB11REP5YjoyG0l99eU/tUvS1dIAZOrtn6cLgvVgeJLu2p0B4RDGXEDcLzSI+BYDQvsm/teEMNupst1bjutvXA==
   dependencies:
     "@chainx/jsonrpc" "^2.5.26"
     "@chainx/rpc-provider" "^2.5.34"
-    "@chainx/storage" "^2.5.35"
-    "@chainx/types" "^2.5.35"
+    "@chainx/storage" "^2.5.36"
+    "@chainx/types" "^2.5.36"
     "@polkadot/util" "^0.34.37"
 
 "@chainx/rpc-provider@^2.5.34":
@@ -829,28 +829,28 @@
     isomorphic-fetch "^2.2.1"
     websocket "^1.0.28"
 
-"@chainx/rpc-rx@^2.5.35":
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/@chainx/rpc-rx/-/rpc-rx-2.5.35.tgz#64ffb2460bbfb572021c03148b0dc84b3033da7c"
-  integrity sha512-/HNTNz9HpEu+ZhWQU44cJUlbr3cz6sCoKOxiobj0fLP0rnm8+2uVfOED+5Rgxkg+m0JvsYmu9NVOus6xCBGnvw==
+"@chainx/rpc-rx@^2.5.36":
+  version "2.5.36"
+  resolved "https://registry.yarnpkg.com/@chainx/rpc-rx/-/rpc-rx-2.5.36.tgz#a5bcbb1028c084e9fce38559c5d127f065f335b3"
+  integrity sha512-who64FRjwAnvLfN4TgiJ3UkAliSQNKKUHsqQQb+Z2ewYcC+7xYEzX62th90363D9eJKSLKzR4Jt5TNDz/Xzw9A==
   dependencies:
-    "@chainx/rpc-core" "^2.5.35"
+    "@chainx/rpc-core" "^2.5.36"
     "@polkadot/util" "^0.34.37"
     rxjs "^6.3.3"
 
-"@chainx/storage@^2.5.35":
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/@chainx/storage/-/storage-2.5.35.tgz#2d80797f9a8a22f14e7d5c5c222a44187916a8c0"
-  integrity sha512-8geZzVjxctyVPpHSqDholzfV7Vt3pxanUmRfiokm2oJ4TayqQ1cG1ccOubmdTBMhXbTt755zB7UrF1PAg0zKEA==
+"@chainx/storage@^2.5.36":
+  version "2.5.36"
+  resolved "https://registry.yarnpkg.com/@chainx/storage/-/storage-2.5.36.tgz#7f0dbf9203da7c369d175dda4ea49779247bc610"
+  integrity sha512-fyPRROsvayFkJYU/Cy1gurrLO28IDvqkqX/SD2pv+kymPq9AtjqI0LARwKCLY+hCADyTbIqudYzyr4/ERdO56Q==
   dependencies:
-    "@chainx/types" "^2.5.35"
+    "@chainx/types" "^2.5.36"
     "@polkadot/util" "^0.34.37"
     "@polkadot/util-crypto" "^0.34.37"
 
-"@chainx/types@^2.5.35":
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/@chainx/types/-/types-2.5.35.tgz#2c96242210daddeca6d5d270758f414d38ff2ef6"
-  integrity sha512-Ka17FP2XzChuL7VE5E6HdfUD1IxFmvTzJ/83LDzo11FHMY9K7rGF78qEbrKrsvSNiFgbUcgcu1SV2SEN9IwqHQ==
+"@chainx/types@^2.5.36":
+  version "2.5.36"
+  resolved "https://registry.yarnpkg.com/@chainx/types/-/types-2.5.36.tgz#1472cc6ba71b2be328f1ecb180ad2796eb0f9d3f"
+  integrity sha512-gje4QTZE1+aksUYnemZ8AvQigovqv5EinXQRR0178ncSwVfa33lXMX/0XMmmju2ufdQ6BFn8h1ENpcYzJ2a1NA==
   dependencies:
     "@polkadot/keyring" "^0.34.37"
     "@polkadot/util" "^0.34.37"
@@ -2017,13 +2017,6 @@ bip66@^1.1.0, bip66@^1.1.3:
   dependencies:
     safe-buffer "^5.0.1"
 
-bitcoin-encrypt@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/bitcoin-encrypt/-/bitcoin-encrypt-1.0.1.tgz#53bb4c7f29e8c12a9c6856f237d8c273ff553179"
-  integrity sha512-IgbHoOTZdZ2er+FTgfHyCOnl3Lh1MHq/aZMtex9KNJPFenX2yvkC214tlepoOEN8+qIkEQc5ah56qTp9h6krQg==
-  dependencies:
-    crypto-browserify "3.12.0"
-
 bitcoin-ops@^1.3.0, bitcoin-ops@^1.4.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/bitcoin-ops/-/bitcoin-ops-1.4.1.tgz#e45de620398e22fd4ca6023de43974ff42240278"
@@ -2428,17 +2421,17 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "http://registry.npm.taobao.org/caseless/download/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-chainx.js@^2.5.35:
-  version "2.5.35"
-  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.5.35.tgz#9bfbb42c5b77996420d675cad6c2464d75f3a341"
-  integrity sha512-a4TWOv8ugK/oNchxc04+jYcboXpghAdTY8wZmKMRsI03i+pSfSgdNDIuKEk3OiPSRA3wTiDrpGv8IkQmBoh24g==
+chainx.js@^2.5.37:
+  version "2.5.37"
+  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.5.37.tgz#fbf56bb5a8486d5162272c4f81786ad0e4c9f233"
+  integrity sha512-vLFk3YgEmeneCVEnO9jfDl8PId5qFYPVX2BZ6ZAEvPjmkYCD/gsN8r2Lsn2XSAYPS4HPRu+9nN/5yXKZrGQ6tQ==
   dependencies:
     "@chainx/account" "^2.5.21"
-    "@chainx/extrinsics" "^2.5.35"
+    "@chainx/extrinsics" "^2.5.36"
     "@chainx/rpc-provider" "^2.5.34"
-    "@chainx/rpc-rx" "^2.5.35"
-    "@chainx/storage" "^2.5.35"
-    "@chainx/types" "^2.5.35"
+    "@chainx/rpc-rx" "^2.5.36"
+    "@chainx/storage" "^2.5.36"
+    "@chainx/types" "^2.5.36"
     "@polkadot/keyring" "^0.34.37"
     "@polkadot/util" "^0.34.37"
     eventemitter3 "^3.1.0"
@@ -2922,7 +2915,7 @@ cross-spawn@^5.0.1:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-crypto-browserify@3.12.0, crypto-browserify@^3.11.0, crypto-browserify@^3.12.0:
+crypto-browserify@^3.11.0, crypto-browserify@^3.12.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/crypto-browserify/-/crypto-browserify-3.12.0.tgz#396cf9f3137f03e4b8e532c58f698254e00f80ec"
   integrity sha512-fz4spIh+znjO2VjL+IdhEpRJ3YN6sMzITSBijk6FK2UvTqruSQW+/cCZTSNsMiZNvUeq0CqurF+dAbyiGOY6Wg==
@@ -8339,6 +8332,13 @@ react-modal@^3.8.1:
     prop-types "^15.5.10"
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
+
+react-paginate@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-6.3.0.tgz#29cbb5d1645227f4e4f959b9d7f43cfae603f801"
+  integrity sha512-lT/ne7hZzctGDli4QzUAou0JjfZgxKmtl9/r30B5UVonICZIy1u0SrAkdlEZ5ubgzrOykBeCmxkTWi5IyPg4AQ==
+  dependencies:
+    prop-types "^15.6.1"
 
 react-popover@^0.5.10:
   version "0.5.10"

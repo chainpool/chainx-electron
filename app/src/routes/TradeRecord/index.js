@@ -5,7 +5,7 @@ import TradeTable from './TradeTable';
 import * as styles from './index.less';
 import { Inject } from '../../utils';
 
-@Inject(({ assetStore: model }) => ({ model }))
+@Inject(({ tradeRecordStore: model }) => ({ model }))
 class TradeRecord extends Mixin {
   state = {
     activeIndex: 0,
