@@ -9,7 +9,7 @@ import Asset from './components/Asset';
 function drawCandies(address) {
   if (!address) return;
   fetchFromHttp({
-    url: 'https://wallet.chainx.org/server-api/faucet',
+    url: 'https://wallet.chainx.org/api/faucet',
     body: { address },
     method: 'POST',
   })
