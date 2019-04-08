@@ -19,7 +19,7 @@ class RegisterNodeModal extends Component {
     checkName: () => {
       const { name } = this.state;
       const errMsg =
-        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(name.length, 12, '不能超过12个字符');
+        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(2, name.length, '最少2个字符长度');
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
@@ -65,7 +65,7 @@ class RegisterNodeModal extends Component {
         }>
         <div>
           <Input.Text
-            placeholder="12个字符以内"
+            placeholder="2-16个字符"
             label={
               <div>
                 名称 <span style={{ color: '#ea754b', marginLeft: 3 }}> (唯一且不可更改，注册后不可转让)</span>
@@ -73,7 +73,7 @@ class RegisterNodeModal extends Component {
             }
             value={name}
             errMsg={nameErrMsg}
-            onChange={value => this.setState({ name: value })}
+            onChange={value => this.setState({ name: value.slice(0, 16) })}
             onBlur={checkAll.checkName}
           />
         </div>

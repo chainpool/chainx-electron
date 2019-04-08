@@ -37,10 +37,7 @@ class UpdateNodeModal extends Component {
 
     checkWebsite: () => {
       const { website } = this.state;
-      const errMsg =
-        Patterns.check('smallerOrEqual')(website.length, 32, '不能超过32个字符') || /[:/]/.test(website)
-          ? '不能包含 : 或 /，请直接输入域名'
-          : '';
+      const errMsg = Patterns.check('smallerOrEqual')(4, website.length, '最少4个字符长度');
       this.setState({ websiteErrMsg: errMsg });
       return errMsg;
     },
@@ -112,18 +109,22 @@ class UpdateNodeModal extends Component {
           />
           <Input.Text
             label="官网域名"
-            placeholder="32个字符以内"
+            placeholder="4-24个字符"
             value={website}
             errMsg={websiteErrMsg}
-            onChange={value => this.setState({ website: value.slice(0, 32) })}
+            onChange={value => {
+              if (/^[a-zA-Z0-9.]*$/.test(value)) {
+                this.setState({ website: value.slice(0, 24) });
+              }
+            }}
             onBlur={checkAll.checkWebsite}
           />
           <Input.Text
             label="简介"
-            placeholder="256个字符以内"
+            placeholder="128个字符以内"
             value={about}
             errMsg={aboutErrMsg}
-            onChange={value => this.setState({ about: value.slice(0, 256) })}
+            onChange={value => this.setState({ about: value.slice(0, 128) })}
             onBlur={checkAll.checkAbout}
           />
           <div className={styles.participate}>
