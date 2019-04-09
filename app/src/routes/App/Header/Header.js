@@ -4,9 +4,9 @@ import { PATH } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
-import logTest from '../../../resource/logo_test.png';
+import classNames from 'classnames';
 import Account from './Account';
-import { Inject, getDeepPath, classNames } from '../../../utils';
+import { Inject, getDeepPath } from '../../../utils';
 
 @Inject(({ configureStore, accountStore }) => ({ configureStore, accountStore }))
 class Header extends Component {
@@ -14,7 +14,7 @@ class Header extends Component {
     const {
       location: { pathname } = {},
       className,
-      configureStore: { isLogin, isTestNet },
+      configureStore: { isLogin },
     } = this.props;
 
     const showRouters = routers.filter(item => item.show !== false);
@@ -24,7 +24,7 @@ class Header extends Component {
         <div>
           <div className={styles.nav}>
             <RouterGo isOutSide go={{ pathname: 'https://chainx.org' }}>
-              <img src={isTestNet ? logTest : logo} alt="logo" style={{ height: 28 }} />
+              <img src={logo} alt="logo" style={{ height: 28 }} />
             </RouterGo>
 
             <ul>
@@ -66,15 +66,16 @@ class Header extends Component {
 
                 {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
                   return item === 0 ? (
-                    <li key={index} className={styles.navli}>
+                    <li key={index} className={classNames(styles.navli, styles.warn)}>
                       <RouterGo
                         go={{ pathname: PATH.configure }}
                         className={pathname === PATH.configure ? styles.active : null}>
                         <Icon name="icon-shezhi" />
                       </RouterGo>
+                      <div className={classNames(styles.testlogo, styles.warn)}>测试网</div>
                     </li>
                   ) : item === 1 ? (
-                    <li key={index} className={styles.navli}>
+                    <li key={index} className={classNames(styles.navli)}>
                       <Account {...this.props} />
                     </li>
                   ) : null;

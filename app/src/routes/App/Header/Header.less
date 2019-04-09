@@ -21,6 +21,10 @@ header {
         cursor: pointer;
         // margin-right: 32px;
         .navli{
+          position: relative;
+          .testlogo{
+            position:absolute;
+          }
           li{
             color:@fontgray !important;
           }
@@ -83,31 +87,41 @@ header {
           align-items: center;
           font-size: 16px;
           height: 100%;
-          &.warn{
-            margin-right: 50px;
-          }
-
-          .warn {
-            padding:3px 0;
-            display: flex;
-            min-width:56px;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: #3F3F3F;
-            position: absolute;
-            left:101%;
-            font-weight: bold;
-            top: 12px;
-            border-radius: 10px;
-            background: @yellow;
-          }
-
           &.active {
             color:white;
             border-bottom: 3px solid @yellow;
           }
+        }
+      }
+    }
+
+    li{
+      &.warn{
+        margin-right: 50px;
+      }
+
+      .warn {
+        padding:3px 0;
+        display: flex;
+        min-width:56px;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #3F3F3F;
+        position: absolute;
+        left:101%;
+        font-weight: bold;
+        top: 12px;
+        border-radius: 10px;
+        background: @yellow;
+        &.testlogo{
+          width:46px;
+          height:15px;
+          top:-10px;
+          background: @red;
+          color:white;
+          font-size: 10px;
         }
       }
     }
