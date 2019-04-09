@@ -10,6 +10,7 @@ import {
   transfer,
   verifyAddressValidity,
   withdraw,
+  bindTxHash,
 } from '../services';
 import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
@@ -294,5 +295,13 @@ export default class Asset extends ModelExtend {
   verifyAddressValidity = async ({ token, address, remark }) => {
     const res = await verifyAddressValidity(token, address, remark);
     return !res;
+  };
+
+  bindTxHash = async ({ params }) => {
+    const res = await bindTxHash({ params });
+    if (res && !_.get(res, 'error.message')) {
+      this.reload();
+    }
+    return res;
   };
 }

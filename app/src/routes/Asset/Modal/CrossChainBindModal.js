@@ -58,7 +58,7 @@ class CrossChainBindModal extends Mixin {
     const { step, recommendChannel, tradeId, tradeIdErrMsg } = this.state;
     const {
       accountStore: { currentAddress, openModal },
-      assetStore: { btcTrusteeAddress },
+      assetStore: { btcTrusteeAddress, dispatch },
       globalStore: {
         modal: {
           data: { token },
@@ -309,10 +309,11 @@ class CrossChainBindModal extends Mixin {
                       onClick={() => {
                         if (checkAll.confirm()) {
                           const params = this.getTradeId();
-                          fetchFromHttp({
-                            url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
-                            methodAlias: 'tx_hash',
-                            params: [params],
+                          dispatch({
+                            type: 'bindTxHash',
+                            payload: {
+                              params,
+                            },
                           })
                             .then(res => {
                               if (_.get(res, 'error.message')) {

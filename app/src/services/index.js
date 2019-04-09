@@ -192,3 +192,12 @@ export const getTradeDetailApi = payload => {
     ...payload,
   });
 };
+
+export const bindTxHash = payload => {
+  const { params } = payload;
+  return fetchFromHttp({
+    url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
+    methodAlias: 'tx_hash',
+    params: [params],
+  });
+};
