@@ -4,7 +4,7 @@ import * as styles from './index.less';
 
 class LoadingIcon extends PureComponent {
   render() {
-    const { size = 20 } = this.props;
+    const { size = 30 } = this.props;
     return <i className={`iconfont icon-loading ${styles.loadingIcon}`} style={{ fontSize: size }} />;
   }
 }
@@ -15,4 +15,4 @@ class Loading extends PureComponent {
   }
 }
 
-export { Loading };
+export { Loading, LoadingIcon };

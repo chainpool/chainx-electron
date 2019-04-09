@@ -12,7 +12,7 @@ export { default as RadioGroup } from './Input/RadioGroup';
 export { default as Slider } from './Slider';
 export { AuthorityRoute, AuthorityComponent } from './Authority';
 export { default as Toast } from './Toast';
-export { Loading } from './Loading';
+export { Loading, LoadingIcon } from './Loading';
 export { default as Pagination } from './Pagination';
 export { default as Tabs } from './Tabs';
 // export { default as Popover } from './Popover';

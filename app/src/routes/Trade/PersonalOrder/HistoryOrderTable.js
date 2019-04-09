@@ -16,10 +16,6 @@ class HistoryOrderTable extends SwitchPair {
     };
   }
 
-  startInit = () => {
-    //this.getHistoryAccountOrder();
-  };
-
   getHistoryAccountOrder = async () => {
     const {
       model: { dispatch },
@@ -77,9 +73,10 @@ class HistoryOrderTable extends SwitchPair {
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {
-      model: { historyAccountPageTotal, dispatch },
+      model: { historyAccountPageTotal, dispatch, loading },
     } = this.props;
     const tableProps = {
+      loading: loading.getHistoryAccountOrder,
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
       columns: setColumnsWidth(

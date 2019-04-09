@@ -11,9 +11,10 @@ class TradeTable extends Mixin {
 
   render() {
     const {
-      model: { tradeRecords = [], tradeRecordsPageTotal, dispatch },
+      model: { tradeRecords = [], tradeRecordsPageTotal, dispatch, loading },
     } = this.props;
     const tableProps = {
+      loading: loading.getTradeRecordApi,
       className: styles.tableContainer,
       columns: [
         {
