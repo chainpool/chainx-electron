@@ -1,6 +1,7 @@
 import { autorun, computed, observable } from 'mobx';
 import { _, localSave, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
+import { Toast } from '../components';
 import { ipc as ipcMsg } from '@constants';
 
 const inElectron = process.env.CHAINX_BUILD_FOR_ELECTRON === 'true';
@@ -98,7 +99,11 @@ export default class Store extends ModelExtend {
 
   addAccount({ tag, address, encoded }) {
     // address已经存在的不再重复加入
-    if (this.accounts.filter(item => item.address === address)[0]) return;
+    const filterOne = this.accounts.filter(item => item.address === address)[0];
+    if (filterOne) {
+      Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
+      return;
+    }
     if (inElectron) {
       // TODO: 考虑用异步的方式保存keystore
       const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, tag, address, encoded);
