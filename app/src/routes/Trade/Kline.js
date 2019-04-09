@@ -173,7 +173,7 @@ class Kline extends SwitchPair {
             const data = res.map((item = {}) => ({
               ...item,
               time: item.time * 1000,
-              volume: _.random(100, 3000),
+              volume: '',
             }));
             try {
               onHistoryCallback(data, { noData: true });

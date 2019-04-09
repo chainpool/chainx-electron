@@ -55,10 +55,7 @@ class NodeManageTable extends Mixin {
               return <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>;
             },
           },
-          {
-            title: '连接节点数',
-            dataIndex: 'links',
-          },
+
           {
             title: '块高',
             dataIndex: 'block',
@@ -68,6 +65,10 @@ class NodeManageTable extends Mixin {
             title: '同步状态',
             dataIndex: 'syncStatus',
             render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,
+          },
+          {
+            title: '连接节点数',
+            dataIndex: 'links',
           },
           {
             title: '',
