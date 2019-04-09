@@ -175,7 +175,7 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '时间',
                 dataIndex: 'time',
-                render: value => <BlockTime value={value} {...this.props} />,
+                // render: value => <BlockTime value={value} {...this.props} />,
               },
               {
                 title: '本链交易ID',

@@ -24,8 +24,8 @@ class WithDrawTable extends Mixin {
       columns: [
         {
           title: '申请时间',
-          dataIndex: 'txid',
-          render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : item.time),
+          dataIndex: 'none',
+          //render: (value, item) => (item.height ? <BlockTime value={item.height} {...this.props} /> : item.time),
         },
         {
           title: '原链交易ID',
