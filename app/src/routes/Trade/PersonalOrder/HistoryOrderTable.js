@@ -73,10 +73,9 @@ class HistoryOrderTable extends SwitchPair {
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {
-      model: { historyAccountPageTotal, dispatch, loading },
+      model: { historyAccountPageTotal, dispatch },
     } = this.props;
     const tableProps = {
-      loading: loading.getHistoryAccountOrder,
       tableHeight: [36, 42, 36, 36],
       className: styles.tableContainer,
       columns: setColumnsWidth(
