@@ -57,7 +57,8 @@ class NodeTable extends Component {
         },
         {
           title: '账户地址',
-          ellipse: true,
+          ellipse: 10,
+          width: 100,
           dataIndex: 'address',
           render: value => (value === currentAccount.address ? '本账户' : value),
         },
@@ -94,7 +95,7 @@ class NodeTable extends Component {
         },
         {
           title: '',
-          width: 170,
+          width: 150,
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>

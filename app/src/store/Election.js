@@ -176,13 +176,6 @@ export default class Election extends ModelExtend {
     this.changeModel('originPseduRecords', records || []);
   };
 
-  getTokenDiscount = async () => {
-    const res = await getTokenDiscount();
-    if (res) {
-      this.changeModel('tokenDiscount', `${res}%`);
-    }
-  };
-
   getPseduNominationRecords = async () => {
     const currentAccount = this.getCurrentAccount();
     if (currentAccount.address) {
