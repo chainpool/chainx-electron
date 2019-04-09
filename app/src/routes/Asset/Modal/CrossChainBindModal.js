@@ -57,7 +57,7 @@ class CrossChainBindModal extends Mixin {
     const { checkAll } = this;
     const { step, recommendChannel, tradeId, tradeIdErrMsg } = this.state;
     const {
-      accountStore: { currentAddress, openModal },
+      accountStore: { currentAddress, openModal, closeModal },
       assetStore: { btcTrusteeAddress, dispatch },
       globalStore: {
         modal: {
@@ -320,6 +320,7 @@ class CrossChainBindModal extends Mixin {
                                 Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
                               } else {
                                 Toast.success('交易ID绑定已完成');
+                                closeModal();
                               }
                             })
                             .catch(err => {
