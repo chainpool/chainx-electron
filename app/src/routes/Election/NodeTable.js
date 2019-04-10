@@ -29,20 +29,22 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 60,
-          ellipse: 20,
+          width: 105,
+          ellipse: 8,
           dataIndex: 'name',
           render: (value, item, index) => {
             return (
               <div className={styles.trustee}>
                 {index + 1}
                 {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
+                <span className={styles.leaveOut}>{item.isActive ? '' : '（已退选)'}</span>
               </div>
             );
           },
         },
         {
           title: '名称',
+          width: 110,
           dataIndex: 'name',
           render: (value, item) => (
             <div className={styles.name}>
@@ -51,7 +53,6 @@ class NodeTable extends Component {
                   {value}
                 </RouterGo>
               </HoverTip>
-              <span className={styles.leaveOut}>{item.isActive ? '' : '（已退选)'}</span>
             </div>
           ),
         },
