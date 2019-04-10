@@ -15,11 +15,11 @@ import coinomi from '../../../resource/coinomi.png';
 import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
 
-@Inject(({ assetStore }) => ({ assetStore }))
+@Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
 class CrossChainBindModal extends Mixin {
   state = {
     step: 0,
-    recommendChannel: '',
+    recommendChannelSelect: {},
     tradeId: '',
     tradeIdErrMsg: '',
   };
@@ -55,10 +55,12 @@ class CrossChainBindModal extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { step, recommendChannel, tradeId, tradeIdErrMsg } = this.state;
+    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg } = this.state;
+    const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress, openModal, closeModal },
       assetStore: { btcTrusteeAddress, dispatch },
+      electionStore: { originIntentions = [] },
       globalStore: {
         modal: {
           data: { token },
@@ -71,6 +73,7 @@ class CrossChainBindModal extends Mixin {
       /^0x/,
       ''
     );
+    const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
     const show = {
       BTC: {
         desc1: (
@@ -210,12 +213,14 @@ class CrossChainBindModal extends Mixin {
         <div className={styles.crossChainBind}>
           {step === 0 ? (
             <div>
-              <Input.Text
-                value={recommendChannel}
+              <Input.Select
+                allowCreate={false}
+                value={recommendChannelSelect}
                 placeholder={'输入推荐渠道的节点名称 (选填)'}
+                options={selectNameOptions}
                 onChange={value => {
                   this.setState({
-                    recommendChannel: value,
+                    recommendChannelSelect: value,
                   });
                 }}
               />
@@ -224,7 +229,7 @@ class CrossChainBindModal extends Mixin {
                   onClick={() => {
                     this.setState({
                       step: 1,
-                      recommendChannel: '',
+                      recommendChannelSelect: {},
                     });
                   }}>
                   跳过
