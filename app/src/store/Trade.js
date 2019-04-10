@@ -1,4 +1,14 @@
-import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, toJS } from '../utils';
+import {
+  _,
+  formatNumber,
+  moment_helper,
+  observable,
+  computed,
+  localSave,
+  parseQueryString,
+  toJS,
+  moment,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -196,7 +206,7 @@ export default class Trade extends ModelExtend {
                         const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
-                          time: item.time,
+                          time: moment.formatHMS(item['block.time']),
                           priceShow: this.setPrecision(item.price, filterPair.assets),
                           other_userShow:
                             [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||

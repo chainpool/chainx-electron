@@ -202,6 +202,7 @@ export default class Asset extends ModelExtend {
           }));
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
+          time: moment.formatHMS(item['block.time']),
           originChainTxId: item.txid,
         }));
         let data = [];
@@ -251,7 +252,10 @@ export default class Asset extends ModelExtend {
               time: moment.formatHMS(new Date(record.time * 1000)),
             };
           });
-        const dataApi = resApi.items;
+        const dataApi = resApi.items.map((item = {}) => ({
+          ...item,
+          time: moment.formatHMS(item['block.time']),
+        }));
         let data = [];
         if (dataApi && dataApi.length) {
           data = dataApi;
