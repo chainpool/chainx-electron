@@ -261,6 +261,8 @@ export default class Trust extends ModelExtend {
   };
 
   signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
+    tx = tx.replace(/^0x/, '');
+    redeemScript = redeemScript.replace(/^0x/, '');
     let tx_trans = null;
     if (tx) {
       tx_trans = await this.sign({ tx, redeemScript, privateKey });
