@@ -14,7 +14,7 @@ class Header extends Component {
     const {
       location: { pathname } = {},
       className,
-      configureStore: { isLogin },
+      configureStore: { isLogin, isTestNet },
     } = this.props;
 
     const showRouters = routers.filter(item => item.show !== false);
@@ -66,13 +66,13 @@ class Header extends Component {
 
                 {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
                   return item === 0 ? (
-                    <li key={index} className={classNames(styles.navli, styles.warn)}>
+                    <li key={index} className={classNames(styles.navli, isTestNet ? styles.warn : null)}>
                       <RouterGo
                         go={{ pathname: PATH.configure }}
                         className={pathname === PATH.configure ? styles.active : null}>
                         <Icon name="icon-shezhi" />
                       </RouterGo>
-                      <div className={classNames(styles.testlogo, styles.warn)}>测试网</div>
+                      {isTestNet && <div className={classNames(styles.testlogo, styles.warn)}>测试网</div>}
                     </li>
                   ) : item === 1 ? (
                     <li key={index} className={classNames(styles.navli)}>
