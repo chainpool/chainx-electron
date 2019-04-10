@@ -39,33 +39,40 @@ class Toast {
   };
 
   message = (status = 'success', title = 'title', message, options = {}) => {
-    const { showStatusIcon = true } = options;
+    const { showStatusIcon = true, newContent, ...rest } = options;
     toast(
       <div className={styles.toast_message}>
-        <div
-          className={classNames(
-            styles.title,
-            status === 'success' ? styles.success : null,
-            status === 'warn' ? styles.warn : null
-          )}>
-          <div />
-          {showStatusIcon ? (
-            status === 'success' ? (
-              <i className="iconfont icon-icon-wancheng" />
-            ) : (
-              <i className="iconfont icon-icon-cuowu" />
-            )
-          ) : null}
-          {title}
-        </div>
-        {message ? <div className={styles.desc}>{message}</div> : null}
+        {!newContent ? (
+          <>
+            <div
+              className={classNames(
+                styles.title,
+                status === 'success' ? styles.success : null,
+                status === 'warn' ? styles.warn : null
+              )}>
+              <div />
+              {showStatusIcon ? (
+                status === 'success' ? (
+                  <i className="iconfont icon-icon-wancheng" />
+                ) : (
+                  <i className="iconfont icon-icon-cuowu" />
+                )
+              ) : null}
+              {title}
+            </div>
+            {message ? <div className={styles.desc}>{message}</div> : null}
+          </>
+        ) : (
+          newContent
+        )}
       </div>,
       {
         hideProgressBar: true,
         autoClose: 2000,
+        closeButton: false,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
-        ...options,
+        ...rest,
       }
     );
   };

@@ -21,15 +21,20 @@ class Node extends Component {
   componentDidUpdate(prevProps) {
     const { nodes: nodesPrev } = prevProps;
     const { nodes } = this.props;
-    const prevBest = this.filterBestNode(nodesPrev);
     const bestNode = this.filterBestNode(nodes);
-    if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && prevBest.syncStatus === '' && bestNode.syncStatus !== '') {
-      this.isFirst = true;
+    if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && bestNode.syncStatus !== '') {
       if (bestNode.syncStatus && ['100.00%', '100%'].indexOf(bestNode.syncStatus) === -1) {
-        Toast.warn('节点未完全同步', <Warn>所选节点未完全同步，页面数据不是最新。请切换至其他已同步节点。</Warn>, {
+        this.isFirst = true;
+        Toast.warn('', '', {
           position: 'top-left',
-          autoClose: 4000,
-          showStatusIcon: false,
+          autoClose: 3000,
+          closeButton: true,
+          newContent: (
+            <div className={styles.toast}>
+              <div className={styles.title}>节点未完全同步</div>
+              <Warn>所选节点未完全同步，页面数据不是最新。请切换至其他已同步节点。</Warn>
+            </div>
+          ),
         });
       }
     }
