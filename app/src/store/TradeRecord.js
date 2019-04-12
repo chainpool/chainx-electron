@@ -12,10 +12,13 @@ export default class TradeRecord extends ModelExtend {
 
   @observable tradeRecordsPageTotal = 1;
   @observable tradeRecords = [];
+  @observable loading = {
+    getTradeRecordApi: '',
+  };
 
   getTradeRecordApi = async ({ page }) => {
     const account = this.getCurrentAccount();
-
+    this.changeModel('loading.getTradeRecordApi', true);
     return from(
       getTradeRecordApi({
         accountId: this.decodeAddressAccountId(account),
@@ -56,9 +59,9 @@ export default class TradeRecord extends ModelExtend {
       )
       .subscribe(res => {
         console.log(res, `-----------tradeRecords,页码：${page}`);
-        this.changeModel(
-          'tradeRecords',
-          res.map(item => ({
+        this.changeModel({
+          'loading.getTradeRecordApi': false,
+          tradeRecords: res.map(item => ({
             ...item,
             ...translation({
               ...item,
@@ -67,8 +70,8 @@ export default class TradeRecord extends ModelExtend {
               getPair: this.rootStore.tradeStore.getPair,
               showUnitPrecision: this.rootStore.tradeStore.showUnitPrecision,
             }),
-          }))
-        );
+          })),
+        });
       });
   };
 }

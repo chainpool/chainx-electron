@@ -16,10 +16,6 @@ class HistoryOrderTable extends SwitchPair {
     };
   }
 
-  startInit = () => {
-    //this.getHistoryAccountOrder();
-  };
-
   getHistoryAccountOrder = async () => {
     const {
       model: { dispatch },
@@ -33,7 +29,7 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   componentWillUnsubscribe = () => {
-    this.subscribeHistoryAccountOrder.unsubscribe();
+    this.subscribeHistoryAccountOrder && this.subscribeHistoryAccountOrder.unsubscribe();
   };
 
   componentUpdate = prevProps => {
@@ -175,7 +171,6 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '时间',
                 dataIndex: 'time',
-                render: value => <BlockTime value={value} {...this.props} />,
               },
               {
                 title: '本链交易ID',

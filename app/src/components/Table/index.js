@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { _, classNames } from '../../../src/utils';
-import { Scroller, Pagination } from '../../components';
+import { Scroller, Pagination, LoadingIcon } from '../../components';
 import * as styles from './index.less';
 
 const createElement = _className => {
@@ -181,6 +181,7 @@ export default class TableComponent extends Component {
       showHead = true,
       activeTrIndex,
       children,
+      loading,
     } = this.props;
 
     let { scroll = {}, scroll: { tr } = {}, tableHeight = [] } = this.props;
@@ -228,6 +229,7 @@ export default class TableComponent extends Component {
     const height = this.calculateTableHeight(dataSource, ...tableHeight, { showHead, scroll });
     return (
       <div
+        // 分页的计算不算入table，所以tabel的高度不能放入容器
         // style={{ height: totalPage ? 52 + height : height }}
         className={classNames(styles.tableContainer, className)}>
         {_.isFunction(noDataTip) && noDataTip() && !dataSource.length ? (
@@ -308,14 +310,11 @@ export default class TableComponent extends Component {
                         );
                       })}
                     </Tbody>
-                    {/*{*/}
-                    {/*loading ? (*/}
-                    {/*<Loading.Circle loading={loading} isGlobal color={'#c1c1c1'} backgroundOpacity={0.01} />*/}
-                    {/*) : null*/}
-                    {/*}*/}
-                    {/*{*/}
-                    {/*loadingMore ? (<div className={styles.loadingmore} >加载更多......</div >) : null*/}
-                    {/*}*/}
+                    {loading && (
+                      <div className={styles.loading}>
+                        <LoadingIcon />
+                      </div>
+                    )}
                   </Scroller>
                 </div>
               </div>

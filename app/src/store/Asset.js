@@ -10,6 +10,7 @@ import {
   transfer,
   verifyAddressValidity,
   withdraw,
+  bindTxHash,
 } from '../services';
 import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
@@ -201,6 +202,7 @@ export default class Asset extends ModelExtend {
           }));
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
+          time: moment.formatHMS(item['block.time']),
           originChainTxId: item.txid,
         }));
         let data = [];
@@ -250,7 +252,10 @@ export default class Asset extends ModelExtend {
               time: moment.formatHMS(new Date(record.time * 1000)),
             };
           });
-        const dataApi = resApi.items;
+        const dataApi = resApi.items.map((item = {}) => ({
+          ...item,
+          time: moment.formatHMS(item['block.time']),
+        }));
         let data = [];
         if (dataApi && dataApi.length) {
           data = dataApi;
@@ -294,5 +299,13 @@ export default class Asset extends ModelExtend {
   verifyAddressValidity = async ({ token, address, remark }) => {
     const res = await verifyAddressValidity(token, address, remark);
     return !res;
+  };
+
+  bindTxHash = async ({ params }) => {
+    const res = await bindTxHash({ params });
+    if (res && !_.get(res, 'error.message')) {
+      this.reload();
+    }
+    return res;
   };
 }

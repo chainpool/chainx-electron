@@ -114,7 +114,7 @@ export const putOrder = (...payload) => trade.putOrder(...payload);
 
 export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 
-export const getOrders = (...payload) => trade.getOrders(...payload);
+export const getOrders = (...payload) => checkLogin(() => trade.getOrders(...payload));
 
 export const getOrdersApi = payload => {
   const { accountId, page } = payload;
@@ -190,5 +190,14 @@ export const getTradeDetailApi = payload => {
     url: `${API}/tx/${txhash}`,
     method: 'get',
     ...payload,
+  });
+};
+
+export const bindTxHash = payload => {
+  const { params } = payload;
+  return fetchFromHttp({
+    url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
+    methodAlias: 'tx_hash',
+    params: [params],
   });
 };

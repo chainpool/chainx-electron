@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, Icon, Mixin } from '../../components';
+import { Button, Icon, Mixin, Tabs } from '../../components';
 import * as styles from './index.less';
-import { Tab } from '../components';
 import NodeTable from './NodeTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
@@ -11,10 +10,6 @@ import { Inject } from '../../utils';
 
 @Inject(({ electionStore: model }) => ({ model }))
 class Election extends Mixin {
-  state = {
-    activeIndex: 0,
-  };
-
   startInit = async () => {
     const {
       model: { dispatch },
@@ -24,7 +19,6 @@ class Election extends Mixin {
   };
 
   render() {
-    const { activeIndex } = this.state;
     const {
       model: { openModal },
       accountStore: { isValidator, currentAddress },
@@ -72,18 +66,17 @@ class Election extends Mixin {
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
-          <Tab
-            tabs={tabs}
-            activeIndex={activeIndex}
-            onClick={(value, index) => {
-              this.setState({
-                activeIndex: index,
-              });
-            }}
-          />
-          {currentAddress ? operations : null}
+          <Tabs tabs={tabs}>
+            {activeIndex => (
+              <>
+                {currentAddress ? operations : null}
+                <div className={styles.nodetable}>
+                  <NodeTable activeIndex={activeIndex} {...this.props} />
+                </div>
+              </>
+            )}
+          </Tabs>
         </div>
-        <NodeTable activeIndex={activeIndex} {...this.props} />
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}

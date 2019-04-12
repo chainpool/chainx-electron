@@ -28,7 +28,7 @@ class ImportHotPrivateKeyModal extends Component {
       const { currentTrustNode } = this.props;
       const errMsg =
         Patterns.check('required')(hotPrivateKey) ||
-        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey, decoded => {
+        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey.replace(/^0x/, ''), decoded => {
           this.decoded = decoded;
         });
       this.setState({ hotPrivateKeyErrMsg: errMsg });

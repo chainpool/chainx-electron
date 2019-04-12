@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Clipboard, Mixin } from '../../components';
 import { _, classNames, RegEx } from '../../utils';
@@ -111,8 +112,12 @@ class InputSelect extends React.Component {
       prefix = '',
       multi = false,
       errMsgIsOutside = false,
+      placeholder = '请选择',
+      allowCreate = true,
+      isSearchable = true,
     } = this.props;
     const errMsg = errMsgIsOutside ? this.props.errMsg : this.state.errMsg;
+    const Ele = allowCreate ? CreatableSelect : Select;
     return (
       <div className={classNames(styles.inputcontainer, className)}>
         {label ? <div className={styles.label}>{label}</div> : null}
@@ -126,7 +131,9 @@ class InputSelect extends React.Component {
           )}>
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
           <div className={styles.userinput}>
-            <CreatableSelect
+            <Ele
+              isSearchable={isSearchable}
+              placeholder={placeholder}
               isMulti={multi}
               closeMenuOnSelect={!multi}
               getOptionLabel={getOptionLabel}

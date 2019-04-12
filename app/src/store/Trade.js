@@ -1,4 +1,14 @@
-import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, toJS } from '../utils';
+import {
+  _,
+  formatNumber,
+  moment_helper,
+  observable,
+  computed,
+  localSave,
+  parseQueryString,
+  toJS,
+  moment,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -46,6 +56,9 @@ export default class Trade extends ModelExtend {
   @observable historyAccountPageTotal = 1;
   @observable historyAccountCurrentPage = 1;
   @observable historyOrderList = [];
+  @observable loading = {
+    getHistoryAccountOrder: '',
+  };
 
   reload = () => {
     clearTimeout(this.interval);
@@ -156,6 +169,7 @@ export default class Trade extends ModelExtend {
   getHistoryAccountOrder = async () => {
     const currentAccount = this.getCurrentAccount();
     if (currentAccount.address) {
+      this.changeModel('loading.getHistoryAccountOrder', true);
       return from(
         this.isApiSwitch(
           getOrdersApi({
@@ -192,7 +206,7 @@ export default class Trade extends ModelExtend {
                         const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
-                          time: item.time,
+                          time: moment.formatHMS(item['block.time']),
                           priceShow: this.setPrecision(item.price, filterPair.assets),
                           other_userShow:
                             [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
@@ -256,12 +270,10 @@ export default class Trade extends ModelExtend {
 
           const historyOrderList = this.processOrderData(dataApi);
 
-          this.changeModel(
-            {
-              historyOrderList,
-            },
-            []
-          );
+          this.changeModel({
+            'loading.getHistoryAccountOrder': false,
+            historyOrderList,
+          });
         });
     }
   };

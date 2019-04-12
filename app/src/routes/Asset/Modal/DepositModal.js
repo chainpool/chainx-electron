@@ -2,7 +2,8 @@ import React from 'react';
 import { Clipboard, Mixin, Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
-import { Inject } from '@utils';
+import { Inject } from '../../../utils';
+import QRious from 'qrious';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class DepositModal extends Mixin {
@@ -16,7 +17,15 @@ class DepositModal extends Mixin {
       },
     } = this.props;
     dispatch({ type: 'getAccountBTCAddresses' });
-    dispatch({ type: 'getTrusteeAddress', payload: { chain } });
+    dispatch({ type: 'getTrusteeAddress', payload: { chain } }).then(res => {
+      if (res) {
+        new QRious({
+          size: 112,
+          element: document.getElementById('qr'),
+          value: res,
+        });
+      }
+    });
   };
 
   render() {
@@ -62,7 +71,9 @@ class DepositModal extends Mixin {
             </div>
             <Warn>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</Warn>
           </div>
-          <div className={styles.back} />
+          <div className={styles.back}>
+            <canvas id="qr" />
+          </div>
         </div>
       </Modal>
     );
