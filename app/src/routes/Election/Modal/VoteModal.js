@@ -42,7 +42,7 @@ class VoteModal extends Mixin {
       if (!errMsg) {
         if (action === 'add') {
           errMsg = Patterns.check('smallerOrEqual')(amount, freeShow);
-        } else if (action === 'cancel') {
+        } else if (action === 'cancel' || action === 'switch') {
           errMsg = Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足');
         }
       }
@@ -71,7 +71,7 @@ class VoteModal extends Mixin {
 
     const bondingSeconds =
       (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
-    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : action === 'cancel' ? '赎回' : ''}`;
+    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : action === 'cancel' ? '赎回' : '换票'}`;
 
     return (
       <Modal
@@ -111,7 +111,11 @@ class VoteModal extends Mixin {
           {myTotalVote ? (
             <>
               <ul className={styles.changeVote}>
-                {[{ label: '追加投票', value: 'add' }, { label: '赎回投票', value: 'cancel' }].map((item, index) => (
+                {[
+                  { label: '追加投票', value: 'add' },
+                  //{ label: '切换投票', value: 'switch' },
+                  { label: '赎回投票', value: 'cancel' },
+                ].map((item, index) => (
                   <li
                     key={index}
                     className={action === item.value ? styles.active : null}
@@ -127,12 +131,13 @@ class VoteModal extends Mixin {
               <div className={styles.afterchange}>
                 修改后投票数：
                 {action === 'add' && setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))}
-                {action === 'cancel' && setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+                {(action === 'cancel' || action === 'switch') &&
+                  setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
               </div>
             </>
           ) : null}
 
-          {action === 'add' && (
+          {(action === 'add' || action === 'switch') && (
             <InputHorizotalList
               left={
                 <Input.Text
