@@ -16,8 +16,11 @@ class CrossChainAssetTable extends Mixin {
       <Modal title="ChainX绑定工具">
         <div className={styles.register}>
           <iframe
+            width={400}
+            height={650}
             title="绑定BTC账户"
-            src={`${registerUrl}?btc=${btcTrusteeAddress}&chainx=${currentAddress}`}
+            src="https://bitx.chainx.org/"
+            //src={`${registerUrl}?btc=${btcTrusteeAddress}&chainx=${currentAddress}`}
             frameBorder="0"
           />
         </div>
