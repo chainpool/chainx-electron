@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Mixin, Modal, RadioGroup } from '../../../components';
+import { Button, Input, Mixin, Modal } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
@@ -9,6 +9,7 @@ import * as styles from './VoteModal.less';
 class VoteModal extends Mixin {
   state = {
     selectNode: '',
+    selectNodeErrMsg: '',
     action: 'add',
     amount: '',
     amountErrMsg: '',
@@ -28,6 +29,15 @@ class VoteModal extends Mixin {
   };
 
   checkAll = {
+    checkSelectNode: () => {
+      const { selectNode, action } = this.state;
+      let errMsg = '';
+      if (action === 'switch') {
+        errMsg = Patterns.check('required')(selectNode);
+      }
+      this.setState({ selectNodeErrMsg: errMsg });
+      return errMsg;
+    },
     checkAmount: () => {
       const { amount, action } = this.state;
       const {
@@ -56,13 +66,13 @@ class VoteModal extends Mixin {
     },
 
     confirm: () => {
-      return ['checkAmount'].every(item => !this.checkAll[item]());
+      return ['checkSelectNode', 'checkAmount'].every(item => !this.checkAll[item]());
     },
   };
 
   render() {
     const { checkAll } = this;
-    const { amount, amountErrMsg, remark, action, selectNode } = this.state;
+    const { amount, amountErrMsg, remark, action, selectNode, selectNodeErrMsg } = this.state;
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
@@ -128,7 +138,7 @@ class VoteModal extends Mixin {
                     key={index}
                     className={action === item.value ? styles.active : null}
                     onClick={() => {
-                      this.setState({ action: item.value }, checkAll.checkAmount);
+                      this.setState({ action: item.value, amount: '' });
                     }}>
                     {item.label}
                     {item.value === 'cancel' && (
@@ -165,6 +175,7 @@ class VoteModal extends Mixin {
           )}
           {action === 'switch' && (
             <Input.Select
+              errMsg={selectNodeErrMsg}
               allowCreate={false}
               value={selectNode}
               placeholder={'节点名称'}
@@ -174,6 +185,7 @@ class VoteModal extends Mixin {
                   selectNode: value,
                 });
               }}
+              onBlur={checkAll.checkSelectNode}
             />
           )}
           {(action === 'cancel' || action === 'switch') && (
