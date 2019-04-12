@@ -15,7 +15,7 @@
     "bignumber.js": "^8.0.2",
     "bip38": "^2.0.2",
     "bitcoinjs-lib": "4.0.2",
-    "chainx.js": "^2.7.0",
+    "chainx.js": "^2.7.1",
     "classnames": "^2.2.6",
     "clipboard": "^2.0.4",
     "current-device": "^0.7.8",
