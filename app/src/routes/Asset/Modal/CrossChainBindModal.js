@@ -134,7 +134,7 @@ class CrossChainBindModal extends Mixin {
             中输入下方<strong>十六进制 (Hex)</strong> 信息：
           </span>
         ),
-        value1: chainxAddressHex,
+        value1: `0x${chainxAddressHex}`,
         desc2: '公共地址',
         value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
         warn: (
@@ -291,7 +291,7 @@ class CrossChainBindModal extends Mixin {
                 <>
                   <div className={styles.desc}>
                     <div />
-                    交易打包成功后，在下面输入交易ID <strong>交易ID (Txid/TxHash)</strong>
+                    交易打包成功后，在下面输入<strong>交易ID (Txid/TxHash)</strong>
                     ，交易签名验证无误后，完成映射, SDOT会立即发放
                   </div>
                   <div className={styles.tradeid}>

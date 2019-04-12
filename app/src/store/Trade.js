@@ -142,20 +142,22 @@ export default class Trade extends ModelExtend {
   getCurrentAccountOrder = async () => {
     const account = this.getCurrentAccount();
     const res = await getOrders(account.address, 0, 100);
-    const data = (res.data || []).map((item = {}) => ({
-      accountid: item.submitter,
-      index: item.index,
-      pair: item.pairIndex,
-      createTime: item.createdAt,
-      amount: item.amount,
-      price: item.price,
-      hasfillAmount: item.alreadyFilled,
-      reserveLast: item.remaining,
-      direction: item.direction,
-      status: item.status,
-      expand: item.expand,
-      timeShow: moment_helper.formatHMS(item['block.time']),
-    }));
+    const data = (res.data || []).map((item = {}) => {
+      return {
+        accountid: item.submitter,
+        index: item.index,
+        pair: item.pairIndex,
+        createTime: item.createdAt,
+        amount: item.amount,
+        price: item.price,
+        hasfillAmount: item.alreadyFilled,
+        reserveLast: item.remaining,
+        direction: item.direction,
+        status: item.status,
+        expand: item.expand,
+        timeShow: moment_helper.formatHMS(item['block.time']),
+      };
+    });
     const currentOrderList = this.processOrderData(data);
 
     this.changeModel(

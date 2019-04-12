@@ -42,7 +42,9 @@ class VoteModal extends Mixin {
         Patterns.smaller(0, amount, '投票数量必须大于0') ||
         (action === 'add'
           ? Patterns.check('smallerOrEqual')(amount, freeShow)
-          : Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足'));
+          : action === 'cancel'
+          ? Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足')
+          : '');
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
