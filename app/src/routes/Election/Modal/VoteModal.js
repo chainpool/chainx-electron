@@ -37,14 +37,15 @@ class VoteModal extends Mixin {
         },
       } = this.props;
 
-      const errMsg =
-        Patterns.check('required')(amount) ||
-        Patterns.smaller(0, amount, '投票数量必须大于0') ||
-        (action === 'add'
-          ? Patterns.check('smallerOrEqual')(amount, freeShow)
-          : action === 'cancel'
-          ? Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足')
-          : '');
+      let errMsg = Patterns.check('required')(amount) || Patterns.smaller(0, amount, '投票数量必须大于0');
+
+      if (!errMsg) {
+        if (action === 'add') {
+          errMsg = Patterns.check('smallerOrEqual')(amount, freeShow);
+        } else if (action === 'cancel') {
+          errMsg = Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足');
+        }
+      }
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -70,7 +71,7 @@ class VoteModal extends Mixin {
 
     const bondingSeconds =
       (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
-    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : '赎回'}`;
+    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : action === 'cancel' ? '赎回' : ''}`;
 
     return (
       <Modal
@@ -125,14 +126,13 @@ class VoteModal extends Mixin {
 
               <div className={styles.afterchange}>
                 修改后投票数：
-                {action === 'add'
-                  ? setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))
-                  : setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+                {action === 'add' && setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))}
+                {action === 'cancel' && setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
               </div>
             </>
           ) : null}
 
-          {action === 'add' ? (
+          {action === 'add' && (
             <InputHorizotalList
               left={
                 <Input.Text
@@ -146,7 +146,8 @@ class VoteModal extends Mixin {
               }
               right={<FreeBalance value={freeShow} unit={token} />}
             />
-          ) : (
+          )}
+          {action === 'cancel' && (
             <Input.Text
               precision={getDefaultPrecision()}
               label={`${operation}数量`}
