@@ -29,7 +29,7 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   componentWillUnsubscribe = () => {
-    this.subscribeHistoryAccountOrder.unsubscribe();
+    this.subscribeHistoryAccountOrder && this.subscribeHistoryAccountOrder.unsubscribe();
   };
 
   componentUpdate = prevProps => {

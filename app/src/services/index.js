@@ -114,7 +114,7 @@ export const putOrder = (...payload) => trade.putOrder(...payload);
 
 export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 
-export const getOrders = (...payload) => trade.getOrders(...payload);
+export const getOrders = (...payload) => checkLogin(() => trade.getOrders(...payload));
 
 export const getOrdersApi = payload => {
   const { accountId, page } = payload;

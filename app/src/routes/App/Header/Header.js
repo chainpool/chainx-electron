@@ -72,7 +72,11 @@ class Header extends Component {
                         className={pathname === PATH.configure ? styles.active : null}>
                         <Icon name="icon-shezhi" />
                       </RouterGo>
-                      {isTestNet && <div className={classNames(styles.testlogo, styles.warn)}>测试网</div>}
+                      {isTestNet && (
+                        <div className={classNames(styles.testlogo, styles.warn, !isLogin() ? styles.notlogin : null)}>
+                          测试网
+                        </div>
+                      )}
                     </li>
                   ) : item === 1 ? (
                     <li key={index} className={classNames(styles.navli)}>
