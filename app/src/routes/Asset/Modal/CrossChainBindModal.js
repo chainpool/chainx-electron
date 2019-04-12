@@ -19,7 +19,7 @@ import coinbin from '../../../resource/coinbin.png';
 class CrossChainBindModal extends Mixin {
   state = {
     step: 0,
-    recommendChannelSelect: {},
+    recommendChannelSelect: '',
     tradeId: '',
     tradeIdErrMsg: '',
   };
