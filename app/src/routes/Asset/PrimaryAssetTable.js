@@ -6,23 +6,45 @@ import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import Asset from './components/Asset';
 
+function loadDynamicScript(callback) {
+  const existingScript = document.getElementById('recaptcha');
+
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.src = 'https://www.recaptcha.net/recaptcha/api.js?render=6LeBzJ0UAAAAAEsQxmnaAPNCS-CcsNAkESgoVC1K'; // URL for the third-party library being loaded.
+    script.id = 'recaptcha';
+    document.body.appendChild(script);
+    script.onload = () => {
+      if (callback) callback();
+    };
+  }
+
+  if (existingScript && callback) callback();
+}
+
 function drawCandies(address) {
   if (!address) return;
-  fetchFromHttp({
-    url: 'https://wallet.chainx.org/api/faucet',
-    body: { address },
-    method: 'POST',
-  })
-    .then(() => {
-      alert('领取成功，等待打包');
-    })
-    .catch((err = {}) => {
-      if (err.status === 429) {
-        alert('请不要重复点击，十分钟后领取');
-      } else {
-        alert(`领取失败${_.get(err, 'message.error_message') ? `,${_.get(err, 'message.error_message')}` : ''}`);
-      }
+  loadDynamicScript(() => {
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LeBzJ0UAAAAAEsQxmnaAPNCS-CcsNAkESgoVC1K', { action: 'homepage' }).then(function(token) {
+        fetchFromHttp({
+          url: 'https://wallet.chainx.org/api/faucet',
+          body: { address, token: token },
+          method: 'POST',
+        })
+          .then(() => {
+            alert('领取成功，等待打包');
+          })
+          .catch((err = {}) => {
+            if (err.status === 429) {
+              alert('请不要重复点击，十分钟后领取');
+            } else {
+              alert(`领取失败${_.get(err, 'message.error_message') ? `,${_.get(err, 'message.error_message')}` : ''}`);
+            }
+          });
+      });
     });
+  });
 }
 
 @Inject(({ configureStore }) => ({ configureStore }))
