@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { formatNumber, Inject, setColumnsWidth, fetchFromHttp } from '../../utils';
+import { formatNumber, Inject, setColumnsWidth, fetchFromHttp, _ } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Table } from '../../components';
 import { HoverTip } from '../components';
@@ -20,7 +20,7 @@ function drawCandies(address) {
       if (err.status === 429) {
         alert('请不要重复点击，十分钟后领取');
       } else {
-        alert(`领取失败${err.message.error_message ? `,${err.message.error_message}` : ''}`);
+        alert(`领取失败${_.get(err, 'message.error_message') ? `,${_.get(err, 'message.error_message')}` : ''}`);
       }
     });
 }
