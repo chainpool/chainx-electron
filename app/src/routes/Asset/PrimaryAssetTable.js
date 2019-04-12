@@ -26,7 +26,7 @@ function drawCandies(address) {
   if (!address) return;
   loadDynamicScript(() => {
     grecaptcha.ready(function() {
-      grecaptcha.execute('6LeBzJ0UAAAAAEsQxmnaAPNCS-CcsNAkESgoVC1K', { action: 'homepage' }).then(function(token) {
+      grecaptcha.execute('6LeBzJ0UAAAAAEsQxmnaAPNCS-CcsNAkESgoVC1K', { action: 'faucet' }).then(function(token) {
         fetchFromHttp({
           url: 'https://wallet.chainx.org/api/faucet',
           body: { address, token: token },
