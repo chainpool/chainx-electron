@@ -15,6 +15,7 @@ import {
   unfreeze,
   unnominate,
   voteClaim,
+  renominate,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -217,6 +218,15 @@ export default class Election extends ModelExtend {
   unnominate = ({ target, amount, remark }) => {
     amount = this.setDefaultPrecision(amount, true);
     const extrinsic = unnominate(target, amount, remark);
+    return {
+      extrinsic,
+      success: () => this.reload(),
+    };
+  };
+
+  renominate = ({ target, to, amount, remark }) => {
+    amount = this.setDefaultPrecision(amount, true);
+    const extrinsic = renominate(target, to, amount, remark);
     return {
       extrinsic,
       success: () => this.reload(),

@@ -8,6 +8,7 @@ import * as styles from './VoteModal.less';
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
 class VoteModal extends Mixin {
   state = {
+    selectNode: '',
     action: 'add',
     amount: '',
     amountErrMsg: '',
@@ -43,7 +44,11 @@ class VoteModal extends Mixin {
         if (action === 'add') {
           errMsg = Patterns.check('smallerOrEqual')(amount, freeShow);
         } else if (action === 'cancel' || action === 'switch') {
-          errMsg = Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote), '赎回数量不足');
+          errMsg = Patterns.check('smallerOrEqual')(
+            amount,
+            setDefaultPrecision(myTotalVote),
+            `${action === 'cancel' ? '赎回' : '换票'}数量不足`
+          );
         }
       }
       this.setState({ amountErrMsg: errMsg });
@@ -57,9 +62,9 @@ class VoteModal extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { amount, amountErrMsg, remark, action } = this.state;
+    const { amount, amountErrMsg, remark, action, selectNode } = this.state;
     const {
-      model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision },
+      model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
         modal: { data: { target, myTotalVote = 0, isCurrentAccount } = {} },
         nativeAssetName: token,
@@ -72,6 +77,8 @@ class VoteModal extends Mixin {
     const bondingSeconds =
       (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
     const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : action === 'cancel' ? '赎回' : '换票'}`;
+
+    const nodesOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.account }));
 
     return (
       <Modal
@@ -92,11 +99,12 @@ class VoteModal extends Mixin {
                     ],
                     callback: () => {
                       return dispatch({
-                        type: action !== 'add' ? 'unnominate' : 'nominate',
+                        type: action === 'add' ? 'nominate' : action === 'cancel' ? 'unnominate' : 'renominate',
                         payload: {
                           target,
                           amount,
                           remark,
+                          ...(action === 'switch' ? { to: selectNode.value } : {}),
                         },
                       });
                     },
@@ -113,13 +121,15 @@ class VoteModal extends Mixin {
               <ul className={styles.changeVote}>
                 {[
                   { label: '追加投票', value: 'add' },
-                  //{ label: '切换投票', value: 'switch' },
+                  { label: '切换投票', value: 'switch' },
                   { label: '赎回投票', value: 'cancel' },
                 ].map((item, index) => (
                   <li
                     key={index}
                     className={action === item.value ? styles.active : null}
-                    onClick={() => this.setState({ action: item.value })}>
+                    onClick={() => {
+                      this.setState({ action: item.value }, checkAll.checkAmount);
+                    }}>
                     {item.label}
                     {item.value === 'cancel' && (
                       <span className={styles.lockweek}>{`(锁定期${bondingSeconds}分钟)`}</span>
@@ -137,10 +147,11 @@ class VoteModal extends Mixin {
             </>
           ) : null}
 
-          {(action === 'add' || action === 'switch') && (
+          {action === 'add' && (
             <InputHorizotalList
               left={
                 <Input.Text
+                  errMsgIsOutside
                   precision={getDefaultPrecision()}
                   label={`${operation}数量`}
                   value={amount}
@@ -152,8 +163,22 @@ class VoteModal extends Mixin {
               right={<FreeBalance value={freeShow} unit={token} />}
             />
           )}
-          {action === 'cancel' && (
+          {action === 'switch' && (
+            <Input.Select
+              allowCreate={false}
+              value={selectNode}
+              placeholder={'节点名称'}
+              options={nodesOptions}
+              onChange={value => {
+                this.setState({
+                  selectNode: value,
+                });
+              }}
+            />
+          )}
+          {(action === 'cancel' || action === 'switch') && (
             <Input.Text
+              errMsgIsOutside
               precision={getDefaultPrecision()}
               label={`${operation}数量`}
               value={amount}
