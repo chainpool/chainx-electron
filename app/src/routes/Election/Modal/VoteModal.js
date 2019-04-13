@@ -175,6 +175,7 @@ class VoteModal extends Mixin {
           )}
           {action === 'switch' && (
             <Input.Select
+              label="新节点"
               errMsg={selectNodeErrMsg}
               allowCreate={false}
               value={selectNode}

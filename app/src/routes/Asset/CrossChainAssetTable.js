@@ -81,12 +81,13 @@ class CrossChainAssetTable extends Mixin {
               const isBTC = item.name === 'BTC';
               return (
                 <ButtonGroup>
-                  {isTestNet ? (
+                  {isTestNet && isBTC ? (
                     <Button
                       type="warn"
                       onClick={() => {
                         openModal({
-                          name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
+                          name: 'GetCollarModal',
+                          // name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
                         });
                       }}>
                       领币
