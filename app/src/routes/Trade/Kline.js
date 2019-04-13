@@ -94,7 +94,7 @@ class Kline extends SwitchPair {
 
   startKline = () => {
     const {
-      model: { dispatch, currentPair: { precision, unitPrecision } = {} },
+      model: { dispatch, currentPair: { assets, currency, precision, unitPrecision } = {} },
     } = this.props;
     const TradingView = window.TradingView;
     const tradeView = document.getElementById('tradeView');
@@ -140,11 +140,11 @@ class Kline extends SwitchPair {
           console.log(formatNumber.toPrecision(1, precision - unitPrecision, true));
           setTimeout(() => {
             onSymbolResolvedCallback({
-              name: 'chainX',
+              name: `chain`,
               ticker: symbolName,
               timezone: 'Asia/Shanghai',
-              description: 'chainX',
-              exchange: 'chainX', //交易所的略称
+              description: `${currency}/${assets}`,
+              // exchange: 'chainX', //交易所的略称
               minmov: 1, //最小波动
               pricescale: Number(formatNumber.toPrecision(1, precision - unitPrecision, true)), //价格精度
               pointvalue: 1,
