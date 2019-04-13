@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, moment_helper, toJS, SetFullScreen, formatNumber } from '../../utils';
+import { _, moment_helper, SetFullScreen, formatNumber } from '../../utils';
 import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
 
 import * as styles from './Kline.less';
@@ -43,9 +43,10 @@ class Kline extends SwitchPair {
 
   getId = () => {
     const {
-      model: { getQueryParams },
+      model: {
+        currentPair: { id },
+      },
     } = this.props;
-    const { id } = getQueryParams();
     return String(id);
   };
 
@@ -137,7 +138,6 @@ class Kline extends SwitchPair {
           });
         },
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
-          console.log(formatNumber.toPrecision(1, precision - unitPrecision, true));
           setTimeout(() => {
             onSymbolResolvedCallback({
               name: `chain`,
