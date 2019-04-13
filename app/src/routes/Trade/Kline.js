@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, moment_helper, toJS, SetFullScreen } from '../../utils';
+import { _, moment_helper, toJS, SetFullScreen, formatNumber } from '../../utils';
 import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
 
 import * as styles from './Kline.less';
@@ -94,7 +94,7 @@ class Kline extends SwitchPair {
 
   startKline = () => {
     const {
-      model: { dispatch },
+      model: { dispatch, currentPair: { precision, unitPrecision } = {} },
     } = this.props;
     const TradingView = window.TradingView;
     const tradeView = document.getElementById('tradeView');
@@ -137,6 +137,7 @@ class Kline extends SwitchPair {
           });
         },
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
+          console.log(formatNumber.toPrecision(1, precision - unitPrecision, true));
           setTimeout(() => {
             onSymbolResolvedCallback({
               name: 'chainX',
@@ -145,7 +146,7 @@ class Kline extends SwitchPair {
               description: 'chainX',
               exchange: 'chainX', //交易所的略称
               minmov: 1, //最小波动
-              pricescale: 100, //价格精度
+              pricescale: Number(formatNumber.toPrecision(1, precision - unitPrecision, true)), //价格精度
               pointvalue: 1,
               session: '24x7',
               has_intraday: true, // 是否具有日内（分钟）历史数据
@@ -170,10 +171,14 @@ class Kline extends SwitchPair {
               endTime: endTime,
             },
           }).then((res = []) => {
+            // console.log(res, '---res');
             const data = res.map((item = {}) => ({
-              ...item,
+              close: item.closeShow,
+              open: item.openShow,
+              high: item.highShow,
+              low: item.lowShow,
+              volume: item.volumeShow,
               time: item.time * 1000,
-              volume: '',
             }));
             try {
               onHistoryCallback(data, { noData: true });

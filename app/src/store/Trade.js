@@ -89,14 +89,25 @@ export default class Trade extends ModelExtend {
 
   getKline = async ({ interval, startTime, endTime }) => {
     const currentPair = this.currentPair;
-    const res = await getKlineApi({
+    let res = await getKlineApi({
       pairid: currentPair.id,
       type: interval,
       start_date: startTime,
       end_date: endTime,
     });
-    return res;
-    //return generateKlineData(startTime, endTime);
+    if (res && res.length) {
+      const filterPair = currentPair;
+      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      res = res.map(item => ({
+        ...item,
+        closeShow: showUnit(this.setPrecision(item.close, filterPair.precision)),
+        highShow: showUnit(this.setPrecision(item.high, filterPair.precision)),
+        lowShow: showUnit(this.setPrecision(item.low, filterPair.precision)),
+        openShow: showUnit(this.setPrecision(item.open, filterPair.precision)),
+        volumeShow: this.setPrecision(item.volume, filterPair.assets),
+      }));
+      return res;
+    }
   };
 
   getLatestOrder = async () => {
