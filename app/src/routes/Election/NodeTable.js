@@ -29,7 +29,7 @@ class NodeTable extends Component {
       columns: [
         {
           title: '排名',
-          width: 105,
+          width: 80,
           ellipse: 8,
           dataIndex: 'name',
           render: (value, item, index) => {

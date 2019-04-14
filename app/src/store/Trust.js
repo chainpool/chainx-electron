@@ -280,7 +280,7 @@ export default class Trust extends ModelExtend {
       url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
-      timeOut: 2000,
+      timeOut: 3500,
       params: [6, 99999999, trusteeAddress],
     })
       .then(res => {
