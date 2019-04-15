@@ -10,12 +10,13 @@ class Footer extends Component {
     const {
       className,
       configureStore: { nodes },
+      ready,
     } = this.props;
 
     return (
       <div className={classNames(styles.footer, className)}>
         <div>
-          <BlockInfo {...this.props} />
+          {ready ? <BlockInfo {...this.props} /> : <div />}
           <Node {...this.props} nodes={nodes} />
         </div>
       </div>
