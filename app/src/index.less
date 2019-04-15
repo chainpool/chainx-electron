@@ -1,5 +1,12 @@
 @import './Aliicon.less';
 @import '~@styles/index.less';
+@font-face{
+  font-family: Droid Sans Mono;
+  font-style: normal;
+  font-weight: 400;
+  src:local("Droid Sans Mono"),local("DroidSansMono"),url('./fonts/droid-sans.rev1.woff2') format("woff2"),url('./fonts/droid-sans.rev1.ttf') format("truetype");
+};
+
 * {
   box-sizing: border-box;
 }
@@ -28,6 +35,7 @@ textarea::-webkit-input-placeholder {
 
 body,
 html {
+  font-family: Droid Sans Mono,BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Helvetica,Arial,sans-serif!important;
   line-height: 1;
   font-size: @fontSize;
   height: 100%;
@@ -35,12 +43,10 @@ html {
   font-weight: 400;
   background: @gray;
   color: @fontgray;
-  font-family: -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  font-family: Arial, 'Helvetica Neue', HelveticaNeue, Helvetica, Microsoft YaHei, sans-serif !important;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased
 }
+
 
 body,
 html,
@@ -54,9 +60,7 @@ h4,
 h5,
 input,
 textarea,
-button {
-  // font-size: unset;
-  font-family: unset;
+button{
   outline: none;
   padding: 0;
   margin: 0;

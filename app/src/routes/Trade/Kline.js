@@ -27,7 +27,7 @@ class Kline extends SwitchPair {
 
   startInit = () => {
     if (this.widget) {
-      this.widget.chart().setSymbol(this.getId());
+      this.widget.chart().setSymbol(this.getSymbol());
     } else {
       this.startKline();
     }
@@ -41,13 +41,14 @@ class Kline extends SwitchPair {
     }
   };
 
-  getId = () => {
+  getSymbol = () => {
     const {
       model: {
-        currentPair: { id },
+        currentPair: { assets, currency },
       },
     } = this.props;
-    return String(id);
+
+    return String(`${currency}/${assets}`);
   };
 
   getInterval = resolution => {
@@ -95,7 +96,7 @@ class Kline extends SwitchPair {
 
   startKline = () => {
     const {
-      model: { dispatch, currentPair: { assets, currency, precision, unitPrecision } = {} },
+      model: { dispatch, currentPair: { precision, unitPrecision } = {} },
     } = this.props;
     const TradingView = window.TradingView;
     const tradeView = document.getElementById('tradeView');
@@ -117,7 +118,7 @@ class Kline extends SwitchPair {
         'chart_property_page_background',
       ],
       toolbar_bg: 'transparent',
-      symbol: this.getId(),
+      symbol: this.getSymbol(),
       library_path: '/',
       width: '100%',
       height: 344,
@@ -129,7 +130,7 @@ class Kline extends SwitchPair {
       interval: this.getDefaultInterval(),
       overrides: {
         'paneProperties.legendProperties.showLegend': false,
-        volumePaneSize: 'medium',
+        volumePaneSize: 'small',
       },
       datafeed: {
         onReady(callback) {
@@ -140,11 +141,9 @@ class Kline extends SwitchPair {
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
           setTimeout(() => {
             onSymbolResolvedCallback({
-              name: `chain`,
+              name: symbolName,
               ticker: symbolName,
               timezone: 'Asia/Shanghai',
-              description: `${currency}/${assets}`,
-              // exchange: 'chainX', //交易所的略称
               minmov: 1, //最小波动
               pricescale: Number(formatNumber.toPrecision(1, precision - unitPrecision, true)), //价格精度
               pointvalue: 1,
@@ -153,7 +152,7 @@ class Kline extends SwitchPair {
               has_weekly_and_monthly: true,
               has_no_volume: false, //布尔表示商品是否拥有成交量数据
               has_empty_bars: true,
-              type: 'stock',
+              type: 'bitcoin',
               supported_resolutions: ['1', '5', '15', '30', '60', '240', 'D', '5D', 'W', 'M'], // 分辨率选择器中启用一个分辨率数组
               data_status: 'streaming', //数据状态码。状态显示在图表的右上角。streaming(实时)endofday(已收盘)pulsed(脉冲)
             });

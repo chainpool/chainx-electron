@@ -187,9 +187,9 @@ export default class TableComponent extends Component {
     let { scroll = {}, scroll: { tr } = {}, tableHeight = [] } = this.props;
     tableHeight = [
       tableHeight[0] || 34, // head
-      tableHeight[1] || 48, // body tr
-      tableHeight[2] || 48, // expand head
-      tableHeight[3] || 48, // expand tr
+      tableHeight[1] || 40, // body tr
+      tableHeight[2] || 40, // expand head
+      tableHeight[3] || 40, // expand tr
       tableHeight[4] || 1, // tr border
     ];
 
