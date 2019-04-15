@@ -48,7 +48,7 @@ const argvs = {
   cold_entity: '冷公钥',
   ethereum_signature: 'ethereum_signature',
   sign_data: 'sign_data',
-  input_data: 'input_data',
+  input_data: '目标账户',
   header: '块头',
   from: '源节点',
   to: '目标节点',
@@ -72,8 +72,12 @@ const translation = ({
   showUnitPrecision,
   originIntentions = [],
   nativeAssetName,
+  encodeAddressAccountId,
+  accounts = [],
 }) => {
-  const findAccount = v => _.get(originIntentions.filter((item = {}) => item.account === `0x${v}`)[0], 'name') || v;
+  const findNode = v => _.get(originIntentions.filter((item = {}) => item.account === `0x${v}`)[0], 'name') || v;
+  const findAccount = v =>
+    _.get(accounts.filter((item = {}) => item.address === encodeAddressAccountId(v))[0], 'tag') || v;
   const merge = (args = [], selfArgs = []) => {
     const result = selfArgs.reduce((result, next) => {
       const primaryArgsObj = args.reduce((result, next) => {
@@ -124,7 +128,7 @@ const translation = ({
         { name: 'token' },
         { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), d.token) },
         { name: 'memo' },
-        { name: 'dest', dataTrans: v => v },
+        { name: 'dest', dataTrans: v => findAccount(v) },
       ]);
       break;
     }
@@ -133,11 +137,12 @@ const translation = ({
       break;
     }
     case 'XStaking|claim': {
-      info = merge(args, [{ name: 'target', dataTrans: v => findAccount(v) }]);
+      info = merge(args, [{ name: 'target', dataTrans: v => findNode(v) }]);
       break;
     }
     case 'XBridgeOfSDOT|claim': {
-      info = merge(args, [{ name: 'ethereum_signature' }, { name: 'sign_data' }, { name: 'input_data' }]);
+      operation = '领SDOT';
+      info = merge(args, [{ name: 'input_data', dataTrans: v => v }]);
       break;
     }
     case 'XBridgeOfBTC|sign_withdraw_tx': {
@@ -148,7 +153,7 @@ const translation = ({
       info = merge(args, [
         { name: 'value', dataTrans: v => setBlankSpace(setDefaultPrecision(v), nativeAssetName) },
         { name: 'memo' },
-        { name: 'target', dataTrans: v => findAccount(v) },
+        { name: 'target', dataTrans: v => findNode(v) },
       ]);
       break;
     }
@@ -156,14 +161,14 @@ const translation = ({
       info = merge(args, [
         { name: 'value', dataTrans: v => setDefaultPrecision(v) },
         { name: 'memo' },
-        { name: 'target', dataTrans: v => findAccount(v) },
+        { name: 'target', dataTrans: v => findNode(v) },
       ]);
       break;
     }
     case 'XStaking|renominate': {
       info = merge(args, [
-        { name: 'from', dataTrans: v => findAccount(v) },
-        { name: 'to', dataTrans: v => findAccount(v) },
+        { name: 'from', dataTrans: v => findNode(v) },
+        { name: 'to', dataTrans: v => findNode(v) },
         { name: 'value', dataTrans: v => setBlankSpace(setDefaultPrecision(v), nativeAssetName) },
         { name: 'memo' },
       ]);
@@ -197,7 +202,7 @@ const translation = ({
       break;
     }
     case 'XStaking|unfreeze': {
-      info = merge(args, [{ name: 'revocation_index' }, { name: 'target', dataTrans: v => findAccount(v) }]);
+      info = merge(args, [{ name: 'revocation_index' }, { name: 'target', dataTrans: v => findNode(v) }]);
       break;
     }
     case 'XBridgeOfBTC|create_withdraw_tx': {

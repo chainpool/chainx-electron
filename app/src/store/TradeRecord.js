@@ -71,6 +71,8 @@ export default class TradeRecord extends ModelExtend {
               showUnitPrecision: this.rootStore.tradeStore.showUnitPrecision,
               originIntentions: this.rootStore.electionStore.originIntentions,
               nativeAssetName: this.rootStore.globalStore.nativeAssetName,
+              encodeAddressAccountId: this.encodeAddressAccountId,
+              accounts: this.rootStore.accountStore.accounts,
             }),
           })),
         });
