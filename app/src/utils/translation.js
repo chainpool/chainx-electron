@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { setBlankSpace } from '../utils';
 
 const calls = {
   unnominate: '撤销投票',
@@ -11,6 +12,7 @@ const calls = {
   setup_trustee: '信托设置',
   withdraw: '提现',
   nominate: '投票',
+  renominate: '换票',
   create_withdraw_tx: '申请提现',
   sign_withdraw_tx: '响应提现',
   cancel_order: '撤单',
@@ -48,6 +50,8 @@ const argvs = {
   sign_data: 'sign_data',
   input_data: 'input_data',
   header: '块头',
+  from: '源节点',
+  to: '目标节点',
 };
 
 const values = {
@@ -58,7 +62,18 @@ const values = {
   true: '是',
 };
 
-const translation = ({ module, call, args = [], setPrecision, setDefaultPrecision, getPair, showUnitPrecision }) => {
+const translation = ({
+  module,
+  call,
+  args = [],
+  setPrecision,
+  setDefaultPrecision,
+  getPair,
+  showUnitPrecision,
+  originIntentions = [],
+  nativeAssetName,
+}) => {
+  const findAccount = v => _.get(originIntentions.filter((item = {}) => item.account === `0x${v}`)[0], 'name') || v;
   const merge = (args = [], selfArgs = []) => {
     const result = selfArgs.reduce((result, next) => {
       const primaryArgsObj = args.reduce((result, next) => {
@@ -107,9 +122,9 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
     case 'XAssets|transfer': {
       info = merge(args, [
         { name: 'token' },
-        { name: 'value', dataTrans: (v, d) => setPrecision(v, d.token) },
+        { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), d.token) },
         { name: 'memo' },
-        { name: 'dest' },
+        { name: 'dest', dataTrans: v => findAccount(v) },
       ]);
       break;
     }
@@ -118,7 +133,7 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
       break;
     }
     case 'XStaking|claim': {
-      info = merge(args, [{ name: 'target' }]);
+      info = merge(args, [{ name: 'target', dataTrans: v => findAccount(v) }]);
       break;
     }
     case 'XBridgeOfSDOT|claim': {
@@ -131,9 +146,9 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
     }
     case 'XStaking|nominate': {
       info = merge(args, [
-        { name: 'value', dataTrans: v => setDefaultPrecision(v) },
+        { name: 'value', dataTrans: v => setBlankSpace(setDefaultPrecision(v), nativeAssetName) },
         { name: 'memo' },
-        { name: 'target' },
+        { name: 'target', dataTrans: v => findAccount(v) },
       ]);
       break;
     }
@@ -141,7 +156,16 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
       info = merge(args, [
         { name: 'value', dataTrans: v => setDefaultPrecision(v) },
         { name: 'memo' },
-        { name: 'target' },
+        { name: 'target', dataTrans: v => findAccount(v) },
+      ]);
+      break;
+    }
+    case 'XStaking|renominate': {
+      info = merge(args, [
+        { name: 'from', dataTrans: v => findAccount(v) },
+        { name: 'to', dataTrans: v => findAccount(v) },
+        { name: 'value', dataTrans: v => setBlankSpace(setDefaultPrecision(v), nativeAssetName) },
+        { name: 'memo' },
       ]);
       break;
     }
@@ -155,14 +179,14 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
           dataTrans: (v, r) => {
             const filterPair = getPair({ id: r.pair_index });
             const showUnit = showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-            return showUnit(setPrecision(v, filterPair.precision));
+            return setBlankSpace(showUnit(setPrecision(v, filterPair.precision)), filterPair.currency);
           },
         },
         {
           name: 'amount',
           dataTrans: (v, r) => {
             const filterPair = getPair({ id: r.pair_index });
-            return setPrecision(v, filterPair.assets);
+            return setBlankSpace(setPrecision(v, filterPair.assets), filterPair.assets);
           },
         },
       ]);
@@ -173,7 +197,7 @@ const translation = ({ module, call, args = [], setPrecision, setDefaultPrecisio
       break;
     }
     case 'XStaking|unfreeze': {
-      info = merge(args, [{ name: 'revocation_index' }, { name: 'target' }]);
+      info = merge(args, [{ name: 'revocation_index' }, { name: 'target', dataTrans: v => findAccount(v) }]);
       break;
     }
     case 'XBridgeOfBTC|create_withdraw_tx': {

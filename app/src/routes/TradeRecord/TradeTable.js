@@ -24,13 +24,18 @@ class TradeTable extends Mixin {
         },
         {
           title: '本链交易ID',
+          width: 200,
           ellipse: true,
           dataIndex: 'id',
-          render: value => <RouterGo isOutSide go={{ pathname: `https://scan.chainx.org/txs/${value}` }} />,
+          render: value => (
+            <RouterGo isOutSide go={{ pathname: `https://scan.chainx.org/txs/${value}` }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
           title: '操作',
-          width: 100,
+          width: 80,
           dataIndex: 'operation',
         },
         {
