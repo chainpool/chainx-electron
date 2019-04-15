@@ -69,7 +69,7 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   render() {
-    const widths = [150, 90, 100, 60, undefined, undefined, 200, undefined, undefined, 100];
+    const widths = [130, 80, 100, 60, undefined, undefined, 220, undefined, undefined, 100];
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {
@@ -83,6 +83,7 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: '时间',
             dataIndex: 'timeShow',
+            ellipse: 10,
           },
           {
             title: '委托编号',
@@ -171,6 +172,7 @@ class HistoryOrderTable extends SwitchPair {
               {
                 title: '时间',
                 dataIndex: 'time',
+                ellipse: 10,
               },
               {
                 title: '本链交易ID',
