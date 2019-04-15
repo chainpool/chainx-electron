@@ -1,7 +1,6 @@
 import React, { Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
-import { ChainX, parseQueryString } from '../../utils';
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
@@ -18,73 +17,7 @@ import * as styles from './index.less';
   tradeStore,
 }))
 class Main extends Component {
-  state = {
-    ready: false,
-  };
-
-  async componentDidMount() {
-    await this.ready();
-  }
-
-  ready = async () => {
-    const {
-      globalStore: { dispatch: dispatchGlobal },
-      accountStore: { dispatch: dispatchAccount },
-      electionStore: { dispatch: dispatchElection },
-      configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
-      tradeStore: { dispatch: dispatchTrade },
-      history: {
-        location: { search },
-      },
-    } = this.props;
-    const address = parseQueryString(search).address;
-    const wsPromise = () =>
-      Promise.race([
-        ChainX.isRpcReady(),
-        new Promise((resovle, reject) => {
-          setTimeout(() => {
-            reject(new Error('请求超时'));
-          }, 10000);
-        }),
-      ]);
-    wsPromise()
-      .then(async () => {
-        await dispatchGlobal({
-          type: 'setHistory',
-          payload: {
-            history: this.props.history,
-          },
-        });
-        await dispatchAccount({
-          type: 'switchAccount',
-          payload: {
-            address,
-          },
-        });
-        await dispatchGlobal({ type: 'getAllAssets' });
-        await dispatchElection({ type: 'getIntentions' });
-        await dispatchTrade({ type: 'getOrderPairs' });
-        this.setState({
-          ready: true,
-        });
-      })
-      .catch(err => {
-        console.log('当前节点连接超时，切换节点', err);
-        subscribeNodeOrApi({
-          refresh: false,
-          target: 'Node',
-          callback: index => {
-            setBestNodeOrApi({
-              target: 'Node',
-              index,
-            });
-          },
-        });
-      });
-  };
-
   render() {
-    const { ready } = this.state;
     const {
       globalStore: {
         modal: { name },
@@ -100,7 +33,7 @@ class Main extends Component {
       </div>
     );
 
-    return ready ? (
+    return (
       <CommonLayOut {...this.props}>
         <Suspense fallback={loading}>
           <Switch>
@@ -119,8 +52,6 @@ class Main extends Component {
         </Suspense>
         {name === 'SignModal' ? <SignModal {...this.props} /> : null}
       </CommonLayOut>
-    ) : (
-      loading
     );
   }
 }

@@ -80,13 +80,13 @@ export default class Configure extends ModelExtend {
             best: true,
             isSystem: true,
             Version: ConfigureVersion,
-            address: 'wss://w1.chainx.org.cn/ws',
+            address: 'wss://w1.chainx.org/ws',
           },
           {
             type: '系统默认',
             name: 'w2',
             isSystem: true,
-            address: 'wss://w2.chainx.org.cn/ws',
+            address: 'wss://w2.chainx.org/ws',
           },
           {
             type: '系统默认',

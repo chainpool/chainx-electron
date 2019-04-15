@@ -64,4 +64,4 @@ export const SCRYPT_PARAMS = {
 
 export const AjaxCallTime = 5000;
 
-export const ConfigureVersion = 5;
+export const ConfigureVersion = 6;
