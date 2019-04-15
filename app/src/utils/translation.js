@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { setBlankSpace } from '../utils';
+import { setBlankSpace, toJS } from '../utils';
 
 const calls = {
   unnominate: '撤销投票',
@@ -124,7 +124,7 @@ const translation = ({
         { name: 'token' },
         { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), d.token) },
         { name: 'memo' },
-        { name: 'dest', dataTrans: v => findAccount(v) },
+        { name: 'dest', dataTrans: v => v },
       ]);
       break;
     }
