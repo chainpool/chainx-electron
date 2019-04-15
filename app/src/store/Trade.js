@@ -166,7 +166,7 @@ export default class Trade extends ModelExtend {
         direction: item.direction,
         status: item.status,
         expand: item.expand,
-        timeShow: moment_helper.formatHMS(item['block.time']),
+        timeShow: moment_helper.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
       };
     });
     const currentOrderList = this.processOrderData(data);
@@ -219,7 +219,7 @@ export default class Trade extends ModelExtend {
                         const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
-                          time: moment.formatHMS(item['block.time']),
+                          time: moment.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
                           priceShow: this.setPrecision(item.price, filterPair.assets),
                           other_userShow:
                             [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
@@ -277,7 +277,7 @@ export default class Trade extends ModelExtend {
                 status: item.status,
                 expand: item.expand,
                 sum: item.sum,
-                timeShow: moment_helper.formatHMS(item['block.time']),
+                timeShow: moment_helper.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
               };
             });
 
