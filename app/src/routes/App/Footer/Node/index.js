@@ -23,7 +23,12 @@ class Node extends Component {
     const { nodes } = this.props;
     const bestNode = this.filterBestNode(nodes);
     if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && bestNode.syncStatus !== '') {
-      if (bestNode.syncStatus && ['100.00%', '100%'].indexOf(bestNode.syncStatus) === -1) {
+      if (
+        bestNode.syncStatus &&
+        ['100.00%', '100%'].indexOf(bestNode.syncStatus) === -1 &&
+        bestNode.syncStatus &&
+        bestNode.syncStatus !== '--'
+      ) {
         this.isFirst = true;
         Toast.warn('', '', {
           position: 'top-left',

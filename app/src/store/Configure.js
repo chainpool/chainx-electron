@@ -223,7 +223,6 @@ export default class Configure extends ModelExtend {
         });
       const bestNodeOrApi = sortedList[0] || {};
       const prevBestNodeOrApi = list.filter((item = {}) => item.best)[0] || {};
-      // console.log(bestNodeOrApi, `最优${target === 'Node' ? '节点' : 'Api'}`);
       if (bestNodeOrApi && bestNodeOrApi.block) {
         const max = _.get(maxBlock, 'block');
         list.forEach((item = {}) => {
@@ -254,39 +253,40 @@ export default class Configure extends ModelExtend {
         }
         /*初始websocket连接失败用下面这行重新连接 最可靠的节点*/
         this.changeModel(target === 'Node' ? 'nodes' : 'api', list);
+      } else {
+        console.log('没找到bestNode', list);
       }
       if (target === 'Node' && bestNodeOrApi.address && _.isFunction(callback)) callback(currentIndex);
     };
 
     for (let i = 0; i < list.length; i++) {
       if (target === 'Node') {
-        const getIntentions = async () => {
+        const getIntentions = async () =>
           fetchSystemPeers(list[i].address)
             .then((result = {}) => {
               const res = result.data;
               if (res && res.length) {
                 changeNodesOrApi(i, 'links', res && res.length ? res.length : '');
-                changeNodesOrApi(i, 'delay', res ? result.wastTime : '');
               }
             })
             .catch(() => {
               changeNodesOrApi(i, 'links', '--');
-              changeNodesOrApi(i, 'delay', 'timeOut');
             });
-        };
-        const getBlockNumber = () => {
+
+        const getBlockNumber = () =>
           getBestNodeNumber(list[i].address)
             .then((result = {}) => {
               const res = result.data;
               if (res) {
+                changeNodesOrApi(i, 'delay', res ? result.wastTime : '');
                 changeNodesOrApi(i, 'block', res);
                 caculatePercent(i);
               }
             })
             .catch(() => {
+              changeNodesOrApi(i, 'delay', 'timeOut');
               changeNodesOrApi(i, 'syncStatus', '--');
             });
-        };
         getIntentions();
         getBlockNumber();
       } else {
