@@ -119,9 +119,9 @@ export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 export const getOrders = (...payload) => checkLogin(() => trade.getOrders(...payload));
 
 export const getOrdersApi = payload => {
-  const { accountId, page } = payload;
+  const { accountId, page, status } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}`,
+    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}&&status=${status}`,
     method: 'get',
     ...payload,
   });

@@ -188,6 +188,7 @@ export default class Trade extends ModelExtend {
           getOrdersApi({
             accountId: this.decodeAddressAccountId(currentAccount),
             page: this.historyAccountCurrentPage,
+            status: '3',
           })
         )
       )
