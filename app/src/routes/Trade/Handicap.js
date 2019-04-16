@@ -9,15 +9,18 @@ import { classNames, observer } from '../../utils';
 @observer
 class Handicap extends SwitchPair {
   startInit = () => {
-    this.getQuotations();
+    this.getQuotations(true);
   };
 
-  getQuotations = async () => {
+  getQuotations = async hasStarWith => {
     const {
       model: { dispatch },
     } = this.props;
     this.subscribeQuotations = await dispatch({
       type: 'getQuotations',
+      payload: {
+        hasStarWith,
+      },
     }).then(res => {
       this.fetchPoll(this.getQuotations);
       return res;

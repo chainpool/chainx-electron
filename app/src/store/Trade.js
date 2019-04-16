@@ -23,13 +23,14 @@ import {
   getKlineApi,
 } from '../services';
 import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
     putOrderBuy: false,
     putOrderSell: false,
     cancelOrder: true,
+    getHistoryAccountOrder: false,
   };
 
   @observable name = 'trade';
@@ -56,9 +57,6 @@ export default class Trade extends ModelExtend {
   @observable historyAccountPageTotal = 1;
   @observable historyAccountCurrentPage = 1;
   @observable historyOrderList = [];
-  @observable loading = {
-    getHistoryAccountOrder: '',
-  };
 
   reload = () => {
     clearTimeout(this.interval);
@@ -292,11 +290,12 @@ export default class Trade extends ModelExtend {
     }
   };
 
-  getQuotations = async () => {
+  getQuotations = async ({ hasStarWith }) => {
     const currentPair = this.currentPair;
     const count = 10;
     return from(getQuotations(currentPair.id, [0, count]))
       .pipe(
+        hasStarWith ? startWith({ buy: [], sell: [] }) : tap(res => res),
         combineLatest(
           from(
             this.isApiSwitch(
