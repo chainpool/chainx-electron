@@ -211,10 +211,12 @@ export default class Configure extends ModelExtend {
 
     const caculatePercent = currentIndex => {
       const list = _.cloneDeep(target === 'Node' ? this.nodes : this.api) || [];
-      const sortedMaxBlockList = [...list].sort((a, b) => b.block - a.block);
+      const sortedMaxBlockList = [...list]
+        .filter((item = {}) => item.block && item.block !== '--')
+        .sort((a, b) => b.block - a.block);
       const maxBlock = sortedMaxBlockList[0] || {};
       const sortedList = [...list]
-        .filter((item = {}) => item.block && item.delay)
+        .filter((item = {}) => item.block && item.block !== '--' && item.delay && item.delay !== '--')
         .sort((a = {}, b = {}) => {
           if (maxBlock.block - a.block <= 2 && maxBlock.block - b.block <= 2) {
             return a.delay - b.delay;

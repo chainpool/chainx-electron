@@ -76,11 +76,24 @@ class Node extends Component {
       configureStore: { nodes = [], api = [], autoSwitchBestNode, autoSwitchBestApi, dispatch, getBestNodeAndApi },
     } = this.props;
     const [bestNode = {}, bestApi = {}] = getBestNodeAndApi();
+
+    const getColorFromDelay = delay => {
+      if (delay === 'timeOut') {
+        return 'red';
+      } else if (delay > 300) {
+        return 'yellow';
+      } else if (delay < 300) {
+        return 'green';
+      }
+    };
     const nodeList = (
       <ul>
         {[nodes, api].map((one = [], index) => (
           <li key={index}>
-            <Icon name="icon-xinhao" className={styles.xinhao} />
+            <Icon
+              name="icon-xinhao"
+              className={classNames(styles.xinhao, getColorFromDelay([bestNode, bestApi][index]['delay']))}
+            />
             <span className={styles.apiornodename}>{index ? bestApi.name : bestNode.name}</span>
             <div className={styles.triangle} />
             <div className={classNames(styles.switchNode, index ? styles.switchsecond : styles.switchfirst)}>
@@ -110,9 +123,9 @@ class Node extends Component {
                     }}>
                     <div className={styles.name}>{item.name}</div>
                     {item.delay === 'timeOut' ? (
-                      <span className={'red'}>超时</span>
+                      <span className={getColorFromDelay(item.delay)}>超时</span>
                     ) : (
-                      <span className={classNames(styles.time, item.delay > 300 ? 'yellow' : 'green')}>{`${
+                      <span className={classNames(styles.time, getColorFromDelay(item.delay))}>{`${
                         item.delay
                       } /ms`}</span>
                     )}
