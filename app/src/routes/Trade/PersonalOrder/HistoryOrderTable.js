@@ -21,9 +21,6 @@ class HistoryOrderTable extends SwitchPair {
     } = this.props;
     this.subscribeHistoryAccountOrder = await dispatch({
       type: 'getHistoryAccountOrder',
-    }).then(res => {
-      this.fetchTimeOut(this.getHistoryAccountOrder);
-      return res;
     });
   };
 
@@ -235,7 +232,7 @@ class HistoryOrderTable extends SwitchPair {
             historyAccountCurrentPage: page,
           },
         });
-        getHistoryAccountOrder();
+        this.fetchPoll(getHistoryAccountOrder);
       },
     };
     return <Table {...tableProps} pagination={pagination} location={this.props.location} />;

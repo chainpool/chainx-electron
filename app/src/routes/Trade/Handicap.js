@@ -9,7 +9,7 @@ import { classNames, observer } from '../../utils';
 @observer
 class Handicap extends SwitchPair {
   startInit = () => {
-    this.getQuotations(true);
+    this.fetchPoll(this.getQuotations, true);
   };
 
   getQuotations = async hasStarWith => {
@@ -21,9 +21,6 @@ class Handicap extends SwitchPair {
       payload: {
         hasStarWith,
       },
-    }).then(res => {
-      this.fetchTimeOut(this.getQuotations);
-      return res;
     });
   };
 

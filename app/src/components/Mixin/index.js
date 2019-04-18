@@ -37,7 +37,6 @@ class Mixin extends React.Component {
     this._isMounted = false;
     _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     this.fetchPoll();
-    this.fetchTimeOut();
   }
 
   changeState = (payload = {}, callback) => {
@@ -48,22 +47,24 @@ class Mixin extends React.Component {
     }
   };
 
-  fetchPoll = callback => {
+  fetchPoll = (callback, ...args) => {
     clearTimeout(this.intervalPoll);
     if (!this._isMounted) return;
     if (_.isFunction(callback)) {
-      const result = callback();
+      const result = callback(...args);
       if (result && result.then) {
         if (!this._isMounted) return;
         result.then(() => {
-          this.intervalPoll = setTimeout(callback, AjaxCallTime);
+          this.intervalPoll = setTimeout(() => {
+            this.fetchPoll(callback);
+          }, AjaxCallTime);
         });
       }
     }
   };
 
   fetchTimeOut = (callback, test) => {
-    // if (!test) return;
+    if (!test) return;
     clearTimeout(this.interval);
     if (!this._isMounted) return;
     if (_.isFunction(callback)) {

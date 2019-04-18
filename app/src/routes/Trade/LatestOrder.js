@@ -10,7 +10,7 @@ class LatestOrder extends SwitchPair {
   state = {};
 
   startInit = () => {
-    this.getLatestOrder();
+    this.fetchPoll(this.getLatestOrder);
   };
 
   getLatestOrder = () => {
@@ -19,8 +19,6 @@ class LatestOrder extends SwitchPair {
     } = this.props;
     return dispatch({
       type: 'getLatestOrder',
-    }).then(() => {
-      this.fetchTimeOut(this.getLatestOrder);
     });
   };
 
