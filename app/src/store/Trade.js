@@ -157,6 +157,7 @@ export default class Trade extends ModelExtend {
           return res.data;
         }),
         mergeMap((items = []) => {
+          if (!items.length) return of(items);
           return combine(
             items.map(item => {
               return from(getBlockTime({ height: item.createdAt })).pipe(
