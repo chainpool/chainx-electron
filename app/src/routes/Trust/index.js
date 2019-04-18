@@ -87,6 +87,7 @@ class Trust extends Mixin {
         <TableTitle title={`信托设置`} className={styles.title}>
           <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
           <Button
+            type="blank"
             onClick={() => {
               openModal({ name: 'TrustSetting' });
             }}>

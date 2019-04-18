@@ -86,7 +86,6 @@ class CommonLayOut extends Component {
       <div className={styles.loading}>
         <div>
           <Loading size={60} />
-          <div className={styles.desc}>加载中......</div>
         </div>
       </div>
     );
