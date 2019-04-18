@@ -1,8 +1,8 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Mixin, Table } from '../../components';
-import { BlockTime } from '../components';
+import { Mixin, RouterGo, Table } from '../../components';
 import { observer } from '../../utils';
+import { blockChain } from '../../constants';
 
 @observer
 class WithDrawTable extends Mixin {
@@ -30,6 +30,11 @@ class WithDrawTable extends Mixin {
           title: '原链交易ID',
           ellipse: true,
           dataIndex: 'originChainTxId',
+          render: value => (
+            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
           title: '币种',

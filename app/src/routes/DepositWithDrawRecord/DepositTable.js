@@ -1,8 +1,8 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Mixin, Table } from '../../components';
+import { Mixin, RouterGo, Table } from '../../components';
 import { Inject } from '../../utils';
-import { BlockTime } from '../components';
+import { blockChain } from '../../constants';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class DepositTable extends Mixin {
@@ -30,6 +30,11 @@ class DepositTable extends Mixin {
           title: '原链交易ID',
           dataIndex: 'txid',
           ellipse: true,
+          render: value => (
+            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
           title: '币种',
