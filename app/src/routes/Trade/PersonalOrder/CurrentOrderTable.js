@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Table } from '../../../components';
-import { BlockTime } from '../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
 import { observer, setBlankSpace } from '../../../utils';

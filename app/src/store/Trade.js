@@ -21,6 +21,7 @@ import {
   getLatestOrderApi,
   getFillOrdersApi,
   getKlineApi,
+  getBlockTime,
 } from '../services';
 import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
@@ -150,31 +151,59 @@ export default class Trade extends ModelExtend {
 
   getCurrentAccountOrder = async () => {
     const account = this.getCurrentAccount();
-    const res = await getOrders(account.address, 0, 100);
-    const data = (res.data || []).map((item = {}) => {
-      return {
-        accountid: item.submitter,
-        index: item.index,
-        pair: item.pairIndex,
-        createTime: item.createdAt,
-        amount: item.amount,
-        price: item.price,
-        hasfillAmount: item.alreadyFilled,
-        reserveLast: item.remaining,
-        direction: item.direction,
-        status: item.status,
-        expand: item.expand,
-        timeShow: moment_helper.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
-      };
-    });
-    const currentOrderList = this.processOrderData(data);
+    return from(getOrders(account.address, 0, 100))
+      .pipe(
+        map(res => {
+          return res.data;
+        }),
+        mergeMap((items = []) => {
+          return combine(
+            items.map(item => {
+              return from(getBlockTime({ height: item.createdAt })).pipe(
+                map((res = {}) => {
+                  return {
+                    ...item,
+                    time: res.time,
+                  };
+                }),
+                catchError(() => {
+                  return of({
+                    ...item,
+                    time: null,
+                    blockHeight: item.createdAt,
+                  });
+                })
+              );
+            })
+          );
+        })
+      )
+      .subscribe((res = []) => {
+        const data = res.map((item = {}) => {
+          return {
+            accountid: item.submitter,
+            index: item.index,
+            pair: item.pairIndex,
+            createTime: item.createdAt,
+            amount: item.amount,
+            price: item.price,
+            hasfillAmount: item.alreadyFilled,
+            reserveLast: item.remaining,
+            direction: item.direction,
+            status: item.status,
+            expand: item.expand,
+            timeShow: item.blockHeight ? item.blockHeight : moment_helper.formatHMS(item.time, 'MM-DD HH:mm:ss'),
+          };
+        });
+        const currentOrderList = this.processOrderData(data);
 
-    this.changeModel(
-      {
-        currentOrderList,
-      },
-      []
-    );
+        this.changeModel(
+          {
+            currentOrderList,
+          },
+          []
+        );
+      });
   };
 
   getHistoryAccountOrder = async () => {
@@ -290,7 +319,7 @@ export default class Trade extends ModelExtend {
     }
   };
 
-  getQuotations = async ({ hasStarWith }) => {
+  getQuotations = async ({ hasStarWith } = {}) => {
     const currentPair = this.currentPair;
     const count = 10;
     return from(getQuotations(currentPair.id, [0, count]))
