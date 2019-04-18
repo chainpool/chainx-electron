@@ -137,9 +137,9 @@ export const getFillOrdersApi = payload => {
 };
 
 export const getLatestOrderApi = payload => {
-  const { pairId } = payload;
+  const { pairId, count } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/latestfills/${pairId}`,
+    url: `${API}/trade/latestfills/${pairId}?count=${count}`,
     method: 'get',
     ...payload,
   });

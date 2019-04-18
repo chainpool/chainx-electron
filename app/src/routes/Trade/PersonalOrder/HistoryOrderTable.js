@@ -4,7 +4,6 @@ import { _, observer, setBlankSpace, setColumnsWidth } from '../../../utils';
 
 import * as styles from './index.less';
 import { Icon, Table } from '../../../components';
-import { BlockTime } from '../../components';
 
 @observer
 class HistoryOrderTable extends SwitchPair {
@@ -23,7 +22,7 @@ class HistoryOrderTable extends SwitchPair {
     this.subscribeHistoryAccountOrder = await dispatch({
       type: 'getHistoryAccountOrder',
     }).then(res => {
-      this.fetchPoll(this.getHistoryAccountOrder);
+      this.fetchTimeOut(this.getHistoryAccountOrder);
       return res;
     });
   };

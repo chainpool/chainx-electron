@@ -17,7 +17,7 @@ class CurrentOrderTable extends SwitchPair {
     dispatch({
       type: 'getCurrentAccountOrder',
     }).then(() => {
-      this.fetchPoll(this.getCurrentAccountOrder);
+      this.fetchTimeOut(this.getCurrentAccountOrder);
     });
   };
 

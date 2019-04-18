@@ -111,7 +111,7 @@ class PutOrder extends SwitchPair {
     dispatch({
       type: 'getAccountAssets',
     }).then(() => {
-      this.fetchPoll(this.getAccountAssets);
+      this.fetchTimeOut(this.getAccountAssets);
     });
   };
 

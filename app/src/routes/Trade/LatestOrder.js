@@ -17,10 +17,10 @@ class LatestOrder extends SwitchPair {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({
+    return dispatch({
       type: 'getLatestOrder',
     }).then(() => {
-      this.fetchPoll(this.getLatestOrder);
+      this.fetchTimeOut(this.getLatestOrder);
     });
   };
 

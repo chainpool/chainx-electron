@@ -22,7 +22,7 @@ class Handicap extends SwitchPair {
         hasStarWith,
       },
     }).then(res => {
-      this.fetchPoll(this.getQuotations);
+      this.fetchTimeOut(this.getQuotations);
       return res;
     });
   };

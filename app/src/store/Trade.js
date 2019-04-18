@@ -111,7 +111,7 @@ export default class Trade extends ModelExtend {
 
   getLatestOrder = async () => {
     const currentPair = this.currentPair;
-    let res = await getLatestOrderApi({ pairId: currentPair.id });
+    let res = await getLatestOrderApi({ pairId: currentPair.id, count: 100 });
     // console.log(res, '最新成交');
     res = (res || []).map((item = {}) => {
       const filterPair = currentPair;
@@ -322,8 +322,8 @@ export default class Trade extends ModelExtend {
 
   getQuotations = async ({ hasStarWith } = {}) => {
     const currentPair = this.currentPair;
-    const count = 10;
-    return from(getQuotations(currentPair.id, [0, count]))
+    const count = 20;
+    return from(getQuotations(currentPair.id, 10))
       .pipe(
         hasStarWith ? startWith({ buy: [], sell: [] }) : tap(res => res),
         combineLatest(
@@ -331,7 +331,7 @@ export default class Trade extends ModelExtend {
             this.isApiSwitch(
               getQuotationsApi({
                 pairId: currentPair.id,
-                count: 10,
+                count: count,
               })
             )
           ).pipe(

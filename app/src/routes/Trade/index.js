@@ -31,7 +31,7 @@ class Trade extends SwitchPair {
   getOrderPairs = () => {
     const { model: { dispatch } = {} } = this.props;
     return dispatch({ type: 'getOrderPairs' }).then(() => {
-      this.fetchPoll(this.getOrderPairs);
+      this.fetchTimeOut(this.getOrderPairs);
     });
   };
 
