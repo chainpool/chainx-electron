@@ -14,29 +14,39 @@ import TrustSetting from './Modal/TrustSettingModal';
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
   startInit = () => {
+    this.fetchPoll(this.getAllWithdrawalList);
+    this.fetchPoll(this.getSomeOneInfo);
+    this.fetchPoll(this.getSign);
+  };
+
+  getAllWithdrawalList = () => {
     const {
       model: { dispatch },
     } = this.props;
+    return dispatch({ type: 'getAllWithdrawalList' });
+  };
 
-    dispatch({ type: 'getAllWithdrawalList' });
-    dispatch({
+  getSomeOneInfo = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    return dispatch({
       type: 'getSomeOneInfo',
     });
-    this.getSign();
   };
 
   getSign = () => {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({
+    return dispatch({
       type: 'getWithdrawTx',
     });
   };
 
   render() {
     const {
-      model: { tx, signStatus, signTrusteeList = [] },
+      model: { tx, signTrusteeList = [] },
     } = this.props;
 
     const {
