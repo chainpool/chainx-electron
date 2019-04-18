@@ -206,7 +206,7 @@ export default class Trade extends ModelExtend {
                   if (!item1.fill_index || !item1.fill_index.length) {
                     return of(item1);
                   }
-                  return from(getFillOrdersApi({ id: (item1.fill_index || []).join(',') })).pipe(
+                  return from(getFillOrdersApi({ id: (item1.fill_index || []).join(','), pair_id: item1.pairid })).pipe(
                     map((item2 = []) => {
                       const res = (item2 || []).map((item = {}) => {
                         const filterPair = this.getPair({ id: String(item.pairid) });

@@ -128,9 +128,9 @@ export const getOrdersApi = payload => {
 };
 
 export const getFillOrdersApi = payload => {
-  const { id } = payload;
+  const { id, pair_id } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/fill_orders?id=${id}`,
+    url: `${API}/trade/fill_orders?id=${id}&&pair_id=${pair_id}`,
     method: 'get',
     ...payload,
   });
