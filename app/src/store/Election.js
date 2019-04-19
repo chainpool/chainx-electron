@@ -26,7 +26,6 @@ export default class Election extends ModelExtend {
   @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
-  @observable tokenDiscount = '';
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
@@ -140,29 +139,24 @@ export default class Election extends ModelExtend {
     });
   }
 
+  // 验证节点
   @computed get validators() {
-    return [...this.validatorsWithRecords.filter(intention => intention.isValidator)].sort((a, b) => {
-      return b.totalNomination - a.totalNomination;
-    });
+    return [...this.validatorsWithRecords.filter(intention => intention.isValidator)];
+  }
+
+  // 候补节点
+  @computed get backupValidators() {
+    return [...this.validatorsWithRecords.filter(intention => !intention.isValidator)];
+  }
+
+  // 我的投票
+  @computed get validatorsWithMyNomination() {
+    return [...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0)];
   }
 
   // 信托节点
   @computed get trustIntentions() {
     return [...this.validatorsWithRecords].filter(validator => validator.isTrustee && validator.isTrustee.length);
-  }
-
-  @computed get backupValidators() {
-    return [...this.validatorsWithRecords.filter(intention => !intention.isValidator)].sort((a, b) => {
-      return b.totalNomination - a.totalNomination;
-    });
-  }
-
-  @computed get validatorsWithMyNomination() {
-    return [
-      ...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0),
-    ].sort((a, b) => {
-      return b.totalNomination - a.totalNomination;
-    });
   }
 
   reload = () => {

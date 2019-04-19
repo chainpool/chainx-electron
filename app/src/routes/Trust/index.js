@@ -51,6 +51,7 @@ class Trust extends Mixin {
 
     const {
       accountStore: {
+        isValidator,
         isTrustee,
         isActiveValidator,
         openModal,
@@ -73,6 +74,7 @@ class Trust extends Mixin {
     )[0];
 
     const isShowResponseWithdraw =
+      isValidator &&
       currentTrustNode &&
       currentTrustNode.connected &&
       currentTrustNode.decodedHotPrivateKey &&
@@ -80,8 +82,10 @@ class Trust extends Mixin {
       !isSelfSign;
 
     const isShowConstructureWithdraw =
+      isValidator &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'signing' || item.status === 'processing')
-        .length === 0 && normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying').length > 0;
+        .length === 0 &&
+      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying').length > 0;
 
     const renderSignLi = (one, index) => {
       return (
@@ -94,19 +98,22 @@ class Trust extends Mixin {
 
     return (
       <div className={styles.trust}>
-        <TableTitle title={`信托设置`} className={styles.title}>
-          <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
-          <Button
-            type="blank"
-            onClick={() => {
-              openModal({ name: 'TrustSetting' });
-            }}>
-            <Icon name="icon-shezhixintuo" />
-            <span>设置信托</span>
-          </Button>
-        </TableTitle>
-        <SettingTable {...this.props} />
-        <div />
+        {isValidator && (
+          <div className={styles.setting}>
+            <TableTitle title={`信托设置`} className={styles.title}>
+              <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
+              <Button
+                type="blank"
+                onClick={() => {
+                  openModal({ name: 'TrustSetting' });
+                }}>
+                <Icon name="icon-shezhixintuo" />
+                <span>设置信托</span>
+              </Button>
+            </TableTitle>
+            <SettingTable {...this.props} />
+          </div>
+        )}
         {signTrusteeList.length && tx ? (
           <div className={styles.signStatus}>
             <TableTitle title={'响应列表'}>
