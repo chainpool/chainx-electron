@@ -5,9 +5,10 @@ import Footer from './Footer/Footer';
 import * as styles from './CommonLayOut.less';
 import { ChainX, parseQueryString, classNames } from '../../utils';
 import { PATH } from '../../constants';
-import { Loading } from '../../components/Loading';
+import { Loading } from '../../components';
 
 class CommonLayOut extends Component {
+  // 此组件不要设置startInit 方法
   state = {
     ready: false,
   };

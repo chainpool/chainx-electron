@@ -1,4 +1,4 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp, toJS } from '../utils';
+import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,

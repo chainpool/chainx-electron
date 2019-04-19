@@ -48,14 +48,15 @@ class Mixin extends React.Component {
   };
 
   fetchPoll = (callback, ...args) => {
-    clearTimeout(this.intervalPoll);
+    const intervalId = _.uniqueId('intervalPoll');
+    clearTimeout(this[intervalId]);
     if (!this._isMounted) return;
     if (_.isFunction(callback)) {
       const result = callback(...args);
       if (result && result.then) {
         if (!this._isMounted) return;
         result.then(() => {
-          this.intervalPoll = setTimeout(() => {
+          this[intervalId] = setTimeout(() => {
             this.fetchPoll(callback);
           }, AjaxCallTime);
         });
