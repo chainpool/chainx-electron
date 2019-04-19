@@ -137,7 +137,8 @@ export default class Trade extends ModelExtend {
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
         sumShow: this.setPrecision(item.sum, filterPair.currency),
-        averagePriceShow: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
+        averagePriceShow: this.setPrecision(item.fill_aver, filterPair.currency),
+        // averagePriceShowSelf: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
         hasfillAmountShow,
         hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 2),
         reserveLastShow: this.setPrecision(
@@ -249,7 +250,7 @@ export default class Trade extends ModelExtend {
                         return {
                           ...item,
                           time: moment.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
-                          priceShow: this.setPrecision(item.price, filterPair.assets),
+                          priceShow: this.setPrecision(item.price, filterPair.currency),
                           other_userShow:
                             [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
                             maker_userShow,
