@@ -138,7 +138,7 @@ export default class Trade extends ModelExtend {
         amountShow: this.setPrecision(item.amount, filterPair.assets),
         sumShow: this.setPrecision(item.sum, filterPair.currency),
         averagePriceShow: this.setPrecision(item.fill_aver, filterPair.currency),
-        // averagePriceShowSelf: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
+        // averagePriceShow: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
         hasfillAmountShow,
         hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 2),
         reserveLastShow: this.setPrecision(
@@ -295,6 +295,7 @@ export default class Trade extends ModelExtend {
             })
             .map((item = {}) => {
               return {
+                fill_aver: item.fill_aver,
                 accountid: item.accountid,
                 index: item.id,
                 pair: item.pairid,
