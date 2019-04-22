@@ -69,7 +69,7 @@ class HistoryOrderTable extends SwitchPair {
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {
-      model: { historyAccountPageTotal, dispatch },
+      model: { historyAccountPageTotal, dispatch, showCurrent },
     } = this.props;
     const tableProps = {
       tableHeight: [36, 42, 36, 36],
@@ -235,7 +235,7 @@ class HistoryOrderTable extends SwitchPair {
         this.fetchPoll(getHistoryAccountOrder);
       },
     };
-    return <Table {...tableProps} pagination={pagination} location={this.props.location} />;
+    return <Table {...tableProps} pagination={pagination} location={this.props.location} searchFilter={showCurrent} />;
   }
 }
 

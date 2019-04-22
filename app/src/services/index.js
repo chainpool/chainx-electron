@@ -1,4 +1,4 @@
-import { ChainX, fetchFromHttp, localSave } from '../utils';
+import { ChainX, fetchFromHttp, localSave, isEmpty } from '../utils';
 import { default as store } from '../store';
 
 const checkLogin = func => {
@@ -119,9 +119,11 @@ export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
 export const getOrders = (...payload) => checkLogin(() => trade.getOrders(...payload));
 
 export const getOrdersApi = payload => {
-  const { accountId, page, status } = payload;
+  const { accountId, page, status, pairid } = payload;
   return fetchFromHttp({
-    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}&&status=${status}`,
+    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}&&status=${status}${
+      isEmpty(pairid) ? '' : `&&pairid=${pairid}`
+    }`,
     method: 'get',
     ...payload,
   });

@@ -1,14 +1,4 @@
-import {
-  _,
-  formatNumber,
-  moment_helper,
-  observable,
-  computed,
-  localSave,
-  parseQueryString,
-  toJS,
-  moment,
-} from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, moment } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -54,10 +44,19 @@ export default class Trade extends ModelExtend {
   @observable sellList = [];
   @observable latestOrderList = [];
   @observable entrustOrderList = [];
-  @observable currentOrderList = [];
+  @observable _currentOrderList = [];
   @observable historyAccountPageTotal = 1;
   @observable historyAccountCurrentPage = 1;
   @observable historyOrderList = [];
+  @observable showCurrent = false;
+
+  @computed get currentOrderList() {
+    const currentPair = this.currentPair;
+    if (this.showCurrent) {
+      return this._currentOrderList.filter(item => item.pair === currentPair.id);
+    }
+    return this._currentOrderList;
+  }
 
   reload = () => {
     clearTimeout(this.interval);
@@ -197,11 +196,11 @@ export default class Trade extends ModelExtend {
             timeShow: item.blockHeight ? item.blockHeight : moment_helper.formatHMS(item.time, 'MM-DD HH:mm:ss'),
           };
         });
-        const currentOrderList = this.processOrderData(data);
+        const _currentOrderList = this.processOrderData(data);
 
         this.changeModel(
           {
-            currentOrderList,
+            _currentOrderList,
           },
           []
         );
@@ -210,6 +209,7 @@ export default class Trade extends ModelExtend {
 
   getHistoryAccountOrder = async () => {
     const currentAccount = this.getCurrentAccount();
+    const currentPair = this.currentPair;
     if (currentAccount.address) {
       this.changeModel('loading.getHistoryAccountOrder', true);
       return from(
@@ -218,6 +218,7 @@ export default class Trade extends ModelExtend {
             accountId: this.decodeAddressAccountId(currentAccount),
             page: this.historyAccountCurrentPage,
             status: '3',
+            ...(this.showCurrent ? { pairid: currentPair.id } : {}),
           })
         )
       )
@@ -495,8 +496,8 @@ export default class Trade extends ModelExtend {
       extrinsic,
       beforeSend: () => {
         this.changeModel(
-          'currentOrderList',
-          this.currentOrderList.map((item = {}) => {
+          '_currentOrderList',
+          this._currentOrderList.map((item = {}) => {
             if (item.index !== index) return item;
             else {
               return {
@@ -514,7 +515,7 @@ export default class Trade extends ModelExtend {
 
   clearAll = () => {
     this.changeModel({
-      currentOrderList: [],
+      _currentOrderList: [],
     });
     this.rootStore.assetStore.changeModel({
       accountAssets: [],
@@ -527,5 +528,11 @@ export default class Trade extends ModelExtend {
     } else {
       return defaultValue;
     }
+  };
+
+  changeShowCurrent = () => {
+    this.changeModel({
+      showCurrent: !this.showCurrent,
+    });
   };
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
 
 import * as styles from './index.less';
+import { Input } from '../../../components';
 import { Tab } from '../../components';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
@@ -16,11 +17,12 @@ class PersonalOrder extends SwitchPair {
   render() {
     const { activeIndex } = this.state;
     const {
-      model: { currentOrderList = [], historyOrderList = [] },
+      model: { currentOrderList = [], historyOrderList = [], showCurrent, dispatch },
       configureStore: { TradeVersion },
     } = this.props;
     const props = {
       ...this.props,
+      showCurrent,
       noDataTip: () => {
         return (
           <div style={{ position: 'relative' }}>
@@ -44,6 +46,17 @@ class PersonalOrder extends SwitchPair {
             tabs={TradeVersion ? ['当前委托', '历史委托'] : ['当前委托']}
             className={styles.tab}
           />
+          <div className={styles.currenttrade}>
+            <Input.Checkbox
+              value={showCurrent}
+              onClick={() => {
+                dispatch({
+                  type: 'changeShowCurrent',
+                });
+              }}
+            />
+            只显示当前交易对
+          </div>
         </div>
         {activeIndex ? (
           <HistoryOrderTable {...props} historyOrderList={historyOrderList} />

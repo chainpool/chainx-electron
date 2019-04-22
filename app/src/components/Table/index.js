@@ -73,7 +73,8 @@ export default class TableComponent extends Component {
     }
     if (
       !_.isEqual(JSON.stringify(prevColumns), JSON.stringify(columns)) ||
-      !_.isEqual(_.get(prevProps, 'location.search'), _.get(this.props, 'location.search'))
+      !_.isEqual(_.get(prevProps, 'location.search'), _.get(this.props, 'location.search')) ||
+      !_.isEqual(_.get(prevProps, 'searchFilter'), _.get(this.props, 'searchFilter'))
     ) {
       this.changeState(
         {

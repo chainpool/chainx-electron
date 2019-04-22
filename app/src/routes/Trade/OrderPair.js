@@ -55,11 +55,6 @@ class OrderPair extends SwitchPair {
           title: '价格',
           dataIndex: 'lastPriceShow',
         },
-        {
-          title: '涨幅',
-          dataIndex: 'id',
-          render: () => '--',
-        },
       ],
       dataSource,
     };

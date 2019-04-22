@@ -125,14 +125,11 @@ export default class Trust extends ModelExtend {
 
   sign = async ({ withdrawList, tx, redeemScript, privateKey }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-    if (!findOne) {
+    if (!findOne || (findOne && !findOne.node)) {
       throw new Error('未设置节点');
     }
     if (!findOne.connected) {
       throw new Error('节点未连接');
-    }
-    if (!findOne.trusteeAddress && !findOne.trusteeAddress[0]) {
-      throw new Error('当前节点未设置信托地址');
     }
     const multisigAddress = await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
     if (!multisigAddress) {
@@ -202,9 +199,7 @@ export default class Trust extends ModelExtend {
         redeemScript = Buffer.from(redeemScript, 'hex');
         const privateKeys = [privateKey];
         const transaction = bitcoin.Transaction.fromHex(tx);
-        //console.log(transaction, transaction.ins, transaction.outs, '------------------transaction');
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
-        //console.log(txb, '------------------txb');
         const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
         try {
           for (let pair of keypairs) {
@@ -215,13 +210,6 @@ export default class Trust extends ModelExtend {
         } catch (err) {
           alert(err.message);
         }
-
-        // for (let pair of keypairs) {
-        //   utxos.forEach((utxo, index) => {
-        //     txb.sign(index, pair, redeemScript);
-        //   });
-        // }
-
         rawTransaction = txb.build().toHex();
       }
       return rawTransaction;
@@ -375,4 +363,6 @@ export default class Trust extends ModelExtend {
     const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);
     this.changeModel('onChainAllWithdrawList', withdrawListResp.data);
   };
+
+  getBitcoinTrusteeAddress = async () => await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
 }
