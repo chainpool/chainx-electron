@@ -15,8 +15,8 @@ import TrustSetting from './Modal/TrustSettingModal';
 class Trust extends Mixin {
   startInit = () => {
     this.fetchPoll(this.getAllWithdrawalList);
-    this.fetchPoll(this.getSomeOneInfo);
     this.fetchPoll(this.getSign);
+    this.getSomeOneInfo();
   };
 
   getAllWithdrawalList = () => {
