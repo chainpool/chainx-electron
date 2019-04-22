@@ -15,6 +15,7 @@ import {
 } from '../services';
 import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
+import { OrderStatus } from '../constants';
 
 export default class Trade extends ModelExtend {
   @observable loading = {
@@ -190,7 +191,7 @@ export default class Trade extends ModelExtend {
             price: item.price,
             hasfillAmount: item.alreadyFilled,
             reserveLast: item.remaining,
-            direction: item.direction,
+            direction: item.side,
             status: item.status,
             expand: item.expand,
             timeShow: item.blockHeight ? item.blockHeight : moment_helper.formatHMS(item.time, 'MM-DD HH:mm:ss'),
@@ -289,9 +290,9 @@ export default class Trade extends ModelExtend {
           const dataApi = resApi.items
             .filter((item = {}) => {
               return (
-                item.status === 'AllExecuted' ||
-                item.status === 'ParitialExecutedAndCanceled' ||
-                item.status === 'Canceled'
+                item.status === OrderStatus.Filled ||
+                item.status === OrderStatus.ParitialFillAndCanceled ||
+                item.status === OrderStatus.Canceled
               );
             })
             .map((item = {}) => {

@@ -1,3 +1,4 @@
+export const chainVersion = '0.9.8';
 export const PATH = {
   default: '/election',
   mine: '/depositMine',
@@ -69,3 +70,20 @@ export const ConfigureVersion = 6;
 export const blockChain = {
   tx: v => `https://www.blockchain.com/btctest/tx/${v}`,
 };
+
+export const OrderStatus =
+  chainVersion === '0.9.8'
+    ? {
+        ZeroFill: 'ZeroExecuted',
+        ParitialFill: 'ParitialExecuted',
+        Filled: 'AllExecuted',
+        ParitialFillAndCanceled: 'ParitialExecutedAndCanceled',
+        Canceled: 'Canceled',
+      }
+    : {
+        ZeroFill: 'ZeroFill',
+        ParitialFill: 'ParitialFill',
+        Filled: 'Filled',
+        ParitialFillAndCanceled: 'ParitialFillAndCanceled',
+        Canceled: 'Canceled',
+      };

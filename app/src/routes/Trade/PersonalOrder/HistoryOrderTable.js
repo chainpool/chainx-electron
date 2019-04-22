@@ -4,6 +4,7 @@ import { _, observer, setBlankSpace, setColumnsWidth } from '../../../utils';
 
 import * as styles from './index.less';
 import { Icon, Table } from '../../../components';
+import { OrderStatus } from '../../../constants';
 
 @observer
 class HistoryOrderTable extends SwitchPair {
@@ -129,13 +130,13 @@ class HistoryOrderTable extends SwitchPair {
             render: (value, item) => {
               let statusShow = '未知';
               switch (item.status) {
-                case 'AllExecuted':
+                case OrderStatus.Filled:
                   statusShow = '完全成交';
                   break;
-                case 'ParitialExecutedAndCanceled':
+                case OrderStatus.ParitialFillAndCanceled:
                   statusShow = '部分成交已撤销';
                   break;
-                case 'Canceled':
+                case OrderStatus.Canceled:
                   statusShow = '已撤销';
                   break;
               }
