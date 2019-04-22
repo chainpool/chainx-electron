@@ -92,7 +92,7 @@ export const getDepositList = (...payload) => asset.getDepositList(...payload);
 
 export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity(...payload);
 
-export const getOrderPairs = (...payload) => trade.getOrderPairs(...payload);
+export const getOrderPairs = (...payload) => trade.getTradingPairs(...payload);
 
 export const getOrderPairsApi = payload =>
   fetchFromHttp({
