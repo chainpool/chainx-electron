@@ -3,6 +3,7 @@ import { Modal, Input, Button, Mixin } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
+import * as styles from './WithdrawModal.less';
 
 @Inject(({ addressManageStore }) => ({ addressManageStore }))
 class WithdrawModal extends Mixin {
@@ -12,7 +13,28 @@ class WithdrawModal extends Mixin {
     amount: '',
     amountErrMsg: '',
     remark: '',
+    fee: '',
   };
+
+  startInit = () => {
+    const {
+      model: { dispatch },
+      globalStore: { modal: { data: { token } = {} } = {} },
+    } = this.props;
+    dispatch({
+      type: 'getMinimalWithdrawalValueByToken',
+      payload: {
+        token,
+      },
+    }).then(res => {
+      if (res) {
+        this.changeState({
+          fee: res,
+        });
+      }
+    });
+  };
+
   checkAll = {
     checkAddress: async () => {
       const { address } = this.state;
@@ -40,13 +62,13 @@ class WithdrawModal extends Mixin {
     },
     checkAmount: () => {
       const {
-        globalStore: { modal: { data: { freeShow } = {} } = {} },
+        globalStore: { modal: { data: { freeShow, token } = {} } = {} },
       } = this.props;
-      const { amount } = this.state;
+      const { amount, fee } = this.state;
       const errMsg =
         Patterns.check('required')(amount) ||
         Patterns.check('smaller')(0, amount, '提现数量必须大于0') ||
-        Patterns.check('smallerOrEqual')(amount, freeShow);
+        Patterns.check('smallerOrEqual')(Number(this.props.model.setPrecision(fee, token)) + Number(amount), freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
@@ -60,9 +82,9 @@ class WithdrawModal extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
+    const { address, addressErrMsg, amount, amountErrMsg, remark, fee } = this.state;
     const {
-      model: { openModal, dispatch, getPrecision },
+      model: { openModal, dispatch, getPrecision, setPrecision },
       globalStore: { modal: { data: { token, freeShow, chain } = {} } = {} },
       addressManageStore: { addresses },
     } = this.props;
@@ -130,7 +152,11 @@ class WithdrawModal extends Mixin {
               <Input.Text
                 suffix="BTC"
                 precision={getPrecision('BTC')}
-                label="提现数量"
+                label={
+                  <div className={styles.bitcoinfee}>
+                    提现数量<span>(收取提现手续费{setPrecision(fee, token)} BTC)</span>
+                  </div>
+                }
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => this.setState({ amount: value })}

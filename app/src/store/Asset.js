@@ -11,6 +11,7 @@ import {
   verifyAddressValidity,
   withdraw,
   bindTxHash,
+  getMinimalWithdrawalValueByToken,
 } from '../services';
 import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
@@ -277,6 +278,8 @@ export default class Asset extends ModelExtend {
     this.changeModel('btcTrusteeAddress', addresses.hotEntity);
     return addresses.hotEntity;
   }
+
+  getMinimalWithdrawalValueByToken = async ({ token }) => await getMinimalWithdrawalValueByToken(token);
 
   transfer = ({ dest, token, amount, remark }) => {
     amount = this.setPrecision(amount, token, true);
