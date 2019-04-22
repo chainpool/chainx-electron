@@ -20,6 +20,7 @@ class WithdrawTable extends Component {
         {
           title: '编号',
           dataIndex: 'id',
+          width: 80,
         },
         {
           title: '账户地址',
@@ -29,6 +30,7 @@ class WithdrawTable extends Component {
         {
           title: '资产',
           dataIndex: 'token',
+          width: 80,
         },
         {
           title: '原链地址',
@@ -42,9 +44,12 @@ class WithdrawTable extends Component {
         {
           title: '备注',
           dataIndex: 'memo',
+          ellipse: true,
         },
         {
           title: '状态',
+          width: 80,
+          ellipse: 0,
           dataIndex: 'state',
         },
       ],
