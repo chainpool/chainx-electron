@@ -1,4 +1,14 @@
-import { _, ChainX, moment, observable, formatNumber, localSave, autorun, fetchFromHttp } from '../utils';
+import {
+  _,
+  ChainX,
+  moment,
+  observable,
+  formatNumber,
+  localSave,
+  autorun,
+  fetchFromHttp,
+  moment_helper,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -7,11 +17,14 @@ import {
   signWithdrawTx,
   getTrusteeInfoByAccount,
   setupTrustee,
+  getBlockTime,
 } from '../services';
 import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
+import { from, of, combineLatest as combine } from 'rxjs';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -363,6 +376,40 @@ export default class Trust extends ModelExtend {
     const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);
     this.changeModel('onChainAllWithdrawList', withdrawListResp.data);
   };
+
+  // getAllWithdrawalList = async () => {
+  //   return from(getWithdrawalList('Bitcoin', 0, 100))
+  //     .pipe(
+  //       map(res => {
+  //         return res.data;
+  //       }),
+  //       mergeMap((items = []) => {
+  //         if (!items.length) return of(items);
+  //         return combine(
+  //           items.map(item => {
+  //             return from(getBlockTime({ height: item.height })).pipe(
+  //               map((res = {}) => {
+  //                 return {
+  //                   ...item,
+  //                   time: res.time,
+  //                 };
+  //               }),
+  //               catchError(() => {
+  //                 return of({
+  //                   ...item,
+  //                   time: null,
+  //                   blockHeight: item.height,
+  //                 });
+  //               })
+  //             );
+  //           })
+  //         );
+  //       })
+  //     )
+  //     .subscribe((res = []) => {
+  //       this.changeModel('onChainAllWithdrawList', res);
+  //     });
+  // };
 
   getBitcoinTrusteeAddress = async () => await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
 }

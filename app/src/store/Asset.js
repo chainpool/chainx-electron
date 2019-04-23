@@ -13,7 +13,6 @@ import {
   bindTxHash,
   getMinimalWithdrawalValueByToken,
 } from '../services';
-import { encodeAddress } from '@polkadot/keyring/address';
 import { computed } from 'mobx';
 import { moment, formatNumber, _, observable } from '../utils/index';
 import { Chain } from '../constants';
@@ -196,7 +195,7 @@ export default class Asset extends ModelExtend {
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
         const dataRpc = resRpc.data
-          .filter(withdraw => encodeAddress(withdraw.accountid) === account.address)
+          .filter(withdraw => this.encodeAddressAccountId(withdraw.accountid) === account.address)
           .map((item = {}) => ({
             ...item,
             time: moment.formatHMS(new Date(item.time * 1000)),
@@ -245,8 +244,9 @@ export default class Asset extends ModelExtend {
         )
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+        console.log(resRpc.data);
         const dataRpc = resRpc.data
-          .filter(record => encodeAddress(record.accountid) === account.address)
+          .filter(record => this.encodeAddressAccountId(record.accountid) === account.address)
           .map(record => {
             return {
               ...record,
