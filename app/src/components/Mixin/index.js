@@ -27,6 +27,7 @@ class Mixin extends React.Component {
           history: this.props.history,
         },
       });
+
       _.isFunction(this.startInit) && this.startInit();
       _.isFunction(this.componentWillUnsubscribe) && this.componentWillUnsubscribe();
     }
@@ -48,15 +49,18 @@ class Mixin extends React.Component {
   };
 
   fetchPoll = (callback, ...args) => {
-    const intervalId = _.uniqueId('intervalPoll');
-    clearTimeout(this[intervalId]);
+    if (callback && callback.interval) {
+      clearTimeout(callback.interval);
+      callback.interval = null;
+    }
+
     if (!this._isMounted) return;
     if (_.isFunction(callback)) {
       const result = callback(...args);
       if (result && result.then) {
         if (!this._isMounted) return;
         result.then(() => {
-          this[intervalId] = setTimeout(() => {
+          callback.interval = setTimeout(() => {
             this.fetchPoll(callback);
           }, AjaxCallTime);
         });

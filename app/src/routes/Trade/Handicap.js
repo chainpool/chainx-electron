@@ -21,7 +21,6 @@ class Handicap extends SwitchPair {
     const {
       model: { dispatch },
     } = this.props;
-
     this.subscribeQuotations = await dispatch({
       type: 'getQuotations',
       payload: {
