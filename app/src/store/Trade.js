@@ -347,7 +347,7 @@ export default class Trade extends ModelExtend {
     }
   };
 
-  getQuotations = async ({ hasStarWith } = {}) => {
+  getQuotations = async ({ hasStarWith, callback } = {}) => {
     const currentPair = this.currentPair;
     const count = 20;
     return from(getQuotations(currentPair.id, 10))
@@ -445,6 +445,7 @@ export default class Trade extends ModelExtend {
             },
             []
           );
+          _.isFunction(callback) && callback();
         }
       });
   };

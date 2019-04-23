@@ -107,6 +107,7 @@ export default class TableComponent extends Component {
   getScroller = scroller => {
     const { loadingMore } = this.props;
     if (!this.scroller && scroller) this.scroller = scroller;
+    _.isFunction(this.props.scrollerInit) && this.props.scrollerInit(this.scroller);
     let prevX = 0;
     window.onresize = () => {
       this.changeState();

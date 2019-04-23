@@ -9,17 +9,24 @@ import { classNames, observer } from '../../utils';
 @observer
 class Handicap extends SwitchPair {
   startInit = () => {
-    this.fetchPoll(this.getQuotations, true);
+    this.fetchPoll(this.getQuotations, true, () => {
+      setTimeout(() => {
+        this.scrollerSell && this.scrollerSell.scrollTo(0, this.scrollerSell.maxScrollY);
+        this.scrollerBuy && this.scrollerBuy.scrollTo(0, 0);
+      });
+    });
   };
 
-  getQuotations = async hasStarWith => {
+  getQuotations = async (hasStarWith, callback) => {
     const {
       model: { dispatch },
     } = this.props;
+
     this.subscribeQuotations = await dispatch({
       type: 'getQuotations',
       payload: {
         hasStarWith,
+        callback,
       },
     });
   };
@@ -88,13 +95,22 @@ class Handicap extends SwitchPair {
     return (
       <div className={styles.handicap}>
         <div className={styles.title}>挂单列表</div>
-        <Table {...setTableProps('red')} dataSource={dataSourceSell} />
+        <Table
+          {...setTableProps('red')}
+          dataSource={dataSourceSell}
+          scrollerInit={scroller => (this.scrollerSell = scroller)}
+        />
         <div className={styles.latestprice}>
           <span className={classNames(isInSell ? styles.red : null, isInBuy ? styles.green : null)}>
             {currentPair.lastPriceShow}
           </span>
         </div>
-        <Table {...setTableProps('green')} dataSource={dataSourceBuy} showHead={false} />
+        <Table
+          {...setTableProps('green')}
+          dataSource={dataSourceBuy}
+          showHead={false}
+          scrollerInit={scroller => (this.scrollerBuy = scroller)}
+        />
       </div>
     );
   }
