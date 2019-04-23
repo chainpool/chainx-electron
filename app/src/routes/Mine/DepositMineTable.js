@@ -46,7 +46,7 @@ class DepositMineTable extends Mixin {
           render: (value, item) => {
             return (
               <span>
-                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : `每日均价 * ${item.discount}%`}>
+                <HoverTip tip={item.id === 'SDOT' ? '固定算力，永久挖矿' : `每小时均价 * ${item.discount}%`}>
                   {' '}
                   {`1: ${value}`}
                 </HoverTip>
