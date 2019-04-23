@@ -1,4 +1,14 @@
-import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, moment } from '../utils';
+import {
+  _,
+  formatNumber,
+  moment_helper,
+  observable,
+  computed,
+  localSave,
+  parseQueryString,
+  moment,
+  generateKlineData,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -94,16 +104,29 @@ export default class Trade extends ModelExtend {
       start_date: startTime,
       end_date: endTime,
     });
-    if (res && res.length) {
+    const show = value => {
       const filterPair = currentPair;
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      return showUnit(this.setPrecision(value, filterPair.precision));
+    };
+    if (res && !res.length && interval === 60) {
+      const obj = {
+        close: currentPair.lastPrice,
+        high: currentPair.lastPrice,
+        low: currentPair.lastPrice,
+        open: currentPair.lastPrice,
+        volume: 0,
+      };
+      res = [{ time: startTime, ...obj }, { time: endTime, ...obj }];
+    }
+    if (res && res.length) {
       res = res.map(item => ({
         ...item,
-        closeShow: showUnit(this.setPrecision(item.close, filterPair.precision)),
-        highShow: showUnit(this.setPrecision(item.high, filterPair.precision)),
-        lowShow: showUnit(this.setPrecision(item.low, filterPair.precision)),
-        openShow: showUnit(this.setPrecision(item.open, filterPair.precision)),
-        volumeShow: this.setPrecision(item.volume, filterPair.assets),
+        closeShow: show(item.close),
+        highShow: show(item.high),
+        lowShow: show(item.low),
+        openShow: show(item.open),
+        volumeShow: show(item.volume),
       }));
       return res;
     }

@@ -8,10 +8,7 @@ import * as styles from './Kline.less';
 const intervals = [
   { name: '1min', value: '1' },
   { name: '5min', value: '5' },
-  { name: '15min', value: '15' },
   { name: '30min', value: '30' },
-  { name: '1hour', value: '60' },
-  { name: '4hour', value: '240' },
   { name: '1day', value: 'D', default: true },
   { name: '5day', value: '5D' },
   { name: '1week', value: 'W' },
@@ -57,10 +54,7 @@ class Kline extends SwitchPair {
     switch (resolution) {
       case '1':
       case '5':
-      case '15':
       case '30':
-      case '60':
-      case '240':
         {
           interval = 60 * Number(resolution);
         }
@@ -153,7 +147,7 @@ class Kline extends SwitchPair {
               has_no_volume: false, //布尔表示商品是否拥有成交量数据
               has_empty_bars: true,
               type: 'bitcoin',
-              supported_resolutions: ['1', '5', '15', '30', '60', '240', 'D', '5D', 'W', 'M'], // 分辨率选择器中启用一个分辨率数组
+              supported_resolutions: ['1', '5', '30', 'D', '5D', 'W', 'M'], // 分辨率选择器中启用一个分辨率数组
               data_status: 'streaming', //数据状态码。状态显示在图表的右上角。streaming(实时)endofday(已收盘)pulsed(脉冲)
             });
           });
