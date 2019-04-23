@@ -1,4 +1,4 @@
-export const chainVersion = '0.9.8';
+export const chainVersion = '0.9.9';
 export const PATH = {
   default: '/election',
   mine: '/depositMine',
