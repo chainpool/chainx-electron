@@ -37,7 +37,7 @@ function drawCandies(address) {
           })
           .catch((err = {}) => {
             if (err.status === 429) {
-              alert('请不要重复点击，十分钟后领取');
+              alert('请不要重复点击，一小时后领取');
             } else {
               alert(`领取失败${_.get(err, 'message.error_message') ? `,${_.get(err, 'message.error_message')}` : ''}`);
             }
