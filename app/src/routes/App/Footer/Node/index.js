@@ -127,7 +127,7 @@ class Node extends Component {
                     ) : (
                       <span className={classNames(styles.time, getColorFromDelay(item.delay))}>{`${
                         item.delay
-                      } /ms`}</span>
+                      }ms`}</span>
                     )}
                   </li>
                 ))}

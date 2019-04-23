@@ -52,7 +52,7 @@ class NodeManageTable extends Mixin {
             dataIndex: 'delay',
             render: value => {
               if (value === 'timeOut') return <span className={'red'}>超时</span>;
-              return <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}/ms` : ''}</span>;
+              return <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}ms` : ''}</span>;
             },
           },
 

@@ -38,7 +38,7 @@ class IncreaseTime extends Mixin {
 
   render() {
     const { time } = this.state;
-    return <span>{time}/ms</span>;
+    return <span>{time}ms</span>;
   }
 }
 
