@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, Input } from '../../../components';
+import { TrustNode } from '../../../constants';
 import { RegEx, Patterns } from '../../../utils';
 
 class NodeSettingModal extends Component {
@@ -11,34 +12,11 @@ class NodeSettingModal extends Component {
     this.state = {
       node: node_prev,
       nodeErrMsg: '',
-      trusteeAddress: '',
     };
   }
 
-  componentDidMount() {
-    const {
-      assetStore: { dispatch },
-      globalStore: { modal: { data: { chain } = {} } = {} },
-    } = this.props;
-    dispatch({
-      type: 'getTrusteeAddress',
-      payload: {
-        chain,
-      },
-    }).then(res => {
-      if (res) {
-        this.setState(
-          {
-            trusteeAddress: res,
-          },
-          this.updateTrust
-        );
-      }
-    });
-  }
-
   updateTrust = () => {
-    const { node, trusteeAddress } = this.state;
+    const { node } = this.state;
     const {
       model: { dispatch },
       globalStore: { modal: { data: { chain } = {} } = {} },
@@ -48,7 +26,6 @@ class NodeSettingModal extends Component {
       payload: {
         node,
         chain,
-        trusteeAddress: trusteeAddress ? [trusteeAddress] : [],
       },
     });
   };
@@ -91,7 +68,7 @@ class NodeSettingModal extends Component {
         }>
         <div>
           <Input.Text
-            label="节点地址"
+            label={`节点地址 (chainX提供默认节点${TrustNode})`}
             value={node}
             placeholder="例 127.1.1.1:8000"
             errMsg={nodeErrMsg}

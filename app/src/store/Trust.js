@@ -1,14 +1,4 @@
-import {
-  _,
-  ChainX,
-  moment,
-  observable,
-  formatNumber,
-  localSave,
-  autorun,
-  fetchFromHttp,
-  moment_helper,
-} from '../utils';
+import { _, ChainX, observable, formatNumber, localSave, autorun, fetchFromHttp, moment_helper } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -19,12 +9,12 @@ import {
   setupTrustee,
   getBlockTime,
 } from '../services';
-import { BitcoinTestNet } from '../constants';
+import { BitcoinTestNet, TrustNode } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
 import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
+import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -38,6 +28,8 @@ export default class Trust extends ModelExtend {
             connected: '',
             hotPubKey: '',
             coldPubKey: '',
+            node: item.node || TrustNode,
+            trusteeAddress: null,
           };
         })
       );
@@ -144,7 +136,7 @@ export default class Trust extends ModelExtend {
     if (!findOne.connected) {
       throw new Error('节点未连接');
     }
-    const multisigAddress = await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+    const multisigAddress = await this.getBitcoinTrusteeAddress();
     if (!multisigAddress) {
       throw new Error('未获取到信托地址');
     }
@@ -153,8 +145,7 @@ export default class Trust extends ModelExtend {
     const minerFee = 40000;
 
     const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const getUnspents = async (url, multisigAddress) =>
-      this.fetchNodeStatus(url, multisigAddress).then((res = {}) => res.result);
+    const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
       const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
       const result = [];
@@ -172,7 +163,7 @@ export default class Trust extends ModelExtend {
 
     const compose = async () => {
       let rawTransaction;
-      const utxos = await getUnspents(nodeUrl, [multisigAddress]);
+      const utxos = await getUnspents(nodeUrl);
       if (withdrawList) {
         if (!utxos.length) {
           throw new Error('当前节点无任何utxo');
@@ -276,14 +267,16 @@ export default class Trust extends ModelExtend {
     };
   };
 
-  fetchNodeStatus = (url, trusteeAddress) => {
+  fetchNodeStatus = async (url, trusteeAddress) => {
+    if (!trusteeAddress) {
+      trusteeAddress = await this.getBitcoinTrusteeAddress();
+    }
     return fetchFromHttp({
-      // url: `/getTrustNodeStatus?ip=${url}`,
       url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       timeOut: 3500,
-      params: [6, 99999999, trusteeAddress],
+      params: [6, 99999999, [trusteeAddress]],
     })
       .then(res => {
         if (res && !res.error) {
@@ -300,8 +293,8 @@ export default class Trust extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
     trusts.forEach(item => {
-      if (item.node && item.trusteeAddress && item.address === address) {
-        this.fetchNodeStatus(item.node, item.trusteeAddress)
+      if (item.node && item.address === address) {
+        this.fetchNodeStatus(item.node)
           .then(res => {
             if (res) {
               item.connected = true;
@@ -323,7 +316,7 @@ export default class Trust extends ModelExtend {
     const trusts = _.cloneDeep(this._trusts);
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, trusteeAddress, decodedHotPrivateKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
     if (!findOne) {
       trusts.push({
@@ -336,7 +329,6 @@ export default class Trust extends ModelExtend {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
-      if (trusteeAddress) findOne.trusteeAddress = trusteeAddress;
       if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
@@ -406,5 +398,8 @@ export default class Trust extends ModelExtend {
       });
   };
 
-  getBitcoinTrusteeAddress = async () => await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+  getBitcoinTrusteeAddress = async () => {
+    const res = await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+    return res;
+  };
 }

@@ -78,8 +78,8 @@ class CrossChainBindModal extends Mixin {
       BTC: {
         desc1: (
           <span>
-            用户需使用 <strong>支持OP_RETURN</strong> 的BTC钱包向公共多签托管地址充值，并在<strong>OP_RETURN</strong>{' '}
-            中输入下方 <strong>十六进制 (Hex)</strong> 信息以完成与ChainX的绑定：
+            用户需使用 <strong>支持OP_RETURN </strong> 的 BTC钱包向公共多签托管地址进行充值，并且在
+            <strong>OP_RETURN</strong> 中输入下方 <strong>十六进制 (Hex)</strong> 信息以完成与ChainX的绑定：
           </span>
         ),
         value1: chainxAddressHex,
@@ -134,7 +134,7 @@ class CrossChainBindModal extends Mixin {
             中输入下方<strong>十六进制 (Hex)</strong> 信息：
           </span>
         ),
-        value1: `0x${chainxAddressHex}`,
+        value1: `${chainxAddressHex}`,
         desc2: '公共地址',
         value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
         warn: (
