@@ -206,7 +206,6 @@ class Kline extends SwitchPair {
 
   render() {
     const { interval } = this.state;
-    // chartProperties, insertIndicator, fullScreen
     const tools = [
       {
         name: insertIndicator,
@@ -216,11 +215,7 @@ class Kline extends SwitchPair {
       },
       {
         name: '分时',
-        onClick: () => {
-          this.widget.chart().setResolution('1', () => {
-            this.widget.chart().setChartType(3);
-          });
-        },
+        value: 'realTime',
       },
       ...intervals,
       {
@@ -246,12 +241,23 @@ class Kline extends SwitchPair {
                 className={interval === item.value ? styles.active : null}
                 key={index}
                 onClick={() => {
-                  if (!this.widget) return;
+                  if (!this.widget || item.value === interval) return;
                   if (item.value) {
+                    if (item.value === 'realTime') {
+                      if (interval === '1') {
+                        this.widget.chart().setChartType(3);
+                      } else {
+                        this.widget.chart().setResolution('1', () => {
+                          this.widget.chart().setChartType(3);
+                        });
+                      }
+                    } else {
+                      this.widget.chart().setChartType(1);
+                      this.widget.chart().setResolution(item.value, () => {});
+                    }
                     this.setState({
                       interval: item.value,
                     });
-                    this.widget.chart().setResolution(item.value, () => {});
                   }
                   if (item.onClick) {
                     item.onClick();
