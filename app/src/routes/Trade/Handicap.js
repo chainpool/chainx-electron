@@ -74,6 +74,7 @@ class Handicap extends SwitchPair {
         {
           title: `数量(${currentPair.assets})`,
           dataIndex: 'amountShow',
+          render: v => <span className={styles.amountShow}>{v.slice(0, 10)}</span>,
         },
         {
           title: `累计(${currentPair.assets})`,
@@ -81,7 +82,7 @@ class Handicap extends SwitchPair {
           render: (value, item = {}) => {
             return (
               <div className={styles.progressContainer}>
-                {value}
+                {value.slice(0, 10)}
                 <ColorProgress value={value} max={colorMax} direction={item.direction} />
               </div>
             );
