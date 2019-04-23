@@ -15,7 +15,7 @@ class WithdrawTable extends Component {
       columns: [
         {
           title: '申请时间',
-          dataIndex: 'date',
+          dataIndex: 'timeShow',
         },
         {
           title: '编号',

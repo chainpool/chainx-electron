@@ -14,13 +14,13 @@ class CurrentOrderTable extends SwitchPair {
     const {
       model: { dispatch },
     } = this.props;
-    this.subscribeCurrentAccountOrder = await dispatch({
+    this.subscribeCurrentAccountOrder$ = await dispatch({
       type: 'getCurrentAccountOrder',
     });
   };
 
   componentWillUnsubscribe = () => {
-    this.subscribeCurrentAccountOrder.unsubscribe();
+    this.subscribeCurrentAccountOrder$.unsubscribe();
   };
 
   render() {

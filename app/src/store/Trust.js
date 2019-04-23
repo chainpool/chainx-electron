@@ -95,7 +95,7 @@ export default class Trust extends ModelExtend {
 
       return {
         id: withdraw.id,
-        date: moment.formatHMS(withdraw.time * 1000), // 申请时间
+        timeShow: withdraw.blockHeight ? withdraw.blockHeight : moment_helper.formatHMS(withdraw.time), // 申请时间
         address: ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
         token: withdraw.token, // 币种
         addr: withdraw.address, // 原链地址，提现的目标地址
@@ -373,43 +373,38 @@ export default class Trust extends ModelExtend {
   };
 
   getAllWithdrawalList = async () => {
-    const withdrawListResp = await getWithdrawalList('Bitcoin', 0, 100);
-    this.changeModel('onChainAllWithdrawList', withdrawListResp.data);
+    return from(getWithdrawalList('Bitcoin', 0, 100))
+      .pipe(
+        map(res => {
+          return res.data;
+        }),
+        mergeMap((items = []) => {
+          if (!items.length) return of(items);
+          return combine(
+            items.map(item => {
+              return from(getBlockTime({ height: item.height })).pipe(
+                map((res = {}) => {
+                  return {
+                    ...item,
+                    time: res.time,
+                  };
+                }),
+                catchError(() => {
+                  return of({
+                    ...item,
+                    time: null,
+                    blockHeight: item.height,
+                  });
+                })
+              );
+            })
+          );
+        })
+      )
+      .subscribe((res = []) => {
+        this.changeModel('onChainAllWithdrawList', res);
+      });
   };
-
-  // getAllWithdrawalList = async () => {
-  //   return from(getWithdrawalList('Bitcoin', 0, 100))
-  //     .pipe(
-  //       map(res => {
-  //         return res.data;
-  //       }),
-  //       mergeMap((items = []) => {
-  //         if (!items.length) return of(items);
-  //         return combine(
-  //           items.map(item => {
-  //             return from(getBlockTime({ height: item.height })).pipe(
-  //               map((res = {}) => {
-  //                 return {
-  //                   ...item,
-  //                   time: res.time,
-  //                 };
-  //               }),
-  //               catchError(() => {
-  //                 return of({
-  //                   ...item,
-  //                   time: null,
-  //                   blockHeight: item.height,
-  //                 });
-  //               })
-  //             );
-  //           })
-  //         );
-  //       })
-  //     )
-  //     .subscribe((res = []) => {
-  //       this.changeModel('onChainAllWithdrawList', res);
-  //     });
-  // };
 
   getBitcoinTrusteeAddress = async () => await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
 }

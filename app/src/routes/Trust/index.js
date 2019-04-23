@@ -19,11 +19,11 @@ class Trust extends Mixin {
     this.getSomeOneInfo();
   };
 
-  getAllWithdrawalList = () => {
+  getAllWithdrawalList = async () => {
     const {
       model: { dispatch },
     } = this.props;
-    return dispatch({ type: 'getAllWithdrawalList' });
+    this.subscribeAllWithdrawalList$ = await dispatch({ type: 'getAllWithdrawalList' });
   };
 
   getSomeOneInfo = () => {
@@ -42,6 +42,10 @@ class Trust extends Mixin {
     return dispatch({
       type: 'getWithdrawTx',
     });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeAllWithdrawalList$.unsubscribe();
   };
 
   render() {

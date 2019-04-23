@@ -194,6 +194,7 @@ export default class Asset extends ModelExtend {
         )
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+        console.log(resRpc, resApi, '-------resRpc,resApi');
         const dataRpc = resRpc.data
           .filter(withdraw => this.encodeAddressAccountId(withdraw.accountid) === account.address)
           .map((item = {}) => ({
