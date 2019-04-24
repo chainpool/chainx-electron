@@ -246,7 +246,7 @@ export default class Asset extends ModelExtend {
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
         const dataRpc = resRpc.data
-          .filter(record => this.encodeAddressAccountId(record.accountid) === account.address)
+          .filter(record => record.accountid && this.encodeAddressAccountId(record.accountid) === account.address)
           .map(record => {
             return {
               ...record,

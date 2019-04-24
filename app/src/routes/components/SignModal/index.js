@@ -56,7 +56,8 @@ class SignModal extends Mixin {
       const errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('decode')(encoded, password) ||
-        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用');
+        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用') ||
+        Patterns.check('required')(fee, '手续费未获取到');
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
