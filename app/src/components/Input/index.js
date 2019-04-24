@@ -226,7 +226,7 @@ class InputText extends Mixin {
       type: isPassword && passwordType ? 'password' : 'text',
       value: value,
       disabled: disabled,
-      readonly: readonly,
+      readOnly: readonly,
       onChange: e => {
         if (
           (isDecimal === 'decimal' || precision) &&

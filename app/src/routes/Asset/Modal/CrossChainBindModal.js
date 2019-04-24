@@ -58,7 +58,7 @@ class CrossChainBindModal extends Mixin {
     const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
-      accountStore: { currentAddress, openModal, closeModal },
+      accountStore: { currentAddress, closeModal },
       assetStore: { btcTrusteeAddress, dispatch },
       electionStore: { originIntentions = [] },
       globalStore: {
@@ -87,7 +87,7 @@ class CrossChainBindModal extends Mixin {
         value2: btcTrusteeAddress,
         warn: (
           <Warn>
-            <div className={styles.hoverimg}>
+            <div className={styles.hoverImg}>
               <strong>
                 目前支持OP_RETURN的钱包有:
                 {[
@@ -99,25 +99,30 @@ class CrossChainBindModal extends Mixin {
                     ),
                     style: { left: -100 },
                     imgWidth: 244,
-                    // onClick: () => {
-                    //   openModal({ name: 'BtcBindModal' });
-                    // },
                   },
                   {
-                    content: 'Trezor',
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                        Trezor
+                      </RouterGo>
+                    ),
                     style: { left: -160 },
                     src: trezor,
                     imgWidth: 352,
                   },
                   {
-                    content: 'Coinb.in',
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                        Coinb.in
+                      </RouterGo>
+                    ),
                     style: { left: -160 },
                     src: coinbin,
                     imgWidth: 352,
                   },
                 ].map((item, index) => (
-                  <span key={index} className={styles.anchor} onClick={item.onClick}>
-                    {item.content}
+                  <span key={index} className={styles.anchor}>
+                    <span className={styles.content}>{item.content}</span>
                     <span className={styles.hoverimg} style={item.style}>
                       <img src={item.src} width={item.imgWidth} />
                     </span>
@@ -142,53 +147,85 @@ class CrossChainBindModal extends Mixin {
         value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
         warn: (
           <Warn>
-            <div className={styles.hoverimg}>
+            <div className={styles.hoverImg}>
               目前支持Data的钱包有:{' '}
               {[
                 {
-                  content: 'imToken',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
+                      ImToken
+                    </RouterGo>
+                  ),
                   style: { left: -100 },
                   src: imtoken,
                   imgWidth: 244,
                 },
                 {
-                  content: 'Parity',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
+                      Parity
+                    </RouterGo>
+                  ),
                   style: { left: -160 },
                   src: parity,
                   imgWidth: 352,
                 },
                 {
-                  content: 'MyEtherWallet',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
+                      MyEtherWallet
+                    </RouterGo>
+                  ),
                   style: { left: -120 },
                   src: myEtherWallet,
                   imgWidth: 352,
                 },
                 {
-                  content: 'Jaxx',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
+                      Jaxx
+                    </RouterGo>
+                  ),
                   style: { left: -160 },
                   src: Jaxx,
                   imgWidth: 352,
                 },
                 {
-                  content: 'MyCrypto',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
+                      MyCrypto
+                    </RouterGo>
+                  ),
                   style: { left: -160 },
                   src: myCrypto,
                   imgWidth: 352,
                 },
                 {
-                  content: 'Trust',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
+                      Trust
+                    </RouterGo>
+                  ),
                   style: { left: -160 },
                   src: trust,
                   imgWidth: 352,
                 },
                 {
-                  content: 'Bitpie',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                      bitpie
+                    </RouterGo>
+                  ),
                   style: { left: -100 },
                   src: bitpie,
                   imgWidth: 244,
                 },
                 {
-                  content: 'Coinomi',
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'coinomi' }}>
+                      coinomi
+                    </RouterGo>
+                  ),
                   style: { left: -160 },
                   src: coinomi,
                   imgWidth: 352,
