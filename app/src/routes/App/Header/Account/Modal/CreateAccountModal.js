@@ -149,18 +149,15 @@ class CreateAccountModal extends Component {
                         userSelectMnemonicWord,
                       });
                     }}>
-                    <Input.Text
-                      disabled
+                    <div
                       className={classNames(
                         styles.word,
                         _.findIndex(userSelectMnemonicWord, item => item === shuffleMnemonicWord[index]) > -1
                           ? styles.selected
                           : null
-                      )}
-                      label=""
-                      value={shuffleMnemonicWord[index]}
-                      errMsg={''}
-                    />
+                      )}>
+                      {shuffleMnemonicWord[index]}
+                    </div>
                   </li>
                 ))}
               </ul>

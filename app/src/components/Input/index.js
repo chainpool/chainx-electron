@@ -206,6 +206,7 @@ class InputText extends Mixin {
       onFocus,
       icon = '',
       disabled = false,
+      readonly = false,
       label = '',
       prefix = '',
       suffix = '',
@@ -225,6 +226,7 @@ class InputText extends Mixin {
       type: isPassword && passwordType ? 'password' : 'text',
       value: value,
       disabled: disabled,
+      readonly: readonly,
       onChange: e => {
         if (
           (isDecimal === 'decimal' || precision) &&
@@ -279,6 +281,7 @@ class InputText extends Mixin {
             styles[type],
             isTextArea ? styles.textarea : null,
             disabled ? styles.disabled : null,
+            readonly ? styles.disabled : null,
             className
           )}>
           {prefix ? <div className={styles.prefix}>{prefix}</div> : null}
