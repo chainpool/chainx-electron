@@ -113,14 +113,14 @@ class TrustSettingModal extends Component {
             right=""
           />
           <Input.Text
-            label="热公钥/地址"
+            label="热公钥"
             value={hotPubKey}
             errMsg={hotPubKeyErrMsg}
             onChange={value => this.setState({ hotPubKey: value })}
             onBlur={checkAll.checkHotKey}
           />
           <Input.Text
-            label="冷公钥/地址"
+            label="冷公钥"
             value={coldPubKey}
             errMsg={coldPubKeyErrMsg}
             onChange={value => this.setState({ coldPubKey: value })}

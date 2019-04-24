@@ -32,12 +32,12 @@ class SettingTable extends Component {
           },
         },
         {
-          title: '热公钥/地址',
+          title: '热公钥',
           ellipse: true,
           dataIndex: 'hotPubKey',
         },
         {
-          title: '冷公钥/地址',
+          title: '冷公钥',
           ellipse: true,
           dataIndex: 'coldPubKey',
         },
