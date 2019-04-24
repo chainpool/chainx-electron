@@ -8,7 +8,6 @@ import {
   getNominationRecords,
   getPseduIntentions,
   getPseduNominationRecords,
-  getTokenDiscount,
   nominate,
   refresh,
   register,

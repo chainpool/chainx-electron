@@ -70,6 +70,7 @@ class Handicap extends SwitchPair {
           className: color,
           title: `价格(${currentPair.currency})`,
           dataIndex: 'priceShow',
+          render: v => v.slice(0, 10),
         },
         {
           title: `数量(${currentPair.assets})`,

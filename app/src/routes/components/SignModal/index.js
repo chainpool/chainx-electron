@@ -149,7 +149,7 @@ class SignModal extends Mixin {
                     _.get(err, 'data') && console.log(_.get(err, 'data'), _.get(err, 'message'));
                     Toast.warn(
                       `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
-                      toastMessage
+                      _.get(err, 'data.message') || _.get(err, 'message') || _.get(err, 'data.message') || toastMessage
                     );
                   };
 
