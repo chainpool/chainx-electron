@@ -65,6 +65,7 @@ export default class Asset extends ModelExtend {
 
       return {
         free,
+        freeShow: this.setPrecision(free, asset.name),
         reservedStaking,
         reservedStakingRevocation,
         reservedDexSpot,

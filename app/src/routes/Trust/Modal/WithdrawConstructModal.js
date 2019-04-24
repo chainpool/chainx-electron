@@ -10,6 +10,8 @@ class WithdrawConstructModal extends Component {
     passwordErrMsg: '',
     tx: '',
     txErrMsg: '',
+    fee: '',
+    feeErrMsg: '',
   };
 
   checkAll = {
@@ -61,7 +63,15 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, redeemScript } = this.state;
+    const {
+      withDrawIndexSignList,
+      withDrawIndexSignListErrMsg,
+      tx,
+      txErrMsg,
+      redeemScript,
+      fee,
+      feeErrMsg,
+    } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
@@ -141,19 +151,18 @@ class WithdrawConstructModal extends Component {
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text
-            errMsgIsOutside
-            value={tx}
-            errMsg={txErrMsg}
-            onChange={value => {
-              this.setState({
-                tx: value,
-              });
-            }}
-            isTextArea
-            label="待签原文"
-            rows={5}
-          />
+          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
+          {/*<Input.Text*/}
+          {/*errMsgIsOutside*/}
+          {/*value={fee}*/}
+          {/*errMsg={feeErrMsg}*/}
+          {/*onChange={value => {*/}
+          {/*this.setState({*/}
+          {/*fee: value,*/}
+          {/*});*/}
+          {/*}}*/}
+          {/*label="Bitcoin手续费"*/}
+          {/*/>*/}
         </div>
       </Modal>
     );
