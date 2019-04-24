@@ -92,13 +92,16 @@ class CrossChainBindModal extends Mixin {
                 目前支持OP_RETURN的钱包有:
                 {[
                   {
-                    content: 'BitX',
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://bitx.chainx.org/' }}>
+                        BitX
+                      </RouterGo>
+                    ),
                     style: { left: -100 },
-                    // src: imtoken,
                     imgWidth: 244,
-                    onClick: () => {
-                      openModal({ name: 'BtcBindModal' });
-                    },
+                    // onClick: () => {
+                    //   openModal({ name: 'BtcBindModal' });
+                    // },
                   },
                   {
                     content: 'Trezor',
