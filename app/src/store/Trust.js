@@ -128,7 +128,7 @@ export default class Trust extends ModelExtend {
     this.rootStore.electionStore.getIntentions();
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (!findOne || (findOne && !findOne.node)) {
       throw new Error('未设置节点');
@@ -196,7 +196,10 @@ export default class Trust extends ModelExtend {
           feeSum += fee;
         });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - feeSum - 10000;
+        const change = totalInputAmount - feeSum - bitFee;
+        if (change < 0) {
+          throw new Error('utxo总额不够支付手续费');
+        }
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
       } else {

@@ -37,7 +37,7 @@ class UpdateNodeModal extends Component {
 
     checkWebsite: () => {
       const { website } = this.state;
-      const errMsg = Patterns.check('smallerOrEqual')(4, website.length, '最少4个字符长度');
+      const errMsg = Patterns.check('smallerOrEqual')(2, website.length, '最少2个字符长度');
       this.setState({ websiteErrMsg: errMsg });
       return errMsg;
     },
@@ -109,12 +109,12 @@ class UpdateNodeModal extends Component {
           />
           <Input.Text
             label="官网域名"
-            placeholder="4-24个字符"
+            placeholder="2-12个字符"
             value={website}
             errMsg={websiteErrMsg}
             onChange={value => {
               if (/^[a-zA-Z0-9.]*$/.test(value)) {
-                this.setState({ website: value.slice(0, 24) });
+                this.setState({ website: value.slice(0, 12) });
               }
             }}
             onBlur={checkAll.checkWebsite}

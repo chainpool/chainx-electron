@@ -348,7 +348,7 @@ export default class Trade extends ModelExtend {
   };
 
   getQuotations = async ({ hasStarWith, callback } = {}) => {
-    return [];
+    return of([]).subscribe();
     const currentPair = this.currentPair;
     const count = 20;
     return from(getQuotations(currentPair.id, 10))

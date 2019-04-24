@@ -16,9 +16,9 @@ class WithdrawConstructModal extends Component {
 
   checkAll = {
     checkWithDrawIndexSignList: async () => {
-      const { withDrawIndexSignList } = this.state;
+      const { withDrawIndexSignList, fee } = this.state;
       const {
-        model: { dispatch },
+        model: { dispatch, setPrecision },
       } = this.props;
       let error = '';
       try {
@@ -26,6 +26,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: this.getWithdrawList(withDrawIndexSignList),
+            ...(fee ? { bitFee: setPrecision(fee, 8, true) } : {}),
           },
         });
       } catch (err) {
@@ -42,10 +43,17 @@ class WithdrawConstructModal extends Component {
       this.setState({ txErrMsg: errMsg });
       return errMsg;
     },
+    checkFee: () => {
+      const { fee } = this.state;
+      const errMsg = Patterns.check('required')(fee);
+      this.setState({ feeErrMsg: errMsg });
+      return errMsg;
+    },
     confirm: async () => {
       const result1 = await this.checkAll['checkWithDrawIndexSignList']();
       const result2 = await this.checkAll['checkTx']();
-      return !result1 && !result2;
+      const result3 = await this.checkAll['checkFee']();
+      return !result1 && !result2 && !result3;
     },
   };
 
@@ -73,7 +81,7 @@ class WithdrawConstructModal extends Component {
       feeErrMsg,
     } = this.state;
     const {
-      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
+      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, setPrecision },
     } = this.props;
     const options = normalizedOnChainAllWithdrawList
       .map((item = {}) => ({
@@ -82,6 +90,31 @@ class WithdrawConstructModal extends Component {
         status: item.status,
       }))
       .filter((item = {}) => item.status !== 'signing' && item.status !== 'processing');
+
+    const setTxFromIndexOrFee = async () => {
+      const { withDrawIndexSignList, fee } = this.state;
+      try {
+        const tx = await dispatch({
+          type: 'sign',
+          payload: {
+            withdrawList: this.getWithdrawList(withDrawIndexSignList),
+            ...(fee ? { bitFee: setPrecision(fee, 8, true) } : {}),
+          },
+        });
+        if (tx) {
+          this.setState(
+            {
+              tx,
+            },
+            checkAll.checkTx
+          );
+        }
+      } catch (err) {
+        this.setState({
+          tx: '',
+        });
+      }
+    };
 
     return (
       <Modal
@@ -126,43 +159,35 @@ class WithdrawConstructModal extends Component {
                   withDrawIndexSignList: value,
                 },
                 async () => {
-                  try {
-                    const tx = await dispatch({
-                      type: 'sign',
-                      payload: {
-                        withdrawList: this.getWithdrawList(value),
-                      },
-                    });
-                    if (tx) {
-                      this.setState(
-                        {
-                          tx,
-                        },
-                        checkAll.checkTx
-                      );
-                    }
-                  } catch {
-                    this.setState({
-                      tx: '',
-                    });
-                  }
+                  await setTxFromIndexOrFee();
                 }
               );
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
           <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
-          {/*<Input.Text*/}
-          {/*errMsgIsOutside*/}
-          {/*value={fee}*/}
-          {/*errMsg={feeErrMsg}*/}
-          {/*onChange={value => {*/}
-          {/*this.setState({*/}
-          {/*fee: value,*/}
-          {/*});*/}
-          {/*}}*/}
-          {/*label="Bitcoin手续费"*/}
-          {/*/>*/}
+          <Input.Text
+            isDecimal="decimal"
+            precision={8}
+            errMsgIsOutside
+            value={fee}
+            errMsg={feeErrMsg}
+            onChange={async value => {
+              this.setState(
+                {
+                  fee: value,
+                },
+                async () => {
+                  await setTxFromIndexOrFee();
+                }
+              );
+            }}
+            label="Bitcoin手续费"
+            onBlur={() => {
+              checkAll.checkFee();
+              checkAll.checkWithDrawIndexSignList();
+            }}
+          />
         </div>
       </Modal>
     );

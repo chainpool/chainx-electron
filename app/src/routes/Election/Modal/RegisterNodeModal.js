@@ -65,7 +65,7 @@ class RegisterNodeModal extends Component {
         }>
         <div>
           <Input.Text
-            placeholder="2-16个字符"
+            placeholder="2-12个字符"
             label={
               <div>
                 名称 <span style={{ color: '#ea754b', marginLeft: 3 }}> (唯一且不可更改，注册后不可转让)</span>
@@ -73,7 +73,7 @@ class RegisterNodeModal extends Component {
             }
             value={name}
             errMsg={nameErrMsg}
-            onChange={value => this.setState({ name: value.slice(0, 16) })}
+            onChange={value => this.setState({ name: value.slice(0, 12) })}
             onBlur={checkAll.checkName}
           />
         </div>
