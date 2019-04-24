@@ -187,7 +187,7 @@ class WithdrawConstructModal extends Component {
             }}
             label={
               <div>
-                Bitcoin手续费<span className={styles.bitcoinfee}>{tx.length ? `交易长度:${tx.length}` : null}</span>
+                Bitcoin手续费<span className={styles.bitcoinfee}>{tx.length ? `(交易长度:${tx.length})` : null}</span>
               </div>
             }
             onBlur={() => {
