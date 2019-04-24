@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button } from '../../../components';
 import { Patterns } from '../../../utils';
+import * as styles from './WithdrawConstructModal.less';
 
 class WithdrawConstructModal extends Component {
   state = {
@@ -171,18 +172,24 @@ class WithdrawConstructModal extends Component {
             precision={8}
             errMsgIsOutside
             value={fee}
+            suffix={'BTC'}
             errMsg={feeErrMsg}
             onChange={async value => {
               this.setState(
                 {
                   fee: value,
+                  withDrawIndexSignListErrMsg: '',
                 },
                 async () => {
                   await setTxFromIndexOrFee();
                 }
               );
             }}
-            label="Bitcoin手续费"
+            label={
+              <div>
+                Bitcoin手续费<span className={styles.bitcoinfee}>{tx.length ? `交易长度:${tx.length}` : null}</span>
+              </div>
+            }
             onBlur={() => {
               checkAll.checkFee();
               checkAll.checkWithDrawIndexSignList();
