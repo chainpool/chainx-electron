@@ -1,5 +1,8 @@
-const zh_CN = {
-  hello: '你好，世界！',
-  name: '我的名字是 {name}',
-};
+import zh_en from './zh_en';
+let zh_CN = {};
+Object.getOwnPropertyNames(zh_en).forEach(key => {
+  let keys = zh_en[key].split(' ');
+  keys = keys.map(item => item.toUpperCase());
+  zh_CN[keys.join('')] = key;
+});
 export default zh_CN;
