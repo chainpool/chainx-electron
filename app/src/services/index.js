@@ -164,7 +164,7 @@ export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payloa
 
 export const getTrusteeAddress = (...payload) => asset.getTrusteeSessionInfo(...payload);
 
-export const getBlockPeriod = (...payload) => chain.getBlockPeriod(...payload);
+export const getBlockPeriod = (...payload) => chain.getMinimumPeriod(...payload);
 
 export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);
 
