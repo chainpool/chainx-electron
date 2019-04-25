@@ -9,7 +9,7 @@ import {
   setupTrustee,
   getBlockTime,
 } from '../services';
-import { BitcoinTestNet, TrustNode } from '../constants';
+import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -28,7 +28,7 @@ export default class Trust extends ModelExtend {
             connected: '',
             hotPubKey: '',
             coldPubKey: '',
-            node: item.node || TrustNode,
+            node: item.node,
             trusteeAddress: null,
           };
         })

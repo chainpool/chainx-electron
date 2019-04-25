@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Modal, Input } from '../../../components';
-import { TrustNode } from '../../../constants';
 import { RegEx, Patterns } from '../../../utils';
 
 class NodeSettingModal extends Component {
@@ -68,7 +67,7 @@ class NodeSettingModal extends Component {
         }>
         <div>
           <Input.Text
-            label={`节点地址 (chainX提供默认节点${TrustNode})`}
+            label={`节点地址`}
             value={node}
             placeholder="例 127.1.1.1:8000"
             errMsg={nodeErrMsg}

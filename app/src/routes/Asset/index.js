@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, Icon, Mixin, RouterGo } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';

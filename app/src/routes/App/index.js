@@ -1,6 +1,12 @@
 import React, { Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
+import { addLocaleData, IntlProvider } from 'react-intl';
+import zh from 'react-intl/locale-data/zh';
+import en from 'react-intl/locale-data/en';
+import zh_CN from '../../langs/zh_CN.js';
+import en_US from '../../langs/en_US.js';
+
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
 import { PATH } from '../../constants';
@@ -8,6 +14,8 @@ import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
+
+addLocaleData([...zh, ...en]);
 
 @Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore }) => ({
   globalStore,
@@ -58,12 +66,14 @@ class Main extends Component {
 export default class App extends Component {
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
-          <Route path="/" render={props => <Main {...props} {...this.props} />} />
-        </Switch>
-      </Router>
+      <IntlProvider key={'zh'} locale={'zh'} messages={zh_CN}>
+        <Router>
+          <Switch>
+            <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
+            <Route path="/" render={props => <Main {...props} {...this.props} />} />
+          </Switch>
+        </Router>
+      </IntlProvider>
     );
   }
 }
