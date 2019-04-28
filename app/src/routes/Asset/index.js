@@ -1,6 +1,5 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Button, Icon, Mixin, RouterGo } from '../../components';
+import { Button, Icon, Mixin, RouterGo, FormattedMessage } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';
 import PrimaryAssetTable from './PrimaryAssetTable';
@@ -44,13 +43,13 @@ class Asset extends Mixin {
       <div className={styles.asset}>
         <ul>
           <li>
-            <TableTitle title={'ChainX资产'}>
+            <TableTitle title={<FormattedMessage id="ChainXAsset" />}>
               <ul>
                 <li>
                   <Button type="blank" Ele="div">
                     <RouterGo go={{ pathname: PATH.addressManage }}>
                       <Icon name="icon-dizhiguanli" />
-                      联系人
+                      <FormattedMessage id="Contact" />
                     </RouterGo>
                   </Button>
                 </li>
@@ -59,14 +58,14 @@ class Asset extends Mixin {
             <PrimaryAssetTable {...props} />
           </li>
           <li>
-            <TableTitle title={'跨链资产'}>
+            <TableTitle title={<FormattedMessage id="CrossChainAssets" />}>
               {
                 <ul>
                   <li>
                     <Button type="blank" Ele="div">
                       <RouterGo go={{ pathname: PATH.depositWithdrawRecord }}>
                         <Icon name="icon-chongtijilu" />
-                        充提记录
+                        <FormattedMessage id="DepositWithdrawalRecords" />
                       </RouterGo>
                     </Button>
                   </li>

@@ -4,23 +4,23 @@ import { lazy } from 'react';
 
 export default [
   {
-    title: '资产',
+    title: 'Asset',
     path: PATH.asset,
     component: lazy(() => import('../Asset')),
     authority: [1],
   },
   {
-    title: '充值挖矿',
+    title: 'DepositsMining',
     path: PATH.mine,
     component: lazy(() => import('../Mine')),
   },
   {
-    title: '投票选举',
+    title: 'NominationsElections',
     path: PATH.election,
     component: lazy(() => import('../Election')),
   },
   {
-    title: '充提记录',
+    title: 'DepositWithdrawalRecords',
     show: false,
     path: PATH.depositWithdrawRecord,
     component: lazy(() => import('../DepositWithDrawRecord')),
@@ -41,20 +41,19 @@ export default [
     authority: [1],
   },
   {
-    title: '资产信托',
+    title: 'AssetTrustee',
     path: PATH.trust,
     component: lazy(() => import('../Trust')),
     authority: [1],
-    // requireTrustee: true,
   },
   {
-    title: '币币交易',
+    title: 'DEX',
     path: PATH.trade,
     component: lazy(() => import('../Trade')),
     warn: '维护中',
   },
   {
-    title: 'DAPP专区',
+    title: 'DAPP',
     path: '/dapp',
     component: lazy(() => import('../Trade')),
     status: 'awaiting',

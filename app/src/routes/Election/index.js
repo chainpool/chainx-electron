@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Mixin, Tabs } from '../../components';
+import { Button, Icon, Mixin, Tabs, FormattedMessage } from '../../components';
 import * as styles from './index.less';
 import NodeTable from './NodeTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
@@ -29,7 +29,13 @@ class Election extends Mixin {
       },
     } = this.props;
 
-    const tabs = currentAddress ? ['验证节点', '候选节点', '我的投票'] : ['验证节点', '候选节点'];
+    const tabs = currentAddress
+      ? [
+          <FormattedMessage id={'ValidatorNode'} />,
+          <FormattedMessage id={'StandbyNode'} />,
+          <FormattedMessage id={'MyNominations'} />,
+        ]
+      : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
 
     const operations = (
       <ul>
@@ -43,7 +49,7 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              更新节点
+              <FormattedMessage id={'UpdateNode'} />
             </Button>
           </li>
         ) : (
@@ -56,7 +62,7 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              注册节点
+              <FormattedMessage id={'RegisterNode'} />
             </Button>
           </li>
         )}

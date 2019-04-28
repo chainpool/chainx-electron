@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, Clipboard } from '../../components';
+import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
 import { Inject } from '../../utils';
@@ -104,15 +104,27 @@ class Trust extends Mixin {
       <div className={styles.trust}>
         {isValidator && (
           <div className={styles.setting}>
-            <TableTitle title={`信托设置`} className={styles.title}>
-              <span>{`（您当前是：${isTrustee ? '信托' : isActiveValidator ? '验证' : '候选'}节点）`}</span>
+            <TableTitle title={<FormattedMessage id={'TrusteeSettings'} />} className={styles.title}>
+              <span className={styles.nodeStyle}>
+                (您当前是：
+                {isTrustee ? (
+                  <FormattedMessage id={'TrusteeNode'} />
+                ) : isActiveValidator ? (
+                  <FormattedMessage id={'ValidatorNode'} />
+                ) : (
+                  <FormattedMessage id={'StandbyNode'} />
+                )}
+                )
+              </span>
               <Button
                 type="blank"
                 onClick={() => {
                   openModal({ name: 'TrustSetting' });
                 }}>
                 <Icon name="icon-shezhixintuo" />
-                <span>设置信托</span>
+                <span>
+                  <FormattedMessage id={'SetupTrustee'} />
+                </span>
               </Button>
             </TableTitle>
             <SettingTable {...this.props} />
@@ -174,7 +186,7 @@ class Trust extends Mixin {
         ) : null}
 
         <div className={styles.withdraw}>
-          <TableTitle title={'提现列表'} className={styles.withdrawTitle}>
+          <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
             {isShowConstructureWithdraw ? (
               <ButtonGroup>
                 <Button
@@ -182,7 +194,7 @@ class Trust extends Mixin {
                     openModal({ name: 'WithdrawConstructModal' });
                   }}>
                   <Icon name="icon-goujiantixian" />
-                  构造多签提现
+                  <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
               </ButtonGroup>
             ) : null}

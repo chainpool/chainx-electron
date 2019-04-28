@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AuthorityComponent, Icon, RouterGo } from '../../../components';
+import { AuthorityComponent, Icon, RouterGo, FormattedMessage } from '../../../components';
 import { PATH } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
@@ -15,6 +15,7 @@ class Header extends Component {
       location: { pathname } = {},
       className,
       configureStore: { isLogin, isTestNet },
+      globalStore: { language, dispatch: dispatchGlobal },
     } = this.props;
 
     const showRouters = routers.filter(item => item.show !== false);
@@ -38,7 +39,7 @@ class Header extends Component {
                       item.warn ? styles.warn : null,
                       getDeepPath(routers, pathname).filter(item2 => item2.path === item.path)[0] ? styles.active : null
                     )}>
-                    {item.title}
+                    <FormattedMessage id={item.title} />
                     {item.warn ? <div className={styles.warn}>{item.warn}</div> : null}
                   </RouterGo>
                 );
@@ -59,7 +60,9 @@ class Header extends Component {
                       go={{ pathname: PATH.tradeRecord }}
                       className={pathname === PATH.tradeRecord ? styles.active : null}>
                       <Icon name="icon-caozuojilu" />
-                      <span style={{ marginLeft: 9 }}>交易记录</span>
+                      <span style={{ marginLeft: 9 }}>
+                        <FormattedMessage id={'TradingRecord'} />
+                      </span>
                     </RouterGo>
                   </li>
                 </AuthorityComponent>
@@ -84,6 +87,29 @@ class Header extends Component {
                     </li>
                   ) : null;
                 })}
+
+                <li className={styles.language}>
+                  {language === 'zh' ? '中文' : '英文'}
+                  <div>
+                    <ul>
+                      {[{ name: 'zh', value: '中文' }, { name: 'en', value: '英文' }].map(item => (
+                        <li
+                          key={item.name}
+                          className={language === item.name ? styles.active : null}
+                          onClick={() => {
+                            dispatchGlobal({
+                              type: 'switchLanguage',
+                              payload: {
+                                lang: item.name,
+                              },
+                            });
+                          }}>
+                          {item.value}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>

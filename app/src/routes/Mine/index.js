@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin } from '../../components';
+import { Mixin, FormattedMessage } from '../../components';
 import { TableTitle } from '../components';
 import DepositMineTable from './DepositMineTable.js';
 import * as styles from './index.less';
@@ -12,7 +12,7 @@ class Asset extends Mixin {
       <div className={styles.mine}>
         <ul>
           <li>
-            <TableTitle title={'充值挖矿'} />
+            <TableTitle title={<FormattedMessage id={'DepositsMining'} />} />
             <DepositMineTable {...this.props} />
           </li>
         </ul>

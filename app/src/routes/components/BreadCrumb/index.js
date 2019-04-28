@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { RouterGo } from '../../../components';
+import { RouterGo, FormattedMessage } from '../../../components';
 import { getDeepPath } from '../../../utils';
 import routers from '../../App/routers';
 import * as styles from './index.less';
@@ -16,7 +16,7 @@ class BreadCrumb extends Component {
       <ul className={styles.breadCrumb}>
         {routes.map((item, index) => (
           <RouterGo key={item.path} Ele="li" go={{ pathname: item.path }}>
-            {item.title}
+            <FormattedMessage id={item.title} />
             {index === routes.length - 1 ? null : <span>></span>}
           </RouterGo>
         ))}

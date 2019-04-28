@@ -40,6 +40,54 @@ header {
             align-items: center;
           }
         }
+        .language{
+          color:#BBBBBB;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position:relative;
+          &:hover{
+            >div{
+              display: block;
+            }
+          }
+          >div{
+            top:0;
+            right:0;
+            display: none;
+            // background: red;
+            position:absolute;
+            width:113px;
+            height:100px;
+            >ul{
+              width:113px;
+              height:100px;
+              right:0;
+              top:25px;
+              position:absolute;
+              display: flex;
+              flex-wrap: wrap;
+              align-content: center;
+              align-items: center;
+              background: #FFFFFF;
+              border: 1px solid #DCE0E2;
+              box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+              border-radius: 4px;
+              li{
+                margin:0;
+                color:@fontgray;
+                display: flex;
+                align-items: center;
+                padding-left: 24px;
+                height:38px;
+                width:100%;
+                &:hover,&.active{
+                  background: #F8F8F8;
+                }
+              }
+            }
+          }
+        }
       }
       display: flex;
     }

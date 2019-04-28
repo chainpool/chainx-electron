@@ -28,6 +28,7 @@ class Main extends Component {
     const {
       globalStore: {
         modal: { name },
+        language,
       },
     } = this.props;
 
@@ -39,8 +40,17 @@ class Main extends Component {
       </div>
     );
 
+    const getMessages = () => {
+      switch (language) {
+        case 'zh':
+          return zh_CN;
+        case 'en':
+          return en_US;
+      }
+    };
+
     return (
-      <IntlProvider key={'zh'} locale={'zh'} messages={zh_CN}>
+      <IntlProvider key={language} locale={language} messages={getMessages()}>
         <CommonLayOut {...this.props}>
           <Suspense fallback={loading}>
             <Switch>
