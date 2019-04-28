@@ -223,6 +223,7 @@ export const RegEx = {
   website: /^[0-9a-zA-Z.]*$/,
   checkDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
   checkIsIP: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
+  checkAuthorization: /^(\w+:\w+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$)/,
 };
 
 export const isEmpty = value => {
@@ -307,7 +308,15 @@ export const fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
   }
 };
 
-export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], body, timeOut = 5000 }) => {
+export const fetchFromHttp = ({
+  url,
+  method = 'POST',
+  methodAlias,
+  params = [],
+  body,
+  timeOut = 5000,
+  header = {},
+}) => {
   const id = _.uniqueId();
   const message = body ? JSON.stringify(body) : JSON.stringify({ id, jsonrpc: '2.0', method: methodAlias, params });
   const request = () =>
@@ -317,6 +326,7 @@ export const fetchFromHttp = ({ url, method = 'POST', methodAlias, params = [], 
         method,
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...header,
       },
       ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
     })

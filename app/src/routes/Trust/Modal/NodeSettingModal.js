@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Modal, Input } from '../../../components';
 import { RegEx, Patterns } from '../../../utils';
+import * as styles from './NodeSettingModal.less';
 
 class NodeSettingModal extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class NodeSettingModal extends Component {
   checkAll = {
     checkNode: () => {
       const { node } = this.state;
-      const errMsg = Patterns.check('required')(node) || (RegEx.checkIsIP.test(node) ? '' : '不符合格式');
+      const errMsg = Patterns.check('required')(node) || (RegEx.checkAuthorization.test(node) ? '' : '不符合格式');
       this.setState({ nodeErrMsg: errMsg });
       return errMsg;
     },
@@ -67,9 +68,13 @@ class NodeSettingModal extends Component {
         }>
         <div>
           <Input.Text
-            label={`节点地址`}
+            label={
+              <div className={styles.nodeexample}>
+                节点地址<span>例[name:password@]127.1.1.1:8000</span>
+              </div>
+            }
             value={node}
-            placeholder="例 127.1.1.1:8000"
+            placeholder="例 [name:password@]127.1.1.1:8000"
             errMsg={nodeErrMsg}
             onChange={value => {
               this.setState({ node: value });

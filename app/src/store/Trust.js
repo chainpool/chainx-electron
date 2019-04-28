@@ -15,6 +15,7 @@ import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
 import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import { Base64 } from 'js-base64';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -274,12 +275,22 @@ export default class Trust extends ModelExtend {
     if (!trusteeAddress) {
       trusteeAddress = await this.getBitcoinTrusteeAddress();
     }
+    let Authorization;
+    if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
+      url = url.split('@')[1];
+    }
     return fetchFromHttp({
       url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
       timeOut: 3500,
       params: [6, 99999999, [trusteeAddress]],
+      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
     })
       .then(res => {
         if (res && !res.error) {
