@@ -22,6 +22,7 @@ const calls = {
   push_transaction: '提交交易',
   transfer: '转账',
   refresh: '更新节点',
+  remove_multi_sig_for: '删除多签',
 };
 
 const argvs = {
@@ -52,6 +53,9 @@ const argvs = {
   header: '块头',
   from: '源节点',
   to: '目标节点',
+  multi_sig_addr: '多签地址',
+  proposal: '签名',
+  multi_sig_id: '多签id',
 };
 
 const values = {
@@ -242,6 +246,15 @@ const translation = ({
     }
     case 'XBridgeOfBTC|push_header': {
       info = merge(args, [{ name: 'header' }]);
+      break;
+    }
+    case 'XMultiSig|execute': {
+      operation = '执行多签';
+      info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'proposal' }]);
+      break;
+    }
+    case 'XMultiSig|remove_multi_sig_for': {
+      info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'multi_sig_id' }]);
       break;
     }
   }
