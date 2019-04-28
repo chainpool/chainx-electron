@@ -143,7 +143,7 @@ export default class Trust extends ModelExtend {
     }
     // const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
-    const minerFee = 40000;
+    const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
 
     const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
