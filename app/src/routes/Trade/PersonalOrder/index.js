@@ -2,7 +2,7 @@ import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
 
 import * as styles from './index.less';
-import { Input } from '../../../components';
+import { Input, FormattedMessage } from '../../../components';
 import { Tab } from '../../components';
 import CurrentOrderTable from './CurrentOrderTable';
 import HistoryOrderTable from './HistoryOrderTable';
@@ -43,7 +43,11 @@ class PersonalOrder extends SwitchPair {
               });
             }}
             activeIndex={activeIndex}
-            tabs={TradeVersion ? ['当前委托', '历史委托'] : ['当前委托']}
+            tabs={
+              TradeVersion
+                ? [<FormattedMessage id={'CurrentOrder'} />, <FormattedMessage id={'HistoryOrder'} />]
+                : [<FormattedMessage id={'CurrentOrder'} />]
+            }
             className={styles.tab}
           />
           <div className={styles.currenttrade}>

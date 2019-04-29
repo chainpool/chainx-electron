@@ -1,7 +1,7 @@
 import React from 'react';
 import { _, formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table } from '../../components';
+import { Button, ButtonGroup, Mixin, Table, FormattedMessage } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
@@ -31,7 +31,7 @@ class CrossChainAssetTable extends Mixin {
       columns: setColumnsWidth(
         [
           {
-            title: '名称',
+            title: <FormattedMessage id={'Name'} />,
             dataIndex: 'tokenName',
             render: (value, asset) => (
               <div className={styles.miniLogo}>
@@ -46,30 +46,30 @@ class CrossChainAssetTable extends Mixin {
             ),
           },
           {
-            title: '简称',
+            title: <FormattedMessage id={'ShortName'} />,
             dataIndex: 'name',
           },
           {
-            title: '原链',
+            title: <FormattedMessage id={'OriginalChain'} />,
             dataIndex: 'chain',
           },
           {
-            title: '可用余额',
+            title: <FormattedMessage id={'FreeBalance'} />,
             dataIndex: 'free',
             render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
-            title: '提现冻结',
+            title: <FormattedMessage id={'WithdrawalReserved'} />,
             dataIndex: 'reservedWithdrawal',
             render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
-            title: '交易冻结',
+            title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
             render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
           {
-            title: '总余额',
+            title: <FormattedMessage id={'TotalBalance'} />,
             dataIndex: 'total',
             render: (value, item) => <Asset value={value} precision={item.precision} />,
           },
@@ -90,7 +90,7 @@ class CrossChainAssetTable extends Mixin {
                           // name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
                         });
                       }}>
-                      领币
+                      <FormattedMessage id={'GetFreeCoin'} />
                     </Button>
                   ) : null}
                   {hasBindAddress && isBTC ? (
@@ -105,7 +105,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      充值
+                      <FormattedMessage id={'GetFreeCoin'} />
                     </Button>
                   ) : (
                     <Button
@@ -118,7 +118,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      {isBTC ? '充值' : '映射'}
+                      {isBTC ? <FormattedMessage id={'Deposit'} /> : <FormattedMessage id={'Mapping'} />}
                     </Button>
                   )}
                   {!isSDOT ? (
@@ -135,7 +135,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      提现
+                      <FormattedMessage id={'Withdraw'} />
                     </Button>
                   ) : null}
 
@@ -151,7 +151,7 @@ class CrossChainAssetTable extends Mixin {
                         },
                       });
                     }}>
-                    转账
+                    <FormattedMessage id={'Transfer'} />
                   </Button>
                 </ButtonGroup>
               );

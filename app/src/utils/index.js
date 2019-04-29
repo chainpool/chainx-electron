@@ -1,9 +1,11 @@
+import React from 'react';
 import { localSave, lodash_helper, moment_helper } from './helper';
 import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg, BitcoinTestNet, SCRYPT_PARAMS } from '../constants';
+import { FormattedMessage } from '../components';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
@@ -130,7 +132,7 @@ export const Patterns = {
       return errMsg;
     }
   },
-  required: (value, errMsg = '必填') => {
+  required: (value, errMsg = <FormattedMessage id={'Required'} />) => {
     return !value && value !== 0 ? errMsg : '';
   },
   equal: (value1, value2, errMsg = '不相等') => {

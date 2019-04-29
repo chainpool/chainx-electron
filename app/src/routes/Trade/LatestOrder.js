@@ -2,7 +2,7 @@ import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './LatestOrder.less';
-import { Table } from '../../components';
+import { Table, FormattedMessage } from '../../components';
 import { observer } from '../../utils';
 
 @observer
@@ -49,7 +49,9 @@ class LatestOrder extends SwitchPair {
     };
     return (
       <div className={styles.latestOrder}>
-        <div className={styles.title}>最新成交</div>
+        <div className={styles.title}>
+          <FormattedMessage id={'LatestTrade'} />
+        </div>
         <Table {...tableProps} />
       </div>
     );

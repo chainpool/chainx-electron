@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage as Message } from 'react-intl';
-import { Inject } from '../../utils';
+import { Inject, _ } from '../../utils';
 
 @Inject(({ globalStore: model }) => ({ model }))
 class FormattedMessage extends Component {
@@ -8,13 +8,18 @@ class FormattedMessage extends Component {
   render() {
     const {
       model: { language },
+      id,
+      values,
+      children,
     } = this.props;
 
     return (
-      <Message key={language} {...this.props} defaultMessage=" ">
-        {value => {
-          return <>{value} </>;
-        }}
+      <Message key={language} id={id} values={values} defaultMessage=" ">
+        {children
+          ? children
+          : value => {
+              return <>{value} </>;
+            }}
       </Message>
     );
   }

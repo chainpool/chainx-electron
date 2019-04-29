@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { formatNumber, Inject, setColumnsWidth, fetchFromHttp, _ } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table } from '../../components';
+import { Button, ButtonGroup, Table, FormattedMessage } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import Asset from './components/Asset';
@@ -63,7 +63,7 @@ class PrimaryAssetTable extends Component {
       columns: setColumnsWidth(
         [
           {
-            title: '名称',
+            title: <FormattedMessage id={'Name'} />,
             dataIndex: 'tokenName',
             render: (value, item) => (
               <div className={styles.miniLogo}>
@@ -75,31 +75,31 @@ class PrimaryAssetTable extends Component {
             ),
           },
           {
-            title: '简称',
+            title: <FormattedMessage id={'ShortName'} />,
             dataIndex: 'name',
           },
           {
-            title: '可用余额',
+            title: <FormattedMessage id={'FreeBalance'} />,
             dataIndex: 'free',
             render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
-            title: '投票冻结',
+            title: <FormattedMessage id={'StakingReserved'} />,
             dataIndex: 'reservedStaking',
             render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
-            title: '赎回冻结',
+            title: <FormattedMessage id={'UnfreezeReserved'} />,
             dataIndex: 'reservedStakingRevocation',
             render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
-            title: '交易冻结',
+            title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
             render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
           {
-            title: '总余额',
+            title: <FormattedMessage id={'TotalBalance'} />,
             dataIndex: 'total',
             render: value => <Asset value={value} precision={nativeAssetPrecision} />,
           },
@@ -114,7 +114,7 @@ class PrimaryAssetTable extends Component {
                     onClick={() => {
                       drawCandies(currentAddress);
                     }}>
-                    领币
+                    <FormattedMessage id={'GetFreeCoin'} />,
                   </Button>
                 )}
                 <Button
@@ -129,7 +129,7 @@ class PrimaryAssetTable extends Component {
                       },
                     });
                   }}>
-                  转账
+                  <FormattedMessage id={'Transfer'} />,
                 </Button>
               </ButtonGroup>
             ),

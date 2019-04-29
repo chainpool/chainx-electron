@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal } from '../../../components';
+import { Button, Input, Modal, FormattedMessage } from '../../../components';
 import { FreeBalance, InputHorizotalList } from '../../components';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
@@ -59,7 +59,7 @@ class TransferModal extends Component {
 
     return (
       <Modal
-        title="链内转账"
+        title={<FormattedMessage id={'InnerChainTransfer'} />}
         button={
           <Button
             size="full"
@@ -91,13 +91,13 @@ class TransferModal extends Component {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
           <Input.Address
             prefix="ChainX"
-            label="接收人地址"
+            label={<FormattedMessage id={'ReceiveAddress'} />}
             value={address}
             errMsg={addressErrMsg}
             options={allAccounts}
@@ -111,7 +111,7 @@ class TransferModal extends Component {
               <Input.Text
                 suffix={token}
                 precision={getPrecision(token)}
-                label="转账数量"
+                label={<FormattedMessage id={'TransferAmount'} />}
                 value={amount}
                 errMsg={amountErrMsg}
                 onChange={value => {
@@ -122,14 +122,18 @@ class TransferModal extends Component {
             }
             right={<FreeBalance value={freeShow} unit={token} />}
           />
-          <Input.Text
-            isTextArea
-            rows={1}
-            label="备注"
-            placeholder={PlaceHolder.setTextAreaLength}
-            value={remark}
-            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
+            {msg => (
+              <Input.Text
+                isTextArea
+                rows={1}
+                label={<FormattedMessage id={'Memo'} />}
+                placeholder={msg}
+                value={remark}
+                onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

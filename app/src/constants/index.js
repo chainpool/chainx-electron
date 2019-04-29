@@ -80,4 +80,4 @@ export const OrderStatus = {
 
 export const TrustNode = '47.111.89.46:18332';
 
-export const ShowLanguage = false;
+export const ShowLanguage = true;

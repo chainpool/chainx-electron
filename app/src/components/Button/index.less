@@ -2,12 +2,14 @@
 
 .button {
   word-break: keep-all;
+  overflow-x: hidden;
   line-height: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   background: none;
+  flex-wrap: nowrap;
   &.loading {
     pointer-events: none !important;
   }
@@ -25,7 +27,8 @@
     padding: 8px 18px;
   }
   &.middle {
-    padding: 8px 16px;
+    padding: 0px 16px;
+    height:28px;
   }
   &.small {
     padding: 8px 10px;

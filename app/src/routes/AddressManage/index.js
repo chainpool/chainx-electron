@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Mixin } from '../../components';
+import { Button, Icon, Mixin, FormattedMessage } from '../../components';
 import { BreadCrumb, TableTitle, ConfirmAndCancelModal } from '../components';
 import AddressTable from './AddressTable';
 import AddAddressModal from './Modal/AddAddressModal';
@@ -26,7 +26,7 @@ class AddressManage extends Mixin {
     return (
       <div className={styles.addressManage}>
         <BreadCrumb />
-        <TableTitle title="地址列表">
+        <TableTitle title={<FormattedMessage id={'AddressList'} />}>
           <ul>
             <li>
               <Button
@@ -37,7 +37,7 @@ class AddressManage extends Mixin {
                   });
                 }}>
                 <Icon name="icon-tianjia" />
-                添加地址
+                <FormattedMessage id={'AddAddress'} />
               </Button>
             </li>
           </ul>
