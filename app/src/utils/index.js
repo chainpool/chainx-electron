@@ -81,7 +81,7 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isChainXAddress: (address, errMsg = '地址格式错误') => {
+  isChainXAddress: (address, errMsg = 'AddressFormatError') => {
     try {
       const result = ChainX.account.isAddressValid(address);
       if (!result) {
@@ -132,7 +132,7 @@ export const Patterns = {
       return errMsg;
     }
   },
-  required: (value, errMsg = <FormattedMessage id={'Required'} />) => {
+  required: (value, errMsg = 'Required') => {
     return !value && value !== 0 ? errMsg : '';
   },
   equal: (value1, value2, errMsg = '不相等') => {
@@ -144,12 +144,12 @@ export const Patterns = {
   strictEqual: (value1, value2, errMsg = '不相等') => {
     return value1 === value2 ? '' : errMsg;
   },
-  smaller: (inputValue, baseValue, errMsg = '余额不足') => {
+  smaller: (inputValue, baseValue, errMsg = 'BalanceNotEnough') => {
     if (!_.isNaN(inputValue) && !_.isNaN(baseValue)) {
       return Number(inputValue) >= Number(baseValue) ? errMsg : '';
     }
   },
-  smallerOrEqual: (inputValue, baseValue, errMsg = '余额不足') => {
+  smallerOrEqual: (inputValue, baseValue, errMsg = 'BalanceNotEnough') => {
     if (!_.isNaN(inputValue) && !_.isNaN(baseValue)) {
       return Number(inputValue) > Number(baseValue) ? errMsg : '';
     }
@@ -174,7 +174,12 @@ export const Patterns = {
       if (!Patterns[value]) {
         return console.error('check对应的方法必须存在');
       }
-      return Patterns[value](...params);
+      const result = Patterns[value](...params);
+      if (result && /[a-zA-Z]/.test(result)) {
+        return <FormattedMessage id={result} />;
+      } else {
+        return result;
+      }
     };
   },
 };

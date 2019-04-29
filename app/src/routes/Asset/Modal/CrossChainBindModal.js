@@ -1,8 +1,18 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal, Input, ButtonGroup, Button, Toast, RouterGo } from '../../../components';
+import {
+  Clipboard,
+  Mixin,
+  Modal,
+  Input,
+  ButtonGroup,
+  Button,
+  Toast,
+  RouterGo,
+  FormattedMessage,
+} from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, fetchFromHttp, _, Patterns } from '../../../utils';
+import { classNames, Inject, _, Patterns } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -83,7 +93,7 @@ class CrossChainBindModal extends Mixin {
           </span>
         ),
         value1: chainxAddressHex,
-        desc2: '公共多签托管地址',
+        desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
         value2: btcTrusteeAddress,
         warn: (
           <Warn>
@@ -249,7 +259,18 @@ class CrossChainBindModal extends Mixin {
     const findOne = show[token];
 
     return (
-      <Modal title={`跨链${token === 'SDOT' ? '映射' : '充值'}（${token}）`} isOverflow>
+      <Modal
+        title={
+          <>
+            {token === 'SDOT' ? (
+              <FormattedMessage id={'CrossChainMapping'} />
+            ) : (
+              <FormattedMessage id={'CrossChainDeposit'} />
+            )}
+            ({token})
+          </>
+        }
+        isOverflow>
         <div className={styles.crossChainBind}>
           {step === 0 ? (
             <div>
@@ -272,7 +293,7 @@ class CrossChainBindModal extends Mixin {
                       recommendChannelSelect: {},
                     });
                   }}>
-                  跳过
+                  <FormattedMessage id={'Skip'} />
                 </Button>
                 <Button
                   type="confirm"
@@ -283,7 +304,7 @@ class CrossChainBindModal extends Mixin {
                       });
                     }
                   }}>
-                  确定
+                  <FormattedMessage id={'Confirm'} />
                 </Button>
               </ButtonGroup>
             </div>

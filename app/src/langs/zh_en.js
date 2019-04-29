@@ -42,15 +42,21 @@ const zh_en = {
   OriginalChain: ['原链', 'Original Chain'],
   WithdrawalReserved: ['提现冻结', 'Withdrawal Reserved'],
   Deposit: ['充值', 'Deposit'],
+  CrossChainDeposit: ['跨链充值', 'Deposit'],
   Withdraw: ['提现', 'Withdraw'],
   Mapping: ['映射', 'Mapping'],
+  CrossChainMapping: ['跨链映射', 'Mapping'],
   ReceiveAddress: ['接收人地址', 'Receive Address'],
   TransferAmount: ['转账数量', 'Transfer Amount'],
   Memo: ['备注', 'Memo'],
+  PublicMultiSigTrusteeAddress: ['公共多签托管地址', 'Public MultiSig Trustee Address'],
 
   CharacterLength: ['{length}个字符以内', 'Within {length} characters'],
+  AddressFormatError: ['地址格式错误', 'Address format error'],
+  BalanceNotEnough: ['余额不足', 'balance not enough'],
   Required: ['必填', 'Required'],
   Confirm: ['确定', 'Confirm'],
+  Skip: ['跳过', 'Skip'],
 };
 
 export const zh_CN = {};

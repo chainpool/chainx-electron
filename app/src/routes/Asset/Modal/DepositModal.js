@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal } from '../../../components';
+import { Clipboard, Mixin, Modal, FormattedMessage } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
 import { Inject } from '../../../utils';
