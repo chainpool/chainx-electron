@@ -50,7 +50,7 @@ class Main extends Component {
     };
 
     return (
-      <IntlProvider key={language} locale={language} messages={getMessages()}>
+      <IntlProvider locale={language} messages={getMessages()}>
         <CommonLayOut {...this.props}>
           <Suspense fallback={loading}>
             <Switch>

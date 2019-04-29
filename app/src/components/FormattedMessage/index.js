@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { FormattedMessage as Message } from 'react-intl';
+import { Inject } from '../../utils';
 
-export default class FormattedMessage extends Component {
+@Inject(({ globalStore: model }) => ({ model }))
+class FormattedMessage extends Component {
   render() {
-    return <Message {...this.props} defaultMessage=" " />;
+    const {
+      model: { language },
+    } = this.props;
+    return <Message key={language} {...this.props} defaultMessage=" " />;
   }
 }
+
+export default FormattedMessage;
