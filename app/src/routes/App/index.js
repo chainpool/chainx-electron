@@ -50,7 +50,7 @@ class Main extends Component {
     };
 
     return (
-      <IntlProvider locale={ShowLanguage ? language : 'zh'} messages={ShowLanguage ? getMessages() : 'zh_CN'}>
+      <IntlProvider locale={ShowLanguage ? language : 'zh'} messages={ShowLanguage ? getMessages() : zh_CN}>
         <CommonLayOut {...this.props}>
           <Suspense fallback={loading}>
             <Switch>
