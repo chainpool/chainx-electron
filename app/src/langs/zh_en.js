@@ -21,6 +21,8 @@ const zh_en = {
   SetupTrustee: ['设置信托', 'Setup Trustee'],
   WithdrawalList: ['提现列表', 'Withdrawal List'],
   BuildMultiSigWithdrawal: ['构造多签提现', 'Build MultiSig Withdrawal'],
+  OpenOrders: ['挂单列表', 'Open Orders'],
+  LimitTrade: ['限价交易', 'Limit'],
 };
 
 export const zh_CN = {};

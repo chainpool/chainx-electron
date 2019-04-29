@@ -8,7 +8,7 @@ class FormattedMessage extends Component {
     const {
       model: { language },
     } = this.props;
-    return <Message key={language} {...this.props} defaultMessage=" " />;
+    return <Message key={language} {...this.props} defaultMessage=" " tagName={React.Fragment} />;
   }
 }
 

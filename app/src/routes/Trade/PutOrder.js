@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { Button, ButtonGroup, Input, Slider } from '../../components';
+import { Button, ButtonGroup, Input, Slider, FormattedMessage } from '../../components';
 import { _, Patterns, formatNumber, classNames, setBlankSpace, observer } from '../../utils';
 import * as styles from './PutOrder.less';
 
@@ -329,7 +329,9 @@ class PutOrder extends SwitchPair {
     return (
       <div className={styles.putOrder}>
         <div className={styles.header}>
-          <div className={styles.title}>限价交易</div>
+          <div className={styles.title}>
+            <FormattedMessage id={'LimitTrade'} />
+          </div>
           <span>撮合手续费：0.00%</span>
         </div>
         <div className={styles.operation}>

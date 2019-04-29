@@ -2,7 +2,7 @@ import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './Handicap.less';
-import { Table } from '../../components';
+import { Table, FormattedMessage } from '../../components';
 import { ColorProgress } from '../components';
 import { classNames, observer } from '../../utils';
 
@@ -95,7 +95,9 @@ class Handicap extends SwitchPair {
 
     return (
       <div className={styles.handicap}>
-        <div className={styles.title}>挂单列表</div>
+        <div className={styles.title}>
+          <FormattedMessage id={'OpenOrders'} />
+        </div>
         <Table
           {...setTableProps('red')}
           dataSource={dataSourceSell}
