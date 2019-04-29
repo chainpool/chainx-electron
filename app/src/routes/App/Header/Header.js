@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AuthorityComponent, Icon, RouterGo, FormattedMessage } from '../../../components';
-import { PATH } from '../../../constants';
+import { PATH, ShowLanguage } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
@@ -88,28 +88,30 @@ class Header extends Component {
                   ) : null;
                 })}
 
-                <li className={styles.language}>
-                  {language === 'zh' ? '中文' : '英文'}
-                  <div>
-                    <ul>
-                      {[{ name: 'zh', value: '中文' }, { name: 'en', value: '英文' }].map(item => (
-                        <li
-                          key={item.name}
-                          className={language === item.name ? styles.active : null}
-                          onClick={() => {
-                            dispatchGlobal({
-                              type: 'switchLanguage',
-                              payload: {
-                                lang: item.name,
-                              },
-                            });
-                          }}>
-                          {item.value}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
+                {ShowLanguage && (
+                  <li className={styles.language}>
+                    {language === 'zh' ? '中文' : '英文'}
+                    <div>
+                      <ul>
+                        {[{ name: 'zh', value: '中文' }, { name: 'en', value: '英文' }].map(item => (
+                          <li
+                            key={item.name}
+                            className={language === item.name ? styles.active : null}
+                            onClick={() => {
+                              dispatchGlobal({
+                                type: 'switchLanguage',
+                                payload: {
+                                  lang: item.name,
+                                },
+                              });
+                            }}>
+                            {item.value}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

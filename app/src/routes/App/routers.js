@@ -34,7 +34,7 @@ export default [
     authority: [1],
   },
   {
-    title: '地址管理',
+    title: 'Contact',
     show: false,
     path: PATH.addressManage,
     component: lazy(() => import('../AddressManage')),
@@ -50,7 +50,6 @@ export default [
     title: 'DEX',
     path: PATH.trade,
     component: lazy(() => import('../Trade')),
-    warn: '维护中',
   },
   {
     title: 'DAPP',

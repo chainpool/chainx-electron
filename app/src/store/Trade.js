@@ -1,14 +1,4 @@
-import {
-  _,
-  formatNumber,
-  moment_helper,
-  observable,
-  computed,
-  localSave,
-  parseQueryString,
-  moment,
-  generateKlineData,
-} from '../utils';
+import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, moment } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getOrderPairs,
@@ -159,8 +149,8 @@ export default class Trade extends ModelExtend {
         createTimeShow: item.createTime ? moment_helper.formatHMS(item.createTime) : '',
         priceShow: showUnit(this.setPrecision(item.price, filterPair.precision)),
         amountShow: this.setPrecision(item.amount, filterPair.assets),
-        sumShow: this.setPrecision(item.sum, filterPair.currency),
-        averagePriceShow: this.setPrecision(item.fill_aver, filterPair.currency),
+        sumShow: formatNumber.toFixed(item.sum, this.getPrecision(filterPair.currency)),
+        averagePriceShow: showUnit(this.setPrecision(item.fill_aver, filterPair.precision)),
         // averagePriceShow: this.setPrecision(item.sum / hasfillAmountShow, filterPair.currency),
         hasfillAmountShow,
         hasfillAmountPercent: formatNumber.percent(item.hasfillAmount / item.amount, 2),
@@ -266,16 +256,20 @@ export default class Trade extends ModelExtend {
                     map((item2 = []) => {
                       const res = (item2 || []).map((item = {}) => {
                         const filterPair = this.getPair({ id: String(item.pairid) });
-                        // const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+                        const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
                         const amountShow = this.setPrecision(item.amount, filterPair.assets);
-                        const totalShow = this.setPrecision(item.price * amountShow, filterPair.currency);
-                        sum += item.price * amountShow;
+                        const priceShow = showUnit(this.setPrecision(item.price, filterPair.precision));
+                        const totalShow = formatNumber.toFixed(
+                          priceShow * amountShow,
+                          this.getPrecision(filterPair.currency)
+                        );
+                        sum += Number(totalShow);
                         const maker_userShow = this.encodeAddressAccountId(item.maker_user);
                         const taker_userShow = this.encodeAddressAccountId(item.taker_user);
                         return {
                           ...item,
                           time: moment.formatHMS(item['block.time'], 'MM-DD HH:mm:ss'),
-                          priceShow: this.setPrecision(item.price, filterPair.currency),
+                          priceShow,
                           other_userShow:
                             [maker_userShow, taker_userShow].filter(item => item !== currentAccount.address)[0] ||
                             maker_userShow,
@@ -348,7 +342,6 @@ export default class Trade extends ModelExtend {
   };
 
   getQuotations = async ({ hasStarWith, callback } = {}) => {
-    return of([]).subscribe();
     const currentPair = this.currentPair;
     const count = 20;
     return from(getQuotations(currentPair.id, 10))
@@ -492,7 +485,6 @@ export default class Trade extends ModelExtend {
     id = id || parseQueryString(search).id;
     let currentPair = {};
     const findOne = this.orderPairs.filter((item = {}) => item.id === +id)[0];
-    // console.log(toJS(this.orderPairs), toJS(findOne), id, typeof +id, '----');
     if (findOne) {
       currentPair = findOne;
     } else if (this.orderPairs[0]) {

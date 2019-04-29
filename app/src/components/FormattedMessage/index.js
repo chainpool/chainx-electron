@@ -4,11 +4,19 @@ import { Inject } from '../../utils';
 
 @Inject(({ globalStore: model }) => ({ model }))
 class FormattedMessage extends Component {
+  Fragment;
   render() {
     const {
       model: { language },
     } = this.props;
-    return <Message key={language} {...this.props} defaultMessage=" " tagName={React.Fragment} />;
+
+    return (
+      <Message key={language} {...this.props} defaultMessage=" ">
+        {value => {
+          return <>{value} </>;
+        }}
+      </Message>
+    );
   }
 }
 

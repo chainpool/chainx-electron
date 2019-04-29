@@ -8,7 +8,7 @@ import { zh_CN, en_US } from '../../langs/zh_en.js';
 
 import CommonLayOut from './CommonLayOut';
 import { SignModal } from '../components';
-import { PATH } from '../../constants';
+import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
 import { Inject } from '../../utils';
@@ -50,7 +50,7 @@ class Main extends Component {
     };
 
     return (
-      <IntlProvider locale={language} messages={getMessages()}>
+      <IntlProvider locale={ShowLanguage ? language : 'zh'} messages={ShowLanguage ? getMessages() : zh_CN}>
         <CommonLayOut {...this.props}>
           <Suspense fallback={loading}>
             <Switch>
