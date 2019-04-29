@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Input, Button, Mixin } from '../../../components';
+import { Modal, Input, Button, Mixin, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
@@ -100,7 +100,7 @@ class WithdrawModal extends Mixin {
 
     return (
       <Modal
-        title="跨链提现"
+        title={<FormattedMessage id={'CrossChainWithdraw'} />}
         button={
           <Button
             size="full"
@@ -131,13 +131,13 @@ class WithdrawModal extends Mixin {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
           <Input.Address
             prefix={chain}
-            label="收款地址"
+            label={<FormattedMessage id={'ReceiptAddress'} />}
             value={address}
             errMsg={addressErrMsg}
             options={options}
@@ -154,7 +154,11 @@ class WithdrawModal extends Mixin {
                 precision={getPrecision('BTC')}
                 label={
                   <div className={styles.bitcoinfee}>
-                    提现数量<span>(收取提现手续费{setPrecision(fee, token)} BTC)</span>
+                    <FormattedMessage id={'WithdrawAmount'} />
+                    <span>
+                      (<FormattedMessage id={'GetWithdrawFee'} />
+                      {setPrecision(fee, token)} BTC)
+                    </span>
                   </div>
                 }
                 value={amount}
@@ -165,14 +169,18 @@ class WithdrawModal extends Mixin {
             }
             right={<FreeBalance value={freeShow} unit={token} />}
           />
-          <Input.Text
-            isTextArea
-            rows={1}
-            label="备注"
-            placeholder={PlaceHolder.setTextAreaLength}
-            value={remark}
-            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
+            {msg => (
+              <Input.Text
+                isTextArea
+                rows={1}
+                label={<FormattedMessage id={'Memo'} />}
+                placeholder={msg}
+                value={remark}
+                onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

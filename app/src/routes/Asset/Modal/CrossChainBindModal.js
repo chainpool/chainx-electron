@@ -277,7 +277,7 @@ class CrossChainBindModal extends Mixin {
               <Input.Select
                 allowCreate={false}
                 value={recommendChannelSelect}
-                placeholder={'输入推荐渠道的节点名称 (选填)'}
+                placeholder={<FormattedMessage id={'RecommendedChannelNode'} />}
                 options={selectNameOptions}
                 onChange={value => {
                   this.setState({
@@ -336,7 +336,14 @@ class CrossChainBindModal extends Mixin {
                     <div className={styles.address}>
                       <div id="copy">{findOne.value1}</div>
                       <button>
-                        <Clipboard id="copy" outInner={<span className={styles.desc}>复制信息</span>} />
+                        <Clipboard
+                          id="copy"
+                          outInner={
+                            <span className={styles.desc}>
+                              <FormattedMessage id={'CopyMessage'} />
+                            </span>
+                          }
+                        />
                       </button>
                     </div>
                   </div>
@@ -394,7 +401,7 @@ class CrossChainBindModal extends Mixin {
                             });
                         }
                       }}>
-                      确认
+                      <FormattedMessage id={'Confirm'} />
                     </Button>
                   </div>
                 </>
