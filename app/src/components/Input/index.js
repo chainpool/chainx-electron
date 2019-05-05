@@ -1,9 +1,17 @@
 import React, { PureComponent } from 'react';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Clipboard, Mixin } from '../../components';
+import { Clipboard, Mixin, FormattedMessage } from '../../components';
 import { _, classNames, RegEx } from '../../utils';
 import * as styles from './index.less';
+
+const renderErrMsg = errMsg => {
+  if (errMsg && /[a-zA-Z]/.test(errMsg)) {
+    return <FormattedMessage id={errMsg} />;
+  } else {
+    return errMsg;
+  }
+};
 
 class InputRadio extends PureComponent {
   render() {
@@ -161,7 +169,7 @@ class InputSelect extends React.Component {
             />
           </div>
         </div>
-        {errMsg ? <div className={styles.errMsg}>{errMsg}</div> : null}
+        {errMsg ? <div className={styles.errMsg}>{renderErrMsg(errMsg)}</div> : null}
       </div>
     );
   }
@@ -308,7 +316,7 @@ class InputText extends Mixin {
             <div className={styles.suffix}>{errMsg && errMsgSuffix ? <span>{errMsg}</span> : suffix}</div>
           ) : null}
         </div>
-        {errMsg && !errMsgSuffix ? <div className={styles.errMsg}>{errMsg}</div> : null}
+        {errMsg && !errMsgSuffix ? <div className={styles.errMsg}>{renderErrMsg(errMsg)}</div> : null}
       </div>
     );
   }
@@ -422,7 +430,7 @@ class InputAddress extends React.Component {
             ) : null}
           </div>
         </div>
-        {errMsg ? <div className={styles.errMsg}>{errMsg}</div> : null}
+        {errMsg ? <div className={styles.errMsg}>{renderErrMsg(errMsg)}</div> : null}
       </div>
     );
   }

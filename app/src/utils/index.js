@@ -5,7 +5,6 @@ import { default as queryString } from 'query-string';
 import { observer as observerable, inject } from 'mobx-react';
 import device from 'current-device';
 import { ErrMsg, BitcoinTestNet, SCRYPT_PARAMS } from '../constants';
-import { FormattedMessage } from '../components';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
@@ -175,11 +174,7 @@ export const Patterns = {
         return console.error('check对应的方法必须存在');
       }
       const result = Patterns[value](...params);
-      if (result && /[a-zA-Z]/.test(result)) {
-        return <FormattedMessage id={result} />;
-      } else {
-        return result;
-      }
+      return result;
     };
   },
 };

@@ -105,7 +105,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      <FormattedMessage id={'GetFreeCoin'} />
+                      <FormattedMessage id={'Deposit'} />
                     </Button>
                   ) : (
                     <Button

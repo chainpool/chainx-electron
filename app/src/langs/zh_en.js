@@ -56,6 +56,8 @@ const zh_en = {
   CopyMessage: ['复制信息', 'Copy'],
   RecommendedChannelNode: ['输入推荐渠道的节点名称 (选填)', 'Recommended Channel Node (optional)'],
   GetWithdrawFee: ['收取提现手续费', 'Required Fee'],
+  BindedAddress: ['已绑定地址', 'Binded Address'],
+  BindNewAddress: ['绑定新地址', 'Bind new Address'],
 
   CharacterLength: ['{length}个字符以内', 'Within {length} characters'],
   AddressFormatError: ['地址格式错误', 'Address format error'],

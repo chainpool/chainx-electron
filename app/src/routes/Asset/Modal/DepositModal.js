@@ -35,10 +35,10 @@ class DepositModal extends Mixin {
     } = this.props;
 
     return (
-      <Modal title="跨链充值">
+      <Modal title={<FormattedMessage id={'CrossChainDeposit'} />}>
         <div className={styles.bindAddress}>
           <div>
-            已绑定地址：
+            <FormattedMessage id={'BindedAddress'} />
             <button
               onClick={() => {
                 openModal({
@@ -48,7 +48,7 @@ class DepositModal extends Mixin {
                   },
                 });
               }}>
-              绑定新地址
+              <FormattedMessage id={'BindNewAddress'} />
             </button>
           </div>
           <ul>
@@ -64,7 +64,9 @@ class DepositModal extends Mixin {
         </div>
         <div className={styles.publicAddress}>
           <div>
-            <div className={styles.title}>公共多签托管地址</div>
+            <div className={styles.title}>
+              <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />
+            </div>
             <div className={styles.address}>
               <span className={styles.token}>Bitcoin:</span>
               <Clipboard>{btcTrusteeAddress}</Clipboard>
