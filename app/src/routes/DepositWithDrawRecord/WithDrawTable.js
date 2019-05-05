@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Mixin, RouterGo, Table } from '../../components';
+import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
 import { observer } from '../../utils';
 import { blockChain } from '../../constants';
 
@@ -23,11 +23,11 @@ class WithDrawTable extends Mixin {
       className: styles.tableContainer,
       columns: [
         {
-          title: '申请时间',
+          title: <FormattedMessage id={'ApplicationTime'} />,
           dataIndex: 'time',
         },
         {
-          title: '原链交易ID',
+          title: <FormattedMessage id={'OriginalChainTradeID'} />,
           ellipse: true,
           dataIndex: 'originChainTxId',
           render: value => (
@@ -37,25 +37,25 @@ class WithDrawTable extends Mixin {
           ),
         },
         {
-          title: '币种',
+          title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
         },
         {
-          title: '地址',
+          title: <FormattedMessage id={'Address'} />,
           ellipse: true,
           dataIndex: 'address',
         },
         {
-          title: '数量',
+          title: <FormattedMessage id={'Amount'} />,
           dataIndex: 'balanceShow',
         },
         {
-          title: '备注',
+          title: <FormattedMessage id={'Memo'} />,
           dataIndex: 'memo',
         },
         {
-          title: '状态',
+          title: <FormattedMessage id={'Status'} />,
           dataIndex: 'status',
         },
       ],

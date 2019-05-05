@@ -416,3 +416,10 @@ export const SetFullScreen = Ele => {
 };
 
 export const setNet = net => ChainX.account.setNet(net);
+
+export const hexPrefix = hex => {
+  if (/^0x/.test(hex)) {
+    return hex;
+  }
+  return `0x${hex}`;
+};

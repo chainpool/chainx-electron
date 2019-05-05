@@ -1,4 +1,14 @@
-import { _, ChainX, observable, formatNumber, localSave, autorun, fetchFromHttp, moment_helper } from '../utils';
+import {
+  _,
+  ChainX,
+  observable,
+  formatNumber,
+  localSave,
+  autorun,
+  fetchFromHttp,
+  moment_helper,
+  hexPrefix,
+} from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -350,7 +360,7 @@ export default class Trust extends ModelExtend {
   };
 
   updateTrustToChain = ({ chain, about = 'bitocin', hotPubKey, coldPubKey }) => {
-    const extrinsic = setupTrustee(chain, about, [chain, `0x${hotPubKey}`], [chain, `0x${coldPubKey}`]);
+    const extrinsic = setupTrustee(chain, about, [chain, hexPrefix(hotPubKey)], [chain, hexPrefix(coldPubKey)]);
     return {
       extrinsic,
       success: () => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table, Clipboard, Button, ButtonGroup } from '../../components';
+import { Table, Clipboard, Button, ButtonGroup, FormattedMessage } from '../../components';
 
 class AddressTable extends Component {
   render() {
@@ -12,18 +12,18 @@ class AddressTable extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '标签',
+          title: <FormattedMessage id={'Label'} />,
           dataIndex: 'label',
           render: value => <span>{value}</span>,
           width: 200,
         },
         {
-          title: '链',
+          title: <FormattedMessage id={'Chain'} />,
           width: 200,
           dataIndex: 'chain',
         },
         {
-          title: '地址',
+          title: <FormattedMessage id={'Address'} />,
           dataIndex: 'address',
           render: value => <Clipboard width={320}>{value}</Clipboard>,
         },
@@ -42,14 +42,14 @@ class AddressTable extends Component {
                     },
                   });
                 }}>
-                修改标签
+                <FormattedMessage id={'ModifyLabel'} />
               </Button>
               <Button
                 onClick={() => {
                   openModal({
                     name: 'ConfirmAndCancelModal',
                     data: {
-                      title: '删除地址',
+                      title: <FormattedMessage id={'DeleteAddress'} />,
                       callback: () => {
                         dispatch({
                           type: 'removeAddress',
@@ -59,7 +59,7 @@ class AddressTable extends Component {
                     },
                   });
                 }}>
-                删除
+                <FormattedMessage id={'Delete'} />
               </Button>
             </ButtonGroup>
           ),

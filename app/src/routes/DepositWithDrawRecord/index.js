@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, Tabs } from '../../components';
+import { Mixin, Tabs, FormattedMessage } from '../../components';
 import { BreadCrumb } from '../components';
 import DepositTable from './DepositTable';
 import WithDrawTable from './WithDrawTable';
@@ -13,7 +13,7 @@ class DepositWithDrawRecord extends Mixin {
       <div className={styles.depositWithDrawRecord}>
         <BreadCrumb />
         <div className={styles.tabLine}>
-          <Tabs tabs={['充值记录', '提现记录']}>
+          <Tabs tabs={[<FormattedMessage id={'DepositRecords'} />, <FormattedMessage id={'WithdrawalRecords'} />]}>
             {activeIndex => (
               <>{activeIndex === 0 ? <DepositTable {...this.props} /> : <WithDrawTable {...this.props} />}</>
             )}

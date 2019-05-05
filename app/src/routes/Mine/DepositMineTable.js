@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table } from '../../components';
+import { Button, ButtonGroup, Mixin, Table, FormattedMessage } from '../../components';
 import { observer } from '../../utils';
 import { Balance, HoverTip } from '../components';
 
@@ -24,23 +24,23 @@ class DepositMineTable extends Mixin {
       className: styles.tableContainer,
       columns: [
         {
-          title: '排名',
+          title: <FormattedMessage id={'Rank'} />,
           width: 85,
           dataIndex: 'id',
           render: (value, item, index) => index + 1,
         },
         {
-          title: '资产种类',
+          title: <FormattedMessage id={'AssetType'} />,
           dataIndex: 'id',
           width: 120,
         },
         {
-          title: '全链总余额',
+          title: <FormattedMessage id={'TotalChainBalance'} />,
           ellipse: true,
           dataIndex: 'circulation',
         },
         {
-          title: '挖矿算力(PCX)',
+          title: <FormattedMessage id={'MiningPower'}>{msg => `${msg}(PCX)`}</FormattedMessage>,
           ellipse: true,
           dataIndex: 'price',
           render: (value, item) => {
@@ -55,21 +55,21 @@ class DepositMineTable extends Mixin {
           },
         },
         {
-          title: '折合投票数(PCX)',
+          title: <FormattedMessage id={'EquivalentNominations'}>{msg => `${msg}(PCX)`}</FormattedMessage>,
           dataIndex: 'discountVote',
         },
         {
-          title: '奖池金额(PCX)',
+          title: <FormattedMessage id={'JackpotBalance'}>{msg => `${msg}(PCX)`}</FormattedMessage>,
           dataIndex: 'jackpot',
           render: value => <Balance value={value} />,
         },
         {
-          title: '我的总余额',
+          title: <FormattedMessage id={'MyTotalBalance'} />,
           dataIndex: 'balance',
           render: value => <Balance value={value} />,
         },
         {
-          title: '待领利息(PCX)',
+          title: <FormattedMessage id={'UnclaimedDividend'}>{msg => `${msg}(PCX)`}</FormattedMessage>,
           dataIndex: 'interest',
           render: value => <Balance value={value} />,
         },
@@ -97,7 +97,7 @@ class DepositMineTable extends Mixin {
                       },
                     });
                   }}>
-                  提息
+                  <FormattedMessage id={'ClaimDividend'} />
                 </Button>
               ) : null}
             </ButtonGroup>

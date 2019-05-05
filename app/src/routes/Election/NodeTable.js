@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Table } from '../../components';
+import { Button, ButtonGroup, RouterGo, Table, FormattedMessage } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { Inject } from '../../utils';
 import trusteeImg from '../../resource/trustee.png';
@@ -28,7 +28,7 @@ class NodeTable extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '排名',
+          title: <FormattedMessage id={'Rank'} />,
           width: 100,
           ellipse: 8,
           dataIndex: 'name',
@@ -43,7 +43,7 @@ class NodeTable extends Component {
           },
         },
         {
-          title: '名称',
+          title: <FormattedMessage id={'Name'} />,
           width: 110,
           dataIndex: 'name',
           render: (value, item) => (
@@ -57,40 +57,40 @@ class NodeTable extends Component {
           ),
         },
         {
-          title: '账户地址',
+          title: <FormattedMessage id={'AccountAddress'} />,
           ellipse: 10,
           width: 100,
           dataIndex: 'address',
           render: value => (value === currentAccount.address ? '本账户' : value),
         },
         {
-          title: '节点抵押',
+          title: <FormattedMessage id={'IntentionSelfNominated'} />,
           ellipse: true,
           dataIndex: 'selfVote',
           render: value => setDefaultPrecision(value),
         },
         {
-          title: '总得票数',
+          title: <FormattedMessage id={'TotalNomination'} />,
           dataIndex: 'totalNomination',
           render: value => setDefaultPrecision(value),
         },
         {
-          title: '奖池金额',
+          title: <FormattedMessage id={'JackpotBalance'} />,
           dataIndex: 'jackpot',
           render: value => setDefaultPrecision(value),
         },
         {
-          title: '我的投票',
+          title: <FormattedMessage id={'MyNominations'} />,
           dataIndex: 'myTotalVote',
           render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
-          title: '赎回冻结',
+          title: <FormattedMessage id={'UnfreezeReserved'} />,
           dataIndex: 'myRevocation',
           render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
-          title: '待领利息',
+          title: <FormattedMessage id={'UnclaimedDividend'} />,
           dataIndex: 'myInterest',
           render: value => <Balance value={setDefaultPrecision(value)} />,
         },
@@ -112,7 +112,7 @@ class NodeTable extends Component {
                       },
                     });
                   }}>
-                  投票
+                  <FormattedMessage id={'Nominate'} />
                 </Button>
               ) : null}
               {item.myRevocation ? (
@@ -147,7 +147,7 @@ class NodeTable extends Component {
                       },
                     });
                   }}>
-                  提息
+                  <FormattedMessage id={'ClaimDividend'} />
                 </Button>
               ) : null}
             </ButtonGroup>

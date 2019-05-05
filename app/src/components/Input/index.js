@@ -120,7 +120,7 @@ class InputSelect extends React.Component {
       prefix = '',
       multi = false,
       errMsgIsOutside = false,
-      placeholder = '请选择',
+      placeholder = <FormattedMessage id={'PleaseSelect'} />,
       allowCreate = true,
       isSearchable = true,
     } = this.props;

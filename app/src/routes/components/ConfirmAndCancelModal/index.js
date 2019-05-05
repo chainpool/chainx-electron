@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { _ } from '../../../utils';
-import { Modal, Button, ButtonGroup } from '../../../components';
+import { Modal, Button, ButtonGroup, FormattedMessage } from '../../../components';
 import * as styles from './index.less';
 
 class ConfirmAndCancelModal extends Component {
@@ -20,7 +20,7 @@ class ConfirmAndCancelModal extends Component {
                 onClick={() => {
                   closeModal();
                 }}>
-                取消
+                <FormattedMessage id={'Cancel'} />
               </Button>
               <Button
                 size="bigger"
@@ -29,7 +29,7 @@ class ConfirmAndCancelModal extends Component {
                   _.isFunction(callback) && callback();
                   closeModal();
                 }}>
-                确定
+                <FormattedMessage id={'Confirm'} />
               </Button>
             </ButtonGroup>
           </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal } from '../../../components';
+import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
 import { Inject, Patterns } from '../../../utils';
 
@@ -28,8 +28,7 @@ class AddAddressModal extends Component {
     },
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg =
-        Patterns.check('required')(label) || Patterns.check('smaller')(label.length, 12, '不能超过12个字符');
+      const errMsg = Patterns.check('required')(label);
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -51,7 +50,7 @@ class AddAddressModal extends Component {
 
     return (
       <Modal
-        title="添加地址"
+        title={<FormattedMessage id={'AddAddress'} />}
         button={
           <Button
             size="full"
@@ -71,14 +70,14 @@ class AddAddressModal extends Component {
                 closeModal();
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
           <InputHorizotalList
             left={
               <Input.Select
-                label="选择链"
+                label={<FormattedMessage id={'ChooseChain'} />}
                 value={chain}
                 errMsg={chainErrMsg}
                 options={options}
@@ -91,20 +90,24 @@ class AddAddressModal extends Component {
             right=""
           />
           <Input.Text
-            label="添加地址"
+            label={<FormattedMessage id={'AddAddress'} />}
             value={address}
             errMsg={addressErrMsg}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
-          <Input.Text
-            label="标签"
-            placeholder="12字符以内"
-            value={label}
-            errMsg={labelErrMsg}
-            onChange={value => this.setState({ label: value })}
-            onBlur={checkAll.checkLabel}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
+            {msg => (
+              <Input.Text
+                label={<FormattedMessage id={'Label'} />}
+                placeholder={msg}
+                value={label}
+                errMsg={labelErrMsg}
+                onChange={value => this.setState({ label: value.slice(0, 12) })}
+                onBlur={checkAll.checkLabel}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );
