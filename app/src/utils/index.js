@@ -236,6 +236,7 @@ export const RegEx = {
 export const isEmpty = value => {
   return _.isUndefined(value) || _.isNull(value) || _.isNaN(value) || value === '';
 };
+
 export const formatNumber = {
   localString: value => {
     if (isEmpty(value)) return '';
@@ -418,3 +419,5 @@ export const SetFullScreen = Ele => {
     Ele.webkitRequestFullscreen();
   }
 };
+
+export const setNet = net => ChainX.account.setNet(net);
