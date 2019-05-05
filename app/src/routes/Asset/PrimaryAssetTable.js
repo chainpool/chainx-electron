@@ -114,7 +114,7 @@ class PrimaryAssetTable extends Component {
                     onClick={() => {
                       drawCandies(currentAddress);
                     }}>
-                    <FormattedMessage id={'GetFreeCoin'} />,
+                    <FormattedMessage id={'GetFreeCoin'} />
                   </Button>
                 )}
                 <Button
@@ -129,7 +129,7 @@ class PrimaryAssetTable extends Component {
                       },
                     });
                   }}>
-                  <FormattedMessage id={'Transfer'} />,
+                  <FormattedMessage id={'Transfer'} />
                 </Button>
               </ButtonGroup>
             ),
