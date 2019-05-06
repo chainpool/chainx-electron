@@ -78,7 +78,7 @@ class Trust extends Mixin {
     )[0];
 
     const isShowResponseWithdraw =
-      isValidator &&
+      isTrustee &&
       currentTrustNode &&
       currentTrustNode.connected &&
       currentTrustNode.decodedHotPrivateKey &&
@@ -86,7 +86,7 @@ class Trust extends Mixin {
       !isSelfSign;
 
     const isShowConstructureWithdraw =
-      isValidator &&
+      isTrustee &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'signing' || item.status === 'processing')
         .length === 0 &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status === 'applying').length > 0;

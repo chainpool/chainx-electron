@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Mixin, Modal } from '../../../components';
+import { Button, Input, Mixin, Modal, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
 import { Inject, Patterns, setBlankSpace } from '../../../utils';
@@ -48,17 +48,15 @@ class VoteModal extends Mixin {
         },
       } = this.props;
 
-      let errMsg = Patterns.check('required')(amount) || Patterns.smaller(0, amount, '投票数量必须大于0');
+      let errMsg =
+        Patterns.check('required')(amount) ||
+        Patterns.check('smaller')(0, amount, <FormattedMessage id={'AmountBiggerThan'} values={{ one: 0 }} />);
 
       if (!errMsg) {
         if (action === 'add') {
           errMsg = Patterns.check('smallerOrEqual')(amount, freeShow);
         } else if (action === 'cancel' || action === 'switch') {
-          errMsg = Patterns.check('smallerOrEqual')(
-            amount,
-            setDefaultPrecision(myTotalVote),
-            `${action === 'cancel' ? '赎回' : '换票'}数量不足`
-          );
+          errMsg = Patterns.check('smallerOrEqual')(amount, setDefaultPrecision(myTotalVote));
         }
       }
       this.setState({ amountErrMsg: errMsg });
@@ -86,13 +84,28 @@ class VoteModal extends Mixin {
 
     const bondingSeconds =
       (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
-    const operation = `${!myTotalVote ? '投票' : action === 'add' ? '追加' : action === 'cancel' ? '赎回' : '换票'}`;
+
+    let operation;
+    let operationAmount;
+    if (!myTotalVote) {
+      operation = <FormattedMessage id={'Nominate'} />;
+      operationAmount = <FormattedMessage id={'NominateAmount'} />;
+    } else if (action === 'add') {
+      operation = <FormattedMessage id={'IncreaseN'} />;
+      operationAmount = <FormattedMessage id={'IncreaseAmount'} />;
+    } else if (action === 'cancel') {
+      operation = <FormattedMessage id={'DecreaseN'} />;
+      operationAmount = <FormattedMessage id={'DecreaseAmount'} />;
+    } else {
+      operation = <FormattedMessage id={'SwitchN'} />;
+      operationAmount = <FormattedMessage id={'SwitchAmount'} />;
+    }
 
     const nodesOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.account }));
 
     return (
       <Modal
-        title="投票"
+        title={<FormattedMessage id={'Nominate'} />}
         button={
           <Button
             size="full"
@@ -104,7 +117,7 @@ class VoteModal extends Mixin {
                   data: {
                     description: [
                       { name: '操作', value: operation },
-                      { name: `${operation}数量`, value: setBlankSpace(amount, token) },
+                      { name: operationAmount, value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],
                     callback: () => {
@@ -122,7 +135,7 @@ class VoteModal extends Mixin {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.voteModal}>
@@ -130,9 +143,9 @@ class VoteModal extends Mixin {
             <>
               <ul className={styles.changeVote}>
                 {[
-                  { label: '追加投票', value: 'add' },
-                  { label: '切换投票', value: 'switch' },
-                  { label: '赎回投票', value: 'cancel' },
+                  { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
+                  { label: <FormattedMessage id={'SwitchNomination'} />, value: 'switch' },
+                  { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
                 ].map((item, index) => (
                   <li
                     key={index}
@@ -142,14 +155,16 @@ class VoteModal extends Mixin {
                     }}>
                     {item.label}
                     {item.value === 'cancel' && (
-                      <span className={styles.lockweek}>{`(锁定期${bondingSeconds}分钟)`}</span>
+                      <span className={styles.lockweek}>
+                        (<FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />)
+                      </span>
                     )}
                   </li>
                 ))}
               </ul>
 
               <div className={styles.afterchange}>
-                修改后投票数：
+                <FormattedMessage id={'NominationAmountAfterModified'}>{msg => `${msg}:`}</FormattedMessage>
                 {action === 'add' && setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))}
                 {(action === 'cancel' || action === 'switch') &&
                   setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
@@ -163,7 +178,7 @@ class VoteModal extends Mixin {
                 <Input.Text
                   errMsgIsOutside
                   precision={getDefaultPrecision()}
-                  label={`${operation}数量`}
+                  label={operationAmount}
                   value={amount}
                   errMsg={amountErrMsg}
                   onChange={value => this.setState({ amount: value })}
@@ -174,41 +189,48 @@ class VoteModal extends Mixin {
             />
           )}
           {action === 'switch' && (
-            <Input.Select
-              label="新节点"
-              errMsg={selectNodeErrMsg}
-              allowCreate={false}
-              value={selectNode}
-              placeholder={'节点名称'}
-              options={nodesOptions}
-              onChange={value => {
-                this.setState({
-                  selectNode: value,
-                });
-              }}
-              onBlur={checkAll.checkSelectNode}
-            />
+            <FormattedMessage id={'NodeName'}>
+              {msg => (
+                <Input.Select
+                  label={<FormattedMessage id={'NewNode'} />}
+                  errMsg={selectNodeErrMsg}
+                  allowCreate={false}
+                  value={selectNode}
+                  placeholder={msg}
+                  options={nodesOptions}
+                  onChange={value => {
+                    this.setState({
+                      selectNode: value,
+                    });
+                  }}
+                  onBlur={checkAll.checkSelectNode}
+                />
+              )}
+            </FormattedMessage>
           )}
           {(action === 'cancel' || action === 'switch') && (
             <Input.Text
               errMsgIsOutside
               precision={getDefaultPrecision()}
-              label={`${operation}数量`}
+              label={operationAmount}
               value={amount}
               errMsg={amountErrMsg}
               onChange={value => this.setState({ amount: value })}
               onBlur={checkAll.checkAmount}
             />
           )}
-
-          <Input.Text
-            isTextArea
-            rows={1}
-            label="备注"
-            placeholder={PlaceHolder.setTextAreaLength}
-            value={remark}
-            onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
+            {msg => (
+              <Input.Text
+                isTextArea
+                rows={1}
+                label={<FormattedMessage id={'Memo'} />}
+                placeholder={msg}
+                value={remark}
+                onChange={value => this.setState({ remark: value.slice(0, PlaceHolder.getTextAreaLength) })}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );
