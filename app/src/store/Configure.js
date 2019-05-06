@@ -24,18 +24,15 @@ export default class Configure extends ModelExtend {
     };
 
     this.refreshLocalNodesOrApi = target => {
-      const localTarget = target === 'Node' ? 'nodes' : 'api';
-      const list = localSave.get(localTarget) || [];
-      const findOne = list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
-      if (!findOne) {
-        localSave.remove(localTarget);
-      }
-      return localSave.get(localTarget) && localSave.get(localTarget).length;
+      const list = localSave.get(target) || [];
+      return list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
     };
 
     autorun(() => {
-      localSave.set('nodes', this.nodes);
-      localSave.set('api', this.api);
+      localSave.set('testNodes', this.testNodes);
+      localSave.set('mainNodes', this.mainNodes);
+      localSave.set('testApi', this.testApi);
+      localSave.set('mainApi', this.mainApi);
       localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
       localSave.set('autoSwitchBestApi', this.autoSwitchBestApi);
       localSave.set('currentNetWork', this.currentNetWork);
@@ -48,9 +45,10 @@ export default class Configure extends ModelExtend {
   @observable netWork = NetWork;
   @observable currentNetWork = localSave.get('currentNetWork') || NetWork[0];
   @observable isTestNet = true || (process.env.CHAINX_NET || '') !== 'main';
-  @observable api = this.resetApi(
-    this.refreshLocalNodesOrApi('Api')
-      ? localSave.get('api')
+
+  @observable testApi = this.resetApi(
+    this.refreshLocalNodesOrApi('testApi')
+      ? localSave.get('testApi')
       : [
           {
             type: '系统默认',
@@ -62,19 +60,26 @@ export default class Configure extends ModelExtend {
           },
         ]
   );
-  @observable nodes = this.resetNode(
-    this.refreshLocalNodesOrApi('Node')
-      ? localSave.get('nodes')
-      : [
-          // {
-          //   type: '系统默认',
-          //   name: 'wallet-server',
-          //   best: true,
-          //   address: process.env.CHAINX_NODE_URL,
-          //   isSystem: true,
-          //   Version: ConfigureVersion,
-          // },
 
+  @observable mainApi = this.resetApi(
+    this.refreshLocalNodesOrApi('mainApi')
+      ? localSave.get('mainApi')
+      : [
+          {
+            type: '系统默认',
+            name: 'api.chainx.org',
+            best: true,
+            address: 'https://api.chainx.org',
+            isSystem: true,
+            Version: ConfigureVersion,
+          },
+        ]
+  );
+
+  @observable testNodes = this.resetNode(
+    this.refreshLocalNodesOrApi('testNodes')
+      ? localSave.get('testNodes')
+      : [
           {
             type: '系统默认',
             name: 'w1',
@@ -89,12 +94,6 @@ export default class Configure extends ModelExtend {
             isSystem: true,
             address: 'wss://w2.chainx.org/ws',
           },
-          // {
-          //   type: '系统默认',
-          //   name: 'w3',
-          //   isSystem: true,
-          //   address: 'wss://w3.chainx.org/ws',
-          // },
           {
             type: '系统默认',
             name: '本机',
@@ -102,8 +101,57 @@ export default class Configure extends ModelExtend {
             isSystem: true,
             isLocalhost: true,
           },
-        ]
+        ].concat((localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem))
   );
+
+  @observable mainNodes = this.resetNode(
+    this.refreshLocalNodesOrApi('mainNodes')
+      ? localSave.get('mainNodes')
+      : [
+          {
+            type: '系统默认',
+            name: 'w2',
+            best: true,
+            isSystem: true,
+            address: 'wss://w2.chainx.org/ws',
+          },
+        ].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+  );
+
+  @computed
+  get nodes() {
+    if (this.currentNetWork.value === 'test') {
+      return this.testNodes;
+    } else if (this.currentNetWork.value === 'main') {
+      return this.mainNodes;
+    }
+  }
+
+  set nodes(nodes) {
+    if (this.currentNetWork.value === 'test') {
+      this.testNodes = nodes;
+    } else if (this.currentNetWork.value === 'main') {
+      this.mainNodes = nodes;
+    }
+  }
+
+  @computed
+  get api() {
+    if (this.currentNetWork.value === 'test') {
+      return this.testApi;
+    } else if (this.currentNetWork.value === 'main') {
+      return this.mainApi;
+    }
+  }
+
+  set api(api) {
+    if (this.currentNetWork.value === 'test') {
+      this.testApi = api;
+    } else if (this.currentNetWork.value === 'main') {
+      this.mainApi = api;
+    }
+  }
+
   @computed get TradeVersion() {
     return true;
   }

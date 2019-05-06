@@ -13,7 +13,13 @@ const checkLogin = func => {
 };
 
 const getBestApi = () => {
-  const api = localSave.get('api') || [];
+  const currentNetWork = localSave.get('currentNetWork') || { value: 'test' };
+  let api;
+  if (currentNetWork.value === 'test') {
+    api = localSave.get('testApi') || [];
+  } else if (currentNetWork.value === 'main') {
+    api = localSave.get('mainApi') || [];
+  }
   return api.filter((item = {}) => item.best)[0] || {};
 };
 

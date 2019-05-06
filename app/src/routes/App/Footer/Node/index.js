@@ -22,7 +22,7 @@ class Node extends Component {
     const { nodes: nodesPrev } = prevProps;
     const { nodes } = this.props;
     const bestNode = this.filterBestNode(nodes);
-    if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && bestNode.syncStatus !== '') {
+    if (!this.isFirst && !_.isEqual(nodesPrev, nodes) && bestNode && bestNode.syncStatus !== '') {
       if (
         bestNode.syncStatus &&
         ['100.00%', '100%'].indexOf(bestNode.syncStatus) === -1 &&

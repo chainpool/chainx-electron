@@ -33,12 +33,13 @@ class Configure extends Mixin {
             <Input.Select
               value={{ label: currentNetWork.name, value: currentNetWork.value }}
               options={netWork.map(({ name, value }) => ({ label: name, value }))}
-              onChange={({ label: name, value }) =>
+              onChange={({ label: name, value }) => {
                 dispatch({
                   type: 'setCurrentNetWork',
                   payload: { name, value },
-                })
-              }
+                });
+                window.location.reload();
+              }}
             />
           </div>
         </div>
