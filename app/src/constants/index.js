@@ -35,7 +35,11 @@ export const PlaceHolder = (() => {
 export const NetWork = [
   {
     name: '测试网',
-    ip: '192.168.1.1',
+    value: 'test',
+  },
+  {
+    name: '主网',
+    value: 'main',
   },
 ];
 

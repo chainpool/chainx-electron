@@ -38,6 +38,7 @@ export default class Configure extends ModelExtend {
       localSave.set('api', this.api);
       localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
       localSave.set('autoSwitchBestApi', this.autoSwitchBestApi);
+      localSave.set('currentNetWork', this.currentNetWork);
     });
   }
 
@@ -45,7 +46,7 @@ export default class Configure extends ModelExtend {
   @observable autoSwitchBestApi =
     localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
-  @observable currentNetWork = NetWork[0];
+  @observable currentNetWork = localSave.get('currentNetWork') || NetWork[0];
   @observable isTestNet = true || (process.env.CHAINX_NET || '') !== 'main';
   @observable api = this.resetApi(
     this.refreshLocalNodesOrApi('Api')
@@ -139,8 +140,8 @@ export default class Configure extends ModelExtend {
     }
   };
 
-  setCurrentNetWork({ name, ip }) {
-    this.changeModel('currentNetWork', { name, ip });
+  setCurrentNetWork({ name, value }) {
+    this.changeModel('currentNetWork', { name, value });
   }
 
   subscribeNodeOrApi = async ({ refresh, target, callback }) => {
