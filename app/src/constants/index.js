@@ -35,8 +35,12 @@ export const PlaceHolder = (() => {
 export const NetWork = [
   {
     name: '测试网',
-    ip: '192.168.1.1',
+    value: 'test',
   },
+  // {
+  //   name: '主网',
+  //   value: 'main',
+  // },
 ];
 
 export const API = {
@@ -64,7 +68,7 @@ export const SCRYPT_PARAMS = {
 
 export const AjaxCallTime = 5000;
 
-export const ConfigureVersion = 7;
+export const ConfigureVersion = 10;
 
 export const blockChain = {
   tx: v => `https://www.blockchain.com/btctest/tx/${v}`,

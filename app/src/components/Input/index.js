@@ -313,7 +313,7 @@ class InputText extends Mixin {
             ) : null}
           </div>
           {suffix ? (
-            <div className={styles.suffix}>{errMsg && errMsgSuffix ? <span>{errMsg}</span> : suffix}</div>
+            <div className={styles.suffix}>{errMsg && errMsgSuffix ? <span>{renderErrMsg(errMsg)}</span> : suffix}</div>
           ) : null}
         </div>
         {errMsg && !errMsgSuffix ? <div className={styles.errMsg}>{renderErrMsg(errMsg)}</div> : null}

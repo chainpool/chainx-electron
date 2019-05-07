@@ -31,14 +31,15 @@ class Configure extends Mixin {
           <span>选择网络类型</span>
           <div>
             <Input.Select
-              value={{ label: currentNetWork.name, value: currentNetWork.ip }}
-              options={netWork.map(({ name, ip }) => ({ label: name, value: ip }))}
-              onChange={({ label: name, value: ip }) =>
+              value={{ label: currentNetWork.name, value: currentNetWork.value }}
+              options={netWork.map(({ name, value }) => ({ label: name, value }))}
+              onChange={({ label: name, value }) => {
                 dispatch({
                   type: 'setCurrentNetWork',
-                  payload: { name, ip },
-                })
-              }
+                  payload: { name, value },
+                });
+                window.location.reload();
+              }}
             />
           </div>
         </div>

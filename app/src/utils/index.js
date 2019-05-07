@@ -23,7 +23,13 @@ export { default as translation } from './translation';
 export { toJS, observable, computed, action, runInAction, autorun } from 'mobx';
 
 const getBestNode = () => {
-  const nodes = localSave.get('nodes') || [];
+  const currentNetWork = localSave.get('currentNetWork') || { value: 'test' };
+  let nodes = [];
+  if (currentNetWork.value === 'test') {
+    nodes = localSave.get('testNodes') || [];
+  } else if (currentNetWork.value === 'main') {
+    nodes = localSave.get('mainNodes') || [];
+  }
   const findOne = nodes.filter((item = {}) => item.best)[0] || {};
   const bestAddress = findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';
   const otherNodesAddress = nodes.filter((item = {}) => item.address !== bestAddress).map((item = {}) => item.address);
