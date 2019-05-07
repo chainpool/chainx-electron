@@ -83,7 +83,6 @@ class TrustSettingModal extends Component {
                       return dispatch({
                         type: 'updateTrustToChain',
                         payload: {
-                          chain: chain.label,
                           hotPubKey,
                           coldPubKey,
                         },

@@ -32,14 +32,6 @@ class WithdrawSignModal extends Component {
     },
   };
 
-  componentDidMount() {
-    const {
-      model: { dispatch },
-    } = this.props;
-    dispatch({
-      type: 'getWithdrawTx',
-    });
-  }
   render() {
     const { checkAll } = this;
     const { activeIndex, password, passwordErrMsg } = this.state;

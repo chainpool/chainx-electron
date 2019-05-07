@@ -69,7 +69,7 @@ export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.
 
 export const getTrusteeInfoByAccount = (...payload) => stake.getTrusteeInfoByAccount(...payload);
 
-export const setupTrustee = (...payload) => stake.setupTrustee(...payload);
+export const setupBitcoinTrustee = (...payload) => stake.setupBitcoinTrustee(...payload);
 
 export const getAssets = (...payload) => asset.getAssets(...payload);
 

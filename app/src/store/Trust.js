@@ -16,7 +16,7 @@ import {
   getWithdrawTx,
   signWithdrawTx,
   getTrusteeInfoByAccount,
-  setupTrustee,
+  setupBitcoinTrustee,
   getBlockTime,
 } from '../services';
 import { BitcoinTestNet } from '../constants';
@@ -359,8 +359,8 @@ export default class Trust extends ModelExtend {
     this.subScribeNodeStatus();
   };
 
-  updateTrustToChain = ({ chain, about = 'bitocin', hotPubKey, coldPubKey }) => {
-    const extrinsic = setupTrustee(chain, about, [chain, hexPrefix(hotPubKey)], [chain, hexPrefix(coldPubKey)]);
+  updateTrustToChain = ({ about = 'bitocin', hotPubKey, coldPubKey }) => {
+    const extrinsic = setupBitcoinTrustee(about, hexPrefix(hotPubKey), hexPrefix(coldPubKey));
     return {
       extrinsic,
       success: () => {
@@ -370,12 +370,14 @@ export default class Trust extends ModelExtend {
   };
 
   getSomeOneInfo = async (payload = {}) => {
+    const chain = 'Bitcoin';
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
     const turstInfo = await getTrusteeInfoByAccount(address);
-    const findOne = turstInfo.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    console.log(turstInfo, '----turstInfo');
+    const findOne = turstInfo[chain];
     if (findOne) {
-      const { chain, coldEntity: coldPubKey, hotEntity: hotPubKey } = findOne;
+      const { coldEntity: coldPubKey, hotEntity: hotPubKey } = findOne;
       const obj = {
         address,
         chain,
