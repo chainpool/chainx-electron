@@ -253,7 +253,7 @@ export default class Trust extends ModelExtend {
         getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus } = resTx || {};
-      const { trusteeList = [], hotEntity: { redeemScript } = {} } = resRede;
+      const { trusteeList = [], hotEntity: { redeemScript } = {} } = resRede || {};
       this.changeModel({
         tx,
         signStatus,

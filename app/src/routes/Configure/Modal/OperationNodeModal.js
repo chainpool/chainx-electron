@@ -1,9 +1,9 @@
 import React from 'react';
 import { Modal, Input, Button, Mixin } from '../../../components';
-import { Patterns, observer, _ } from '../../../utils';
+import { Patterns, _, Inject } from '../../../utils';
 import * as styles from './OperationNodeModal.less';
 
-@observer
+@Inject(({ chainStore }) => ({ chainStore }))
 class OperationNodeModal extends Mixin {
   constructor(props) {
     super(props);
@@ -28,14 +28,29 @@ class OperationNodeModal extends Mixin {
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
-    checkAddress: () => {
+    checkAddress: async () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
+      let errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
+      if (!errMsg) {
+        errMsg = await this.checkAll.checkNetType();
+      }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
-    confirm: () => {
-      return ['checkName', 'checkAddress'].every(item => !this.checkAll[item]());
+    checkNetType: async () => {
+      const {
+        model: { currentNetWork: { name, value } = {} },
+        chainStore: { dispatch },
+      } = this.props;
+      const res = await dispatch({
+        type: 'getChainProperties',
+      });
+      return res.network.search(value) > -1 ? '' : `该节点网络类型(${res.network})不符合所选类型(${name})`;
+    },
+    confirm: async () => {
+      const result1 = await this.checkAll['checkName']();
+      const result2 = await this.checkAll['checkAddress']();
+      return !result1 && !result2;
     },
   };
   render() {
@@ -54,8 +69,8 @@ class OperationNodeModal extends Mixin {
           <Button
             size="full"
             type="confirm"
-            onClick={() => {
-              if (checkAll.confirm()) {
+            onClick={async () => {
+              if (await checkAll.confirm()) {
                 _.isFunction(callback) &&
                   callback({
                     action,
@@ -80,6 +95,7 @@ class OperationNodeModal extends Mixin {
             onBlur={checkAll.checkName}
           />
           <Input.Text
+            errMsgIsOutside
             placeholder="wss://abcd.com:6789"
             label={
               <div>

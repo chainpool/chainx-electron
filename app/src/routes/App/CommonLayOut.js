@@ -3,7 +3,7 @@ import Header from './Header/Header';
 import Content from './Content';
 import Footer from './Footer/Footer';
 import * as styles from './CommonLayOut.less';
-import { ChainX, parseQueryString, classNames, setNet } from '../../utils';
+import { ChainX, parseQueryString, classNames } from '../../utils';
 import { PATH } from '../../constants';
 import { Loading } from '../../components';
 
@@ -40,7 +40,6 @@ class CommonLayOut extends Component {
       ]);
     wsPromise()
       .then(async () => {
-        // await setNet('testnet');
         await dispatchGlobal({
           type: 'setHistory',
           payload: {

@@ -172,6 +172,8 @@ export const getTrusteeSessionInfo = (...payload) => asset.getTrusteeSessionInfo
 
 export const getBlockPeriod = (...payload) => chain.getMinimumPeriod(...payload);
 
+export const chainProperties = (...payload) => chain.chainProperties(...payload);
+
 export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);
 
 export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);

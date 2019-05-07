@@ -101,7 +101,7 @@ class Node extends Component {
                 {one.map((item, ins) => (
                   <li
                     className={item.best ? styles.active : null}
-                    key={item.name}
+                    key={ins}
                     onClick={() => {
                       if (!item.block) {
                         return Toast.warn(`未获取到当前${index ? 'Api' : '节点'}同步状态，无法连接`);
