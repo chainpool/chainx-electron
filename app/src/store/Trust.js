@@ -18,6 +18,7 @@ import {
   getTrusteeInfoByAccount,
   setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeSessionInfo,
 } from '../services';
 import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
@@ -247,15 +248,18 @@ export default class Trust extends ModelExtend {
   getWithdrawTx = async () => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
     if (findOne && findOne.chain) {
-      const res = (await getWithdrawTx(findOne.chain)) || {};
-      const { tx, signStatus, redeemScript, trusteeList = [] } = res;
+      const [resTx = {}, resRede = {}] = await Promise.all([
+        getWithdrawTx(findOne.chain),
+        getTrusteeSessionInfo(findOne.chain),
+      ]);
+      const { tx, signStatus } = resTx || {};
+      const { trusteeList = [], hotEntity: { redeemScript } = {} } = resRede;
       this.changeModel({
         tx,
         signStatus,
         redeemScript,
         trusteeList,
       });
-      return res;
     } else {
       this.changeModel({
         tx: '',

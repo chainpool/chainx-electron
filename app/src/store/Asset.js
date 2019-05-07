@@ -4,7 +4,7 @@ import {
   getAsset,
   getDepositList,
   getDepositListApi,
-  getTrusteeAddress,
+  getTrusteeSessionInfo,
   getWithdrawalList,
   getWithdrawalListApi,
   transfer,
@@ -275,7 +275,7 @@ export default class Asset extends ModelExtend {
   }
 
   async getTrusteeAddress({ chain }) {
-    const addresses = (await getTrusteeAddress(chain)) || [];
+    const addresses = (await getTrusteeSessionInfo(chain)) || [];
     this.changeModel('btcTrusteeAddress', addresses.hotEntity.addr);
     return addresses.hotEntity.addr;
   }
