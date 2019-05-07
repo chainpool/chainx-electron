@@ -374,7 +374,6 @@ export default class Trust extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
     const turstInfo = await getTrusteeInfoByAccount(address);
-    console.log(turstInfo, '----turstInfo');
     const findOne = turstInfo[chain];
     if (findOne) {
       const { coldEntity: coldPubKey, hotEntity: hotPubKey } = findOne;

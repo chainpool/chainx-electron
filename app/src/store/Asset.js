@@ -276,8 +276,8 @@ export default class Asset extends ModelExtend {
 
   async getTrusteeAddress({ chain }) {
     const addresses = (await getTrusteeAddress(chain)) || [];
-    this.changeModel('btcTrusteeAddress', addresses.hotEntity);
-    return addresses.hotEntity;
+    this.changeModel('btcTrusteeAddress', addresses.hotEntity.addr);
+    return addresses.hotEntity.addr;
   }
 
   getMinimalWithdrawalValueByToken = async ({ token }) => await getMinimalWithdrawalValueByToken(token);
