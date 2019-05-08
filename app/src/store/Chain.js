@@ -1,7 +1,8 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
 import { _ } from '@utils/index';
-import { subscribeNewHead, getBlockPeriod, chainProperties } from '../services';
+import { subscribeNewHead, getBlockPeriod } from '../services';
+import { fetchFromWs } from '../utils';
 
 class Chain extends ModelExtend {
   @observable blockNumber;
@@ -30,7 +31,15 @@ class Chain extends ModelExtend {
     this.changeModel('blockDuration', period * 1000);
   }
 
-  getChainProperties = async () => await chainProperties();
+  getChainProperties = async ({ url }) => {
+    const res = await fetchFromWs({
+      url,
+      method: 'system_properties',
+    });
+    if (res && res.data) {
+      return res.data.network;
+    }
+  };
 }
 
 export default Chain;

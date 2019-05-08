@@ -32,20 +32,29 @@ class OperationNodeModal extends Mixin {
       const { address } = this.state;
       let errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
       if (!errMsg) {
-        errMsg = await this.checkAll.checkNetType();
+        errMsg = await this.checkAll.checkNetType(address);
       }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
-    checkNetType: async () => {
+    checkNetType: async address => {
       const {
         model: { currentNetWork: { name, value } = {} },
         chainStore: { dispatch },
       } = this.props;
-      const res = await dispatch({
-        type: 'getChainProperties',
-      });
-      return res.network.search(value) > -1 ? '' : `该节点网络类型(${res.network})不符合所选类型(${name})`;
+      let res = '';
+      try {
+        res = await dispatch({
+          type: 'getChainProperties',
+          payload: { url: address },
+        });
+        if (!res) {
+          return '未获取到该节点的网络类型';
+        }
+      } catch (err) {
+        return '节点连接失败';
+      }
+      return res.search(value) > -1 ? '' : `该节点网络类型(${res.network})不符合所选类型(${name})`;
     },
     confirm: async () => {
       const result1 = await this.checkAll['checkName']();

@@ -16,7 +16,8 @@ export default class Store extends ModelExtend {
     super(rootStore);
 
     autorun(() => {
-      localSave.set('currentSelect', this.currentAccount);
+      localSave.set('currentSelectTest', this.currentAccountTest);
+      localSave.set('currentSelectMain', this.currentAccountMain);
       if (!inElectron) {
         localSave.set('accounts', this._accounts);
       }
@@ -40,7 +41,27 @@ export default class Store extends ModelExtend {
   }
 
   @observable _accounts = localSave.get('accounts') || [];
-  @observable currentAccount = localSave.get('currentSelect') || {};
+  @observable currentAccountTest = localSave.get('currentSelectTest') || {};
+  @observable currentAccountMain = localSave.get('currentAccountMain') || {};
+
+  @computed
+  get currentAccount() {
+    const currentNetWork = this.getCurrentNetWork();
+    if (currentNetWork.value === 'test') {
+      return this.currentAccountTest;
+    } else if (currentNetWork.value === 'main') {
+      return this.currentAccountMain;
+    }
+  }
+
+  set currentAccount(account) {
+    const currentNetWork = this.getCurrentNetWork();
+    if (currentNetWork.value === 'test') {
+      this.currentAccountTest = account;
+    } else if (currentNetWork.value === 'main') {
+      this.currentAccountMain = account;
+    }
+  }
 
   @computed
   get accounts() {
