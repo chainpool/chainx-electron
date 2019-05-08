@@ -7,15 +7,23 @@ import * as styles from './VoteModal.less';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
 class VoteModal extends Mixin {
-  state = {
-    selectNode: '',
-    selectNodeErrMsg: '',
-    action: 'add',
-    amount: '',
-    amountErrMsg: '',
-    remark: '',
-    remarkErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      globalStore: {
+        modal: { data: { isActive } = {} },
+      },
+    } = props;
+    this.state = {
+      selectNode: '',
+      selectNodeErrMsg: '',
+      action: isActive ? 'add' : 'switch',
+      amount: '',
+      amountErrMsg: '',
+      remark: '',
+      remarkErrMsg: '',
+    };
+  }
 
   startInit = async () => {
     const {
@@ -74,7 +82,7 @@ class VoteModal extends Mixin {
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
-        modal: { data: { target, myTotalVote = 0, isCurrentAccount } = {} },
+        modal: { data: { target, isActive, myTotalVote = 0, isCurrentAccount } = {} },
         nativeAssetName: token,
       },
       chainStore: { blockDuration },
@@ -143,24 +151,26 @@ class VoteModal extends Mixin {
             <>
               <ul className={styles.changeVote}>
                 {[
-                  { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
+                  isActive ? { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' } : null,
                   { label: <FormattedMessage id={'SwitchNomination'} />, value: 'switch' },
                   { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
-                ].map((item, index) => (
-                  <li
-                    key={index}
-                    className={action === item.value ? styles.active : null}
-                    onClick={() => {
-                      this.setState({ action: item.value, amount: '' });
-                    }}>
-                    {item.label}
-                    {item.value === 'cancel' && (
-                      <span className={styles.lockweek}>
-                        (<FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />)
-                      </span>
-                    )}
-                  </li>
-                ))}
+                ]
+                  .filter(item => item)
+                  .map((item, index) => (
+                    <li
+                      key={index}
+                      className={action === item.value ? styles.active : null}
+                      onClick={() => {
+                        this.setState({ action: item.value, amount: '' });
+                      }}>
+                      {item.label}
+                      {item.value === 'cancel' && (
+                        <span className={styles.lockweek}>
+                          (<FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />)
+                        </span>
+                      )}
+                    </li>
+                  ))}
               </ul>
 
               <div className={styles.afterchange}>
