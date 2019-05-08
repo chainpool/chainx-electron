@@ -124,33 +124,13 @@ export default class Configure extends ModelExtend {
   @observable premainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('premainNodes')
       ? localSave.get('premainNodes')
-      : [
-          {
-            type: '系统默认',
-            name: 'w1',
-            best: true,
-            net: 'premain',
-            isSystem: true,
-            Version: ConfigureVersion,
-            address: 'wss://w1.chainx.org/ws',
-          },
-        ].concat((localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
+      : [].concat((localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @observable mainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('mainNodes')
       ? localSave.get('mainNodes')
-      : [
-          {
-            type: '系统默认',
-            name: 'w1',
-            best: true,
-            net: 'main',
-            isSystem: true,
-            Version: ConfigureVersion,
-            address: 'wss://w1.chainx.org/ws',
-          },
-        ].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+      : [].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @computed

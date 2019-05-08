@@ -31,13 +31,20 @@ class Chain extends ModelExtend {
     this.changeModel('blockDuration', period * 1000);
   }
 
-  getChainProperties = async ({ url }) => {
+  getChainPropertiesFetch = async ({ url }) => {
     const res = await fetchFromWs({
       url,
       method: 'system_properties',
     });
     if (res && res.data) {
-      return res.data.network;
+      const { address_type, network_type } = res.data;
+      if (address_type === 44 && network_type === 'mainnet') {
+        return 'main';
+      } else if (address_type === 42 && network_type === 'testnet') {
+        return 'test';
+      } else if (address_type === 44 && network_type === 'testnet') {
+        return 'premain';
+      }
     }
   };
 }

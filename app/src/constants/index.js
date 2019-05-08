@@ -72,7 +72,7 @@ export const SCRYPT_PARAMS = {
 
 export const AjaxCallTime = 5000;
 
-export const ConfigureVersion = 11;
+export const ConfigureVersion = 12;
 
 export const blockChain = {
   tx: v => `https://www.blockchain.com/btctest/tx/${v}`,

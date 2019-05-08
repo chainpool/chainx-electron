@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Input, Button, Mixin } from '../../../components';
+import { NetWork } from '../../../constants';
 import { Patterns, _, Inject } from '../../../utils';
 import * as styles from './OperationNodeModal.less';
 
@@ -31,9 +32,9 @@ class OperationNodeModal extends Mixin {
     checkAddress: async () => {
       const { address } = this.state;
       let errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
-      // if (!errMsg) {
-      //   errMsg = await this.checkAll.checkNetType(address);
-      // }
+      if (!errMsg) {
+        errMsg = await this.checkAll.checkNetType(address);
+      }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -45,7 +46,7 @@ class OperationNodeModal extends Mixin {
       let res = '';
       try {
         res = await dispatch({
-          type: 'getChainProperties',
+          type: 'getChainPropertiesFetch',
           payload: { url: address },
         });
         if (!res) {
@@ -54,7 +55,8 @@ class OperationNodeModal extends Mixin {
       } catch (err) {
         return '节点连接失败';
       }
-      return res.search(value) > -1 ? '' : `该节点网络类型(${res})不符合所选类型(${name})`;
+      const desc = NetWork.filter((item = {}) => item.value === res)[0];
+      return res.search(value) > -1 ? '' : `该节点网络类型(${desc.name})不允许添加到${name}网络类型`;
     },
     confirm: async () => {
       const result1 = await this.checkAll['checkName']();
