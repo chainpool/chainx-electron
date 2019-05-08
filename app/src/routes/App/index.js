@@ -16,12 +16,13 @@ import * as styles from './index.less';
 
 addLocaleData([...zh, ...en]);
 
-@Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore }) => ({
+@Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore, chainStore }) => ({
   globalStore,
   accountStore,
   electionStore,
   configureStore,
   tradeStore,
+  chainStore,
 }))
 class Main extends Component {
   render() {

@@ -1,7 +1,7 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
 import { _ } from '@utils/index';
-import { subscribeNewHead, getBlockPeriod } from '../services';
+import { subscribeNewHead, getBlockPeriod, chainProperties } from '../services';
 import { fetchFromWs } from '../utils';
 
 class Chain extends ModelExtend {
@@ -37,14 +37,25 @@ class Chain extends ModelExtend {
       method: 'system_properties',
     });
     if (res && res.data) {
-      const { address_type, network_type } = res.data;
-      if (address_type === 44 && network_type === 'mainnet') {
-        return 'main';
-      } else if (address_type === 42 && network_type === 'testnet') {
-        return 'test';
-      } else if (address_type === 44 && network_type === 'testnet') {
-        return 'premain';
-      }
+      return this.getType(res.data);
+    }
+  };
+
+  getChainProperties = async () => {
+    const res = await chainProperties();
+    if (res) {
+      return this.getType(res) || 'test';
+    }
+  };
+
+  getType = data => {
+    const { address_type, network_type } = data;
+    if (address_type === 44 && network_type === 'mainnet') {
+      return 'main';
+    } else if (address_type === 42 && network_type === 'testnet') {
+      return 'test';
+    } else if (address_type === 44 && network_type === 'testnet') {
+      return 'premain';
     }
   };
 }
