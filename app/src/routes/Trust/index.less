@@ -47,9 +47,42 @@
 
 
   .signStatus{
+    position:relative;
     border:1px solid @yellow;
     padding:20px;
     margin:40px 0;
+    .completeSign{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      color:white;
+      background: rgba(0,0,0,.7);
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      position:absolute;
+      .resok{
+        margin:12px 0 16px;
+        color:@yellow;
+      }
+      .hash{
+        text-align: center;
+        font-size: 12px;
+        >div+div{
+          margin-top: 8px;
+        }
+        .hashvalue{
+          color:@yellow;
+        }
+      }
+      i{
+        font-size: 30px;
+        color:@yellow;
+      }
+    }
     >ul{
       >li+li{
         margin-top: 10px;

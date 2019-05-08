@@ -50,10 +50,6 @@ class Trust extends Mixin {
 
   render() {
     const {
-      model: { tx, signTrusteeList = [] },
-    } = this.props;
-
-    const {
       accountStore: {
         isValidator,
         isTrustee,
@@ -64,7 +60,7 @@ class Trust extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { trusts = [], normalizedOnChainAllWithdrawList = [] },
+      model: { tx, signTrusteeList = [], trusts = [], normalizedOnChainAllWithdrawList = [], maxSignCount, signHash },
     } = this.props;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -130,8 +126,19 @@ class Trust extends Mixin {
             <SettingTable {...this.props} />
           </div>
         )}
-        {signTrusteeList.length && tx ? (
+        {isTrustee && signTrusteeList.length && tx ? (
           <div className={styles.signStatus}>
+            {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
+              <div className={styles.completeSign}>
+                <Icon name="dengdai" />
+                <div className={styles.resok}>响应已完成，提现处理中…</div>
+                <div className={styles.hash}>
+                  <div>交易哈希</div>
+                  <div className={styles.hashvalue}>{signHash}</div>
+                </div>
+              </div>
+            )}
+
             <TableTitle title={'响应列表'}>
               <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
                 <span>{tx}</span>

@@ -27,6 +27,7 @@ import { default as BigNumber } from 'bignumber.js';
 import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
+import { default as reverse } from 'buffer-reverse';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -57,6 +58,7 @@ export default class Trust extends ModelExtend {
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
   @observable commentFee = '';
+  @observable maxSignCount = '';
 
   @computed
   get trusts() {
@@ -135,6 +137,15 @@ export default class Trust extends ModelExtend {
     });
   }
 
+  @computed get signHash() {
+    if (this.tx && this.signTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCount) {
+      const tx = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
+      const hash = tx.getHash();
+      return reverse(hash).toString('hex');
+    }
+    return '';
+  }
+
   reload = () => {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
@@ -175,9 +186,8 @@ export default class Trust extends ModelExtend {
 
     const caculateCommentFee = async (url, inputLength, outputLength) => {
       const fee = await this.fetchNodeFeeRate(url);
-      const res = await getTrusteeSessionInfo('Bitcoin');
-      const { trusteeList = [] } = res;
-      const maxSignCount = Math.ceil((trusteeList.length * 2) / 3);
+      const res = await this.getTrusteeSessionInfo('Bitcoin');
+      const { maxSignCount } = res;
       const bytes = inputLength * (166 + 319 + (maxSignCount - 1) * 74) + 34 * outputLength;
       const result = formatNumber.toFixed(bytes * fee, 8);
       console.log(
@@ -274,15 +284,16 @@ export default class Trust extends ModelExtend {
     if (findOne && findOne.chain) {
       const [resTx = {}, resRede = {}] = await Promise.all([
         getWithdrawTx(findOne.chain),
-        getTrusteeSessionInfo(findOne.chain),
+        this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { hotEntity: { redeemScript } = {} } = resRede || {};
+      const { redeemScript, maxSignCount } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
         redeemScript,
         trusteeList,
+        maxSignCount,
       });
     } else {
       this.changeModel({
@@ -290,7 +301,24 @@ export default class Trust extends ModelExtend {
         signStatus: '',
         redeemScript: '',
         trusteeList: [],
+        maxSignCount: '',
       });
+    }
+  };
+
+  getTrusteeSessionInfo = async chain => {
+    if (this.redeemScript) {
+      return {
+        redeemScript: this.redeemScript,
+        maxSignCount: this.maxSignCount,
+      };
+    } else {
+      const res = await getTrusteeSessionInfo(chain);
+      const { hotEntity: { redeemScript } = {}, trusteeList = [] } = res || {};
+      return {
+        redeemScript,
+        maxSignCount: Math.ceil((trusteeList.length * 2) / 3),
+      };
     }
   };
 
