@@ -146,4 +146,6 @@ export default class ModelExtend {
     const findOne = assets.filter((item = {}) => item.name === 'PCX')[0] || {};
     return findOne.precision;
   };
+
+  getCurrentNetWork = () => this.rootStore.configureStore.currentNetWork;
 }

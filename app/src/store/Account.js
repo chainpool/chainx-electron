@@ -18,7 +18,7 @@ export default class Store extends ModelExtend {
     autorun(() => {
       localSave.set('currentSelect', this.currentAccount);
       if (!inElectron) {
-        localSave.set('accounts', this.accounts);
+        localSave.set('accounts', this._accounts);
       }
     });
 
@@ -39,8 +39,22 @@ export default class Store extends ModelExtend {
     this.accounts = defaultAccounts;
   }
 
-  @observable accounts = localSave.get('accounts') || [];
+  @observable _accounts = localSave.get('accounts') || [];
   @observable currentAccount = localSave.get('currentSelect') || {};
+
+  @computed
+  get accounts() {
+    const currentNetWork = this.getCurrentNetWork();
+    if (currentNetWork.value === 'test') {
+      return this._accounts.filter((item = {}) => item.net === 'test' || !item.net);
+    } else if (currentNetWork.value === 'main') {
+      return this._accounts.filter((item = {}) => item.net === 'main');
+    }
+  }
+
+  set accounts(accounts) {
+    this._accounts = accounts;
+  }
 
   @computed get accountsList() {
     return this.accounts.map((item = {}) => ({
@@ -100,6 +114,7 @@ export default class Store extends ModelExtend {
   addAccount({ tag, address, encoded }) {
     // address已经存在的不再重复加入
     const filterOne = this.accounts.filter(item => item.address === address)[0];
+    const currentNetWork = this.getCurrentNetWork();
     if (filterOne) {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
       return;
@@ -111,7 +126,7 @@ export default class Store extends ModelExtend {
         return;
       }
     }
-    this.changeModel('accounts', [...this.accounts, { tag, address, encoded }]);
+    this.changeModel('accounts', [...this.accounts, { tag, address, encoded, net: currentNetWork.value }]);
     this.setCurrentAccount(address);
   }
 

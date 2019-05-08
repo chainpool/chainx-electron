@@ -82,7 +82,7 @@ class WithdrawConstructModal extends Component {
       feeErrMsg,
     } = this.state;
     const {
-      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, setPrecision },
+      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, setPrecision, commentFee },
     } = this.props;
     const options = normalizedOnChainAllWithdrawList
       .map((item = {}) => ({
@@ -187,7 +187,9 @@ class WithdrawConstructModal extends Component {
             }}
             label={
               <div>
-                Bitcoin手续费<span className={styles.bitcoinfee}>{tx.length ? `(交易长度:${tx.length})` : null}</span>
+                Bitcoin手续费
+                <span className={styles.bitcoinfee}>{tx.length ? `(交易长度:${tx.length})` : null}</span>
+                {commentFee && <span className={styles.bitcoinfee}>推荐手续费:{commentFee}</span>}
               </div>
             }
             onBlur={() => {

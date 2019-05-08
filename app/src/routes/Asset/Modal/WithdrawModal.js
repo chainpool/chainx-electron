@@ -67,8 +67,12 @@ class WithdrawModal extends Mixin {
       const { amount, fee } = this.state;
       const errMsg =
         Patterns.check('required')(amount) ||
-        Patterns.check('smaller')(0, amount, '提现数量必须大于0') ||
-        Patterns.check('smallerOrEqual')(Number(this.props.model.setPrecision(fee, token)) + Number(amount), freeShow);
+        Patterns.check('smaller')(
+          Number(this.props.model.setPrecision(fee, token)),
+          amount,
+          '提现数量必须大于手续费'
+        ) ||
+        Patterns.check('smallerOrEqual')(Number(amount), freeShow);
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },

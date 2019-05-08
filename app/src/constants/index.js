@@ -37,10 +37,10 @@ export const NetWork = [
     name: '测试网',
     value: 'test',
   },
-  // {
-  //   name: '主网',
-  //   value: 'main',
-  // },
+  {
+    name: '主网',
+    value: 'main',
+  },
 ];
 
 export const API = {

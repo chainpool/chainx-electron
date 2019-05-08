@@ -56,6 +56,7 @@ export default class Trust extends ModelExtend {
   @observable signStatus = '';
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
+  @observable commentFee = '';
 
   @computed
   get trusts() {
@@ -152,7 +153,6 @@ export default class Trust extends ModelExtend {
     if (!multisigAddress) {
       throw new Error('未获取到信托地址');
     }
-    // const multisigAddress = findOne.trusteeAddress[0];
     const nodeUrl = findOne.node;
     const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
 
@@ -173,6 +173,27 @@ export default class Trust extends ModelExtend {
       return sum.isLessThan(amount) ? [] : result;
     };
 
+    const caculateCommentFee = async (url, inputLength, outputLength) => {
+      const fee = await this.fetchNodeFeeRate(url);
+      const res = await getTrusteeSessionInfo('Bitcoin');
+      const { trusteeList = [] } = res;
+      const maxSignCount = Math.ceil((trusteeList.length * 2) / 3);
+      const bytes = inputLength * (166 + 319 + (maxSignCount - 1) * 74) + 34 * outputLength;
+      const result = formatNumber.toFixed(bytes * fee, 8);
+      console.log(
+        inputLength,
+        outputLength,
+        fee,
+        maxSignCount,
+        bytes,
+        result,
+        'inputLength,outputLength,fee,maxSignCount,result'
+      );
+      if (result) {
+        // this.changeModel('commentFee', result);
+      }
+    };
+
     const compose = async () => {
       let rawTransaction;
       const utxos = await getUnspents(nodeUrl);
@@ -190,6 +211,8 @@ export default class Trust extends ModelExtend {
         if (targetUtxos.length <= 0) {
           throw new Error('构造失败，账户余额不足');
         }
+
+        // console.log(utxos, targetUtxos, withdrawList, '----utxos,targetUtxos,withdrawList');
 
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
@@ -214,6 +237,7 @@ export default class Trust extends ModelExtend {
         }
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
+        caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
         const privateKeys = [privateKey];
@@ -252,8 +276,8 @@ export default class Trust extends ModelExtend {
         getWithdrawTx(findOne.chain),
         getTrusteeSessionInfo(findOne.chain),
       ]);
-      const { tx, signStatus } = resTx || {};
-      const { trusteeList = [], hotEntity: { redeemScript } = {} } = resRede || {};
+      const { tx, signStatus, trusteeList = [] } = resTx || {};
+      const { hotEntity: { redeemScript } = {} } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
@@ -314,6 +338,22 @@ export default class Trust extends ModelExtend {
         }
       })
       .catch(err => Promise.reject(err));
+  };
+
+  fetchNodeFeeRate = async url => {
+    if (/@/.test(url)) {
+      url = url.split('@')[1];
+    }
+    const res = await fetchFromHttp({
+      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+      methodAlias: 'estimatesmartfee',
+      method: 'POST',
+      timeOut: 3500,
+      params: [10],
+    });
+    if (res && res.result) {
+      return res.result.feerate;
+    }
   };
 
   subScribeNodeStatus = () => {
@@ -428,7 +468,6 @@ export default class Trust extends ModelExtend {
   };
 
   getBitcoinTrusteeAddress = async () => {
-    const res = await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
-    return res;
+    return await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
   };
 }

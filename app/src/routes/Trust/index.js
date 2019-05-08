@@ -136,22 +136,18 @@ class Trust extends Mixin {
               <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
                 <span>{tx}</span>
               </div>
-              {tx ? (
-                <ButtonGroup>
-                  <Button>
-                    <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
-                  </Button>
-                  {isShowResponseWithdraw ? (
-                    <Button
-                      type="success"
-                      onClick={() => {
-                        openModal({ name: 'WithdrawSignModal' });
-                      }}>
-                      响应多签提现
-                    </Button>
-                  ) : null}
-                </ButtonGroup>
-              ) : null}
+              <ButtonGroup>
+                <Button>
+                  <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
+                </Button>
+                <Button
+                  {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
+                  onClick={() => {
+                    openModal({ name: 'WithdrawSignModal' });
+                  }}>
+                  响应多签提现
+                </Button>
+              </ButtonGroup>
             </TableTitle>
             <ul>
               <li>
@@ -187,17 +183,16 @@ class Trust extends Mixin {
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
-            {isShowConstructureWithdraw ? (
-              <ButtonGroup>
-                <Button
-                  onClick={() => {
-                    openModal({ name: 'WithdrawConstructModal' });
-                  }}>
-                  <Icon name="icon-goujiantixian" />
-                  <FormattedMessage id={'BuildMultiSigWithdrawal'} />
-                </Button>
-              </ButtonGroup>
-            ) : null}
+            <ButtonGroup>
+              <Button
+                {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}
+                onClick={() => {
+                  openModal({ name: 'WithdrawConstructModal' });
+                }}>
+                <Icon name="icon-goujiantixian" />
+                <FormattedMessage id={'BuildMultiSigWithdrawal'} />
+              </Button>
+            </ButtonGroup>
           </TableTitle>
           <WithdrawTable {...props} />
         </div>
