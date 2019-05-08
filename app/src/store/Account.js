@@ -18,58 +18,45 @@ export default class Store extends ModelExtend {
     autorun(() => {
       localSave.set('currentSelectTest', this.currentAccountTest);
       localSave.set('currentSelectMain', this.currentAccountMain);
-      if (!inElectron) {
-        localSave.set('accounts', this._accounts);
-      }
+      localSave.set('currentSelectPreMain', this.currentAccountPreMain);
+      localSave.set('accounts', this._accounts);
     });
-
-    let defaultAccounts = [];
-    if (inElectron) {
-      const originAccounts = ipc.sendSync(ipcMsg.GET_KEYSTORE);
-      defaultAccounts = originAccounts.map(account => {
-        return {
-          tag: account.tag,
-          address: account.address,
-          encoded: account,
-        };
-      });
-    } else {
-      defaultAccounts = localSave.get('accounts');
-    }
-
-    this.accounts = defaultAccounts;
   }
 
   @observable _accounts = localSave.get('accounts') || [];
   @observable currentAccountTest = localSave.get('currentSelectTest') || {};
   @observable currentAccountMain = localSave.get('currentAccountMain') || {};
+  @observable currentAccountPreMain = localSave.get('currentAccountPreMain') || {};
 
   @computed
   get currentAccount() {
-    const currentNetWork = this.getCurrentNetWork();
-    if (currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       return this.currentAccountTest;
-    } else if (currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       return this.currentAccountMain;
+    } else if (this.isPreMainNetWork()) {
+      return this.currentAccountPreMain;
     }
   }
 
   set currentAccount(account) {
-    const currentNetWork = this.getCurrentNetWork();
-    if (currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       this.currentAccountTest = account;
-    } else if (currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       this.currentAccountMain = account;
+    } else if (this.isPreMainNetWork()) {
+      this.currentAccountPreMain = account;
     }
   }
 
   @computed
   get accounts() {
-    const currentNetWork = this.getCurrentNetWork();
-    if (currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       return this._accounts.filter((item = {}) => item.net === 'test' || !item.net);
-    } else if (currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       return this._accounts.filter((item = {}) => item.net === 'main');
+    } else if (this.isPreMainNetWork()) {
+      return this._accounts.filter((item = {}) => item.net === 'premain');
     }
   }
 
@@ -147,7 +134,7 @@ export default class Store extends ModelExtend {
         return;
       }
     }
-    this.changeModel('accounts', [...this.accounts, { tag, address, encoded, net: currentNetWork.value }]);
+    this.changeModel('accounts', [...this._accounts, { tag, address, encoded, net: currentNetWork.value }]);
     this.setCurrentAccount(address);
   }
 

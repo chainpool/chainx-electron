@@ -31,9 +31,9 @@ class OperationNodeModal extends Mixin {
     checkAddress: async () => {
       const { address } = this.state;
       let errMsg = Patterns.check('required')(address) || Patterns.check('isWsAddress')(address);
-      if (!errMsg) {
-        errMsg = await this.checkAll.checkNetType(address);
-      }
+      // if (!errMsg) {
+      //   errMsg = await this.checkAll.checkNetType(address);
+      // }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },

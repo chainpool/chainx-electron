@@ -17,6 +17,8 @@ const getBestApi = () => {
   let api;
   if (currentNetWork.value === 'test') {
     api = localSave.get('testApi') || [];
+  } else if (currentNetWork.value === 'premain') {
+    api = localSave.get('premainApi') || [];
   } else if (currentNetWork.value === 'main') {
     api = localSave.get('mainApi') || [];
   }

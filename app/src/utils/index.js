@@ -29,6 +29,8 @@ const getBestNode = () => {
     nodes = localSave.get('testNodes') || [];
   } else if (currentNetWork.value === 'main') {
     nodes = localSave.get('mainNodes') || [];
+  } else if (currentNetWork.value === 'premain') {
+    nodes = localSave.get('premainNodes') || [];
   }
   const findOne = nodes.filter((item = {}) => item.best)[0] || {};
   const bestAddress = findOne.address || process.env.CHAINX_NODE_URL || 'ws://127.0.0.1:9944';

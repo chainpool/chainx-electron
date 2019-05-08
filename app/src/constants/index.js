@@ -38,6 +38,10 @@ export const NetWork = [
     value: 'test',
   },
   {
+    name: '主网预发布',
+    value: 'premain',
+  },
+  {
     name: '主网',
     value: 'main',
   },

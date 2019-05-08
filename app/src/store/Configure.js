@@ -31,8 +31,10 @@ export default class Configure extends ModelExtend {
     autorun(() => {
       localSave.set('testNodes', this.testNodes);
       localSave.set('mainNodes', this.mainNodes);
+      localSave.set('premainNodes', this.premainNodes);
       localSave.set('testApi', this.testApi);
       localSave.set('mainApi', this.mainApi);
+      localSave.set('premainApi', this.premainApi);
       localSave.set('autoSwitchBestNode', this.autoSwitchBestNode);
       localSave.set('autoSwitchBestApi', this.autoSwitchBestApi);
       localSave.set('currentNetWork', this.currentNetWork);
@@ -61,10 +63,34 @@ export default class Configure extends ModelExtend {
         ].concat((localSave.get('testApi') || []).filter((item = {}) => !item.isSystem))
   );
 
+  @observable premainApi = this.resetApi(
+    this.refreshLocalNodesOrApi('premainApi')
+      ? localSave.get('premainApi')
+      : [
+          {
+            type: '系统默认',
+            name: 'api.chainx.org',
+            best: true,
+            address: 'https://api.chainx.org',
+            isSystem: true,
+            Version: ConfigureVersion,
+          },
+        ].concat((localSave.get('premainApi') || []).filter((item = {}) => !item.isSystem))
+  );
+
   @observable mainApi = this.resetApi(
     this.refreshLocalNodesOrApi('mainApi')
       ? localSave.get('mainApi')
-      : [].concat((localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem))
+      : [
+          {
+            type: '系统默认',
+            name: 'api.chainx.org',
+            best: true,
+            address: 'https://api.chainx.org',
+            isSystem: true,
+            Version: ConfigureVersion,
+          },
+        ].concat((localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem))
   );
 
   @observable testNodes = this.resetNode(
@@ -95,43 +121,77 @@ export default class Configure extends ModelExtend {
         ].concat((localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
+  @observable premainNodes = this.resetNode(
+    this.refreshLocalNodesOrApi('premainNodes')
+      ? localSave.get('premainNodes')
+      : [
+          {
+            type: '系统默认',
+            name: 'w1',
+            best: true,
+            net: 'premain',
+            isSystem: true,
+            Version: ConfigureVersion,
+            address: 'wss://w1.chainx.org/ws',
+          },
+        ].concat((localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
+  );
+
   @observable mainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('mainNodes')
       ? localSave.get('mainNodes')
-      : [].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+      : [
+          {
+            type: '系统默认',
+            name: 'w1',
+            best: true,
+            net: 'main',
+            isSystem: true,
+            Version: ConfigureVersion,
+            address: 'wss://w1.chainx.org/ws',
+          },
+        ].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @computed
   get nodes() {
-    if (this.currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       return this.testNodes;
-    } else if (this.currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       return this.mainNodes;
+    } else if (this.isPreMainNetWork()) {
+      return this.premainNodes;
     }
   }
 
   set nodes(nodes) {
-    if (this.currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       this.testNodes = nodes;
-    } else if (this.currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       this.mainNodes = nodes;
+    } else if (this.isPreMainNetWork()) {
+      this.premainNodes = nodes;
     }
   }
 
   @computed
   get api() {
-    if (this.currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       return this.testApi;
-    } else if (this.currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       return this.mainApi;
+    } else if (this.isPreMainNetWork()) {
+      return this.premainApi;
     }
   }
 
   set api(api) {
-    if (this.currentNetWork.value === 'test') {
+    if (this.isTestNetWork()) {
       this.testApi = api;
-    } else if (this.currentNetWork.value === 'main') {
+    } else if (this.isMainNetWork()) {
       this.mainApi = api;
+    } else if (this.isPreMainNetWork()) {
+      this.premainApi = api;
     }
   }
 

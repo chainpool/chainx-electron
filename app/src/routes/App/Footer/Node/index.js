@@ -82,7 +82,7 @@ class Node extends Component {
         return 'red';
       } else if (delay > 300) {
         return 'yellow';
-      } else if (delay < 300) {
+      } else if (delay <= 300) {
         return 'green';
       }
     };
