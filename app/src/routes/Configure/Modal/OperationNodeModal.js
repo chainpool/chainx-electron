@@ -54,7 +54,7 @@ class OperationNodeModal extends Mixin {
       } catch (err) {
         return '节点连接失败';
       }
-      return res.search(value) > -1 ? '' : `该节点网络类型(${res.network})不符合所选类型(${name})`;
+      return res.search(value) > -1 ? '' : `该节点网络类型(${res})不符合所选类型(${name})`;
     },
     confirm: async () => {
       const result1 = await this.checkAll['checkName']();

@@ -58,22 +58,13 @@ export default class Configure extends ModelExtend {
             isSystem: true,
             Version: ConfigureVersion,
           },
-        ]
+        ].concat((localSave.get('testApi') || []).filter((item = {}) => !item.isSystem))
   );
 
   @observable mainApi = this.resetApi(
     this.refreshLocalNodesOrApi('mainApi')
       ? localSave.get('mainApi')
-      : [
-          {
-            type: '系统默认',
-            name: 'api.chainx.org',
-            best: true,
-            address: 'https://api.chainx.org',
-            isSystem: true,
-            Version: ConfigureVersion,
-          },
-        ]
+      : [].concat((localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem))
   );
 
   @observable testNodes = this.resetNode(
@@ -107,15 +98,7 @@ export default class Configure extends ModelExtend {
   @observable mainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('mainNodes')
       ? localSave.get('mainNodes')
-      : [
-          {
-            type: '系统默认',
-            name: 'w2',
-            best: true,
-            isSystem: true,
-            address: 'wss://w2.chainx.org/ws',
-          },
-        ].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+      : [].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @computed
