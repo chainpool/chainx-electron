@@ -410,6 +410,7 @@ export default class Trust extends ModelExtend {
   updateTrust = (obj = {}) => {
     const trusts = _.cloneDeep(this._trusts);
     const currentAccount = this.getCurrentAccount();
+    const currentNetWork = this.getCurrentNetWork();
     const { address } = currentAccount;
     const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey } = obj;
     const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
@@ -419,6 +420,7 @@ export default class Trust extends ModelExtend {
         chain,
         hotPubKey,
         coldPubKey,
+        net: currentNetWork.value,
       });
     } else {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
