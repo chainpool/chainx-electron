@@ -38,6 +38,7 @@ class Configure extends Mixin {
                   type: 'setCurrentNetWork',
                   payload: { name, value },
                 });
+
                 window.location.reload();
               }}
             />

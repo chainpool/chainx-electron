@@ -2,66 +2,68 @@ import { autorun, computed, observable } from 'mobx';
 import { _, localSave, toJS } from '../utils';
 import ModelExtend from './ModelExtend';
 import { Toast } from '../components';
-import { ipc as ipcMsg } from '@constants';
-
-const inElectron = process.env.CHAINX_BUILD_FOR_ELECTRON === 'true';
-let ipc;
-if (inElectron) {
-  const { ipcRenderer } = window.require('electron');
-  ipc = ipcRenderer;
-}
 
 export default class Store extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
 
     autorun(() => {
-      localSave.set('currentSelectTest', this.currentAccountTest);
-      localSave.set('currentSelectMain', this.currentAccountMain);
-      localSave.set('currentSelectPreMain', this.currentAccountPreMain);
-      localSave.set('accounts', this._accounts);
+      localSave.set('currentSelectTest', this.currentSelectTest);
+      localSave.set('currentSelectMain', this.currentSelectMain);
+      localSave.set('currentSelectPreMain', this.currentSelectPreMain);
+      localSave.set('accountsTest', this.accountsTest);
+      localSave.set('accountsMain', this.accountsMain);
+      localSave.set('accountsPreMain', this.accountsPreMain);
     });
   }
 
-  @observable _accounts = localSave.get('accounts') || [];
-  @observable currentAccountTest = localSave.get('currentSelectTest') || {};
-  @observable currentAccountMain = localSave.get('currentAccountMain') || {};
-  @observable currentAccountPreMain = localSave.get('currentAccountPreMain') || {};
+  @observable accountsTest = localSave.get('accountsTest') || localSave.get('accounts') || [];
+  @observable accountsMain = localSave.get('accountsMain') || [];
+  @observable accountsPreMain = localSave.get('accountsPreMain') || [];
+  @observable currentSelectTest = localSave.get('currentSelectTest') || {};
+  @observable currentSelectMain = localSave.get('currentSelectMain') || {};
+  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || {};
 
   @computed
   get currentAccount() {
     if (this.isTestNetWork()) {
-      return this.currentAccountTest;
+      return this.currentSelectTest;
     } else if (this.isMainNetWork()) {
-      return this.currentAccountMain;
+      return this.currentSelectMain;
     } else if (this.isPreMainNetWork()) {
-      return this.currentAccountPreMain;
+      return this.currentSelectPreMain;
     }
   }
 
   set currentAccount(account) {
     if (this.isTestNetWork()) {
-      this.currentAccountTest = account;
+      this.currentSelectTest = account;
     } else if (this.isMainNetWork()) {
-      this.currentAccountMain = account;
+      this.currentSelectMain = account;
     } else if (this.isPreMainNetWork()) {
-      this.currentAccountPreMain = account;
+      this.currentSelectPreMain = account;
     }
   }
 
   @computed
   get accounts() {
     if (this.isTestNetWork()) {
-      return this._accounts.filter((item = {}) => item.net === 'test' || !item.net);
+      return this.accountsTest.filter((item = {}) => !item.net || item.net === 'test');
     } else if (this.isMainNetWork()) {
-      return this._accounts.filter((item = {}) => item.net === 'main');
+      return this.accountsMain;
     } else if (this.isPreMainNetWork()) {
-      return this._accounts.filter((item = {}) => item.net === 'premain');
+      return this.accountsPreMain;
     }
   }
 
   set accounts(accounts) {
-    this._accounts = accounts;
+    if (this.isTestNetWork()) {
+      this.accountsTest = accounts;
+    } else if (this.isMainNetWork()) {
+      this.accountsMain = accounts;
+    } else if (this.isPreMainNetWork()) {
+      this.accountsPreMain = accounts;
+    }
   }
 
   @computed get accountsList() {
@@ -121,79 +123,48 @@ export default class Store extends ModelExtend {
 
   addAccount({ tag, address, encoded }) {
     // address已经存在的不再重复加入
-    const filterOne = this._accounts.filter(item => item.address === address)[0];
+    const filterOne = this.accounts.filter(item => item.address === address)[0];
     const currentNetWork = this.getCurrentNetWork();
     if (filterOne) {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
       return;
     }
-    if (inElectron) {
-      // TODO: 考虑用异步的方式保存keystore
-      const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, tag, address, encoded);
-      if (!success) {
-        return;
-      }
-    }
-    this.changeModel('accounts', [...this._accounts, { tag, address, encoded, net: currentNetWork.value }]);
+    this.changeModel('accounts', [...this.accounts, { tag, address, encoded, net: currentNetWork.value }]);
     this.setCurrentAccount(address);
   }
 
   deleteAccount({ address }) {
-    const accounts = [...this._accounts];
-    const index = this._accounts.findIndex(account => account.address === address);
+    const accounts = [...this.accounts];
+    const index = this.accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
-
-    if (inElectron) {
-      const success = ipc.sendSync(ipcMsg.DELETE_KEYSTORE, address);
-      if (!success) {
-        return;
-      }
-    }
-
     accounts.splice(index, 1);
     this.changeModel('accounts', accounts);
     this.setCurrentAccount();
   }
 
   updateEncoded({ address, encoded }) {
-    const accounts = [...this._accounts];
-    const index = this._accounts.findIndex(account => account.address === address);
+    const accounts = [...this.accounts];
+    const index = this.accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
 
-    const account = this._accounts[index];
-
-    if (inElectron) {
-      const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, account.tag, address, encoded);
-      if (!success) {
-        return;
-      }
-    }
-
+    const account = this.accounts[index];
     accounts.splice(index, 1, { ...account, encoded });
     this.changeModel('accounts', accounts);
     this.setCurrentAccount();
   }
 
   updateTag({ address, tag }) {
-    const accounts = [...this._accounts];
-    const index = this._accounts.findIndex(account => account.address === address);
+    const accounts = [...this.accounts];
+    const index = this.accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
 
-    const account = this._accounts[index];
-
-    if (inElectron) {
-      const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, tag, address, account.encoded);
-      if (!success) {
-        return;
-      }
-    }
-
+    const account = this.accounts[index];
     accounts.splice(index, 1, { ...account, tag });
     this.changeModel('accounts', accounts);
     this.setCurrentAccount();

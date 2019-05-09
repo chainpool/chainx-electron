@@ -30,6 +30,18 @@ class CommonLayOut extends Component {
       },
     } = this.props;
     const address = parseQueryString(search).address;
+    await dispatchGlobal({
+      type: 'setHistory',
+      payload: {
+        history: this.props.history,
+      },
+    });
+    await dispatchAccount({
+      type: 'switchAccount',
+      payload: {
+        address,
+      },
+    });
     const wsPromise = () =>
       Promise.race([
         ChainX.isRpcReady(),
@@ -49,18 +61,6 @@ class CommonLayOut extends Component {
         } else {
           setNet('mainnet');
         }
-        await dispatchGlobal({
-          type: 'setHistory',
-          payload: {
-            history: this.props.history,
-          },
-        });
-        await dispatchAccount({
-          type: 'switchAccount',
-          payload: {
-            address,
-          },
-        });
         await dispatchGlobal({ type: 'getAllAssets' });
         await dispatchElection({ type: 'getIntentions' });
         await dispatchTrade({ type: 'getOrderPairs' });
@@ -68,7 +68,7 @@ class CommonLayOut extends Component {
           ready: true,
         });
       })
-      .catch(err => {
+      .catch(async err => {
         console.log('当前节点连接超时，切换节点', err);
         subscribeNodeOrApi({
           refresh: false,

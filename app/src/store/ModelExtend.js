@@ -81,10 +81,13 @@ export default class ModelExtend {
     };
   };
 
-  getQueryParams = () => {
+  getParams = () => {
     const history = this.getHistory();
-    const { location: { search } = {} } = history;
-    return parseQueryString(search);
+    const { location: { pathname, search } = {} } = history;
+    return {
+      pathname,
+      search: parseQueryString(search),
+    };
   };
 
   isLogin = () => {
