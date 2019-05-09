@@ -28,15 +28,24 @@ export default class Configure extends ModelExtend {
       return list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
     };
 
-    this.concatNodeOrApi = (defaultNodes = [], selfNodes = []) => {
-      const findOne = selfNodes.filter(item => item.best)[0];
+    this.concatNodeOrApi = (defaultNodesOrApi = [], selfNodesOrApi = []) => {
+      const bestCount = defaultNodesOrApi.filter(item => item.best);
+      const versionCount = defaultNodesOrApi.filter(item => item.Version);
+      if ((defaultNodesOrApi.length && bestCount.length === 0) || bestCount.length > 1) {
+        throw Error('默认节点或Api必须且只有一个best属性等于true');
+      }
+      if (defaultNodesOrApi.length && versionCount.length === 0) {
+        throw Error('默认节点或Api必须至少有一个Version属性等于ConfigureVersion');
+      }
+
+      const findOne = selfNodesOrApi.filter(item => item.best)[0];
       if (findOne) {
-        defaultNodes = [...defaultNodes].map(item => {
+        defaultNodesOrApi = [...defaultNodesOrApi].map(item => {
           item.best = null;
           return item;
         });
       }
-      return defaultNodes.concat(selfNodes);
+      return defaultNodesOrApi.concat(selfNodesOrApi);
     };
 
     autorun(() => {
@@ -61,46 +70,55 @@ export default class Configure extends ModelExtend {
   @observable testApi = this.resetApi(
     this.refreshLocalNodesOrApi('testApi')
       ? localSave.get('testApi')
-      : [
-          {
-            type: '系统默认',
-            name: 'api.chainx.org',
-            best: true,
-            address: 'https://api.chainx.org',
-            isSystem: true,
-            Version: ConfigureVersion,
-          },
-        ].concat((localSave.get('testApi') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'api.chainx.org',
+              best: true,
+              address: 'https://api.chainx.org',
+              isSystem: true,
+              Version: ConfigureVersion,
+            },
+          ],
+          (localSave.get('testApi') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @observable premainApi = this.resetApi(
     this.refreshLocalNodesOrApi('premainApi')
       ? localSave.get('premainApi')
-      : [
-          {
-            type: '系统默认',
-            name: 'api.chainx.org',
-            best: true,
-            address: 'https://api.chainx.org',
-            isSystem: true,
-            Version: ConfigureVersion,
-          },
-        ].concat((localSave.get('premainApi') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'api.chainx.org',
+              best: true,
+              address: 'https://api.chainx.org',
+              isSystem: true,
+              Version: ConfigureVersion,
+            },
+          ],
+          (localSave.get('premainApi') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @observable mainApi = this.resetApi(
     this.refreshLocalNodesOrApi('mainApi')
       ? localSave.get('mainApi')
-      : [
-          {
-            type: '系统默认',
-            name: 'api.chainx.org',
-            best: true,
-            address: 'https://api.chainx.org',
-            isSystem: true,
-            Version: ConfigureVersion,
-          },
-        ].concat((localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'api.chainx.org',
+              best: true,
+              address: 'https://api.chainx.org',
+              isSystem: true,
+              Version: ConfigureVersion,
+            },
+          ],
+          (localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @observable testNodes = this.resetNode(
