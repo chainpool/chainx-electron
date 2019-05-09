@@ -45,22 +45,19 @@ class Chain extends ModelExtend {
   getChainProperties = async () => {
     const res = await chainProperties();
     if (res) {
+      const { bitcoin_type } = res;
+      if (bitcoin_type === 'mainnet') {
+        this.changeModel('bitCoinNetWork', 'main');
+      } else if (bitcoin_type === 'testnet') {
+        this.changeModel('bitCoinNetWork', 'test');
+      }
       return this.getNetType(res) || 'test';
     }
   };
 
   getNetType = data => {
-    const { address_type, network_type, bitcoin_type } = data;
+    const { address_type, network_type } = data;
     console.log(data, '-----网络类型');
-    if (bitcoin_type === 'mainnet') {
-      this.changeModel({
-        bitCoinNetWork: 'main',
-      });
-    } else if (bitcoin_type === 'testnet') {
-      this.changeModel({
-        bitCoinNetWork: 'test',
-      });
-    }
     if (address_type === 44 && network_type === 'mainnet') {
       return 'main';
     } else if (address_type === 42 && network_type === 'testnet') {
