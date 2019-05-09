@@ -121,7 +121,7 @@ export default class Store extends ModelExtend {
 
   addAccount({ tag, address, encoded }) {
     // address已经存在的不再重复加入
-    const filterOne = this.accounts.filter(item => item.address === address)[0];
+    const filterOne = this._accounts.filter(item => item.address === address)[0];
     const currentNetWork = this.getCurrentNetWork();
     if (filterOne) {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
@@ -139,8 +139,8 @@ export default class Store extends ModelExtend {
   }
 
   deleteAccount({ address }) {
-    const accounts = [...this.accounts];
-    const index = this.accounts.findIndex(account => account.address === address);
+    const accounts = [...this._accounts];
+    const index = this._accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
@@ -158,13 +158,13 @@ export default class Store extends ModelExtend {
   }
 
   updateEncoded({ address, encoded }) {
-    const accounts = [...this.accounts];
-    const index = this.accounts.findIndex(account => account.address === address);
+    const accounts = [...this._accounts];
+    const index = this._accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
 
-    const account = this.accounts[index];
+    const account = this._accounts[index];
 
     if (inElectron) {
       const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, account.tag, address, encoded);
@@ -179,13 +179,13 @@ export default class Store extends ModelExtend {
   }
 
   updateTag({ address, tag }) {
-    const accounts = [...this.accounts];
-    const index = this.accounts.findIndex(account => account.address === address);
+    const accounts = [...this._accounts];
+    const index = this._accounts.findIndex(account => account.address === address);
     if (index < 0) {
       return;
     }
 
-    const account = this.accounts[index];
+    const account = this._accounts[index];
 
     if (inElectron) {
       const success = ipc.sendSync(ipcMsg.SAVE_KEYSTORE, tag, address, account.encoded);

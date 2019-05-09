@@ -27,7 +27,7 @@ class EditPasswordModal extends Component {
       const { password, confirmPassword } = this.state;
       const errMsg =
         Patterns.check('required')(password) ||
-        Patterns.check('smaller')(6, password.length, '密码至少包含6个字符') ||
+        Patterns.check('smallerOrEqual')(6, password.length, '密码至少包含6个字符') ||
         Patterns.check('equal')(password, confirmPassword, ErrMsg.passNotEqual);
       this.setState({
         passwordErrMsg: errMsg,
