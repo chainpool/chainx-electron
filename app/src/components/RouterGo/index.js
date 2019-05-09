@@ -13,6 +13,7 @@ class RouterGo extends PureComponent {
       go = {},
       go: { pathname } = {},
       className,
+      style = {},
       isOutSide = false,
       onClick,
     } = this.props;
@@ -24,12 +25,12 @@ class RouterGo extends PureComponent {
     const url = !/http/.test(pathname) ? `http://${pathname}` : pathname;
 
     return isOutSide ? (
-      <a className={styles.url} rel="noopener noreferrer" href={url} target="_blank">
+      <a className={styles.url} style={style} rel="noopener noreferrer" href={url} target="_blank">
         {children || pathname}
       </a>
     ) : (
       <Ele
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', ...style }}
         className={className}
         onClick={() => {
           routerGo(go);

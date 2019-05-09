@@ -113,16 +113,16 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isHotPrivateKey: (prikey, pubkey, callback, errMsg = '热私钥格式错误') => {
+  isHotPrivateKey: (priKey, pubKey, callback, errMsg = '热私钥格式错误') => {
     try {
-      const decoded = wif.decode(prikey);
+      const decoded = wif.decode(priKey);
       _.isFunction(callback) && callback(decoded);
       try {
         let ecPair = bitcoin.ECPair.fromWIF(
-          prikey,
+          priKey,
           BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
         ); // 导入私钥
-        return ecPair.publicKey.toString('hex') === pubkey ? '' : '热私钥与热公钥不匹配';
+        return ecPair.publicKey.toString('hex') === pubKey ? '' : '热私钥与热公钥不匹配';
       } catch (err) {
         return '热私钥与热公钥不匹配';
       }
@@ -162,8 +162,7 @@ export const Patterns = {
     }
   },
   characterLength: (inputValue = '', minLength, maxLength) => {
-    let result = '';
-    result = inputValue.length > minLength ? '' : `最少${minLength}个字符`;
+    let result = inputValue.length > minLength ? '' : `最少${minLength}个字符`;
     result = inputValue.length > maxLength ? `最多${maxLength}个字符` : result;
     return result;
   },
@@ -171,7 +170,6 @@ export const Patterns = {
     if (inputValue && !_.isNaN(precision)) {
       inputValue = String(inputValue).replace(/(\.\d+?)0*$/, '$1'); //parseFloat(inputValue);
       const length = _.get(String(inputValue).split('.')[1] || 0, 'length');
-      // console.log(inputValue, length, Number(precision), '+++++++++++++++++++++++++++++++++++');
       return length > Number(precision) ? `小数位数最大${precision}位` : '';
     }
   },

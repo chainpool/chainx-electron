@@ -9,8 +9,9 @@ import {
   Toast,
   RouterGo,
   FormattedMessage,
+  Icon,
 } from '../../../components';
-import { Warn } from '../../components';
+import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject, _, Patterns } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
@@ -28,7 +29,7 @@ import coinbin from '../../../resource/coinbin.png';
 @Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
 class CrossChainBindModal extends Mixin {
   state = {
-    step: 0,
+    step: 1,
     recommendChannelSelect: '',
     tradeId: '',
     tradeIdErrMsg: '',
@@ -88,8 +89,8 @@ class CrossChainBindModal extends Mixin {
       BTC: {
         desc1: (
           <span>
-            用户需使用 <strong>支持OP_RETURN </strong> 的 BTC钱包向公共多签托管地址进行充值，并且在
-            <strong>OP_RETURN</strong> 中输入下方 <strong>十六进制 (Hex)</strong> 信息以完成与ChainX的绑定：
+            用户需使用<strong>支持OP_RETURN</strong>的BTC钱包向<strong>公共多签托管</strong>地址进行充值，并且在
+            <strong>OP_RETURN</strong>中输入下方信息以完成与ChainX的绑定：
           </span>
         ),
         value1: chainxAddressHex,
@@ -139,7 +140,10 @@ class CrossChainBindModal extends Mixin {
                     {index === 2 ? null : '、'}
                   </span>
                 ))}
-                等，不添加OP_RETURN信息，充值无法到账
+                等，如果不添加OP_RETURN信息，则充值无法到账。充值完成后ChainX会在 1小时内发放PCX奖励至您的资产。
+                <RouterGo isOutSide go={{ pathname: '' }}>
+                  查看充值奖励规则
+                </RouterGo>
               </strong>
             </div>
           </Warn>
@@ -148,8 +152,8 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            由持有DOT的地址向任意地址 (建议向自己) 发起任意金额 (建议为0) 的转账交易，并在 <strong>Data</strong>{' '}
-            中输入下方<strong>十六进制 (Hex)</strong> 信息：
+            由持有DOT的地址向任意地址 (建议向自己) 发起任意金额 (建议为0) 的转账交易，并在<strong>Data</strong>
+            中输入下方信息：
           </span>
         ),
         value1: `${chainxAddressHex}`,
@@ -258,6 +262,135 @@ class CrossChainBindModal extends Mixin {
 
     const findOne = show[token];
 
+    const BTC = (
+      <>
+        <div className={styles.desc}>{findOne.desc1}</div>
+        <div className={classNames(styles.grayblock, styles.addressall)}>
+          <div className={styles.address}>
+            <div className={styles.OP_RETURNcopy}>
+              <span id="copy">{findOne.value1}</span>
+              <HoverTip tip="本次BTC跨链充值的ChainX地址(16进制)">
+                <Icon name={'icon-jieshishuoming'} />
+              </HoverTip>
+            </div>
+            <div className={styles.OP_RETURNtitle}>
+              OP_RETURN中需要输入的信息d：
+              <Clipboard
+                id="copy"
+                outInner={
+                  <span className={styles.desc}>
+                    <FormattedMessage id={'CopyMessage'} />
+                  </span>
+                }
+              />
+            </div>
+          </div>
+        </div>
+        <div className={classNames(styles.grayblock, styles.depositaddress)}>
+          <span className={styles.label}>{findOne.desc2}</span>
+          <Clipboard>
+            <span className={styles.depositaddressvalue}>{findOne.value2}</span>
+          </Clipboard>
+        </div>
+      </>
+    );
+
+    const SDOT = (
+      <>
+        <div className={styles.grayblock1}>
+          <div>
+            <strong>参与了Polkadot第一期ICO的用户</strong>，可以将锁定的DOT
+            1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。{' '}
+            <RouterGo
+              style={{ fontWeight: 'bold' }}
+              isOutSide
+              go={{
+                pathname: 'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
+              }}>
+              点击查看参与用户地址列表
+            </RouterGo>
+          </div>
+        </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>第一步</span>
+          {findOne.desc1}
+        </div>
+        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot)}>
+          <div className={styles.address}>
+            <div className={styles.OP_RETURNcopy}>
+              <div>
+                <span id="copy">{findOne.value1}</span>
+                <HoverTip tip="本次SDOT跨链映射的ChainX地址(16进制)">
+                  <Icon name={'icon-jieshishuoming'} />
+                </HoverTip>
+                <div className={styles.dataerror}>
+                  如果出现<span>“Data格式不正确”</span>的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。
+                </div>
+              </div>
+            </div>
+            <div className={styles.OP_RETURNtitle}>
+              OP_RETURN中需要输入的信息d：
+              <Clipboard
+                id="copy"
+                outInner={
+                  <span className={styles.desc}>
+                    <FormattedMessage id={'CopyMessage'} />
+                  </span>
+                }
+              />
+            </div>
+          </div>
+        </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>第二步</span>
+          交易打包成功后，在下方输入<strong>交易ID (Txid/TxHash)</strong>。待交易签名验证无误，即可完成映射,
+          SDOT会立即发放。
+        </div>
+        <div className={styles.tradeid}>
+          <Input.Text
+            isTextArea
+            rows={2}
+            value={tradeId}
+            errMsg={tradeIdErrMsg}
+            placeholder={'0x002a3bfcf910ed48c3837c7293062caee146bb72ca1cfd0bd398315e3a07ce79'}
+            onChange={value => {
+              this.setState({
+                tradeId: value,
+              });
+            }}
+            onBlur={checkAll.checkTradeId}
+          />
+          <Button
+            size="full"
+            type="confirm"
+            onClick={() => {
+              if (checkAll.confirm()) {
+                const params = this.getTradeId();
+                dispatch({
+                  type: 'bindTxHash',
+                  payload: {
+                    params,
+                  },
+                })
+                  .then(res => {
+                    if (_.get(res, 'error.message')) {
+                      Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
+                    } else {
+                      Toast.success('交易ID绑定已完成');
+                      closeModal();
+                    }
+                  })
+                  .catch(err => {
+                    Toast.warn('交易ID绑定失败', err.message);
+                  });
+              }
+            }}>
+            <FormattedMessage id={'Confirm'} />
+          </Button>
+        </div>
+      </>
+    );
+
     return (
       <Modal
         title={
@@ -310,104 +443,9 @@ class CrossChainBindModal extends Mixin {
             </div>
           ) : (
             <>
-              {token === 'SDOT' && (
-                <div className={styles.grayblock1}>
-                  <div>
-                    <strong>参与了Polkadot第一期ICO的用户</strong>，可以将锁定的DOT
-                    1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。{' '}
-                    <RouterGo
-                      isOutSide
-                      go={{
-                        pathname:
-                          'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
-                      }}>
-                      点击查看参与用户地址列表
-                    </RouterGo>
-                  </div>
-                </div>
-              )}
-              <div className={styles.desc}>
-                <div />
-                {findOne.desc1}
-              </div>
-              <div className={classNames(styles.grayblock, styles.addressall)}>
-                <div>
-                  <div>
-                    <div className={styles.address}>
-                      <div id="copy">{findOne.value1}</div>
-                      <button>
-                        <Clipboard
-                          id="copy"
-                          outInner={
-                            <span className={styles.desc}>
-                              <FormattedMessage id={'CopyMessage'} />
-                            </span>
-                          }
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {token === 'BTC' ? (
-                <div className={styles.depositaddress}>
-                  <span className={styles.label}>{findOne.desc2}</span>
-                  <Clipboard>{findOne.value2}</Clipboard>
-                </div>
-              ) : null}
-              {token === 'SDOT' ? (
-                <>
-                  <div className={styles.desc}>
-                    <div />
-                    交易打包成功后，在下面输入<strong>交易ID (Txid/TxHash)</strong>
-                    ，交易签名验证无误后，完成映射, SDOT会立即发放
-                  </div>
-                  <div className={styles.tradeid}>
-                    <Input.Text
-                      isTextArea
-                      rows={2}
-                      value={tradeId}
-                      errMsg={tradeIdErrMsg}
-                      placeholder={'0x002a3bfcf910ed48c3837c7293062caee146bb72ca1cfd0bd398315e3a07ce79'}
-                      onChange={value => {
-                        this.setState({
-                          tradeId: value,
-                        });
-                      }}
-                      onBlur={checkAll.checkTradeId}
-                    />
-                    <Button
-                      size="full"
-                      type="confirm"
-                      onClick={() => {
-                        if (checkAll.confirm()) {
-                          const params = this.getTradeId();
-                          dispatch({
-                            type: 'bindTxHash',
-                            payload: {
-                              params,
-                            },
-                          })
-                            .then(res => {
-                              if (_.get(res, 'error.message')) {
-                                Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
-                              } else {
-                                Toast.success('交易ID绑定已完成');
-                                closeModal();
-                              }
-                            })
-                            .catch(err => {
-                              Toast.warn('交易ID绑定失败', err.message);
-                            });
-                        }
-                      }}>
-                      <FormattedMessage id={'Confirm'} />
-                    </Button>
-                  </div>
-                </>
-              ) : null}
-
-              {findOne.warn}
+              {token === 'BTC' && BTC}
+              {token === 'SDOT' && SDOT}
+              <div className={styles.warn}>{findOne.warn}</div>
             </>
           )}
         </div>

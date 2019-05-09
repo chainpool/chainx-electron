@@ -37,18 +37,18 @@ class Chain extends ModelExtend {
       method: 'system_properties',
     });
     if (res && res.data) {
-      return this.getType(res.data);
+      return this.getNetType(res.data);
     }
   };
 
   getChainProperties = async () => {
     const res = await chainProperties();
     if (res) {
-      return this.getType(res) || 'test';
+      return this.getNetType(res) || 'test';
     }
   };
 
-  getType = data => {
+  getNetType = data => {
     const { address_type, network_type } = data;
     if (address_type === 44 && network_type === 'mainnet') {
       return 'main';

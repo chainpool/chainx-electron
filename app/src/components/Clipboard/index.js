@@ -29,7 +29,7 @@ export default class Clipboard extends PureComponent {
             style={{ marginLeft: children ? 8 : null }}
           />
           {outInner ? (
-            <span className="outerInner" data-clipboard-target={`#${uid}`}>
+            <span className={classNames('outerInner', styles.outerInner)} data-clipboard-target={`#${uid}`}>
               {outInner}
             </span>
           ) : null}

@@ -46,7 +46,6 @@ export default class Configure extends ModelExtend {
     localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
   @observable currentNetWork = localSave.get('currentNetWork') || NetWork[0];
-  @observable isTestNet = true || (process.env.CHAINX_NET || '') !== 'main';
 
   @observable testApi = this.resetApi(
     this.refreshLocalNodesOrApi('testApi')
@@ -177,6 +176,10 @@ export default class Configure extends ModelExtend {
 
   @computed get TradeVersion() {
     return true;
+  }
+
+  @computed get isTestNet() {
+    return this.isTestNetWork() || this.isPreMainNetWork();
   }
 
   getBestNodeAndApi = () => {

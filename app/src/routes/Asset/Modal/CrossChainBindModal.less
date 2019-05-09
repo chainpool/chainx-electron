@@ -10,7 +10,7 @@
     }
   }
   .tradeid{
-    margin:27px 0 28px;
+    margin:12px 0 28px;
     button{
       margin-top: 32px;
     }
@@ -19,13 +19,10 @@
     line-height: 22px;
     padding-left: 4px;
     position: relative;
-    > div {
-      top: 3px;
-      left: -4px;
-      background: @yellow;
-      width: 4px;
-      height: 14px;
-      position: absolute;
+    > .step {
+      font-weight: bold;
+      color: @yellow;
+      margin-right: 8px;
     }
     .coverclick {
       background: transparent;
@@ -48,13 +45,16 @@
   }
 
   .depositaddress {
-    display: flex;
+    align-items: flex-start !important;
+    height:72px !important;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 32px;
-    .label {
-      margin-bottom: 16px;
+    padding:16px;
+    .label{
       font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .depositaddressvalue{
+      color:#959595;
     }
   }
 
@@ -74,6 +74,7 @@
 
   }
 
+
   .grayblock {
     display: flex;
     justify-content: center;
@@ -84,44 +85,66 @@
     background: #f2f3f4;
     border: 1px solid #dce0e2;
     border-radius: 1px;
-    margin: 16px 0 24px;
+    margin:16px 0;
     img {
       height: 162px;
     }
     &.addressall {
-      line-height: 20px;
-      height: 124px;
+      &.sdot{
+        height:130px;
+        .OP_RETURNcopy{
+          .dataerror{
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            color:#3F3F3F;
+            span{
+              color:@red;
+            }
+          }
+
+        }
+      }
+      height: 105px;
       display: flex;
       justify-content: center;
-      padding: 16px 12px;
+      padding: 16px;
       .address + .address {
         margin-top: 24px;
       }
 
       .address {
+        width:100%;
+        height:100%;
+        position:relative;
         text-align: center;
         word-break: break-all;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        align-items: center;
-
-        button {
-          margin-top: 16px;
-          height: 32px;
-          width: 102px;
-          background: #ffffff;
-          border: 1px solid #dce0e2;
-          border-radius: 2px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          .desc {
-            margin-left: 5px;
+        .OP_RETURNcopy{
+          line-height: 18px;
+          position:absolute;
+          bottom:0;
+          color: #959595;
+          text-align: left;
+          i{
+            margin-left: 6px;
           }
+        }
+
+        .OP_RETURNtitle{
+          font-weight:bold;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
       }
     }
+  }
+
+  .warn{
+    margin-top: 24px;
   }
 
   .hoverImg {
