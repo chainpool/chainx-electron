@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Input, Button, Mixin, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { Inject, Patterns, setBlankSpace } from '../../../utils';
+import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './WithdrawModal.less';
 
@@ -102,6 +102,9 @@ class WithdrawModal extends Mixin {
         };
       });
 
+    const feeShow = setPrecision(fee, token);
+    const factTransferValue = formatNumber.toFixed(Number(amount) - Number(feeShow), getPrecision(token));
+
     return (
       <Modal
         title={<FormattedMessage id={'CrossChainWithdraw'} />}
@@ -161,7 +164,7 @@ class WithdrawModal extends Mixin {
                     <FormattedMessage id={'WithdrawAmount'} />
                     <span>
                       (<FormattedMessage id={'GetWithdrawFee'} />
-                      {setPrecision(fee, token)} BTC)
+                      {setBlankSpace(feeShow, token)}
                     </span>
                   </div>
                 }
@@ -169,6 +172,9 @@ class WithdrawModal extends Mixin {
                 errMsg={amountErrMsg}
                 onChange={value => this.setState({ amount: value })}
                 onBlur={checkAll.checkAmount}
+                helpContent={
+                  !amountErrMsg && amount && <span>实际到账数量:{setBlankSpace(factTransferValue, token)}</span>
+                }
               />
             }
             right={<FreeBalance value={freeShow} unit={token} />}

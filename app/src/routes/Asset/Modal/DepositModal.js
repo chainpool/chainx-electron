@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clipboard, Mixin, Modal, FormattedMessage } from '../../../components';
+import { Clipboard, Mixin, Modal, FormattedMessage, RouterGo } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './DepositModal.less';
 import { Inject } from '../../../utils';
@@ -71,7 +71,21 @@ class DepositModal extends Mixin {
               <span className={styles.token}>Bitcoin:</span>
               <Clipboard>{btcTrusteeAddress}</Clipboard>
             </div>
-            <Warn>请使用已绑定地址之一向公共多签托管地址转账，使用其他未绑定地址无法到账</Warn>
+            <Warn>
+              <div>
+                使用已绑定地址可直接向公共多签托管地址充值，使用未绑定地址充值无法到账。充值完成后ChainX会在
+                1小时内发放PCX奖励至您的资产。
+                <RouterGo
+                  isOutSide
+                  go={{
+                    pathname:
+                      'https://github.com/chainx-org/ChainX/wiki/%E5%85%85%E5%80%BC%E6%8C%96%E7%9F%BF#%E5%85%85%E5%80%BC%E5%A5%96%E5%8A%B1',
+                  }}
+                  style={{ fontWeight: 'bold' }}>
+                  查看充值奖励规则
+                </RouterGo>
+              </div>
+            </Warn>
           </div>
           <div className={styles.back}>
             <canvas id="qr" />

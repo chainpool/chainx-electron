@@ -141,7 +141,12 @@ class CrossChainBindModal extends Mixin {
                   </span>
                 ))}
                 等，如果不添加OP_RETURN信息，则充值无法到账。充值完成后ChainX会在 1小时内发放PCX奖励至您的资产。
-                <RouterGo isOutSide go={{ pathname: '' }}>
+                <RouterGo
+                  isOutSide
+                  go={{
+                    pathname:
+                      'https://github.com/chainx-org/ChainX/wiki/%E5%85%85%E5%80%BC%E6%8C%96%E7%9F%BF#%E5%85%85%E5%80%BC%E5%A5%96%E5%8A%B1',
+                  }}>
                   查看充值奖励规则
                 </RouterGo>
               </strong>

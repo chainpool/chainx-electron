@@ -7,6 +7,7 @@ import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
 import RegisterNodeModal from './Modal/RegisterNodeModal';
 import { Inject } from '../../utils';
+import { HoverTip } from '../components';
 
 @Inject(({ electionStore: model }) => ({ model }))
 class Election extends Mixin {
@@ -49,7 +50,9 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              <FormattedMessage id={'UpdateNode'} />
+              <HoverTip tip="更新出块地址、网址、简介和节点状态 (参选/退选)">
+                <FormattedMessage id={'UpdateNode'} />
+              </HoverTip>
             </Button>
           </li>
         ) : (

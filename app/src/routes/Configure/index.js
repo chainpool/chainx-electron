@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Icon, Mixin, ButtonGroup } from '../../components';
+import { Button, Input, Icon, Mixin, ButtonGroup, RouterGo } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
@@ -47,8 +47,10 @@ class Configure extends Mixin {
         <TableTitle title="节点管理">
           <ButtonGroup className={styles.settingButton}>
             <Button type="blank">
-              <Icon name="icon-jiedianbushuwendang" />
-              查看节点部署文档
+              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
+                <Icon name="icon-jiedianbushuwendang" />
+                <span className={styles.document}>查看节点部署文档</span>
+              </RouterGo>
             </Button>
             <Button
               type="blank"
@@ -80,10 +82,6 @@ class Configure extends Mixin {
 
         <TableTitle style={{ marginTop: 32 }} title="API管理">
           <ButtonGroup className={styles.settingButton}>
-            <Button type="blank">
-              <Icon name="icon-APIbushuwendang" />
-              查看API部署文档
-            </Button>
             <Button
               type="blank"
               onClick={() => {

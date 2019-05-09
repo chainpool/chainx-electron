@@ -74,7 +74,7 @@ class CheckBox extends PureComponent {
             disabled ? styles.disabled : null
           )}
           onClick={() => {
-            _.isFunction(onClick) && onClick();
+            _.isFunction(onClick) && onClick(!value);
           }}>
           <div style={style} className={classNames(styles.checkbox, value ? styles.active : null)}>
             {value ? <i className="iconfont icon-dagou1" /> : null}
@@ -226,6 +226,7 @@ class InputText extends Mixin {
       isDecimal = false,
       precision,
       errMsgIsOutside = false,
+      helpContent,
     } = this.props;
 
     const errMsg = errMsgIsOutside ? this.props.errMsg : this.state.errMsg;
@@ -316,6 +317,7 @@ class InputText extends Mixin {
             <div className={styles.suffix}>{errMsg && errMsgSuffix ? <span>{renderErrMsg(errMsg)}</span> : suffix}</div>
           ) : null}
         </div>
+        {helpContent && <div className={styles.helpContent}>{helpContent}</div>}
         {errMsg && !errMsgSuffix ? <div className={styles.errMsg}>{renderErrMsg(errMsg)}</div> : null}
       </div>
     );
