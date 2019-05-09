@@ -154,4 +154,6 @@ export default class ModelExtend {
   isMainNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'main';
 
   isPreMainNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'premain';
+
+  isTestBitCoinNetWork = () => this.rootStore.chainStore.bitCoinNetWork === 'test';
 }

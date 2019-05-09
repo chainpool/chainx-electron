@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './WithdrawSignModal.less';
 import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
-import { BitcoinTestNet } from '../../../constants';
 import wif from 'wif';
 import { Patterns } from '../../../utils';
 
@@ -36,7 +35,7 @@ class WithdrawSignModal extends Component {
     const { checkAll } = this;
     const { activeIndex, password, passwordErrMsg } = this.state;
     const {
-      model: { openModal, dispatch, tx, redeemScript },
+      model: { openModal, dispatch, tx, redeemScript, isTestBitCoinNetWork },
     } = this.props;
 
     return (
@@ -52,7 +51,7 @@ class WithdrawSignModal extends Component {
                 if (!activeIndex) {
                   const decryptedKey = this.decryptedKey;
                   privateKey = wif.encode(
-                    BitcoinTestNet ? 0xef : 0x80,
+                    isTestBitCoinNetWork() ? 0xef : 0x80,
                     decryptedKey.privateKey,
                     decryptedKey.compressed
                   );

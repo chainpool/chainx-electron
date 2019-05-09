@@ -62,8 +62,6 @@ export const ipc = {
   DELETE_KEYSTORE: 'DELETE_KEYSTORE',
 };
 
-export const BitcoinTestNet = true;
-
 export const SCRYPT_PARAMS = {
   N: 64, // specified by BIP38
   r: 4,

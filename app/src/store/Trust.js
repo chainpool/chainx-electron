@@ -20,7 +20,6 @@ import {
   getBlockTime,
   getTrusteeSessionInfo,
 } from '../services';
-import { BitcoinTestNet } from '../constants';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -167,7 +166,7 @@ export default class Trust extends ModelExtend {
     const nodeUrl = findOne.node;
     const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
 
-    const network = BitcoinTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
       const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);

@@ -3,7 +3,7 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { Inject } from '../../utils';
-import trusteeImg from '../../resource/trustee.png';
+import trusteeImg from '../../resource/trustee2.png';
 
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {

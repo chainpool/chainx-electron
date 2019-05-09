@@ -8,6 +8,7 @@ class Chain extends ModelExtend {
   @observable blockNumber;
   @observable blockTime;
   @observable blockDuration = 2000; // 出块时间
+  @observable bitCoinNetWork = 'test';
 
   @computed get normalizedBlockNumber() {
     return this.blockNumber && this.blockNumber.toLocaleString();

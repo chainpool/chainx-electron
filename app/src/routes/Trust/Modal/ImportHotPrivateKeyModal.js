@@ -25,12 +25,20 @@ class ImportHotPrivateKeyModal extends Component {
     },
     checkHotPrivateKey: () => {
       const { hotPrivateKey } = this.state;
-      const { currentTrustNode } = this.props;
+      const {
+        currentTrustNode,
+        model: { isTestBitCoinNetWork },
+      } = this.props;
       const errMsg =
         Patterns.check('required')(hotPrivateKey) ||
-        Patterns.check('isHotPrivateKey')(hotPrivateKey, currentTrustNode.hotPubKey.replace(/^0x/, ''), decoded => {
-          this.decoded = decoded;
-        });
+        Patterns.check('isHotPrivateKey')(
+          hotPrivateKey,
+          currentTrustNode.hotPubKey.replace(/^0x/, ''),
+          isTestBitCoinNetWork(),
+          decoded => {
+            this.decoded = decoded;
+          }
+        );
       this.setState({ hotPrivateKeyErrMsg: errMsg });
       return errMsg;
     },
