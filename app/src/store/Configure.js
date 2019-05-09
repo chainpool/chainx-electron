@@ -28,6 +28,17 @@ export default class Configure extends ModelExtend {
       return list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
     };
 
+    this.concatNodeOrApi = (defaultNodes = [], selfNodes = []) => {
+      const findOne = selfNodes.filter(item => item.best)[0];
+      if (findOne) {
+        defaultNodes = [...defaultNodes].map(item => {
+          item.best = null;
+          return item;
+        });
+      }
+      return defaultNodes.concat(selfNodes);
+    };
+
     autorun(() => {
       localSave.set('testNodes', this.testNodes);
       localSave.set('mainNodes', this.mainNodes);
@@ -95,41 +106,44 @@ export default class Configure extends ModelExtend {
   @observable testNodes = this.resetNode(
     this.refreshLocalNodesOrApi('testNodes')
       ? localSave.get('testNodes')
-      : [
-          {
-            type: '系统默认',
-            name: 'w1',
-            best: true,
-            isSystem: true,
-            Version: ConfigureVersion,
-            address: 'wss://w1.chainx.org/ws',
-          },
-          {
-            type: '系统默认',
-            name: 'w2',
-            isSystem: true,
-            address: 'wss://w2.chainx.org/ws',
-          },
-          {
-            type: '系统默认',
-            name: '本机',
-            address: 'ws://localhost:8087',
-            isSystem: true,
-            isLocalhost: true,
-          },
-        ].concat((localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'w1',
+              best: true,
+              isSystem: true,
+              Version: ConfigureVersion,
+              address: 'wss://w1.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: 'w2',
+              isSystem: true,
+              address: 'wss://w2.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: '本机',
+              address: 'ws://localhost:8087',
+              isSystem: true,
+              isLocalhost: true,
+            },
+          ],
+          (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @observable premainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('premainNodes')
       ? localSave.get('premainNodes')
-      : [].concat((localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi([], (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @observable mainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('mainNodes')
       ? localSave.get('mainNodes')
-      : [].concat((localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi([], (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
   );
 
   @computed
