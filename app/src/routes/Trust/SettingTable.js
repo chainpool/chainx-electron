@@ -46,7 +46,7 @@ class SettingTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {item.decodedHotPrivateKey ? (
+              {item.decodedHotPrivateKey && item.hotPubKey ? (
                 <Button type="disabeld">已导入</Button>
               ) : (
                 <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal', data: { chain: item.chain } })}>

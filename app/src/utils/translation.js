@@ -81,7 +81,8 @@ const translation = ({
 }) => {
   const findNode = v => _.get(originIntentions.filter((item = {}) => item.account === `0x${v}`)[0], 'name') || v;
   const findAccount = v =>
-    _.get(accounts.filter((item = {}) => item.address === encodeAddressAccountId(v))[0], 'tag') || v;
+    _.get(accounts.filter((item = {}) => item.address === encodeAddressAccountId(v))[0], 'tag') ||
+    encodeAddressAccountId(v);
   const merge = (args = [], selfArgs = []) => {
     const result = selfArgs.reduce((result, next) => {
       const primaryArgsObj = args.reduce((result, next) => {
