@@ -254,6 +254,11 @@ const translation = ({
       info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'proposal' }]);
       break;
     }
+    case 'XMultiSig|confirm': {
+      operation = '确认多签';
+      info = merge(args, [{ name: 'multi_sig_addr' }]);
+      break;
+    }
     case 'XMultiSig|remove_multi_sig_for': {
       info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'multi_sig_id' }]);
       break;
