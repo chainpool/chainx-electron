@@ -77,6 +77,7 @@ const zh_en = {
   Direction: ['方向', 'Direction'],
   OrderPrice: ['委托价格', 'Order Price'],
   OrderAmount: ['委托数量', 'Order Amount'],
+  CurrentChainID: ['本连交易ID', 'Trading ID'],
 
   Name: ['名称', 'Name'],
   ShortName: ['简称', 'Short Name'],
@@ -163,6 +164,8 @@ const zh_en = {
   MatchingFee: ['撮合手续费', 'Matching fee'],
   TradingVolume: ['交易额', 'volume'],
   TimeSharing: ['分时', 'Time-Sharing chart'],
+  Operation: ['操作', 'Operation'],
+  ParamsInfo: ['参数信息', 'Params Info'],
 
   CharacterLength: ['{length}个字符以内', 'Within {length} characters'],
   MinCharacterLength: ['最少{length}个字符长度', 'At least {length} characters'],

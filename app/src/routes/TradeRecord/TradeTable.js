@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table, Mixin, RouterGo } from '../../components';
+import { Table, Mixin, RouterGo, FormattedMessage } from '../../components';
 import { observer } from '../../utils';
 
 @observer
@@ -18,12 +18,12 @@ class TradeTable extends Mixin {
       className: styles.tableContainer,
       columns: [
         {
-          title: '时间',
+          title: <FormattedMessage id={'Time'} />,
           width: 200,
           dataIndex: 'timeShow',
         },
         {
-          title: '本链交易ID',
+          title: <FormattedMessage id={'CurrentChainID'} />,
           width: 200,
           ellipse: true,
           dataIndex: 'id',
@@ -34,12 +34,12 @@ class TradeTable extends Mixin {
           ),
         },
         {
-          title: '操作',
+          title: <FormattedMessage id={'Operation'} />,
           width: 80,
           dataIndex: 'operation',
         },
         {
-          title: '参数信息',
+          title: <FormattedMessage id={'ParamsInfo'} />,
           ellipse: 0,
           dataIndex: 'info',
         },

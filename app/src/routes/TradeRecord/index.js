@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin } from '../../components';
+import { FormattedMessage, Mixin } from '../../components';
 import { TableTitle } from '../components';
 import TradeTable from './TradeTable';
 import * as styles from './index.less';
@@ -17,7 +17,7 @@ class TradeRecord extends Mixin {
     const { activeIndex } = this.state;
     return (
       <div className={styles.tradeRecord}>
-        <TableTitle title="交易记录" />
+        <TableTitle title={<FormattedMessage id={'TradingRecord'} />} />
         {activeIndex === 0 ? <TradeTable {...this.props} /> : null}
       </div>
     );
