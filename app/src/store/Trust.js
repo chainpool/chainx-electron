@@ -413,7 +413,9 @@ export default class Trust extends ModelExtend {
     const currentNetWork = this.getCurrentNetWork();
     const { address } = currentAccount;
     const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey } = obj;
-    const findOne = trusts.filter((item = {}) => item.address === address && item.chain === chain)[0];
+    const findOne = trusts.filter(
+      (item = {}) => item.address === address && item.chain === chain && (item.net || 'test') === currentNetWork.value
+    )[0];
     if (!findOne) {
       trusts.push({
         address,
