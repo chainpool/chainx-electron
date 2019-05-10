@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal } from '../../../components';
+import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './UpdateNodeModal.less';
 
@@ -37,14 +37,17 @@ class UpdateNodeModal extends Component {
 
     checkWebsite: () => {
       const { website } = this.state;
-      const errMsg = Patterns.check('smallerOrEqual')(2, website.length, '最少2个字符长度');
+      const errMsg = Patterns.check('smallerOrEqual')(
+        2,
+        website.length,
+        <FormattedMessage id={'MinCharacterLength'} values={{ length: 2 }} />
+      );
       this.setState({ websiteErrMsg: errMsg });
       return errMsg;
     },
 
     checkAbout: () => {
-      const { about } = this.state;
-      const errMsg = Patterns.check('smallerOrEqual')(about.length, 256, '不能超过256个字符');
+      const errMsg = '';
       this.setState({ aboutErrMsg: errMsg });
       return errMsg;
     },
@@ -63,7 +66,7 @@ class UpdateNodeModal extends Component {
 
     return (
       <Modal
-        title="更新节点"
+        title={<FormattedMessage id={'UpdateNode'} />}
         button={
           <Button
             size="full"
@@ -95,40 +98,52 @@ class UpdateNodeModal extends Component {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.updateNodeModal}>
           <Input.Text
             prefix="ChainX"
-            label="出块地址"
+            label={<FormattedMessage id={'BlockAuthoringAddress'} />}
             value={address}
             errMsg={addressErrMsg}
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
-          <Input.Text
-            label="官网域名"
-            placeholder="2-12个字符"
-            value={website}
-            errMsg={websiteErrMsg}
-            onChange={value => {
-              if (/^[a-zA-Z0-9.]*$/.test(value)) {
-                this.setState({ website: value.slice(0, 12) });
-              }
-            }}
-            onBlur={checkAll.checkWebsite}
-          />
-          <Input.Text
-            label="简介"
-            placeholder="128个字符以内"
-            value={about}
-            errMsg={aboutErrMsg}
-            onChange={value => this.setState({ about: value.slice(0, 128) })}
-            onBlur={checkAll.checkAbout}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: '2-12' }}>
+            {msg => (
+              <Input.Text
+                label={<FormattedMessage id={'Website'} />}
+                placeholder={msg}
+                value={website}
+                errMsg={websiteErrMsg}
+                onChange={value => {
+                  if (/^[a-zA-Z0-9.]*$/.test(value)) {
+                    this.setState({ website: value.slice(0, 12) });
+                  }
+                }}
+                onBlur={checkAll.checkWebsite}
+              />
+            )}
+          </FormattedMessage>
+          <FormattedMessage id={'CharacterLength'} values={{ length: 128 }}>
+            {msg => (
+              <Input.Text
+                label={<FormattedMessage id={'BriefIntroduction'} />}
+                placeholder={msg}
+                value={about}
+                errMsg={aboutErrMsg}
+                onChange={value => this.setState({ about: value.slice(0, 128) })}
+                onBlur={checkAll.checkAbout}
+              />
+            )}
+          </FormattedMessage>
+
           <div className={styles.participate}>
-            {[{ name: '参选', value: true }, { name: '退选', value: false }].map((item, index) => (
+            {[
+              { name: <FormattedMessage id="Participate" />, value: true },
+              { name: <FormattedMessage id={'Elect'} />, value: false },
+            ].map((item, index) => (
               <Button
                 key={index}
                 className={willParticipating === item.value ? styles.active : null}

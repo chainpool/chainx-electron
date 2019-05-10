@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal, RouterGo } from '../../../components';
+import { Button, FormattedMessage, Input, Modal, RouterGo } from '../../../components';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './RegisterNodeModal.less';
 
@@ -22,13 +22,18 @@ class RegisterNodeModal extends Component {
     checkName: () => {
       const { name } = this.state;
       const errMsg =
-        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(2, name.length, '最少2个字符长度');
+        Patterns.check('required')(name) ||
+        Patterns.check('smallerOrEqual')(
+          2,
+          name.length,
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 2 }} />
+        );
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
     checkRead: () => {
       const { haveRead } = this.state;
-      const errMsg = haveRead ? '' : '未勾选';
+      const errMsg = haveRead ? '' : <FormattedMessage id={'NotSelect'} />;
       this.setState({
         haveReadErrMsg: errMsg,
       });
@@ -48,7 +53,7 @@ class RegisterNodeModal extends Component {
 
     return (
       <Modal
-        title="注册节点"
+        title={<FormattedMessage id={'RegisterNode'} />}
         button={
           <>
             <div className={styles.document}>
@@ -61,10 +66,10 @@ class RegisterNodeModal extends Component {
                     haveReadErrMsg: '',
                   });
                 }}>
-                我已阅读
+                <FormattedMessage id={'IHaveRead'} />
                 <span className={styles.documentLink}>
                   <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
-                    节点部署文档
+                    <FormattedMessage id={'NodeDeployDocument'} />
                   </RouterGo>
                 </span>
                 {haveReadErrMsg && <span className={styles.haveReadErrMsg}>{haveReadErrMsg}</span>}
@@ -91,7 +96,7 @@ class RegisterNodeModal extends Component {
                   });
                 }
               }}>
-              确定
+              <FormattedMessage id={'Confirm'} />
             </Button>
           </>
         }>
@@ -100,7 +105,8 @@ class RegisterNodeModal extends Component {
             placeholder="2-12个字符"
             label={
               <div>
-                名称 <span style={{ color: '#ea754b', marginLeft: 3 }}> (唯一且不可更改，注册后不可转让)</span>
+                <FormattedMessage id={'Name'} />{' '}
+                <span style={{ color: '#ea754b', marginLeft: 3 }}> (唯一且不可更改，注册后不可转让)</span>
               </div>
             }
             value={name}

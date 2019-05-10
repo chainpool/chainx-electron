@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Modal, Table } from '../../../components';
+import { Button, ButtonGroup, Modal, Table, FormattedMessage } from '../../../components';
 import * as styles from './UnFreezeModal.less';
 import { formatNumber, Inject, moment_helper } from '../../../utils';
 
@@ -26,13 +26,16 @@ class UnFreezeModal extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '冻结金额',
+          title: <FormattedMessage id={'FreezeBalance'} />,
           dataIndex: 'amount',
         },
         {
           title: () => (
             <span>
-              到期时间<span className={styles.desc}>(预估)</span>
+              <FormattedMessage id={'DeadTime'} />
+              <span className={styles.desc}>
+                (<FormattedMessage id={'predict'} />)
+              </span>
             </span>
           ),
           dataIndex: 'time',
@@ -66,7 +69,7 @@ class UnFreezeModal extends Component {
                     },
                   });
                 }}>
-                解冻
+                <FormattedMessage id={'Unfreeze'} />
               </Button>
             </ButtonGroup>
           ),
@@ -76,7 +79,7 @@ class UnFreezeModal extends Component {
     };
 
     return (
-      <Modal title="赎回解冻">
+      <Modal title={<FormattedMessage id={'UnfreezeLocked'} />}>
         <div className={styles.unFreezeModal}>
           <Table {...tableProps} />
         </div>

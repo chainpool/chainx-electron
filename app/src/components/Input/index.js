@@ -6,7 +6,7 @@ import { _, classNames, RegEx } from '../../utils';
 import * as styles from './index.less';
 
 const renderErrMsg = errMsg => {
-  if (errMsg && /[a-zA-Z]$/.test(errMsg)) {
+  if (errMsg && /^[a-zA-Z]+$/.test(errMsg)) {
     return <FormattedMessage id={errMsg} />;
   } else {
     return errMsg;

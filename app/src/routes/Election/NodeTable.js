@@ -37,7 +37,7 @@ class NodeTable extends Component {
               <div className={styles.trustee}>
                 {index + 1}
                 {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
-                <span className={styles.leaveOut}>{item.isActive ? '' : '（已退选)'}</span>
+                <span className={styles.leaveOut}>{item.isActive ? '' : <FormattedMessage id={'Inactive'} />}</span>
               </div>
             );
           },
@@ -126,7 +126,7 @@ class NodeTable extends Component {
                       },
                     });
                   }}>
-                  解冻
+                  <FormattedMessage id={'Unfreeze'} />
                 </Button>
               ) : null}
               {item.myInterest ? (
