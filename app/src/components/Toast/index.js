@@ -8,7 +8,10 @@ import * as styles from './index.less';
 class Toast {
   constructor() {
     this.interval = null;
-    this.renderElement(_.uniqueId('message'), <ToastContainer />);
+    /*
+    为了避免react-initl国际化问题
+    this.renderElement(_.uniqueId('message'), <ToastContainer />)把<ToastContainer />放到App下面
+    */
   }
 
   renderElement = (id, element) => {
@@ -68,7 +71,7 @@ class Toast {
       </div>,
       {
         hideProgressBar: true,
-        autoClose: 4000,
+        autoClose: 1114000,
         closeButton: false,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,

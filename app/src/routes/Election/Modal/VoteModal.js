@@ -91,17 +91,17 @@ class VoteModal extends Mixin {
     let operation;
     let operationAmount;
     if (!myTotalVote) {
-      operation = '投票'; //<FormattedMessage id={'Nominate'} />;
-      operationAmount = '投票数量'; //<FormattedMessage id={'NominateAmount'} />;
+      operation = <FormattedMessage id={'Nominate'} />;
+      operationAmount = <FormattedMessage id={'NominateAmount'} />;
     } else if (action === 'add') {
-      operation = '追加'; //<FormattedMessage id={'IncreaseN'} />;
-      operationAmount = '追加数量'; //<FormattedMessage id={'IncreaseAmount'} />;
+      operation = <FormattedMessage id={'IncreaseN'} />;
+      operationAmount = <FormattedMessage id={'IncreaseAmount'} />;
     } else if (action === 'cancel') {
-      operation = '赎回'; //<FormattedMessage id={'DecreaseN'} />;
-      operationAmount = '赎回数量'; //<FormattedMessage id={'DecreaseAmount'} />;
+      operation = <FormattedMessage id={'DecreaseN'} />;
+      operationAmount = <FormattedMessage id={'DecreaseAmount'} />;
     } else {
-      operation = '换票'; //<FormattedMessage id={'SwitchN'} />;
-      operationAmount = '换票数量'; //<FormattedMessage id={'SwitchAmount'} />;
+      operation = <FormattedMessage id={'SwitchN'} />;
+      operationAmount = <FormattedMessage id={'SwitchAmount'} />;
     }
 
     const nodesOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.account }));
@@ -119,8 +119,8 @@ class VoteModal extends Mixin {
                   name: 'SignModal',
                   data: {
                     description: [
-                      { name: '操作', value: operation },
-                      { name: operationAmount, value: setBlankSpace(amount, token) },
+                      { name: 'operation', value: () => operation },
+                      { name: () => operationAmount, value: setBlankSpace(amount, token) },
                       { name: '备注', value: remark },
                     ],
                     callback: () => {

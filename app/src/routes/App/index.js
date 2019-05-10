@@ -1,6 +1,7 @@
 import React, { Suspense, Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
+import { ToastContainer } from 'react-toastify';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import zh from 'react-intl/locale-data/zh';
 import en from 'react-intl/locale-data/en';
@@ -69,6 +70,7 @@ class Main extends Component {
             </Switch>
           </Suspense>
           {name === 'SignModal' ? <SignModal {...this.props} /> : null}
+          <ToastContainer />
         </CommonLayOut>
       </IntlProvider>
     );

@@ -71,13 +71,15 @@ class SignModal extends Mixin {
     const { checkAll } = this;
     const { defaultAcceleration, acceleration, fee, password, passwordErrMsg, showSlider } = this.state;
     const {
-      globalStore: {
-        closeModal,
-        nativeAssetName,
-        modal: { data: { description = [{ name: operation, value: '操作' }] } = {} } = {},
-      },
+      globalStore: { closeModal, nativeAssetName, modal: { data: { description: descriptionAlias } = {} } = {} },
       model: { currentAccount },
     } = this.props;
+    const description = descriptionAlias.map(item => {
+      return {
+        name: _.isFunction(item.name) ? item.name() : item.name,
+        value: _.isFunction(item.value) ? item.value() : item.value,
+      };
+    });
 
     const max = 10;
 
@@ -117,17 +119,20 @@ class SignModal extends Mixin {
               if (await checkAll.confirm()) {
                 if (this.result) {
                   const result = this.result;
-                  const {
-                    globalStore: { modal: { data: { description = [] } = {} } = {} },
-                  } = this.props;
-                  const operationItem = description.filter((item = {}) => item.name === operation)[0] || {};
+                  const operationItem =
+                    description.filter((item = {}) => item.name === operation || item.name === 'operation')[0] || {};
                   const toastOperation = description.filter(
-                    (item = {}) => item.name !== operation && item.toastShow !== false
+                    (item = {}) => item.name !== operation && item.name !== 'operation' && item.toastShow !== false
                   );
-                  const toastMessage = toastOperation.reduce(
-                    (sum, next, index) =>
-                      `${sum}${next.name}${' '}${next.value}${index === toastOperation.length - 1 ? '' : '; '}`,
-                    ''
+                  const toastMessage = (
+                    <ul className={styles.toastMessage}>
+                      {toastOperation.map((item = {}, index) => (
+                        <li>
+                          {item.name}&nbsp;{item.value}
+                          {index === toastOperation.length - 1 ? '' : <>;&nbsp;</>}
+                        </li>
+                      ))}
+                    </ul>
                   );
 
                   const reCoverLoading = status => {
@@ -138,7 +143,7 @@ class SignModal extends Mixin {
                     reCoverLoading(false);
                     _.isFunction(result.success) && result.success(res);
                     Toast.success(
-                      `${_.get(result, 'successToast.title') || operationItem.value || operation}成功`,
+                      _.get(result, 'successToast.title') || operationItem.value || `${operation}成功`,
                       toastMessage
                     );
                   };
@@ -148,7 +153,7 @@ class SignModal extends Mixin {
                     _.isFunction(result.fail) && result.fail(err);
                     _.get(err, 'data') && console.log(_.get(err, 'data'), _.get(err, 'message'));
                     Toast.warn(
-                      `${_.get(result, 'failToast.title') || operationItem.value || operation}报错`,
+                      _.get(result, 'failToast.title') || operationItem.value || `${operation}报错`,
                       _.get(err, 'data.message') || _.get(err, 'message') || _.get(err, 'data.message') || toastMessage
                     );
                   };

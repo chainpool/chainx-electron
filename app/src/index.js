@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import { configure } from 'mobx';
-import App from '@routes/App';
+import App from './routes/App';
 import { default as store } from './store';
 import './index.less';
 import 'whatwg-fetch';
