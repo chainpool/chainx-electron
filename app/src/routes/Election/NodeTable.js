@@ -102,12 +102,10 @@ class NodeTable extends Component {
             <ButtonGroup>
               {currentAddress ? (
                 <Button
-                  {...(item.isActive ? {} : item.myTotalVote > 0 ? {} : { type: 'disabled' })}
                   onClick={() => {
                     openModal({
                       name: 'VoteModal',
                       data: {
-                        isActive: item.isActive,
                         target: item.account,
                         myTotalVote: item.myTotalVote,
                         isCurrentAccount: item.address === currentAccount.address,

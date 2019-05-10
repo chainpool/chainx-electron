@@ -9,15 +9,10 @@ import * as styles from './VoteModal.less';
 class VoteModal extends Mixin {
   constructor(props) {
     super(props);
-    const {
-      globalStore: {
-        modal: { data: { isActive } = {} },
-      },
-    } = props;
     this.state = {
       selectNode: '',
       selectNodeErrMsg: '',
-      action: isActive ? 'add' : 'switch',
+      action: 'add',
       amount: '',
       amountErrMsg: '',
       remark: '',
@@ -82,7 +77,7 @@ class VoteModal extends Mixin {
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
-        modal: { data: { target, isActive, myTotalVote = 0, isCurrentAccount } = {} },
+        modal: { data: { target, myTotalVote = 0, isCurrentAccount } = {} },
         nativeAssetName: token,
       },
       chainStore: { blockDuration },
@@ -151,7 +146,7 @@ class VoteModal extends Mixin {
             <>
               <ul className={styles.changeVote}>
                 {[
-                  isActive ? { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' } : null,
+                  { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
                   { label: <FormattedMessage id={'SwitchNomination'} />, value: 'switch' },
                   { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
                 ]
