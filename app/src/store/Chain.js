@@ -46,11 +46,12 @@ class Chain extends ModelExtend {
     const res = await chainProperties();
     if (res) {
       const { bitcoin_type } = res;
-      if (bitcoin_type === 'mainnet') {
-        this.changeModel('bitCoinNetWork', 'main');
-      } else if (bitcoin_type === 'testnet') {
-        this.changeModel('bitCoinNetWork', 'test');
-      }
+      this.changeModel('bitCoinNetWork', 'test');
+      // if (bitcoin_type === 'mainnet') {
+      //   this.changeModel('bitCoinNetWork', 'main');
+      // } else if (bitcoin_type === 'testnet') {
+      //   this.changeModel('bitCoinNetWork', 'test');
+      // }
       return this.getNetType(res) || 'test';
     }
   };
