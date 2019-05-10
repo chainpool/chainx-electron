@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
+import { Modal, Input, Button, FormattedMessage } from '../../../components';
 import { Patterns } from '../../../utils';
 import * as styles from './WithdrawConstructModal.less';
 
@@ -31,10 +31,14 @@ class WithdrawConstructModal extends Component {
           },
         });
       } catch (err) {
-        error = err;
+        if (err.message === 'UTXONotEnoughFee') {
+          error = <FormattedMessage id={'UTXONotEnoughFee'} />;
+        } else {
+          error = err.message;
+        }
       }
 
-      const errMsg = Patterns.check('required')(withDrawIndexSignList) || error.message;
+      const errMsg = Patterns.check('required')(withDrawIndexSignList) || error;
       this.setState({ withDrawIndexSignListErrMsg: errMsg });
       return errMsg;
     },
@@ -119,7 +123,7 @@ class WithdrawConstructModal extends Component {
 
     return (
       <Modal
-        title="构造多签提现"
+        title={<FormattedMessage id={'BuildMultiSigWithdrawal'} />}
         button={
           <Button
             size="full"
@@ -144,7 +148,7 @@ class WithdrawConstructModal extends Component {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
@@ -152,7 +156,7 @@ class WithdrawConstructModal extends Component {
             errMsgIsOutside
             errMsg={withDrawIndexSignListErrMsg}
             multi={true}
-            label="提现列表"
+            label={<FormattedMessage id={'WithdrawalList'} />}
             options={options}
             onChange={value => {
               this.setState(
@@ -166,7 +170,7 @@ class WithdrawConstructModal extends Component {
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label="待签原文" rows={5} />
+          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label={'OriginalDataToSigned'} rows={5} />
           <Input.Text
             isDecimal="decimal"
             precision={8}
@@ -187,7 +191,7 @@ class WithdrawConstructModal extends Component {
             }}
             label={
               <div>
-                Bitcoin手续费
+                <FormattedMessage id={'BitCoinFee'} />
                 <span className={styles.bitcoinfee}>{tx.length ? `(交易长度:${tx.length})` : null}</span>
                 {commentFee && <span className={styles.bitcoinfee}>推荐手续费:{commentFee}</span>}
               </div>

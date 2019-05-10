@@ -51,10 +51,9 @@ class WithdrawModal extends Mixin {
             remark: '备注',
           },
         });
-        if (!!res) return '地址格式错误';
+        if (!!res) return <FormattedMessage id={'AddressFormatError'} />;
         return '';
       };
-      // TODO: 根据token检查地址格式
       const isVertifyAddress = await vertifyAddress();
       const errMsg = Patterns.check('required')(address) || isVertifyAddress;
       this.setState({ addressErrMsg: errMsg });
@@ -70,7 +69,7 @@ class WithdrawModal extends Mixin {
         Patterns.check('smaller')(
           Number(this.props.model.setPrecision(fee, token)),
           amount,
-          '提现数量必须大于手续费'
+          <FormattedMessage id={'WithdrawAmountMustOverFee'} />
         ) ||
         Patterns.check('smallerOrEqual')(Number(amount), freeShow);
       this.setState({ amountErrMsg: errMsg });
@@ -173,7 +172,12 @@ class WithdrawModal extends Mixin {
                 onChange={value => this.setState({ amount: value })}
                 onBlur={checkAll.checkAmount}
                 helpContent={
-                  !amountErrMsg && amount && <span>实际到账数量:{setBlankSpace(factTransferValue, token)}</span>
+                  !amountErrMsg &&
+                  amount && (
+                    <span>
+                      <FormattedMessage id={'ActualWithDrawAmount'} />:{setBlankSpace(factTransferValue, token)}
+                    </span>
+                  )
                 }
               />
             }

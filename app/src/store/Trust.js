@@ -154,14 +154,23 @@ export default class Trust extends ModelExtend {
   sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (!findOne || (findOne && !findOne.node)) {
-      throw new Error('未设置节点');
+      throw new Error({
+        info: '未设置节点',
+        toString: () => 'NotSetNode',
+      });
     }
     if (!findOne.connected) {
-      throw new Error('节点未连接');
+      throw new Error({
+        info: '节点未连接',
+        toString: () => 'NodeNotLink',
+      });
     }
     const multisigAddress = await this.getBitcoinTrusteeAddress();
     if (!multisigAddress) {
-      throw new Error('未获取到信托地址');
+      throw new Error({
+        info: '未获取到信托地址',
+        toString: () => 'NotFindTrusteeAddress',
+      });
     }
     const nodeUrl = findOne.node;
     const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
@@ -208,13 +217,19 @@ export default class Trust extends ModelExtend {
       const utxos = await getUnspents(nodeUrl);
       if (withdrawList) {
         if (!utxos.length) {
-          throw new Error('当前节点无任何utxo');
+          throw new Error({
+            info: '当前节点无任何utxo',
+            toString: () => 'NodeHasNoUTXO',
+          });
         }
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
         if (totalWithdrawAmount <= 0) {
-          throw new Error('提现总额应大于0');
+          throw new Error({
+            info: '提现总额应大于0',
+            toString: () => 'WithDrawTotalMustBiggerZero',
+          });
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
         if (targetUtxos.length <= 0) {
@@ -242,7 +257,10 @@ export default class Trust extends ModelExtend {
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - bitFee;
         if (change < 0) {
-          throw new Error('utxo总额不够支付手续费');
+          throw new Error({
+            info: 'utxo总额不够支付手续费',
+            toString: () => 'UTXONotEnoughFee',
+          });
         }
         txb.addOutput(multisigAddress, change);
         rawTransaction = txb.buildIncomplete().toHex();
