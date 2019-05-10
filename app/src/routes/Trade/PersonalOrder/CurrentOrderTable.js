@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table } from '../../../components';
+import { Button, FormattedMessage, Table } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
 import { observer, setBlankSpace } from '../../../utils';
@@ -39,45 +39,57 @@ class CurrentOrderTable extends SwitchPair {
       className: styles.tableContainer,
       columns: [
         {
-          title: '时间',
+          title: <FormattedMessage id={'Time'} />,
           dataIndex: 'timeShow',
         },
         {
-          title: '委托编号',
+          title: <FormattedMessage id={'OrderNumber'} />,
           width: 90,
           dataIndex: 'index',
         },
         {
-          title: '交易对',
+          title: <FormattedMessage id={'TradingPair'} />,
           width: 100,
           dataIndex: 'createTimeShow',
           render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
         },
         {
-          title: '方向',
+          title: <FormattedMessage id={'Direction'} />,
           width: 100,
           dataIndex: 'direction',
           render: value =>
-            value === 'Buy' ? <span className={'green'}>买入</span> : <span className={'red'}>卖出</span>,
+            value === 'Buy' ? (
+              <span className={'green'}>
+                <FormattedMessage id={'Buy'} />
+              </span>
+            ) : (
+              <span className={'red'}>
+                <FormattedMessage id={'Sell'} />
+              </span>
+            ),
         },
         {
-          title: `委托价格`,
+          title: <FormattedMessage id={'OrderPrice'} />,
           dataIndex: 'priceShow',
           render: (value, item) => setBlankSpace(value, item.filterPair.currency),
         },
         {
-          title: `委托数量`,
+          title: <FormattedMessage id={'OrderAmount'} />,
           dataIndex: 'amountShow',
           render: (value, item) => setBlankSpace(value, item.filterPair.assets),
         },
         {
-          title: `冻结金额`,
+          title: <FormattedMessage id={'FreezeBalance'} />,
           dataIndex: 'reserveLastShow',
           render: (value, item) =>
             `${value}${' '}${item.direction === 'Buy' ? item.filterPair.currency : item.filterPair.assets}`,
         },
         {
-          title: `实际成交/成交率`,
+          title: (
+            <>
+              <FormattedMessage id={'FactFilled'} />/<FormattedMessage id={'FilledPercent'} />%
+            </>
+          ),
           dataIndex: 'hasfillAmountShow',
           render: (value, item) => setBlankSpace(value, `(${item.hasfillAmountPercent})`),
         },
@@ -115,7 +127,7 @@ class CurrentOrderTable extends SwitchPair {
                   },
                 });
               }}>
-              撤销
+              <FormattedMessage id={'Revoke'} />
             </Button>
           ),
         },

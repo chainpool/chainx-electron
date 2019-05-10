@@ -78,6 +78,7 @@ class SignModal extends Mixin {
       return {
         name: _.isFunction(item.name) ? item.name() : item.name,
         value: _.isFunction(item.value) ? item.value() : item.value,
+        toastShow: item.toastShow,
       };
     });
 
@@ -125,14 +126,14 @@ class SignModal extends Mixin {
                     (item = {}) => item.name !== operation && item.name !== 'operation' && item.toastShow !== false
                   );
                   const toastMessage = (
-                    <ul className={styles.toastMessage}>
+                    <div className={styles.toastMessage}>
                       {toastOperation.map((item = {}, index) => (
-                        <li>
+                        <span>
                           {item.name}&nbsp;{item.value}
                           {index === toastOperation.length - 1 ? '' : <>;&nbsp;</>}
-                        </li>
+                        </span>
                       ))}
-                    </ul>
+                    </div>
                   );
 
                   const reCoverLoading = status => {

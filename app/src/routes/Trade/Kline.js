@@ -4,6 +4,7 @@ import { _, moment_helper, SetFullScreen, formatNumber } from '../../utils';
 import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
 
 import * as styles from './Kline.less';
+import { FormattedMessage } from '../../components';
 
 const intervals = [
   { name: '1min', value: '1' },
@@ -214,7 +215,7 @@ class Kline extends SwitchPair {
         },
       },
       {
-        name: '分时',
+        name: <FormattedMessage id={'TimeSharing'} />,
         value: 'realTime',
       },
       ...intervals,

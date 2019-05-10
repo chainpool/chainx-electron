@@ -2,7 +2,7 @@ import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './OrderPair.less';
-import { Table } from '../../components';
+import { FormattedMessage, Table } from '../../components';
 import { Tab } from '../components';
 import { _, observer, parseQueryString } from '../../utils';
 
@@ -48,11 +48,11 @@ class OrderPair extends SwitchPair {
       columns: [
         {
           width: '40%',
-          title: '币种',
+          title: <FormattedMessage id={'Token'} />,
           dataIndex: 'assets',
         },
         {
-          title: '价格',
+          title: <FormattedMessage id={'Price'} />,
           dataIndex: 'lastPriceShow',
         },
       ],

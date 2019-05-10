@@ -33,7 +33,7 @@ class PutOrder extends SwitchPair {
       } = this.props;
       if (amount !== '' && price) {
         const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
-        const err = errMsg ? '交易额太小' : '';
+        const err = errMsg ? <FormattedMessage id={'TradingVolumeTooSmall'} /> : '';
         this.changeBS(action, { tradeErrMsg: err });
         return err;
       }
@@ -50,12 +50,16 @@ class PutOrder extends SwitchPair {
           ? Patterns.check('smallerOrEqual')(
               price,
               currentPair.maxLastPriceShow,
-              `最高 ${currentPair.maxLastPriceShow}`
+              <>
+                <FormattedMessage id={'MaxPrice'} /> {currentPair.maxLastPriceShow}
+              </>
             )
           : Patterns.check('smallerOrEqual')(
               currentPair.minLastPriceShow,
               price,
-              `最低 ${currentPair.minLastPriceShow}`
+              <>
+                <FormattedMessage id={'MinPrice'} /> {currentPair.minLastPriceShow}
+              </>
             ));
       this.changeBS(action, { priceErrMsg: errMsg }, callback);
 
@@ -69,7 +73,11 @@ class PutOrder extends SwitchPair {
       const errMsg =
         Patterns.check('required')(amount) ||
         Patterns.check('precision')(amount, currentPair.assetsPrecision) ||
-        Patterns.check('smallerOrEqual')(amount, this.getMaxAmount(action, price), '数量不足');
+        Patterns.check('smallerOrEqual')(
+          amount,
+          this.getMaxAmount(action, price),
+          <FormattedMessage id={'AmountNotEnough'} />
+        );
       this.changeBS(action, { amountErrMsg: errMsg }, callback);
       return errMsg;
     },
@@ -159,7 +167,7 @@ class PutOrder extends SwitchPair {
     return Math.max(getPrecision(currentPair.currency), currentPair.assetsPrecision);
   };
 
-  renderArea = ({ direction: { price, amount, action } = {}, label }) => {
+  renderArea = ({ direction: { price, amount, action } = {}, PriceLabel, AmountLabel }) => {
     const { changeBS, checkAll } = this;
     const {
       model: { isLogin, openModal, dispatch, currentPair, setPrecision, loading },
@@ -193,10 +201,11 @@ class PutOrder extends SwitchPair {
     };
 
     const loadingAction = action === 'buy' ? 'putOrderBuy' : 'putOrderSell';
+    const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
-          可用余额:{' '}
+          <FormattedMessage id={'FreeBalance'} />:{' '}
           <span>
             {action === 'buy'
               ? setPrecision(currentCurrencyAssetFree, currentPair.currency) || '-'
@@ -205,7 +214,7 @@ class PutOrder extends SwitchPair {
           </span>
         </div>
         <div className={styles.userprice}>
-          <div className={styles.pricelabel}>{label}价</div>
+          <div className={styles.pricelabel}>{<FormattedMessage id={`${actionUpper}Price`} />}</div>
           <div className={styles.input}>
             <Input.Text
               errMsgIsOutside
@@ -226,7 +235,7 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.useramount}>
-          <div className={styles.amountlabel}>{label}量</div>
+          <div className={styles.amountlabel}>{<FormattedMessage id={`${actionUpper}Amount`} />}</div>
           <div className={styles.input}>
             <Input.Text
               errMsgIsOutside
@@ -259,8 +268,8 @@ class PutOrder extends SwitchPair {
           </div>
         </div>
         <div className={styles.totalPrice}>
-          交易额 {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())} {currentPair.currency}{' '}
-          {tradeErrMsg ? <div className={styles.tradeErrMsg}>{tradeErrMsg}</div> : null}
+          <FormattedMessage id={'TradingVolume'} /> {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())}{' '}
+          {currentPair.currency} {tradeErrMsg ? <div className={styles.tradeErrMsg}>{tradeErrMsg}</div> : null}
         </div>
         {isLogin() ? (
           <div className={styles.submit}>
@@ -269,14 +278,6 @@ class PutOrder extends SwitchPair {
               className={classNames(styles[action], loading[loadingAction] ? styles.loading : null)}
               onClick={() => {
                 if (checkAll.confirm(action) && !tradeErrMsg) {
-                  const content = (
-                    <div>
-                      交易对 {`${currentPair.assets} / ${currentPair.currency}`}; 方向{' '}
-                      {action === 'buy' ? '买入' : '卖出'}；报价 {price}
-                      <br />
-                      数量 {amount}
-                    </div>
-                  );
                   openModal({
                     name: 'SignModal',
                     data: {
@@ -304,7 +305,7 @@ class PutOrder extends SwitchPair {
                   });
                 }
               }}>
-              {label} {currentPair.assets}
+              <FormattedMessage id={actionUpper} /> {currentPair.assets}
             </Button>
           </div>
         ) : null}
@@ -320,11 +321,13 @@ class PutOrder extends SwitchPair {
     } = this.props;
     const buyConfig = {
       direction: buy,
-      label: '买入',
+      PriceLabel: '买入价',
+      AmountLabel: '买入量',
     };
     const sellConfig = {
       direction: sell,
-      label: '卖出',
+      PriceLabel: '卖出价',
+      AmountLabel: '卖出量',
     };
     return (
       <div className={styles.putOrder}>
@@ -332,7 +335,10 @@ class PutOrder extends SwitchPair {
           <div className={styles.title}>
             <FormattedMessage id={'LimitTrade'} />
           </div>
-          <span>撮合手续费：0.00%</span>
+          <span>
+            <FormattedMessage id={'MatchingFee'} />
+            ：0.00%
+          </span>
         </div>
         <div className={styles.operation}>
           <div className={styles.top}>

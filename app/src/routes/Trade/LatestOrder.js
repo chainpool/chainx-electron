@@ -33,15 +33,23 @@ class LatestOrder extends SwitchPair {
       columns: [
         {
           width: '40%',
-          title: `价格(${currentPair.currency})`,
+          title: (
+            <>
+              <FormattedMessage id={'Price'} />({currentPair.currency})
+            </>
+          ),
           dataIndex: 'priceShow',
         },
         {
-          title: '时间',
+          title: <FormattedMessage id={'Time'} />,
           dataIndex: 'timeShow',
         },
         {
-          title: `数量(${currentPair.assets})`,
+          title: (
+            <>
+              <FormattedMessage id={'Amount'} />({currentPair.assets})
+            </>
+          ),
           dataIndex: 'amountShow',
         },
       ],

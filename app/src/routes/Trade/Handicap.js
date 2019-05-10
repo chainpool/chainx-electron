@@ -68,17 +68,29 @@ class Handicap extends SwitchPair {
       columns: [
         {
           className: color,
-          title: `价格(${currentPair.currency})`,
+          title: (
+            <>
+              <FormattedMessage id={'Price'} />({currentPair.currency})
+            </>
+          ),
           dataIndex: 'priceShow',
           render: v => v.slice(0, 10),
         },
         {
-          title: `数量(${currentPair.assets})`,
+          title: (
+            <>
+              <FormattedMessage id={'Amount'} />({currentPair.assets})
+            </>
+          ),
           dataIndex: 'amountShow',
           render: v => <span className={styles.amountShow}>{v.slice(0, 10)}</span>,
         },
         {
-          title: `累计(${currentPair.assets})`,
+          title: (
+            <>
+              <FormattedMessage id={'Total'} />({currentPair.assets})
+            </>
+          ),
           dataIndex: 'totalAmountShow',
           render: (value, item = {}) => {
             return (

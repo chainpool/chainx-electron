@@ -27,7 +27,9 @@ class PersonalOrder extends SwitchPair {
         return (
           <div style={{ position: 'relative' }}>
             <div className={styles.nodata} style={{ top: 20 }}>
-              <div>暂无当前委托</div>
+              <div>
+                <FormattedMessage id={'NoOrder'} />
+              </div>
             </div>
           </div>
         );
@@ -59,7 +61,7 @@ class PersonalOrder extends SwitchPair {
                 });
               }}
             />
-            只显示当前交易对
+            <FormattedMessage id={'ShowCurrentTradingPair'} />
           </div>
         </div>
         {activeIndex ? (

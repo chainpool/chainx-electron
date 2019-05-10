@@ -3,7 +3,7 @@ import SwitchPair from '../Mixin/SwitchPair';
 import { _, observer, setBlankSpace, setColumnsWidth } from '../../../utils';
 
 import * as styles from './index.less';
-import { Icon, Table } from '../../../components';
+import { FormattedMessage, Icon, Table } from '../../../components';
 import { OrderStatus } from '../../../constants';
 
 @observer
@@ -78,49 +78,61 @@ class HistoryOrderTable extends SwitchPair {
       columns: setColumnsWidth(
         [
           {
-            title: '时间',
+            title: <FormattedMessage id={'Time'} />,
             dataIndex: 'timeShow',
             ellipse: 10,
           },
           {
-            title: '委托编号',
+            title: <FormattedMessage id={'OrderNumber'} />,
             ellipse: true,
             dataIndex: 'index',
           },
           {
-            title: '交易对',
+            title: <FormattedMessage id={'TradingPair'} />,
             dataIndex: 'index',
             render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
           },
           {
-            title: '方向',
+            title: <FormattedMessage id={'Direction'} />,
             dataIndex: 'direction',
             render: value =>
-              value === 'Buy' ? <span className={'green'}>买入</span> : <span className={'red'}>卖出</span>,
+              value === 'Buy' ? (
+                <span className={'green'}>
+                  <FormattedMessage id={'Buy'} />
+                </span>
+              ) : (
+                <span className={'red'}>
+                  <FormattedMessage id={'Sell'} />
+                </span>
+              ),
           },
           {
-            title: `委托价格`,
+            title: <FormattedMessage id={'OrderPrice'} />,
             dataIndex: 'priceShow',
             render: (value, item) => setBlankSpace(value, item.filterPair.currency),
           },
           {
-            title: `委托数量`,
+            title: <FormattedMessage id={'OrderAmount'} />,
             dataIndex: 'amountShow',
             render: (value, item) => setBlankSpace(value, item.filterPair.assets),
           },
           {
-            title: `成交量/成交率`,
+            title: (
+              <>
+                <FormattedMessage id={'FactFilled'} />/<FormattedMessage id={'FilledPercent'} />%
+              </>
+            ),
             dataIndex: 'hasfillAmountShow',
             render: (value, item) =>
               setBlankSpace(setBlankSpace(value, item.filterPair.assets), `(${item.hasfillAmountPercent})`),
           },
           {
-            title: `成交均价`,
+            title: <FormattedMessage id={'FilledAverage'} />,
             dataIndex: 'averagePriceShow',
             render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
           },
           {
-            title: `成交总额`,
+            title: <FormattedMessage id={'FilledTotal'} />,
             dataIndex: 'sumShow',
             render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
           },
@@ -131,13 +143,13 @@ class HistoryOrderTable extends SwitchPair {
               let statusShow = '未知';
               switch (item.status) {
                 case OrderStatus.Filled:
-                  statusShow = '完全成交';
+                  statusShow = <FormattedMessage id={'FullFilled'} />;
                   break;
                 case OrderStatus.ParitialFillAndCanceled:
-                  statusShow = '部分成交已撤销';
+                  statusShow = <FormattedMessage id={'PartialFillAndCanceled'} />;
                   break;
                 case OrderStatus.Canceled:
-                  statusShow = '已撤销';
+                  statusShow = <FormattedMessage id={'Cancelled'} />;
                   break;
               }
               return (
@@ -179,7 +191,11 @@ class HistoryOrderTable extends SwitchPair {
                 title: '对手方',
                 dataIndex: 'other_userShow',
                 render: value => {
-                  return <div className={styles.otherFace}>对手方：{value}</div>;
+                  return (
+                    <div className={styles.otherFace}>
+                      <FormattedMessage id={'CounterParty'} />：{value}
+                    </div>
+                  );
                 },
               },
               {
