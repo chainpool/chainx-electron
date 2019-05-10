@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './WithdrawSignModal.less';
-import { ButtonGroup, Button, Modal, Input, Icon } from '../../../components';
+import { ButtonGroup, Button, Modal, Input, Icon, FormattedMessage } from '../../../components';
 import wif from 'wif';
 import { Patterns } from '../../../utils';
 
@@ -40,7 +40,7 @@ class WithdrawSignModal extends Component {
 
     return (
       <Modal
-        title="响应多签提现"
+        title={<FormattedMessage id={'RespondMultiSigWithdrawal'} />}
         button={
           <Button
             size="full"
@@ -78,12 +78,14 @@ class WithdrawSignModal extends Component {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.withdrawSign}>
           <div className={styles.sign}>
-            <div className={styles.desc}>待签原文：</div>
+            <div className={styles.desc}>
+              <FormattedMessage id={'OriginalDataToSigned'} />：
+            </div>
             <div className={styles.tx}>
               <div style={{ maxHeight: 300, overflowY: 'scroll' }}>
                 {tx}
@@ -93,7 +95,7 @@ class WithdrawSignModal extends Component {
             </div>
           </div>
           <ButtonGroup className={styles.buttonselect}>
-            {['签名', '否决'].map((item, index) => (
+            {[<FormattedMessage id={'Sign'} />, <FormattedMessage id={'VetoedSign'} />].map((item, index) => (
               <Button
                 type="confirm"
                 key={index}

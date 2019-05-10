@@ -91,7 +91,12 @@ class Trust extends Mixin {
       return (
         <li key={index}>
           {one.name}
-          {one.isSelf && ' (本人)'}
+          {one.isSelf && (
+            <>
+              {' '}
+              (<FormattedMessage id={'Self'} />)
+            </>
+          )}
         </li>
       );
     };
@@ -139,27 +144,36 @@ class Trust extends Mixin {
               </div>
             )}
 
-            <TableTitle title={'响应列表'}>
+            <TableTitle title={<FormattedMessage id={'ResponseList'} />}>
               <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
                 <span>{tx}</span>
               </div>
               <ButtonGroup>
                 <Button>
-                  <Clipboard id="copy" outInner={<span className={styles.desc}>复制待签原文</span>} />
+                  <Clipboard
+                    id="copy"
+                    outInner={
+                      <span className={styles.desc}>
+                        <FormattedMessage id={'CopyOriginalDataToSigned'} />
+                      </span>
+                    }
+                  />
                 </Button>
                 <Button
                   {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
                   onClick={() => {
                     openModal({ name: 'WithdrawSignModal' });
                   }}>
-                  响应多签提现
+                  <FormattedMessage id={'RespondMultiSigWithdrawal'} />
                 </Button>
               </ButtonGroup>
             </TableTitle>
             <ul>
               <li>
                 <Icon name="icon-wancheng" className={'green'} />
-                <span>已签名</span>
+                <span>
+                  <FormattedMessage id={'HaveSigned'} />
+                </span>
                 <ul>
                   {signTrusteeList
                     .filter((item = {}) => item.trusteeSign)
@@ -168,7 +182,9 @@ class Trust extends Mixin {
               </li>
               <li>
                 <Icon name="icon-cuowu" className={'red'} />
-                <span>已否决</span>
+                <span>
+                  <FormattedMessage id={'HaveVetoedSign'} />
+                </span>
                 <ul>
                   {signTrusteeList
                     .filter((item = {}) => item.trusteeSign === false)
@@ -177,7 +193,9 @@ class Trust extends Mixin {
               </li>
               <li>
                 <Icon name="weixiangying" className={'yellow'} />
-                <span>未响应</span>
+                <span>
+                  <FormattedMessage id={'NoResponseSign'} />
+                </span>
                 <ul>
                   {signTrusteeList
                     .filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)
