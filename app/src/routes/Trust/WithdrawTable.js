@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Table } from '../../components';
+import { FormattedMessage, Table } from '../../components';
 import { observer } from '../../utils';
 
 @observer
@@ -14,40 +14,40 @@ class WithdrawTable extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '申请时间',
+          title: <FormattedMessage id={'ApplicationTime'} />,
           dataIndex: 'timeShow',
         },
         {
-          title: '编号',
+          title: <FormattedMessage id={'ID'} />,
           dataIndex: 'id',
           width: 80,
         },
         {
-          title: '账户地址',
+          title: <FormattedMessage id={'AccountAddress'} />,
           ellipse: true,
           dataIndex: 'address',
         },
         {
-          title: '资产',
+          title: <FormattedMessage id={'Asset'} />,
           dataIndex: 'token',
           width: 80,
         },
         {
-          title: '原链地址',
+          title: <FormattedMessage id={'OriginalChainAddr'} />,
           ellipse: true,
           dataIndex: 'addr',
         },
         {
-          title: '金额',
+          title: <FormattedMessage id={'Balance'} />,
           dataIndex: 'balance',
         },
         {
-          title: '备注',
+          title: <FormattedMessage id={'Memo'} />,
           dataIndex: 'memo',
           ellipse: true,
         },
         {
-          title: '状态',
+          title: <FormattedMessage id={'Status'} />,
           width: 80,
           ellipse: 0,
           dataIndex: 'state',

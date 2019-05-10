@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, Input } from '../../../components';
+import { Button, Modal, Input, FormattedMessage } from '../../../components';
 import { RegEx, Patterns } from '../../../utils';
 import * as styles from './NodeSettingModal.less';
 
@@ -33,7 +33,9 @@ class NodeSettingModal extends Component {
   checkAll = {
     checkNode: () => {
       const { node } = this.state;
-      const errMsg = Patterns.check('required')(node) || (RegEx.checkAuthorization.test(node) ? '' : '不符合格式');
+      const errMsg =
+        Patterns.check('required')(node) ||
+        (RegEx.checkAuthorization.test(node) ? '' : <FormattedMessage id={'NotMathTheFormat'} />);
       this.setState({ nodeErrMsg: errMsg });
       return errMsg;
     },
@@ -52,7 +54,7 @@ class NodeSettingModal extends Component {
 
     return (
       <Modal
-        title="设置节点"
+        title={<FormattedMessage id={'SetupNode'} />}
         button={
           <Button
             size="full"
@@ -63,24 +65,31 @@ class NodeSettingModal extends Component {
                 closeModal();
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
-          <Input.Text
-            label={
-              <div className={styles.nodeexample}>
-                节点地址<span>例[name:password@]127.1.1.1:8000</span>
-              </div>
-            }
-            value={node}
-            placeholder="例 [name:password@]127.1.1.1:8000"
-            errMsg={nodeErrMsg}
-            onChange={value => {
-              this.setState({ node: value });
-            }}
-            onBlur={checkAll.checkNode}
-          />
+          <FormattedMessage id={'Example'}>
+            {msg => (
+              <Input.Text
+                label={
+                  <div className={styles.nodeexample}>
+                    <FormattedMessage id={'NodeAddress'} />
+                    <span>
+                      <FormattedMessage id={'Example'} />: [name:password@]127.1.1.1:8000
+                    </span>
+                  </div>
+                }
+                value={node}
+                placeholder={`${msg}: [name:password@]127.1.1.1:8000`}
+                errMsg={nodeErrMsg}
+                onChange={value => {
+                  this.setState({ node: value });
+                }}
+                onBlur={checkAll.checkNode}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

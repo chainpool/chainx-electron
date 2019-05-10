@@ -4,6 +4,7 @@ import * as styles from './ImportHotPrivateKeyModal.less';
 import { Patterns } from '../../../utils';
 import { SCRYPT_PARAMS } from '../../../constants';
 import bip38 from 'bip38';
+import { FormattedMessage } from '../../../components';
 
 class ImportHotPrivateKeyModal extends Component {
   state = {
@@ -19,7 +20,7 @@ class ImportHotPrivateKeyModal extends Component {
   checkAll = {
     checkEqual: () => {
       const { password, confirmedPassword } = this.state;
-      const errMsg = Patterns.check('equal')(password, confirmedPassword, '密码不一致');
+      const errMsg = Patterns.check('equal')(password, confirmedPassword, <FormattedMessage id={'PasswordNotEqual'} />);
       this.setState({ passwordErrMsg: errMsg, confirmedPasswordErrMsg: errMsg });
       return errMsg;
     },
@@ -46,7 +47,11 @@ class ImportHotPrivateKeyModal extends Component {
       const { password } = this.state;
       const errMsg =
         Patterns.check('required')(password) ||
-        Patterns.check('smallerOrEqual')(8, password.length, '密码至少包含8个字符') ||
+        Patterns.check('smallerOrEqual')(
+          8,
+          password.length,
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }} />
+        ) ||
         this.checkAll.checkEqual();
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
@@ -55,7 +60,11 @@ class ImportHotPrivateKeyModal extends Component {
       const { confirmedPassword } = this.state;
       const errMsg =
         Patterns.check('required')(confirmedPassword) ||
-        Patterns.check('smallerOrEqual')(8, confirmedPassword.length, '密码至少包含8个字符') ||
+        Patterns.check('smallerOrEqual')(
+          8,
+          confirmedPassword.length,
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }} />
+        ) ||
         this.checkAll.checkEqual();
       this.setState({ confirmedPasswordErrMsg: errMsg });
       return errMsg;
@@ -81,7 +90,7 @@ class ImportHotPrivateKeyModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="导入热私钥"
+        title={<FormattedMessage id={'ImportHotPrivateKey'} />}
         button={
           <Button
             size="full"
@@ -109,13 +118,13 @@ class ImportHotPrivateKeyModal extends Component {
                 closeModal();
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.hello}>
           <Input.Text
             placeholder="热私钥将加密存储于本地，用于手动提现，请确保本机安全"
-            label="热私钥"
+            label={<FormattedMessage id={'HotPrivateEntity'} />}
             value={hotPrivateKey}
             errMsg={hotPrivateKeyErrMsg}
             onChange={value => {
@@ -123,29 +132,37 @@ class ImportHotPrivateKeyModal extends Component {
             }}
             onBlur={checkAll.checkHotPrivateKey}
           />
-          <Input.Text
-            errMsgIsOutside
-            isPassword
-            placeholder="密码至少包含8个字符"
-            label="热私钥密码"
-            value={password}
-            errMsg={passwordErrMsg}
-            onChange={value => {
-              this.setState({ password: value });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
-          <Input.Text
-            errMsgIsOutside
-            isPassword
-            placeholder="重复输入密码"
-            label="确认密码"
-            value={confirmedPassword}
-            errMsg={confirmedPasswordErrMsg}
-            onChange={value => {
-              this.setState({ confirmedPassword: value });
-            }}
-          />
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }}>
+            {msg => (
+              <Input.Text
+                errMsgIsOutside
+                isPassword
+                placeholder={msg}
+                label={<FormattedMessage id={'HotPrivateEntityPassword'} />}
+                value={password}
+                errMsg={passwordErrMsg}
+                onChange={value => {
+                  this.setState({ password: value });
+                }}
+                onBlur={checkAll.checkPassword}
+              />
+            )}
+          </FormattedMessage>
+          <FormattedMessage id={'RepeatPassword'}>
+            {msg => (
+              <Input.Text
+                errMsgIsOutside
+                isPassword
+                placeholder={msg}
+                label={<FormattedMessage id={'ConfirmPassword'} />}
+                value={confirmedPassword}
+                errMsg={confirmedPasswordErrMsg}
+                onChange={value => {
+                  this.setState({ confirmedPassword: value });
+                }}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

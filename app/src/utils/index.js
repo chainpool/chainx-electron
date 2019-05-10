@@ -105,7 +105,7 @@ export const Patterns = {
   isHttpAddress: (address, errMsg = '地址格式错误') => {
     return /(http|https):\/\/([\w.]+\/?)\S*/.test(address) ? '' : errMsg;
   },
-  isPublicKey: (pubkey, errMsg = '格式错误') => {
+  isPublicKey: (pubkey, errMsg = 'NotMathTheFormat') => {
     try {
       Buffer.from(pubkey, 'hex');
       return '';
@@ -113,15 +113,15 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isHotPrivateKey: (priKey, pubKey, isTest, callback, errMsg = '热私钥格式错误') => {
+  isHotPrivateKey: (priKey, pubKey, isTest, callback, errMsg = 'NotMathTheFormat') => {
     try {
       const decoded = wif.decode(priKey);
       _.isFunction(callback) && callback(decoded);
       try {
         let ecPair = bitcoin.ECPair.fromWIF(priKey, isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin); // 导入私钥
-        return ecPair.publicKey.toString('hex') === pubKey ? '' : '热私钥与热公钥不匹配';
+        return ecPair.publicKey.toString('hex') === pubKey ? '' : 'HotEntityNotMathHotPrivateEntity';
       } catch (err) {
-        return '热私钥与热公钥不匹配';
+        return 'HotEntityNotMathHotPrivateEntity';
       }
     } catch (err) {
       return errMsg;

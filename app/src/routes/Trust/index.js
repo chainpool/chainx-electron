@@ -102,7 +102,7 @@ class Trust extends Mixin {
           <div className={styles.setting}>
             <TableTitle title={<FormattedMessage id={'TrusteeSettings'} />} className={styles.title}>
               <span className={styles.nodeStyle}>
-                (您当前是：
+                (<FormattedMessage id={'YouAre'} />：
                 {isTrustee ? (
                   <FormattedMessage id={'TrusteeNode'} />
                 ) : isActiveValidator ? (

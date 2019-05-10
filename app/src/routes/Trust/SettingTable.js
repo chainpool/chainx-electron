@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Inject } from '../../utils';
-import { Button, ButtonGroup, Table } from '../../components';
+import { Button, ButtonGroup, FormattedMessage, Table } from '../../components';
 import * as styles from './index.less';
 
 @Inject(({ trustStore }) => ({ trustStore }))
@@ -14,30 +14,38 @@ class SettingTable extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '链',
+          title: <FormattedMessage id={'Chain'} />,
           dataIndex: 'chain',
         },
         {
-          title: '节点状态',
+          title: <FormattedMessage id={'NodeStatus'} />,
           dataIndex: 'connected',
           render: value => {
             switch (value) {
               case true:
-                return '已连接';
+                return <FormattedMessage id={'HaveLinked'} />;
               case false:
-                return <span className="red">超时</span>;
+                return (
+                  <span className="red">
+                    <FormattedMessage id={'OverTime'} />
+                  </span>
+                );
               default:
-                return <span className="red">未连接</span>;
+                return (
+                  <span className="red">
+                    <FormattedMessage id={'UnLinked'} />
+                  </span>
+                );
             }
           },
         },
         {
-          title: '热公钥',
+          title: <FormattedMessage id={'HotEntity'} />,
           ellipse: true,
           dataIndex: 'hotPubKey',
         },
         {
-          title: '冷公钥',
+          title: <FormattedMessage id={'ColdEntity'} />,
           ellipse: true,
           dataIndex: 'coldPubKey',
         },
@@ -47,10 +55,12 @@ class SettingTable extends Component {
           render: (value, item) => (
             <ButtonGroup>
               {item.decodedHotPrivateKey && item.hotPubKey ? (
-                <Button type="disabeld">已导入</Button>
+                <Button type="disabeld">
+                  <FormattedMessage id={'Imported'} />
+                </Button>
               ) : (
                 <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal', data: { chain: item.chain } })}>
-                  导入热私钥
+                  <FormattedMessage id={'ImportHotPrivateKey'} />
                 </Button>
               )}
 
@@ -64,7 +74,7 @@ class SettingTable extends Component {
                     },
                   })
                 }>
-                设置节点
+                <FormattedMessage id={'SetupNode'} />
               </Button>
             </ButtonGroup>
           ),

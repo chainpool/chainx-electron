@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal } from '../../../components';
+import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
 import { Patterns } from '../../../utils';
 
@@ -68,7 +68,7 @@ class TrustSettingModal extends Component {
 
     return (
       <Modal
-        title="设置信托"
+        title={<FormattedMessage id={'TrusteeSettings'} />}
         button={
           <Button
             size="full"
@@ -92,14 +92,14 @@ class TrustSettingModal extends Component {
                 });
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
           <InputHorizotalList
             left={
               <Input.Select
-                label="选择链"
+                label={<FormattedMessage id={'ChooseChain'} />}
                 value={chain}
                 errMsg={chainErrMsg}
                 options={options}
@@ -112,14 +112,14 @@ class TrustSettingModal extends Component {
             right=""
           />
           <Input.Text
-            label="热公钥"
+            label={<FormattedMessage id={'HotEntity'} />}
             value={hotPubKey}
             errMsg={hotPubKeyErrMsg}
             onChange={value => this.setState({ hotPubKey: value })}
             onBlur={checkAll.checkHotKey}
           />
           <Input.Text
-            label="冷公钥"
+            label={<FormattedMessage id={'ColdEntity'} />}
             value={coldPubKey}
             errMsg={coldPubKeyErrMsg}
             onChange={value => this.setState({ coldPubKey: value })}
