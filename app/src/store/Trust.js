@@ -57,7 +57,13 @@ export default class Trust extends ModelExtend {
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
   @observable commentFee = '';
-  @observable maxSignCount = '';
+  @observable totalSignCount = '';
+  @observable lastPredictTradeLength = '';
+
+  @computed
+  get maxSignCount() {
+    return Math.ceil((this.totalSignCount * 2) / 3);
+  }
 
   @computed
   get trusts() {
@@ -192,23 +198,25 @@ export default class Trust extends ModelExtend {
       return sum.isLessThan(amount) ? [] : result;
     };
 
-    const caculateCommentFee = async (url, inputLength, outputLength) => {
+    const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
       const fee = await this.fetchNodeFeeRate(url);
       const res = await this.getTrusteeSessionInfo('Bitcoin');
-      const { maxSignCount } = res;
-      const bytes = inputLength * (166 + 319 + (maxSignCount - 1) * 74) + 34 * outputLength;
+      const { maxSignCount: n, totalSignCount: m } = res;
+      const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
       const result = formatNumber.toFixed(bytes * fee, 8);
       console.log(
         inputLength,
-        outputLength,
+        withdrawalLength,
         fee,
-        maxSignCount,
+        n,
+        m,
         bytes,
         result,
-        'inputLength,outputLength,fee,maxSignCount,result'
+        'inputLength,withdrawalLength,fee,n,m,bytes,result'
       );
       if (result) {
-        // this.changeModel('commentFee', result);
+        this.changeModel('commentFee', result);
+        this.changeModel('lastPredictTradeLength', bytes);
       }
     };
 
@@ -304,13 +312,13 @@ export default class Trust extends ModelExtend {
         this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, maxSignCount } = resRede || {};
+      const { redeemScript, totalSignCount } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
         redeemScript,
         trusteeList,
-        maxSignCount,
+        totalSignCount,
       });
     } else {
       this.changeModel({
@@ -318,7 +326,7 @@ export default class Trust extends ModelExtend {
         signStatus: '',
         redeemScript: '',
         trusteeList: [],
-        maxSignCount: '',
+        totalSignCount: '',
       });
     }
   };
@@ -328,13 +336,14 @@ export default class Trust extends ModelExtend {
       return {
         redeemScript: this.redeemScript,
         maxSignCount: this.maxSignCount,
+        totalSignCount: this.totalSignCount,
       };
     } else {
       const res = await getTrusteeSessionInfo(chain);
       const { hotEntity: { redeemScript } = {}, trusteeList = [] } = res || {};
       return {
         redeemScript,
-        maxSignCount: Math.ceil((trusteeList.length * 2) / 3),
+        totalSignCount: trusteeList.length,
       };
     }
   };
@@ -397,7 +406,7 @@ export default class Trust extends ModelExtend {
       params: [10],
     });
     if (res && res.result) {
-      return res.result.feerate;
+      return res.result.feerate / 1024;
     }
   };
 

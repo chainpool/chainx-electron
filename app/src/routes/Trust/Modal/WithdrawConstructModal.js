@@ -86,7 +86,14 @@ class WithdrawConstructModal extends Component {
       feeErrMsg,
     } = this.state;
     const {
-      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, setPrecision, commentFee },
+      model: {
+        normalizedOnChainAllWithdrawList = [],
+        dispatch,
+        openModal,
+        setPrecision,
+        commentFee,
+        lastPredictTradeLength,
+      },
     } = this.props;
     const options = normalizedOnChainAllWithdrawList
       .map((item = {}) => ({
@@ -192,7 +199,9 @@ class WithdrawConstructModal extends Component {
             label={
               <div>
                 <FormattedMessage id={'BitCoinFee'} />
-                <span className={styles.bitcoinfee}>{tx.length ? `(交易长度:${tx.length})` : null}</span>
+                <span className={styles.bitcoinfee}>
+                  {lastPredictTradeLength ? `(最终交易长度预估:${lastPredictTradeLength})` : null}
+                </span>
                 {commentFee && <span className={styles.bitcoinfee}>推荐手续费:{commentFee}</span>}
               </div>
             }

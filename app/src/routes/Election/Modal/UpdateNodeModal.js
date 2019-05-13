@@ -38,9 +38,9 @@ class UpdateNodeModal extends Component {
     checkWebsite: () => {
       const { website } = this.state;
       const errMsg = Patterns.check('smallerOrEqual')(
-        2,
+        4,
         website.length,
-        <FormattedMessage id={'MinCharacterLength'} values={{ length: 2 }} />
+        <FormattedMessage id={'MinCharacterLength'} values={{ length: 4 }} />
       );
       this.setState({ websiteErrMsg: errMsg });
       return errMsg;
@@ -110,7 +110,7 @@ class UpdateNodeModal extends Component {
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}
           />
-          <FormattedMessage id={'CharacterLength'} values={{ length: '2-12' }}>
+          <FormattedMessage id={'CharacterLength'} values={{ length: '4-24' }}>
             {msg => (
               <Input.Text
                 label={<FormattedMessage id={'Website'} />}
@@ -119,7 +119,7 @@ class UpdateNodeModal extends Component {
                 errMsg={websiteErrMsg}
                 onChange={value => {
                   if (/^[a-zA-Z0-9.]*$/.test(value)) {
-                    this.setState({ website: value.slice(0, 12) });
+                    this.setState({ website: value.slice(0, 24) });
                   }
                 }}
                 onBlur={checkAll.checkWebsite}

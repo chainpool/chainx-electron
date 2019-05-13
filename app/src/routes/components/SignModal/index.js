@@ -128,7 +128,7 @@ class SignModal extends Mixin {
                   const toastMessage = (
                     <div className={styles.toastMessage}>
                       {toastOperation.map((item = {}, index) => (
-                        <span>
+                        <span key={index}>
                           {item.name}&nbsp;{item.value}
                           {index === toastOperation.length - 1 ? '' : <>;&nbsp;</>}
                         </span>
