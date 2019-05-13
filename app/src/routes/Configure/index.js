@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Icon, Mixin, ButtonGroup, RouterGo } from '../../components';
+import { Button, Input, Icon, Mixin, ButtonGroup, RouterGo, FormattedMessage } from '../../components';
 import { TableTitle, ConfirmAndCancelModal } from '../components';
 import { Inject } from '../../utils';
 import NodeManageTable from './NodeManageTable';
@@ -25,10 +25,12 @@ class Configure extends Mixin {
     return (
       <div className={styles.configure}>
         <div className={styles.title}>
-          <TableTitle title="网络设置" />
+          <TableTitle title={<FormattedMessage id={'NetworkSetting'} />} />
         </div>
         <div className={styles.network}>
-          <span>选择网络类型</span>
+          <span>
+            <FormattedMessage id={'SelectNetType'} />
+          </span>
           <div>
             <Input.Select
               value={{ label: currentNetWork.name, value: currentNetWork.value }}
@@ -45,12 +47,14 @@ class Configure extends Mixin {
           </div>
         </div>
 
-        <TableTitle title="节点管理">
+        <TableTitle title={<FormattedMessage id={'NodeSetting'} />}>
           <ButtonGroup className={styles.settingButton}>
             <Button type="blank">
               <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
                 <Icon name="icon-jiedianbushuwendang" />
-                <span className={styles.document}>查看节点部署文档</span>
+                <span className={styles.document}>
+                  <FormattedMessage id={'SeeNodeDeployDocument'} />
+                </span>
               </RouterGo>
             </Button>
             <Button
@@ -75,13 +79,13 @@ class Configure extends Mixin {
                 });
               }}>
               <Icon name="icon-tianjia" />
-              添加节点
+              <FormattedMessage id={'AddNode'} />
             </Button>
           </ButtonGroup>
         </TableTitle>
         <NodeManageTable {...tableProps} />
 
-        <TableTitle style={{ marginTop: 32 }} title="API管理">
+        <TableTitle style={{ marginTop: 32 }} title={<FormattedMessage id={'APISetting'} />}>
           <ButtonGroup className={styles.settingButton}>
             <Button
               type="blank"
@@ -105,7 +109,7 @@ class Configure extends Mixin {
                 });
               }}>
               <Icon name="icon-tianjia" />
-              添加API
+              <FormattedMessage id={'AddApi'} />
             </Button>
           </ButtonGroup>
         </TableTitle>

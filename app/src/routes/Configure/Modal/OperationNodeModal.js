@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Input, Button, Mixin } from '../../../components';
+import { Modal, Input, Button, Mixin, FormattedMessage } from '../../../components';
 import { NetWork } from '../../../constants';
 import { Patterns, _, Inject } from '../../../utils';
 import * as styles from './OperationNodeModal.less';
@@ -24,8 +24,7 @@ class OperationNodeModal extends Mixin {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg =
-        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(name.length, 12, '12字符以内');
+      const errMsg = Patterns.check('required')(name);
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
@@ -50,10 +49,10 @@ class OperationNodeModal extends Mixin {
           payload: { url: address },
         });
         if (!res) {
-          return '未获取到该节点的网络类型';
+          return <FormattedMessage id={'NotGetNodeNetType'} />;
         }
       } catch (err) {
-        return '节点连接失败';
+        return <FormattedMessage id={'NodeLinkFail'} />;
       }
       const desc = NetWork.filter((item = {}) => item.value === res)[0];
       return res.search(value) > -1 ? '' : `该节点网络类型(${desc.name})不允许添加到${name}网络类型`;
@@ -75,7 +74,7 @@ class OperationNodeModal extends Mixin {
     } = this.props;
     return (
       <Modal
-        title={`${action === 'add' ? '添加' : '修改'}节点`}
+        title={action === 'add' ? <FormattedMessage id={'AddNode'} /> : <FormattedMessage id={'ChangeNode'} />}
         button={
           <Button
             size="full"
@@ -91,26 +90,34 @@ class OperationNodeModal extends Mixin {
                 closeModal();
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.OperationNodeModal}>
-          <Input.Text
-            placeholder="12个字符以内"
-            label="名称"
-            value={name}
-            errMsg={nameErrMsg}
-            onChange={value => {
-              this.setState({ name: value.slice(0, 12) });
-            }}
-            onBlur={checkAll.checkName}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={<FormattedMessage id={'Name'} />}
+                value={name}
+                errMsg={nameErrMsg}
+                onChange={value => {
+                  this.setState({ name: value.slice(0, 12) });
+                }}
+                onBlur={checkAll.checkName}
+              />
+            )}
+          </FormattedMessage>
+
           <Input.Text
             errMsgIsOutside
             placeholder="wss://abcd.com:6789"
             label={
               <div>
-                节点地址<span className={styles.assetData}>(提供核心资产数据)</span>
+                <FormattedMessage id={'NodeAddress'} />
+                <span className={styles.assetData}>
+                  (<FormattedMessage id={'ProvideCoreAssetData'} />)
+                </span>
               </div>
             }
             value={address}

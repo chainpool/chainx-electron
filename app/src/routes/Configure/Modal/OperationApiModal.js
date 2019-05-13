@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../components';
+import { Modal, Input, Button, FormattedMessage } from '../../../components';
 import { _, Patterns } from '../../../utils';
 import * as styles from './OperationApiModal.less';
 
@@ -21,8 +21,7 @@ class OperationApiModal extends Component {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg =
-        Patterns.check('required')(name) || Patterns.check('smallerOrEqual')(name.length, 12, '12字符以内');
+      const errMsg = Patterns.check('required')(name);
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
@@ -47,7 +46,7 @@ class OperationApiModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="添加API"
+        title={<FormattedMessage id={'AddApi'} />}
         button={
           <Button
             size="full"
@@ -65,25 +64,33 @@ class OperationApiModal extends Component {
                 }
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.OperationApiModal}>
-          <Input.Text
-            placeholder="12个字符以内"
-            label="名称"
-            value={name}
-            errMsg={nameErrMsg}
-            onChange={value => {
-              this.setState({ name: value.slice(0, 12) });
-            }}
-            onBlur={checkAll.checkName}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={<FormattedMessage id={'Name'} />}
+                value={name}
+                errMsg={nameErrMsg}
+                onChange={value => {
+                  this.setState({ name: value.slice(0, 12) });
+                }}
+                onBlur={checkAll.checkName}
+              />
+            )}
+          </FormattedMessage>
+
           <Input.Text
             placeholder="https://api.chainx.org"
             label={
               <div>
-                API地址<span className={styles.listData}>(提供列表详情数据)</span>
+                <FormattedMessage id={'ApiAddress'} />
+                <span className={styles.listData}>
+                  (<FormattedMessage id={'ProvideDetailedListData'} />)
+                </span>
               </div>
             }
             value={address}

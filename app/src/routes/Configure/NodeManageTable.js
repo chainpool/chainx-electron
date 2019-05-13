@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer, parseQueryString, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button, ButtonGroup, Mixin } from '../../components';
+import { Table, Button, ButtonGroup, Mixin, FormattedMessage } from '../../components';
 
 @observer
 class NodeManageTable extends Mixin {
@@ -36,38 +36,43 @@ class NodeManageTable extends Mixin {
       columns: setColumnsWidth(
         [
           {
-            title: '类别',
+            title: <FormattedMessage id={'Type'} />,
             dataIndex: 'type',
           },
           {
-            title: '名称',
+            title: <FormattedMessage id={'Name'} />,
             dataIndex: 'name',
           },
           {
-            title: '节点地址',
+            title: <FormattedMessage id={'NodeAddress'} />,
             dataIndex: 'address',
           },
           {
-            title: '网络延迟',
+            title: <FormattedMessage id={'NetDelay'} />,
             dataIndex: 'delay',
             render: value => {
-              if (value === 'timeOut') return <span className={'red'}>超时</span>;
+              if (value === 'timeOut')
+                return (
+                  <span className={'red'}>
+                    <FormattedMessage id={'OverTime'} />
+                  </span>
+                );
               return <span className={value > 300 ? 'yellow' : 'green'}>{value ? `${value}ms` : ''}</span>;
             },
           },
 
           {
-            title: '块高',
+            title: <FormattedMessage id={'BlockHeight'} />,
             dataIndex: 'block',
             render: value => value || '--',
           },
           {
-            title: '同步状态',
+            title: <FormattedMessage id={'SyncStatus'} />,
             dataIndex: 'syncStatus',
             render: value => <span className={value !== '100.00%' && value !== '--' ? 'red' : null}>{value}</span>,
           },
           {
-            title: '连接节点数',
+            title: <FormattedMessage id={'ConnectedPeers'} />,
             dataIndex: 'links',
           },
           {
@@ -100,14 +105,14 @@ class NodeManageTable extends Mixin {
                           },
                         });
                       }}>
-                      修改
+                      <FormattedMessage id={'Change'} />
                     </Button>
                     <Button
                       onClick={() => {
                         openModal({
                           name: 'DeleteNodeModal',
                           data: {
-                            title: '删除节点',
+                            title: <FormattedMessage id={'DeleteNode'} />,
                             callback: () => {
                               dispatch({
                                 type: 'updateNodeOrApi',
@@ -121,7 +126,7 @@ class NodeManageTable extends Mixin {
                           },
                         });
                       }}>
-                      删除
+                      <FormattedMessage id={'Delete'} />
                     </Button>
                   </>
                 ) : null}

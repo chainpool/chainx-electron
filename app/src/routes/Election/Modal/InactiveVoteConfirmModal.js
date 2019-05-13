@@ -14,7 +14,7 @@ class InactiveVoteConfirmModal extends Component {
         title={'确定要投票吗？'}
         button={
           <div className={styles.InactiveVoteConfirmModal}>
-            <div className={styles.desc}>当前节点为退选状态，投票后您不会获得任何奖励</div>
+            <div className={styles.desc}>当前节点为退选状态，您的投票在退选期间不会获得任何收益</div>
             <ButtonGroup>
               <Button
                 size="bigger"

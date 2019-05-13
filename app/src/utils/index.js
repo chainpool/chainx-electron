@@ -99,10 +99,10 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isWsAddress: (address, errMsg = '地址格式错误') => {
+  isWsAddress: (address, errMsg = 'AddressFormatError') => {
     return /[ws|wss]:\/\/[\d|.]*/.test(address) ? '' : errMsg;
   },
-  isHttpAddress: (address, errMsg = '地址格式错误') => {
+  isHttpAddress: (address, errMsg = 'AddressFormatError') => {
     return /(http|https):\/\/([\w.]+\/?)\S*/.test(address) ? '' : errMsg;
   },
   isPublicKey: (pubkey, errMsg = 'NotMathTheFormat') => {
