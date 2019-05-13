@@ -23,11 +23,9 @@
       .th {
         font-size: 12px;
         &:first-child {
-          // width: auto !important;
           justify-content: flex-start;
         }
         &:last-child {
-          // width: auto !important;
           justify-content: flex-end;
         }
       }
@@ -43,7 +41,6 @@
     }
     .tr {
       border-bottom: 1px solid #eeeeee;
-      // border-bottom: 1px solid blue;
       &.activeTr {
         background: rgba(242, 243, 244, 0.9);
         font-weight: bold;
@@ -81,7 +78,6 @@
 .mixin_tabLine() {
   margin: 0 -24px;
   padding: 0 24px;
-  // border-bottom: 1px solid #eeeeee;
 }
 
 .mixin_button() {
@@ -97,6 +93,12 @@
     color: @fontgray;
     background: @yellow;
   }
+}
+
+.mixin_ellipse {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 :global{

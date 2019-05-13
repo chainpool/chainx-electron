@@ -159,11 +159,6 @@ class VoteModal extends Mixin {
                         this.setState({ action: item.value, amount: '' });
                       }}>
                       {item.label}
-                      {item.value === 'cancel' && (
-                        <span className={styles.lockweek}>
-                          (<FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />)
-                        </span>
-                      )}
                     </li>
                   ))}
               </ul>
@@ -236,6 +231,11 @@ class VoteModal extends Mixin {
               />
             )}
           </FormattedMessage>
+          {action === 'cancel' && (
+            <div className={styles.lockweek}>
+              <FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />
+            </div>
+          )}
         </div>
       </Modal>
     );

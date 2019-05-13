@@ -1,8 +1,11 @@
 @import '~@styles/index.less';
 .voteModal {
   .lockweek {
+    display: flex;
+    margin-top: 32px;
+    margin-bottom: -10px;
+    justify-content: center;
     font-weight: bold;
-    margin-left: 5px;
   }
   .afterchange{
     display: flex;
@@ -17,6 +20,9 @@
     display: flex;
     flex-grow: 1;
     margin-bottom: 16px;
+    li+li{
+      border-left: 1px solid  #E3E3E3;
+    }
     li{
       cursor: pointer;
       display: flex;

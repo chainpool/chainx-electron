@@ -6,6 +6,7 @@ import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
 import RegisterNodeModal from './Modal/RegisterNodeModal';
+import InactiveVoteConfirmModal from './Modal/InactiveVoteConfirmModal';
 import { Inject } from '../../utils';
 import { HoverTip } from '../components';
 
@@ -90,6 +91,7 @@ class Election extends Mixin {
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
         {name === 'RegisterNodeModal' ? <RegisterNodeModal {...this.props} /> : null}
+        {name === 'InactiveVoteConfirmModal' ? <InactiveVoteConfirmModal {...this.props} /> : null}
       </div>
     );
   }

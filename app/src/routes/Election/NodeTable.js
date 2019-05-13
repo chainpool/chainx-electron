@@ -37,23 +37,28 @@ class NodeTable extends Component {
               <div className={styles.trustee}>
                 {index + 1}
                 {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
-                <span className={styles.leaveOut}>{item.isActive ? '' : <FormattedMessage id={'Inactive'} />}</span>
+                {!item.isActive && (
+                  <span className={styles.leaveOut}>
+                    (<FormattedMessage id={'Inactive'} />)
+                  </span>
+                )}
               </div>
             );
           },
         },
         {
           title: <FormattedMessage id={'Name'} />,
-          width: 110,
+          ellipse: 10,
+          width: 100,
           dataIndex: 'name',
           render: (value, item) => (
-            <div className={styles.name}>
-              <HoverTip tip={item.about + ' '}>
+            <HoverTip tip={item.about}>
+              <div className={styles.overHidden}>
                 <RouterGo isOutSide go={{ pathname: item.url }}>
                   {value}
                 </RouterGo>
-              </HoverTip>
-            </div>
+              </div>
+            </HoverTip>
           ),
         },
         {
@@ -103,14 +108,25 @@ class NodeTable extends Component {
               {currentAddress ? (
                 <Button
                   onClick={() => {
-                    openModal({
-                      name: 'VoteModal',
-                      data: {
-                        target: item.account,
-                        myTotalVote: item.myTotalVote,
-                        isCurrentAccount: item.address === currentAccount.address,
-                      },
-                    });
+                    const vote = () =>
+                      openModal({
+                        name: 'VoteModal',
+                        data: {
+                          target: item.account,
+                          myTotalVote: item.myTotalVote,
+                          isCurrentAccount: item.address === currentAccount.address,
+                        },
+                      });
+                    if (!item.isActive) {
+                      openModal({
+                        name: 'InactiveVoteConfirmModal',
+                        data: {
+                          callback: vote,
+                        },
+                      });
+                    } else {
+                      vote();
+                    }
                   }}>
                   <FormattedMessage id={'Nominate'} />
                 </Button>
