@@ -76,9 +76,16 @@ class SignModal extends Mixin {
     } = this.props;
     const description = descriptionAlias.map(item => {
       return {
-        name: _.isFunction(item.name) ? item.name() : item.name,
+        name: _.isFunction(item.name) ? (
+          item.name()
+        ) : item.name === 'operation' ? (
+          <FormattedMessage id={'Operation'} />
+        ) : (
+          item.name
+        ),
         value: _.isFunction(item.value) ? item.value() : item.value,
         toastShow: item.toastShow,
+        willFilter: item.name === 'operation',
       };
     });
 
@@ -120,10 +127,9 @@ class SignModal extends Mixin {
               if (await checkAll.confirm()) {
                 if (this.result) {
                   const result = this.result;
-                  const operationItem =
-                    description.filter((item = {}) => item.name === operation || item.name === 'operation')[0] || {};
+                  const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
                   const toastOperation = description.filter(
-                    (item = {}) => item.name !== operation && item.name !== 'operation' && item.toastShow !== false
+                    (item = {}) => !item.willFilter && item.toastShow !== false
                   );
                   const toastMessage = (
                     <div className={styles.toastMessage}>
@@ -210,12 +216,14 @@ class SignModal extends Mixin {
         <div className={styles.signModal}>
           <div className={styles.descList}>
             <table>
-              {description.map((item = {}, index) => (
-                <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>{item.value}</td>
-                </tr>
-              ))}
+              <tbody>
+                {description.map((item = {}, index) => (
+                  <tr key={index}>
+                    <td>{item.name}</td>
+                    <td>{item.value}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
           <div className={styles.fee}>

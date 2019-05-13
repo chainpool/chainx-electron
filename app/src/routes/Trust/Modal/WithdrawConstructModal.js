@@ -140,7 +140,9 @@ class WithdrawConstructModal extends Component {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '构造多签提现' }],
+                    description: [
+                      { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
+                    ],
                     callback: () => {
                       return dispatch({
                         type: 'createWithdrawTx',

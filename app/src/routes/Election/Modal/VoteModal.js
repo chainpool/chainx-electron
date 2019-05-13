@@ -121,7 +121,7 @@ class VoteModal extends Mixin {
                     description: [
                       { name: 'operation', value: () => operation },
                       { name: () => operationAmount, value: setBlankSpace(amount, token) },
-                      { name: '备注', value: remark },
+                      { name: () => <FormattedMessage id={'Memo'} />, value: remark },
                     ],
                     callback: () => {
                       return dispatch({

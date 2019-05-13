@@ -105,15 +105,24 @@ class CurrentOrderTable extends SwitchPair {
                   name: 'SignModal',
                   data: {
                     description: [
-                      { name: '操作', value: '撤单' },
-                      { name: '委托编号', value: item.index },
-                      { name: '交易对', value: `${item.filterPair.assets}/${item.filterPair.currency}` },
+                      { name: 'operation', value: () => <FormattedMessage id={'CancelOrder'} /> },
+                      { name: () => <FormattedMessage id={'OrderNumber'} />, value: item.index },
                       {
-                        name: '方向',
-                        value: item.direction === 'Buy' ? '买入' : '卖出',
+                        name: () => <FormattedMessage id={'TradingPair'} />,
+                        value: `${item.filterPair.assets}/${item.filterPair.currency}`,
                       },
-                      { name: '委托价格', value: setBlankSpace(item.priceShow, item.filterPair.currency) },
-                      { name: '委托数量', value: setBlankSpace(item.amountShow, item.filterPair.assets) },
+                      {
+                        name: () => <FormattedMessage id={'Direction'} />,
+                        value: () => <FormattedMessage id={item.direction === 'Buy' ? 'Buy' : 'Sell'} />,
+                      },
+                      {
+                        name: () => <FormattedMessage id={'OrderPrice'} />,
+                        value: setBlankSpace(item.priceShow, item.filterPair.currency),
+                      },
+                      {
+                        name: () => <FormattedMessage id={'OrderAmount'} />,
+                        value: setBlankSpace(item.amountShow, item.filterPair.assets),
+                      },
                     ],
                     callback: () => {
                       return dispatch({

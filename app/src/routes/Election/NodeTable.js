@@ -156,7 +156,10 @@ class NodeTable extends Component {
                     openModal({
                       name: 'SignModal',
                       data: {
-                        description: [{ name: '操作', value: '提息' }, { name: '资产种类', value: nativeAssetName }],
+                        description: [
+                          { name: 'operation', value: () => <FormattedMessage id={'ClaimDividend'} /> },
+                          { name: () => <FormattedMessage id={'AssetType'} />, value: nativeAssetName },
+                        ],
                         callback: () => {
                           return dispatch({
                             type: 'voteClaim',

@@ -78,7 +78,7 @@ class TrustSettingModal extends Component {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [{ name: '操作', value: '设置信托' }],
+                    description: [{ name: 'operation', value: () => <FormattedMessage id={'SetupTrustee'} /> }],
                     callback: () => {
                       return dispatch({
                         type: 'updateTrustToChain',

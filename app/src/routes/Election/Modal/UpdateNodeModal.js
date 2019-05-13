@@ -77,11 +77,18 @@ class UpdateNodeModal extends Component {
                   name: 'SignModal',
                   data: {
                     description: [
-                      { name: '操作', value: '更新节点' },
-                      { name: '出块地址', value: address, toastShow: false },
-                      { name: '官网域名', value: website },
-                      { name: '参选状态', value: willParticipating ? '参选' : '退选' },
-                      { name: '简介', value: about },
+                      { name: 'operation', value: () => <FormattedMessage id={'UpdateNode'} /> },
+                      {
+                        name: () => <FormattedMessage id={'BlockAuthoringAddress'} />,
+                        value: address,
+                        toastShow: false,
+                      },
+                      { name: () => <FormattedMessage id={'Website'} />, value: website },
+                      {
+                        name: () => <FormattedMessage id={'ParticipateStatus'} />,
+                        value: () => <FormattedMessage id={willParticipating ? 'Participate' : 'Elect'} />,
+                      },
+                      { name: () => <FormattedMessage id={'BriefIntroduction'} />, value: about },
                     ],
                     callback: () => {
                       return dispatch({

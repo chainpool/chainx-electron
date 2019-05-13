@@ -282,12 +282,28 @@ class PutOrder extends SwitchPair {
                     name: 'SignModal',
                     data: {
                       description: [
-                        { name: '操作', value: '挂单' },
-                        { name: '交易对', value: `${currentPair.assets}/${currentPair.currency}` },
-                        { name: '方向', value: action === 'buy' ? '买入' : '卖出' },
-                        { name: '报价', value: setBlankSpace(price, currentPair.currency) },
-                        { name: '数量', value: setBlankSpace(amount, currentPair.assets) },
-                        { name: '账户', value: currentAccount.address, toastShow: false },
+                        { name: 'operation', value: () => <FormattedMessage id={'PlaceOrder'} /> },
+                        {
+                          name: () => <FormattedMessage id={'TradingPair'} />,
+                          value: `${currentPair.assets}/${currentPair.currency}`,
+                        },
+                        {
+                          name: () => <FormattedMessage id={'Direction'} />,
+                          value: () => <FormattedMessage id={action === 'buy' ? 'Buy' : 'Sell'} />,
+                        },
+                        {
+                          name: () => <FormattedMessage id={'Offer'} />,
+                          value: setBlankSpace(price, currentPair.currency),
+                        },
+                        {
+                          name: () => <FormattedMessage id={'Amount'} />,
+                          value: setBlankSpace(amount, currentPair.assets),
+                        },
+                        {
+                          name: () => <FormattedMessage id={'Account'} />,
+                          value: currentAccount.address,
+                          toastShow: false,
+                        },
                       ],
                       callback: () => {
                         return dispatch({

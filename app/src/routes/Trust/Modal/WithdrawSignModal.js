@@ -61,8 +61,11 @@ class WithdrawSignModal extends Component {
                   name: 'SignModal',
                   data: {
                     description: [
-                      { name: '操作', value: '响应多签提现' },
-                      { name: '是否签名', value: !activeIndex ? '是' : '否' },
+                      { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                      {
+                        name: () => <FormattedMessage id={'WhetherSignature'} />,
+                        value: () => <FormattedMessage id={!activeIndex ? 'TrueSign' : 'FalseSign'} />,
+                      },
                     ],
                     callback: () => {
                       return dispatch({

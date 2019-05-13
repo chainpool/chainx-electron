@@ -83,7 +83,10 @@ class RegisterNodeModal extends Component {
                   openModal({
                     name: 'SignModal',
                     data: {
-                      description: [{ name: '操作', value: '注册节点' }, { name: '名称', value: name }],
+                      description: [
+                        { name: 'operation', value: () => <FormattedMessage id={'RegisterNode'} /> },
+                        { name: () => <FormattedMessage id={'Name'} />, value: name },
+                      ],
                       callback: () => {
                         return dispatch({
                           type: 'register',
@@ -101,19 +104,26 @@ class RegisterNodeModal extends Component {
           </>
         }>
         <div>
-          <Input.Text
-            placeholder="2-12个字符"
-            label={
-              <div>
-                <FormattedMessage id={'Name'} />{' '}
-                <span style={{ color: '#ea754b', marginLeft: 3 }}> (唯一且不可更改，注册后不可转让)</span>
-              </div>
-            }
-            value={name}
-            errMsg={nameErrMsg}
-            onChange={value => this.setState({ name: value.slice(0, 12) })}
-            onBlur={checkAll.checkName}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: '2-12' }}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={
+                  <div>
+                    <FormattedMessage id={'Name'} />{' '}
+                    <span style={{ color: '#ea754b', marginLeft: 3 }}>
+                      {' '}
+                      (<FormattedMessage id={'RegisterNodeUnchangeable'} />)
+                    </span>
+                  </div>
+                }
+                value={name}
+                errMsg={nameErrMsg}
+                onChange={value => this.setState({ name: value.slice(0, 12) })}
+                onBlur={checkAll.checkName}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

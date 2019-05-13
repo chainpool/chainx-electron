@@ -56,7 +56,7 @@ class UnFreezeModal extends Component {
                   openModal({
                     name: 'SignModal',
                     data: {
-                      description: [{ name: '操作', value: '解冻' }],
+                      description: [{ name: 'operation', value: () => <FormattedMessage id={'Unfreeze'} /> }],
                       callback: () => {
                         return dispatch({
                           type: 'unfreeze',
