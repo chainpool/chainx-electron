@@ -40,7 +40,11 @@ class Header extends Component {
                       getDeepPath(routers, pathname).filter(item2 => item2.path === item.path)[0] ? styles.active : null
                     )}>
                     <FormattedMessage id={item.title} />
-                    {item.warn ? <div className={styles.warn}>{item.warn}</div> : null}
+                    {item.warn ? (
+                      <div className={styles.warn}>
+                        <FormattedMessage id={item.warn} />
+                      </div>
+                    ) : null}
                   </RouterGo>
                 );
                 return item.authority && item.authority[0] === 1 ? (

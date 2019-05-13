@@ -136,9 +136,13 @@ class Trust extends Mixin {
             {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
               <div className={styles.completeSign}>
                 <Icon name="dengdai" />
-                <div className={styles.resok}>响应已完成，提现处理中…</div>
+                <div className={styles.resok}>
+                  <FormattedMessage id={'ResponseOkThenDealing'} />
+                </div>
                 <div className={styles.hash}>
-                  <div>交易哈希</div>
+                  <div>
+                    <FormattedMessage id={'TransactionHash'} />
+                  </div>
                   <div className={styles.hashvalue}>{signHash}</div>
                 </div>
               </div>

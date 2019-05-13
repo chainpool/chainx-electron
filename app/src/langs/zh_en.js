@@ -183,6 +183,14 @@ const zh_en = {
   CopyOriginalDataToSigned: ['复制待签原文', 'Copy Original Data to be signed'],
   RespondMultiSigWithdrawal: ['响应多签提现', 'Respond the MultiSig Withdrawal'],
   Self: ['本人', 'Self'],
+  CopySuccessful: ['复制成功', 'Copy successfully'],
+  ResponseOkThenDealing: [
+    '响应已完成，提现处理中',
+    'The response has been completed and the withdrawal process is in progress',
+  ],
+  TransactionHash: ['交易Hash', 'Transaction hash'],
+  ComingSoon: ['敬请期待', 'ComingSoon'],
+  ThisAccount: ['本账户', 'This account'],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于手续费', 'Amount must greater than fee'],
@@ -198,6 +206,7 @@ const zh_en = {
   ConfirmPassword: ['确认密码', 'Confirm password'],
   RepeatPassword: ['重复输入密码', 'Repeat password'],
   PasswordNotEqual: ['密码不一致', 'Passwords does not match! '],
+  PasswordError: ['密码错误', 'Password error'],
   Cancel: ['取消', 'Cancel'],
   Skip: ['跳过', 'Skip'],
   MaxPrice: ['最高', 'Max'],

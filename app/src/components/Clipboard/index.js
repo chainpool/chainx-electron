@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import ClipboardJS from 'clipboard';
-import { Tooltip } from '../index';
+import { Tooltip, FormattedMessage } from '../index';
 import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
@@ -22,18 +22,22 @@ export default class Clipboard extends PureComponent {
         <span id={uid} className={classNames(styles.children, width ? styles.ellipse : null)} style={{ width }}>
           {children}
         </span>
-        <Tooltip tip="复制成功" type="click">
-          <i
-            className="clipboard iconfont icon-icon-fuzhi"
-            data-clipboard-target={`#${uid}`}
-            style={{ marginLeft: children ? 8 : null }}
-          />
-          {outInner ? (
-            <span className={classNames('outerInner', styles.outerInner)} data-clipboard-target={`#${uid}`}>
-              {outInner}
-            </span>
-          ) : null}
-        </Tooltip>
+        <FormattedMessage id={'CopySuccessful'}>
+          {msg => (
+            <Tooltip tip={msg} type="click">
+              <i
+                className="clipboard iconfont icon-icon-fuzhi"
+                data-clipboard-target={`#${uid}`}
+                style={{ marginLeft: children ? 8 : null }}
+              />
+              {outInner ? (
+                <span className={classNames('outerInner', styles.outerInner)} data-clipboard-target={`#${uid}`}>
+                  {outInner}
+                </span>
+              ) : null}
+            </Tooltip>
+          )}
+        </FormattedMessage>
       </span>
     );
   }

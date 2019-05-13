@@ -110,18 +110,22 @@ class WithdrawSignModal extends Component {
             ))}
           </ButtonGroup>
           {!activeIndex ? (
-            <Input.Text
-              isPassword
-              value={password}
-              errMsg={passwordErrMsg}
-              placeholder="输入热私钥密码"
-              onChange={value => {
-                this.setState({
-                  password: value,
-                });
-              }}
-              onBlur={checkAll.checkPassword}
-            />
+            <FormattedMessage id={'HotPrivateEntityPassword'}>
+              {msg => (
+                <Input.Text
+                  isPassword
+                  value={password}
+                  errMsg={passwordErrMsg}
+                  placeholder={msg}
+                  onChange={value => {
+                    this.setState({
+                      password: value,
+                    });
+                  }}
+                  onBlur={checkAll.checkPassword}
+                />
+              )}
+            </FormattedMessage>
           ) : null}
         </div>
       </Modal>

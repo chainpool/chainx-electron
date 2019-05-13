@@ -127,7 +127,7 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isHotPrivateKeyPassword: (decodedHotPrivateKey, password, callback, errMsg = '密码错误') => {
+  isHotPrivateKeyPassword: (decodedHotPrivateKey, password, callback, errMsg = 'PasswordError') => {
     try {
       const decryptedKey = bip38.decrypt(decodedHotPrivateKey, password, () => {}, SCRYPT_PARAMS);
       _.isFunction(callback) && callback(decryptedKey);

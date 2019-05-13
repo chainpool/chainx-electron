@@ -71,7 +71,7 @@ class NodeTable extends Component {
           ellipse: 10,
           width: 100,
           dataIndex: 'address',
-          render: value => (value === currentAccount.address ? '本账户' : value),
+          render: value => (value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : value),
         },
         {
           title: <FormattedMessage id={'IntentionSelfNominated'} />,

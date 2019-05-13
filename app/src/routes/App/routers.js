@@ -56,7 +56,7 @@ export default [
     path: '/dapp',
     component: lazy(() => import('../Trade')),
     status: 'awaiting',
-    warn: '敬请期待',
+    warn: 'ComingSoon',
   },
   {
     title: '配置',
