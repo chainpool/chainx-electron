@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../../../components';
+import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Patterns } from '../../../../../utils';
 import { ErrMsg } from '../../../../../constants';
 import * as styles from './SetPasswordModal.less';
@@ -17,12 +17,12 @@ class SetPasswordModal extends Component {
     checkEqual: () => {
       const { password, confirmPassword } = this.state;
       if (password && confirmPassword) {
-        return password === confirmPassword ? '' : ErrMsg.passNotEqual;
+        return password === confirmPassword ? '' : <FormattedMessage id={'PasswordNotEqual'} />;
       }
     },
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg = Patterns.check('required')(label) || Patterns.check('smaller')(label.length, 12, '12字符以内');
+      const errMsg = Patterns.check('required')(label);
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -30,7 +30,11 @@ class SetPasswordModal extends Component {
       const { password } = this.state;
       const errMsg =
         Patterns.check('required')(password) ||
-        Patterns.check('smallerOrEqual')(6, password.length, '密码至少包含6个字符') ||
+        Patterns.check('smallerOrEqual')(
+          6,
+          password.length,
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }} />
+        ) ||
         this.checkAll.checkEqual();
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
@@ -57,7 +61,7 @@ class SetPasswordModal extends Component {
       <Modal
         title={
           <span>
-            设置密码 (<span className={styles.step}>{step}</span>/{step})
+            <FormattedMessage id={'SettingPassword'} /> (<span className={styles.step}>{step}</span>/{step})
           </span>
         }
         button={
@@ -78,42 +82,56 @@ class SetPasswordModal extends Component {
                 closeModal();
               }
             }}>
-            完成
+            <FormattedMessage id={'Complete'} />
           </Button>
         }>
         <div className={styles.setPasswordModal}>
-          <Input.Text
-            placeholder="12字符以内"
-            label="标签"
-            value={label}
-            errMsg={labelErrMsg}
-            onChange={value => {
-              this.setState({ label: value });
-            }}
-            onBlur={checkAll.checkLabel}
-          />
-          <Input.Text
-            isPassword
-            placeholder="密码至少包含6个字符"
-            label="密码"
-            value={password}
-            errMsg={passwordErrMsg}
-            onChange={value => {
-              this.setState({ password: value });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
-          <Input.Text
-            isPassword
-            placeholder="重复输入密码"
-            label="确认密码"
-            value={confirmPassword}
-            errMsg={confirmPasswordErrMsg}
-            onChange={value => {
-              this.setState({ confirmPassword: value });
-            }}
-            onBlur={checkAll.checkConfirmPassword}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={<FormattedMessage id={'Label'} />}
+                value={label}
+                errMsg={labelErrMsg}
+                onChange={value => {
+                  this.setState({ label: value.slice(0, 12) });
+                }}
+                onBlur={checkAll.checkLabel}
+              />
+            )}
+          </FormattedMessage>
+
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }}>
+            {msg => (
+              <Input.Text
+                isPassword
+                placeholder={msg}
+                label={<FormattedMessage id={'Password'} />}
+                value={password}
+                errMsg={passwordErrMsg}
+                onChange={value => {
+                  this.setState({ password: value });
+                }}
+                onBlur={checkAll.checkPassword}
+              />
+            )}
+          </FormattedMessage>
+
+          <FormattedMessage id={'RepeatPassword'}>
+            {msg => (
+              <Input.Text
+                isPassword
+                placeholder={msg}
+                label={<FormattedMessage id={'ConfirmPassword'} />}
+                value={confirmPassword}
+                errMsg={confirmPasswordErrMsg}
+                onChange={value => {
+                  this.setState({ confirmPassword: value });
+                }}
+                onBlur={checkAll.checkConfirmPassword}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, ButtonGroup } from '../../../../../components';
+import { Modal, Input, Button, ButtonGroup, FormattedMessage } from '../../../../../components';
 import { _, Patterns, ChainX, classNames, isRepeat } from '../../../../../utils';
 import { ErrMsg } from '../../../../../constants';
 import * as styles from './CreateAccountModal.less';
@@ -32,7 +32,7 @@ class CreateAccountModal extends Component {
       const errMsg = Patterns.check('strictEqual')(
         userSelectMnemonicWord.join(),
         mnemonicWord.join(),
-        ErrMsg.mnemonicOrderNotFormat
+        <FormattedMessage id={'AccountImportMnemonicNotEqual'} />
       );
       this.setState({ userSelectMnemonicWordErrMsg: errMsg });
       return errMsg;
@@ -76,16 +76,19 @@ class CreateAccountModal extends Component {
       <Modal
         title={
           <span>
-            {step === 1 ? '备份助记词' : null}
-            {step === 2 ? '验证助记词' : null}(<span className={styles.step}>{step}</span>/3)
+            {step === 1 ? <FormattedMessage id={'BackUpMnemonic'} /> : null}
+            {step === 2 ? <FormattedMessage id={'ValidateMnemonic'} /> : null}(
+            <span className={styles.step}>{step}</span>/3)
           </span>
         }>
         <div className={styles.createAccountModal}>
           {step === 1 ? (
             <>
               <div className={styles.title}>
-                <div>温馨提醒：</div>
-                不要将您的备份助记词存储在您的电脑上，或者网上某处。任何能够访问您备份助记词的人就能取用您的资金。
+                <div>
+                  <FormattedMessage id={'WarmReminder'} />：
+                </div>
+                <FormattedMessage id={'NotSavePrivateKeyAnyWhere'} />
               </div>
               <ul>
                 {mnemonicWord.map((item, index) => (
@@ -113,7 +116,7 @@ class CreateAccountModal extends Component {
                       step: step + 1,
                     });
                   }}>
-                  我已备份
+                  <FormattedMessage id={'IHaveBackedUp'} />
                 </Button>
               </div>
             </>
@@ -132,7 +135,9 @@ class CreateAccountModal extends Component {
                   </li>
                 ))}
               </ul>
-              <div className={styles.remember}>按顺序确认您的助记词</div>
+              <div className={styles.remember}>
+                <FormattedMessage id={'ConfirmMnemonicOrder'} />
+              </div>
               <ul className={styles.inmemory}>
                 {shuffleMnemonicWord.map((item, index) => (
                   <li
@@ -174,7 +179,7 @@ class CreateAccountModal extends Component {
                         step: step - 1,
                       });
                     }}>
-                    返回上一步
+                    <FormattedMessage id={'BackUpStep'} />
                   </Button>
                   <Button
                     size="bigger"
@@ -182,7 +187,7 @@ class CreateAccountModal extends Component {
                     onClick={() => {
                       submit();
                     }}>
-                    完成
+                    <FormattedMessage id={'Complete'} />
                   </Button>
                 </ButtonGroup>
               </div>

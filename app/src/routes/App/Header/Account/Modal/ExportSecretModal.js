@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../../../components';
+import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Warn } from '../../../../components';
 import { ChainX, Patterns } from '../../../../../utils';
 import * as styles from './ExportSecretModal.less';
@@ -33,7 +33,7 @@ class ExportSecretModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="导出私钥"
+        title={<FormattedMessage id={'ExportPrivateKey'} />}
         button={
           showResult ? (
             ''
@@ -46,7 +46,7 @@ class ExportSecretModal extends Component {
                   this.setState({ showResult: ChainX.account.fromKeyStore(encoded, password).privateKey() });
                 }
               }}>
-              确定
+              <FormattedMessage id={'Confirm'} />
             </Button>
           )
         }>
@@ -54,14 +54,19 @@ class ExportSecretModal extends Component {
           {showResult ? (
             <>
               <div className={styles.secret}>
-                私钥：<span className={styles.result}>{showResult}</span>
+                <span className={styles.label}>
+                  <FormattedMessage id={'PrivateKey'} />
+                </span>
+                ：<span className={styles.result}>{showResult}</span>
               </div>
-              <Warn>不要将您的私钥存储在您的电脑上，或者网上某处。任何能够访问您备份私钥的人就能取用您的资金。</Warn>
+              <Warn>
+                <FormattedMessage id={'NotSavePrivateKeyAnyWhere'} />
+              </Warn>
             </>
           ) : (
             <Input.Text
               isPassword
-              label="密码"
+              label={<FormattedMessage id={'Password'} />}
               value={password}
               errMsg={passwordErrMsg}
               onChange={value => {

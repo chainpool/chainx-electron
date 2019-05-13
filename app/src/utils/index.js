@@ -66,7 +66,7 @@ export const setColumnsWidth = (table = [], widths = []) => {
 };
 
 export const Patterns = {
-  decode: (encoded, password, errMsg = '密码错误') => {
+  decode: (encoded, password, errMsg = 'PasswordError') => {
     try {
       ChainX.account.fromKeyStore(encoded, password);
       return '';

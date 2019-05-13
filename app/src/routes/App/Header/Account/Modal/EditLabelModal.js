@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button } from '../../../../../components';
+import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Patterns } from '../../../../../utils';
 
 class EditLabelModal extends Component {
@@ -10,7 +10,7 @@ class EditLabelModal extends Component {
   checkAll = {
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg = Patterns.check('required')(label) || Patterns.check('smaller')(label.length, 12, '12字符以内');
+      const errMsg = Patterns.check('required')(label);
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -28,7 +28,7 @@ class EditLabelModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="修改标签"
+        title={<FormattedMessage id={'ModifyLabel'} />}
         button={
           <Button
             size="full"
@@ -45,20 +45,24 @@ class EditLabelModal extends Component {
                 closeModal();
               }
             }}>
-            确定
+            <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div>
-          <Input.Text
-            placeholder="12字符以内"
-            label="标签"
-            value={label}
-            errMsg={labelErrMsg}
-            onChange={value => {
-              this.setState({ label: value });
-            }}
-            onBlur={checkAll.checkLabel}
-          />
+          <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={<FormattedMessage id={'Label'} />}
+                value={label}
+                errMsg={labelErrMsg}
+                onChange={value => {
+                  this.setState({ label: value.slice(0, 12) });
+                }}
+                onBlur={checkAll.checkLabel}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );

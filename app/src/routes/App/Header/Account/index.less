@@ -29,7 +29,7 @@
     > div {
       > div {
         background: white;
-        width: 134px;
+        min-width: 134px;
         padding: 12px 0 12px;
 
         ul {
@@ -38,7 +38,7 @@
           }
           li {
             color: @fontgray;
-            padding-left: 24px;
+            padding: 0 24px;
             height: 38px;
             &:hover {
               background: #f8f8f8;
@@ -169,7 +169,6 @@
               justify-content: flex-end;
               position: relative;
               &:hover {
-
                 > div {
                   display: block;
                 }
@@ -186,12 +185,15 @@
                 display: none;
                 padding-top: 20px;
                 > ul {
+
                   border: 1px solid #dce0e2;
                   box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
                   background: white;
-                  width: 120px;
+                  min-width: 120px;
                   padding: 12px 0;
                   li {
+                    white-space: nowrap;
+                    word-break: keep-all;
                     margin-left: unset;
                     cursor: pointer;
                     display: flex;

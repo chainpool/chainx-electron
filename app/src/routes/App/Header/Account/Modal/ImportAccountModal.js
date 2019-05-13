@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, Icon } from '../../../../../components';
+import { Modal, Input, Button, Icon, FormattedMessage } from '../../../../../components';
 import { ChainX, Patterns } from '../../../../../utils';
 import * as styles from './ImportAccountModal.less';
 
@@ -17,16 +17,23 @@ class ImportAccountModal extends Component {
 
       const errMsg = mnemonicWord.some(item => {
         return !!Patterns.check('required')(item);
-      })
-        ? '请填写完整'
-        : Patterns.check('isMnemonicValid')(mnemonicWord.join(' '));
+      }) ? (
+        <FormattedMessage id={'CompleteTheForm'} />
+      ) : (
+        Patterns.check('isMnemonicValid')(
+          mnemonicWord.join(' '),
+          <FormattedMessage id={'AccountImportMnemonicNotFormat'} />
+        )
+      );
 
       this.setState({ MnemonicWordErrMsg: errMsg });
       return errMsg;
     },
     checkSecretKey: () => {
       const { secretKey } = this.state;
-      const errMsg = Patterns.check('required')(secretKey) || Patterns.check('isPrivateKey')(secretKey);
+      const errMsg =
+        Patterns.check('required')(secretKey) ||
+        Patterns.check('isPrivateKey')(secretKey, <FormattedMessage id={'AccountImportPrivateKeyNotFormat'} />);
       this.setState({ secretKeyErrMsg: errMsg });
       return errMsg;
     },
@@ -52,7 +59,7 @@ class ImportAccountModal extends Component {
       <Modal
         title={
           <span>
-            导入账户 (<span className={styles.step}>1</span>/2)
+            <FormattedMessage id={'ImportAccount'} /> (<span className={styles.step}>1</span>/2)
           </span>
         }
         button={
@@ -75,13 +82,15 @@ class ImportAccountModal extends Component {
                   });
                 }
               }}>
-              导入
+              <FormattedMessage id={'Import'} />
             </Button>
           </div>
         }>
         <div className={styles.importAccountModal}>
           <div className={styles.title}>
-            <span>{step === 1 ? '导入助记词' : '导入私钥'}</span>
+            <span>
+              {step === 1 ? <FormattedMessage id={'ImportMnemonic'} /> : <FormattedMessage id={'ImportPrivateKey'} />}
+            </span>
             <Button
               type="blank"
               onClick={() => {
@@ -90,7 +99,7 @@ class ImportAccountModal extends Component {
                 });
               }}>
               <Icon name="icon-daoruzhanghu" className={styles.importicon} />
-              {step === 1 ? '导入私钥' : '导入助记词'}
+              {step === 1 ? <FormattedMessage id={'ImportPrivateKey'} /> : <FormattedMessage id={'ImportMnemonic'} />}
             </Button>
           </div>
           {step === 1 ? (
@@ -112,7 +121,9 @@ class ImportAccountModal extends Component {
                 ))}
               </ul>
               {MnemonicWordErrMsg ? <div className={styles.errMsg}>{MnemonicWordErrMsg}</div> : null}
-              <div className={styles.warn}>按顺序输入您的助记词，并以空格键区分</div>
+              <div className={styles.warn}>
+                <FormattedMessage id={'InputMnemonicOrder'} />
+              </div>
             </>
           ) : (
             <Input.Text

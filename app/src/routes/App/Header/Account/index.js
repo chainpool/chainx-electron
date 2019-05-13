@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, RouterGo, Scroller } from '../../../../components';
+import { FormattedMessage, Mixin, RouterGo, Scroller } from '../../../../components';
 import { classNames, Inject, Device } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import ImportAccountModal from './Modal/ImportAccountModal';
@@ -77,7 +77,7 @@ class Account extends Mixin {
                             },
                           });
                         }}>
-                        忘记账户
+                        <FormattedMessage id={'ForgetAccount'} />
                       </li>
                       <li
                         onClick={e => {
@@ -89,7 +89,7 @@ class Account extends Mixin {
                             },
                           });
                         }}>
-                        修改标签
+                        <FormattedMessage id={'ModifyLabel'} />
                       </li>
                       <li
                         onClick={e => {
@@ -102,7 +102,7 @@ class Account extends Mixin {
                             },
                           });
                         }}>
-                        修改密码
+                        <FormattedMessage id={'ChangePassword'} />
                       </li>
                       <li
                         onClick={e => {
@@ -114,7 +114,7 @@ class Account extends Mixin {
                             },
                           });
                         }}>
-                        导出私钥
+                        <FormattedMessage id={'ExportPrivateKey'} />
                       </li>
                     </ul>
                   </div>
@@ -149,7 +149,9 @@ class Account extends Mixin {
                         });
                       }}>
                       <Icon name="icon-daoruzhanghu" className={styles.icon} />
-                      <span style={{ color: '#555555' }}>导入账户</span>
+                      <span style={{ color: '#555555' }}>
+                        <FormattedMessage id={'ImportAccount'} />
+                      </span>
                     </Button>
                   </div>
                   <div>
@@ -161,7 +163,9 @@ class Account extends Mixin {
                         });
                       }}>
                       <Icon name="icon-tianjia" className={styles.icon} />
-                      <span style={{ color: '#555555' }}>新增账户</span>
+                      <span style={{ color: '#555555' }}>
+                        <FormattedMessage id={'NewAccount'} />
+                      </span>
                     </Button>
                   </div>
                 </div>
@@ -178,7 +182,7 @@ class Account extends Mixin {
         ) : (
           <ButtonGroup>
             <Button type="warnoutline" className={styles.addaccount} Ele={'div'}>
-              添加账户
+              <FormattedMessage id={'AddAccount'} />
               <div className={styles.hoverpannel}>
                 <div>
                   <ul>
@@ -189,7 +193,7 @@ class Account extends Mixin {
                         });
                       }}>
                       <Icon name="icon-tianjia" />
-                      新增账户
+                      <FormattedMessage id={'NewAccount'} />
                     </li>
                     <li
                       onClick={() => {
@@ -198,7 +202,7 @@ class Account extends Mixin {
                         });
                       }}>
                       <Icon name="icon-daoruzhanghu" />
-                      导入账户
+                      <FormattedMessage id={'ImportAccount'} />
                     </li>
                   </ul>
                 </div>

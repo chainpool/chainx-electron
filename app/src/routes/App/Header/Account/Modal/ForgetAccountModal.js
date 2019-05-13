@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, ButtonGroup } from '../../../../../components';
+import { Modal, Input, Button, ButtonGroup, FormattedMessage } from '../../../../../components';
 import { Warn } from '../../../../components';
 import { Patterns } from '../../../../../utils';
 import * as styles from './ForgetAccountModal.less';
@@ -33,7 +33,7 @@ class ForgetAccountModal extends Component {
     } = this.props;
     return (
       <Modal
-        title="忘记账户"
+        title={<FormattedMessage id={'ForgetAccount'} />}
         button={
           <ButtonGroup className={styles.group}>
             <Button
@@ -41,7 +41,7 @@ class ForgetAccountModal extends Component {
               onClick={() => {
                 closeModal();
               }}>
-              取消
+              <FormattedMessage id={'Cancel'} />
             </Button>
             <Button
               size="bigger"
@@ -57,23 +57,30 @@ class ForgetAccountModal extends Component {
                   closeModal();
                 }
               }}>
-              确定
+              <FormattedMessage id={'Confirm'} />
             </Button>
           </ButtonGroup>
         }>
         <div className={styles.forgetAccountModal}>
-          <Input.Text
-            isPassword
-            placeholder="输入密码"
-            label="密码"
-            value={password}
-            errMsg={passwordErrMsg}
-            onChange={value => {
-              this.setState({ password: value });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
-          <Warn className={styles.warn}>确保您已备份账户，否则您的账户将无法找回</Warn>
+          <FormattedMessage id={'InputPassword'}>
+            {msg => (
+              <Input.Text
+                isPassword
+                placeholder={msg}
+                label={<FormattedMessage id={'Password'} />}
+                value={password}
+                errMsg={passwordErrMsg}
+                onChange={value => {
+                  this.setState({ password: value });
+                }}
+                onBlur={checkAll.checkPassword}
+              />
+            )}
+          </FormattedMessage>
+
+          <Warn className={styles.warn}>
+            <FormattedMessage id={'EnsureCustomerBackUp'} />
+          </Warn>
         </div>
       </Modal>
     );
