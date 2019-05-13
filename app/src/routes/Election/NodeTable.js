@@ -4,6 +4,7 @@ import { Button, ButtonGroup, RouterGo, Table, FormattedMessage } from '../../co
 import { HoverTip, Balance } from '../components';
 import { Inject } from '../../utils';
 import trusteeImg from '../../resource/trustee2.png';
+import inactive from '../../resource/inactive.png';
 
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {
@@ -36,11 +37,15 @@ class NodeTable extends Component {
             return (
               <div className={styles.trustee}>
                 {index + 1}
-                {item.isTrustee && item.isTrustee.length ? <img src={trusteeImg} alt="" /> : null}
+                {item.isTrustee && item.isTrustee.length ? (
+                  <HoverTip tip={'负责联合托管⽤户的链外资产'}>
+                    <img src={trusteeImg} alt="" />
+                  </HoverTip>
+                ) : null}
                 {!item.isActive && (
-                  <span className={styles.leaveOut}>
-                    (<FormattedMessage id={'Inactive'} />)
-                  </span>
+                  <HoverTip tip={'无法参与验证节点的选举，并且没有任何收益'}>
+                    <img src={inactive} alt="" />
+                  </HoverTip>
                 )}
               </div>
             );

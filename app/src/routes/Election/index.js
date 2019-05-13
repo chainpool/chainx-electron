@@ -33,8 +33,12 @@ class Election extends Mixin {
 
     const tabs = currentAddress
       ? [
-          <FormattedMessage id={'ValidatorNode'} />,
-          <FormattedMessage id={'StandbyNode'} />,
+          <HoverTip tip={'负责全链⽤户交易的记账处理和打包出块'}>
+            <FormattedMessage id={'ValidatorNode'} />
+          </HoverTip>,
+          <HoverTip tip={'负责搭建同步节点接收交易和广播数据'}>
+            <FormattedMessage id={'StandbyNode'} />
+          </HoverTip>,
           <FormattedMessage id={'MyNominations'} />,
         ]
       : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
@@ -66,7 +70,9 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              <FormattedMessage id={'RegisterNode'} />
+              <HoverTip tip="注册并成功部署后，您将成为验证节点并参与选举">
+                <FormattedMessage id={'RegisterNode'} />
+              </HoverTip>
             </Button>
           </li>
         )}
