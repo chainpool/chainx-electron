@@ -1,6 +1,6 @@
 import React from 'react';
 import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
-import { Modal, Button, Input, Mixin, Slider, Toast } from '../../../components';
+import { Modal, Button, Input, Mixin, Slider, Toast, FormattedMessage } from '../../../components';
 import { PlaceHolder } from '../../../constants';
 
 import * as styles from './index.less';
@@ -111,7 +111,7 @@ class SignModal extends Mixin {
 
     return (
       <Modal
-        title="交易签名"
+        title={<FormattedMessage id={'TransactionSignature'} />}
         button={
           <Button
             size="full"
@@ -204,20 +204,24 @@ class SignModal extends Mixin {
                 }
               }
             }}>
-            签名
+            <FormattedMessage id={'Sign'} />
           </Button>
         }>
         <div className={styles.signModal}>
-          <ul>
-            {description.map((item = {}, index) => (
-              <li key={index}>
-                <span>{item.name}</span>
-                <span>{item.value}</span>
-              </li>
-            ))}
-          </ul>
+          <div className={styles.descList}>
+            <table>
+              {description.map((item = {}, index) => (
+                <tr key={index}>
+                  <td>{item.name}</td>
+                  <td>{item.value}</td>
+                </tr>
+              ))}
+            </table>
+          </div>
           <div className={styles.fee}>
-            <span>节点费用</span>
+            <span>
+              <FormattedMessage id={'NodeFee'} />
+            </span>
             <div className={styles.speed}>
               <div>
                 {fee} {nativeAssetName}
@@ -234,7 +238,9 @@ class SignModal extends Mixin {
           {showSlider ? (
             <div className={styles.slider}>
               <Slider {...sliderProps} style={{ width: 252 }} />
-              <span className={styles.feedesc}>费用越高打包速度越快</span>
+              <span className={styles.feedesc}>
+                <FormattedMessage id={'higherFeeFasterPacked'} />
+              </span>
             </div>
           ) : null}
 

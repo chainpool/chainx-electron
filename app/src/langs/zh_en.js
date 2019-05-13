@@ -249,6 +249,9 @@ const zh_en = {
   ],
   PrimaryPassword: ['原密码', 'Old Password'],
   NewPassword: ['新密码', 'New Password'],
+  TransactionSignature: ['交易签名', 'Transaction Signature'],
+  NodeFee: ['节点费用', 'Node Fee'],
+  higherFeeFasterPacked: ['费用越高打包速度越快', 'The higher fee, the faster to be packed'],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于手续费', 'Amount must greater than fee'],

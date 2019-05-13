@@ -71,10 +71,13 @@ class TransferModal extends Component {
                   data: {
                     token: token,
                     description: [
-                      { name: '操作', value: '转账' },
-                      { name: '转账数量', value: `${setBlankSpace(amount, token)}` },
-                      { name: '接收人地址', value: address, toastShow: false },
-                      { name: '备注', value: remark },
+                      { name: 'operation', value: () => <FormattedMessage id={'Transfer'} /> },
+                      {
+                        name: () => <FormattedMessage id={'TransferAmount'} />,
+                        value: `${setBlankSpace(amount, token)}`,
+                      },
+                      { name: () => <FormattedMessage id={'ReceiveAddress'} />, value: address, toastShow: false },
+                      { name: () => <FormattedMessage id={'Memo'} />, value: remark },
                     ],
                     callback: ({ token }) => {
                       return dispatch({
