@@ -94,10 +94,10 @@ class Header extends Component {
 
                 {ShowLanguage && (
                   <li className={styles.language}>
-                    {language === 'zh' ? '中文' : '英文'}
+                    {language === 'zh' ? '中文' : 'English'}
                     <div>
                       <ul>
-                        {[{ name: 'zh', value: '中文' }, { name: 'en', value: '英文' }].map(item => (
+                        {[{ name: 'zh', value: '中文' }, { name: 'en', value: 'English' }].map(item => (
                           <li
                             key={item.name}
                             className={language === item.name ? styles.active : null}

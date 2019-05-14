@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Table, FormattedMessage } from '../../components';
+import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { Inject } from '../../utils';
-import trusteeImg from '../../resource/trustee2.png';
-import inactive from '../../resource/inactive.png';
+import trustee_zh from '../../resource/trustee_zh.png';
+import trustee_en from '../../resource/trustee_en.png';
+import inactive_zh from '../../resource/inactive_zh.png';
+import inactive_en from '../../resource/inactive_en.png';
 
 @Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
 class NodeTable extends Component {
@@ -39,12 +41,12 @@ class NodeTable extends Component {
                 {index + 1}
                 {item.isTrustee && item.isTrustee.length ? (
                   <HoverTip tip={'负责联合托管⽤户的链外资产'}>
-                    <img src={trusteeImg} alt="" />
+                    <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />
                   </HoverTip>
                 ) : null}
                 {!item.isActive && (
                   <HoverTip tip={'无法参与验证节点的选举，并且没有任何收益'}>
-                    <img src={inactive} alt="" />
+                    <LanguageContent zh={<img src={inactive_zh} alt="" />} en={<img src={inactive_en} alt="" />} />
                   </HoverTip>
                 )}
               </div>

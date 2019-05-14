@@ -70,7 +70,7 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              <HoverTip tip="注册并成功部署后，您将成为验证节点并参与选举">
+              <HoverTip tip="注册并成功部署后，即可参与验证节点选举">
                 <FormattedMessage id={'RegisterNode'} />
               </HoverTip>
             </Button>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Inject, moment_helper } from '../../../../utils';
 import * as styles from './index.less';
+import { FormattedMessage } from '../../../../components';
 @Inject(({ chainStore }) => ({ chainStore }))
 class BlockInfo extends Component {
   constructor(props) {
@@ -31,10 +32,10 @@ class BlockInfo extends Component {
     return (
       <div className={styles.blockinfo}>
         <span>
-          最新高度:<span>{normalizedBlockNumber}</span>
+          <FormattedMessage id={'LatestHeightBlock'} />:<span>{normalizedBlockNumber}</span>
         </span>
         <span>
-          出块时间:<span>{moment_helper.formatHMS(blockTime, 'YYYY/MM/DD HH:mm:ss')}</span>
+          <FormattedMessage id={'BlockTime'} />:<span>{moment_helper.formatHMS(blockTime, 'YYYY/MM/DD HH:mm:ss')}</span>
         </span>
       </div>
     );

@@ -212,7 +212,8 @@ export default class Configure extends ModelExtend {
 
   @computed get isTestNet() {
     //这个测试网决定了UI显示测试网还是主网
-    return this.isTestNetWork() || this.isPreMainNetWork();
+    return true;
+    // return this.isTestNetWork() || this.isPreMainNetWork();
   }
 
   getBestNodeAndApi = () => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Input, Toast } from '../../../../components';
+import { FormattedMessage, Icon, Input, Toast } from '../../../../components';
 import { Warn } from '../../../components';
 import * as styles from './index.less';
 import { classNames, observer, parseQueryString, _ } from '../../../../utils';
@@ -148,7 +148,9 @@ class Node extends Component {
                       className={styles.check}
                       value={autoSwitchBestApi}
                     />
-                    自动切换最优API
+                    <span>
+                      <FormattedMessage id={'SwitchBestApiAuto'} />
+                    </span>
                   </li>
                 ) : (
                   <li
@@ -167,7 +169,9 @@ class Node extends Component {
                       className={styles.check}
                       value={autoSwitchBestNode}
                     />
-                    自动切换最优节点
+                    <span>
+                      <FormattedMessage id={'SwitchBestNodeAuto'} />
+                    </span>
                   </li>
                 )}
               </ul>
