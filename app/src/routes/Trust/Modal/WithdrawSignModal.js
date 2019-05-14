@@ -36,6 +36,11 @@ class WithdrawSignModal extends Component {
     const { activeIndex, password, passwordErrMsg } = this.state;
     const {
       model: { openModal, dispatch, tx, redeemScript, isTestBitCoinNetWork },
+      globalStore: {
+        modal: {
+          data: { desc, withdrawList, tx: tx_toBeSigned },
+        },
+      },
     } = this.props;
 
     return (
@@ -56,29 +61,54 @@ class WithdrawSignModal extends Component {
                     decryptedKey.compressed
                   );
                 }
-
-                openModal({
-                  name: 'SignModal',
-                  data: {
-                    description: [
-                      { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
-                      {
-                        name: () => <FormattedMessage id={'WhetherSignature'} />,
-                        value: () => <FormattedMessage id={!activeIndex ? 'TrueSign' : 'FalseSign'} />,
-                      },
-                    ],
-                    callback: () => {
-                      return dispatch({
-                        type: 'signWithdrawTx',
-                        payload: {
-                          tx: !activeIndex ? tx : null,
-                          redeemScript,
-                          privateKey,
+                if (desc) {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [
+                        { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                        {
+                          name: () => <FormattedMessage id={'WhetherSignature'} />,
+                          value: () => <FormattedMessage id={!activeIndex ? 'TrueSign' : 'FalseSign'} />,
                         },
-                      });
+                      ],
+                      callback: () => {
+                        return dispatch({
+                          type: 'createWithdrawTxAndSign',
+                          payload: {
+                            withdrawList,
+                            tx: !activeIndex ? tx_toBeSigned : null,
+                            redeemScript,
+                            privateKey,
+                          },
+                        });
+                      },
                     },
-                  },
-                });
+                  });
+                } else {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [
+                        { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                        {
+                          name: () => <FormattedMessage id={'WhetherSignature'} />,
+                          value: () => <FormattedMessage id={!activeIndex ? 'TrueSign' : 'FalseSign'} />,
+                        },
+                      ],
+                      callback: () => {
+                        return dispatch({
+                          type: 'signWithdrawTx',
+                          payload: {
+                            tx: !activeIndex ? tx : null,
+                            redeemScript,
+                            privateKey,
+                          },
+                        });
+                      },
+                    },
+                  });
+                }
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -91,9 +121,9 @@ class WithdrawSignModal extends Component {
             </div>
             <div className={styles.tx}>
               <div style={{ maxHeight: 300, overflowY: 'scroll' }}>
-                {tx}
+                {tx || tx_toBeSigned}
                 <Icon name="icon-wancheng" className={styles.right} />
-                正确
+                <FormattedMessage id={'Right'} />
               </div>
             </div>
           </div>

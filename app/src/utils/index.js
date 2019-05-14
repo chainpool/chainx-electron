@@ -88,6 +88,15 @@ export const Patterns = {
       return errMsg;
     }
   },
+  isBTCAddress: (address, isTestNet, errMsg = 'AddressFormatError') => {
+    const net = isTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    try {
+      bitcoin.address.toOutputScript(address, net);
+      return '';
+    } catch (e) {
+      return errMsg;
+    }
+  },
   isChainXAddress: (address, errMsg = 'AddressFormatError') => {
     try {
       const result = ChainX.account.isAddressValid(address);

@@ -12,11 +12,12 @@ import {
   withdraw,
   bindTxHash,
   getMinimalWithdrawalValueByToken,
+  getBlockTime,
 } from '../services';
 import { computed } from 'mobx';
 import { moment, formatNumber, _, observable } from '../utils/index';
 import { Chain } from '../constants';
-import { from, of } from 'rxjs';
+import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
 
 function getAssetWithZeroBalance(info) {
@@ -150,24 +151,31 @@ export default class Asset extends ModelExtend {
     switch (txstate) {
       case '0':
       case 'NotApplying':
+      case 'notApplying':
         return '未申请';
       case '1':
       case 'Applying':
+      case 'applying':
         return '申请中';
       case '2':
       case 'Signing':
+      case 'signing':
         return '签名中';
       case '3':
       case 'Broadcasting':
+      case 'broadcasting':
         return '广播中';
       case '4':
       case 'Processing':
+      case 'processing':
         return '处理中';
       case '5':
       case 'Confirming':
+      case 'confirming':
         return '确认中';
       case '6':
       case 'Confirmed':
+      case 'confirmed':
         return '已确认';
       default:
         return '未知';
@@ -177,6 +185,33 @@ export default class Asset extends ModelExtend {
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
     from(getWithdrawalList('Bitcoin', 0, 100))
+      .pipe(
+        map(res => {
+          return res.data;
+        }),
+        mergeMap((items = []) => {
+          if (!items.length) return of(items);
+          return combine(
+            items.map(item => {
+              return from(getBlockTime({ height: item.height })).pipe(
+                map((res = {}) => {
+                  return {
+                    ...item,
+                    time: res.time,
+                  };
+                }),
+                catchError(() => {
+                  return of({
+                    ...item,
+                    time: null,
+                    blockHeight: item.height,
+                  });
+                })
+              );
+            })
+          );
+        })
+      )
       .pipe(
         combineLatest(
           from(
@@ -194,13 +229,14 @@ export default class Asset extends ModelExtend {
           )
         )
       )
-      .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+      .subscribe(([resRpc = [], resApi = { items: [] }]) => {
         console.log(resRpc, resApi, '-------resRpc,resApi');
-        const dataRpc = resRpc.data
+        const dataRpc = resRpc
           .filter(withdraw => this.encodeAddressAccountId(withdraw.accountid) === account.address)
           .map((item = {}) => ({
             ...item,
-            time: moment.formatHMS(new Date(item.time * 1000)),
+            time: moment.formatHMS(new Date(item.time)),
+            originChainTxId: item.txid,
           }));
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
@@ -218,7 +254,7 @@ export default class Asset extends ModelExtend {
             return {
               ...item,
               balanceShow: this.setPrecision(item.balance, item.token),
-              status: this.processTxState(item.txstate),
+              statusValue: this.processTxState(item.status.value),
             };
           }),
         });
@@ -268,7 +304,7 @@ export default class Asset extends ModelExtend {
           depositRecords: data.map(item => ({
             ...item,
             amount: this.setPrecision(item.balance, item.token),
-            status: this.processTxState(item.txstate),
+            statusValue: this.processTxState(item.txstate),
           })),
         });
       });

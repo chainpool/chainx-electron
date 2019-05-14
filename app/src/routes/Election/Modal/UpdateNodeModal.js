@@ -163,10 +163,12 @@ class UpdateNodeModal extends Component {
               </Button>
             ))}
           </div>
-          <div>
-            {willParticipating
-              ? '请确保您的节点已经部署妥当，否则将会受到惩罚'
-              : '退选后无法再接受投票，不会再有奖惩和惩罚'}
+          <div className={styles.desc}>
+            {willParticipating ? (
+              <FormattedMessage id={'MakeSureNodesDeployed'} />
+            ) : (
+              <FormattedMessage id={'NoRewardsAfterWithdrawal'} />
+            )}
           </div>
         </div>
       </Modal>

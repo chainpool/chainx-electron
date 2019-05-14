@@ -8,6 +8,7 @@ import {
   fetchFromHttp,
   moment_helper,
   hexPrefix,
+  toJS,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -89,7 +90,7 @@ export default class Trust extends ModelExtend {
       }
 
       let state = withdraw.status;
-      switch (withdraw.status) {
+      switch (withdraw.status.value) {
         case 'applying':
           state = '申请中';
           break;
@@ -244,8 +245,6 @@ export default class Trust extends ModelExtend {
           throw new Error('构造失败，账户余额不足');
         }
 
-        // console.log(utxos, targetUtxos, withdrawList, '----utxos,targetUtxos,withdrawList');
-
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
             .exponentiatedBy(8)
@@ -293,6 +292,29 @@ export default class Trust extends ModelExtend {
       return rawTransaction;
     };
     return compose();
+  };
+
+  createWithdrawTxAndSign = async ({ withdrawList = [], tx, redeemScript, privateKey }) => {
+    const ids = withdrawList.map((item = {}) => item.id);
+    let tx_trans = null;
+    if (tx) {
+      tx = tx.replace(/^0x/, '');
+      redeemScript = redeemScript.replace(/^0x/, '');
+      tx_trans = await this.sign({ tx, redeemScript, privateKey });
+    }
+    console.log(
+      toJS(withdrawList),
+      tx,
+      redeemScript,
+      privateKey,
+      tx_trans,
+      '---withdrawList,tx,redeemScript, privateKey,tx_trans'
+    );
+    const extrinsic = createWithdrawTx(ids, `0x${tx_trans}`);
+    return {
+      extrinsic,
+      success: this.reload,
+    };
   };
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {

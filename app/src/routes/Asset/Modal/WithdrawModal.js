@@ -39,7 +39,7 @@ class WithdrawModal extends Mixin {
     checkAddress: async () => {
       const { address } = this.state;
       const {
-        model: { dispatch },
+        model: { dispatch, isTestBitCoinNetWork },
         globalStore: { modal: { data: { token } = {} } = {} },
       } = this.props;
       const vertifyAddress = async () => {
@@ -54,8 +54,13 @@ class WithdrawModal extends Mixin {
         if (!!res) return <FormattedMessage id={'AddressFormatError'} />;
         return '';
       };
-      const isVertifyAddress = await vertifyAddress();
-      const errMsg = Patterns.check('required')(address) || isVertifyAddress;
+
+      let errMsg =
+        Patterns.check('required')(address) || Patterns.check('isBTCAddress')(address, isTestBitCoinNetWork());
+      if (!errMsg) {
+        const isVertifyAddress = await vertifyAddress();
+        errMsg = isVertifyAddress;
+      }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -143,7 +148,14 @@ class WithdrawModal extends Mixin {
         <div>
           <Input.Address
             prefix={chain}
-            label={<FormattedMessage id={'ReceiptAddress'} />}
+            label={
+              <>
+                <FormattedMessage id={'ReceiptAddress'} />
+                <span className={styles.warnaddress}>
+                  (<FormattedMessage id={'NotSupport'} />)
+                </span>
+              </>
+            }
             value={address}
             errMsg={addressErrMsg}
             options={options}
@@ -163,7 +175,7 @@ class WithdrawModal extends Mixin {
                     <FormattedMessage id={'WithdrawAmount'} />
                     <span>
                       (<FormattedMessage id={'GetWithdrawFee'} />
-                      {setBlankSpace(feeShow, token)}
+                      {setBlankSpace(feeShow, token)})
                     </span>
                   </div>
                 }

@@ -76,15 +76,7 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const {
-      withDrawIndexSignList,
-      withDrawIndexSignListErrMsg,
-      tx,
-      txErrMsg,
-      redeemScript,
-      fee,
-      feeErrMsg,
-    } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg } = this.state;
     const {
       model: {
         normalizedOnChainAllWithdrawList = [],
@@ -138,23 +130,30 @@ class WithdrawConstructModal extends Component {
             onClick={async () => {
               if (await checkAll.confirm()) {
                 openModal({
-                  name: 'SignModal',
+                  name: 'WithdrawSignModal',
                   data: {
-                    description: [
-                      { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
-                    ],
-                    callback: () => {
-                      return dispatch({
-                        type: 'createWithdrawTx',
-                        payload: {
-                          withdrawList: this.getWithdrawList(withDrawIndexSignList),
-                          tx,
-                          redeemScript,
-                        },
-                      });
-                    },
+                    desc: 'createWithdrawTxAndSign',
+                    withdrawList: this.getWithdrawList(withDrawIndexSignList),
+                    tx,
                   },
                 });
+                // openModal({
+                //   name: 'SignModal',
+                //   data: {
+                //     description: [
+                //       { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
+                //     ],
+                //     callback: () => {
+                //       return dispatch({
+                //         type: 'createWithdrawTx',
+                //         payload: {
+                //           withdrawList: this.getWithdrawList(withDrawIndexSignList),
+                //           tx,
+                //         },
+                //       });
+                //     },
+                //   },
+                // });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -202,9 +201,17 @@ class WithdrawConstructModal extends Component {
               <div>
                 <FormattedMessage id={'BitCoinFee'} />
                 <span className={styles.bitcoinfee}>
-                  {lastPredictTradeLength ? `(最终交易长度预估:${lastPredictTradeLength})` : null}
+                  {lastPredictTradeLength ? (
+                    <>
+                      (<FormattedMessage id={'EstimationFinalTransactionLength'} />:{lastPredictTradeLength})
+                    </>
+                  ) : null}
                 </span>
-                {commentFee && <span className={styles.bitcoinfee}>推荐手续费:{commentFee}</span>}
+                {commentFee && (
+                  <span className={styles.bitcoinfee}>
+                    <FormattedMessage id={'RecommendationFee'} />:{commentFee}
+                  </span>
+                )}
               </div>
             }
             onBlur={() => {

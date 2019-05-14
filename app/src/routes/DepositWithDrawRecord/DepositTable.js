@@ -57,7 +57,7 @@ class DepositTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Status'} />,
-          dataIndex: 'status',
+          dataIndex: 'statusValue',
         },
       ],
       dataSource: depositRecords,

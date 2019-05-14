@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer } from '../../utils';
+import { observer, _ } from '../../utils';
 import { blockChain } from '../../constants';
 
 @observer
@@ -56,7 +56,17 @@ class WithDrawTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Status'} />,
-          dataIndex: 'status',
+          dataIndex: 'statusValue',
+          render: (value, item = {}) => {
+            if (value === 'Confirming') {
+              return (
+                <>
+                  {value}({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')})
+                </>
+              );
+            }
+            return value;
+          },
         },
       ],
       dataSource: onChainAccountWithdrawList,

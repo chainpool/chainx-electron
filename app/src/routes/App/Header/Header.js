@@ -81,7 +81,7 @@ class Header extends Component {
                       </RouterGo>
                       {isTestNet && (
                         <div className={classNames(styles.testlogo, styles.warn, !isLogin() ? styles.notlogin : null)}>
-                          测试网
+                          <FormattedMessage id={'TestNet'} />
                         </div>
                       )}
                     </li>

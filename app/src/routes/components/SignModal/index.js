@@ -251,19 +251,22 @@ class SignModal extends Mixin {
               </span>
             </div>
           ) : null}
-
-          <Input.Text
-            errMsgIsOutside
-            isPassword
-            placeholder={PlaceHolder.password}
-            label=""
-            value={password}
-            errMsg={passwordErrMsg}
-            onChange={value => {
-              this.setState({ password: value });
-            }}
-            onBlur={checkAll.checkPassword}
-          />
+          <FormattedMessage id={'InputPassword'}>
+            {msg => (
+              <Input.Text
+                errMsgIsOutside
+                isPassword
+                placeholder={msg}
+                label=""
+                value={password}
+                errMsg={passwordErrMsg}
+                onChange={value => {
+                  this.setState({ password: value });
+                }}
+                onBlur={checkAll.checkPassword}
+              />
+            )}
+          </FormattedMessage>
         </div>
       </Modal>
     );
