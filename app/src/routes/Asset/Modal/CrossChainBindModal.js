@@ -29,7 +29,7 @@ import coinbin from '../../../resource/coinbin.png';
 @Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
 class CrossChainBindModal extends Mixin {
   state = {
-    step: 1,
+    step: 0,
     recommendChannelSelect: '',
     tradeId: '',
     tradeIdErrMsg: '',

@@ -48,6 +48,7 @@
     "slider-perfect": "^1.0.3",
     "socket.io-client": "^2.2.0",
     "store": "^2.0.12",
+    "wallet-address-validator": "^0.2.4",
     "whatwg-fetch": "^3.0.0",
     "wif": "^2.0.6"
   },
