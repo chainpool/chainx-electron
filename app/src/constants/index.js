@@ -33,16 +33,16 @@ export const PlaceHolder = (() => {
 })();
 
 export const NetWork = [
+  // {
+  //   name: '测试网',
+  //   value: 'test',
+  // },
+  // {
+  //   name: '主网预发布',
+  //   value: 'premain',
+  // },
   {
-    name: '测试网',
-    value: 'test',
-  },
-  {
-    name: '主网预发布',
-    value: 'premain',
-  },
-  {
-    name: '主网',
+    name: '主网预演',
     value: 'main',
   },
 ];
@@ -70,7 +70,7 @@ export const SCRYPT_PARAMS = {
 
 export const AjaxCallTime = 5000;
 
-export const ConfigureVersion = 21;
+export const ConfigureVersion = 22;
 
 export const blockChain = {
   tx: v => `https://www.blockchain.com/btctest/tx/${v}`,

@@ -65,7 +65,7 @@ export default class Configure extends ModelExtend {
   @observable autoSwitchBestApi =
     localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
-  @observable currentNetWork = localSave.get('currentNetWork') || NetWork[0];
+  @observable currentNetWork = NetWork[0]; //localSave.get('currentNetWork') || NetWork[0];
 
   @observable testApi = this.resetApi(
     this.refreshLocalNodesOrApi('testApi')
@@ -155,13 +155,63 @@ export default class Configure extends ModelExtend {
   @observable premainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('premainNodes')
       ? localSave.get('premainNodes')
-      : this.concatNodeOrApi([], (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'w1',
+              best: true,
+              isSystem: true,
+              Version: ConfigureVersion,
+              address: 'wss://w1.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: 'w2',
+              isSystem: true,
+              address: 'wss://w2.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: '本机',
+              address: 'ws://localhost:8087',
+              isSystem: true,
+              isLocalhost: true,
+            },
+          ],
+          (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @observable mainNodes = this.resetNode(
     this.refreshLocalNodesOrApi('mainNodes')
       ? localSave.get('mainNodes')
-      : this.concatNodeOrApi([], (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem))
+      : this.concatNodeOrApi(
+          [
+            {
+              type: '系统默认',
+              name: 'w1',
+              best: true,
+              isSystem: true,
+              Version: ConfigureVersion,
+              address: 'wss://w1.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: 'w2',
+              isSystem: true,
+              address: 'wss://w2.chainx.org/ws',
+            },
+            {
+              type: '系统默认',
+              name: '本机',
+              address: 'ws://localhost:8087',
+              isSystem: true,
+              isLocalhost: true,
+            },
+          ],
+          (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)
+        )
   );
 
   @computed
