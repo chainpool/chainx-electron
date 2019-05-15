@@ -31,11 +31,14 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
           ellipse: true,
           dataIndex: 'originChainTxId',
-          render: value => (
-            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-              {value}
-            </RouterGo>
-          ),
+          render: value =>
+            value ? (
+              <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+                {value}
+              </RouterGo>
+            ) : (
+              '-'
+            ),
         },
         {
           title: <FormattedMessage id={'Token'} />,
@@ -71,32 +74,34 @@ class WithDrawTable extends Mixin {
               return (
                 <div className={styles.removewithdrawl}>
                   {value}
-                  <img
-                    src={removewithdrawl}
-                    alt={'removewithdrawl'}
-                    onClick={() => {
-                      openModal({
-                        name: 'SignModal',
-                        data: {
-                          description: [
-                            { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
-                            {
-                              name: () => <FormattedMessage id={'WithdrawAmount'} />,
-                              value: setBlankSpace(item.balanceShow, item.token),
-                            },
-                          ],
-                          callback: () => {
-                            return dispatch({
-                              type: 'revokeWithdraw',
-                              payload: {
-                                id: item.id,
+                  {item.id && (
+                    <img
+                      src={removewithdrawl}
+                      alt={'removewithdrawl'}
+                      onClick={() => {
+                        openModal({
+                          name: 'SignModal',
+                          data: {
+                            description: [
+                              { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
+                              {
+                                name: () => <FormattedMessage id={'WithdrawAmount'} />,
+                                value: setBlankSpace(item.balanceShow, item.token),
                               },
-                            });
+                            ],
+                            callback: () => {
+                              return dispatch({
+                                type: 'revokeWithdraw',
+                                payload: {
+                                  id: item.id,
+                                },
+                              });
+                            },
                           },
-                        },
-                      });
-                    }}
-                  />
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               );
             }

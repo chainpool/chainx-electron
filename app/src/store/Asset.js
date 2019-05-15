@@ -149,7 +149,7 @@ export default class Asset extends ModelExtend {
   };
 
   processTxState = txstate => {
-    switch (txstate.toUpperCase()) {
+    switch (txstate && txstate.toUpperCase()) {
       case 'NOTAPPLYING':
         return '未申请';
       case 'APPLYING':
@@ -237,6 +237,9 @@ export default class Asset extends ModelExtend {
           ...item,
           time: moment.formatHMS(item['block.time']),
           originChainTxId: item.txid,
+          status: {
+            value: item.txstate,
+          },
         }));
         let data = [];
         if (dataApi && dataApi.length) {
