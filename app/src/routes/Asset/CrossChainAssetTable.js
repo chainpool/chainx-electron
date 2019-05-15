@@ -33,21 +33,15 @@ class CrossChainAssetTable extends Mixin {
           {
             title: <FormattedMessage id={'Name'} />,
             dataIndex: 'tokenName',
-            render: (value, asset) => (
+            render: (value, item) => (
               <div className={styles.miniLogo}>
-                <img
-                  src={asset.name === 'BTC' ? btcIcon : asset.name === 'SDOT' ? sdotLogo : miniLogo}
-                  alt="miniLogo"
-                />
+                <img src={item.name === 'BTC' ? btcIcon : item.name === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
                 <span>
-                  <HoverTip tip={asset.desc}> {value}</HoverTip>
+                  <HoverTip tip={item.desc}> {value}</HoverTip>
                 </span>
+                <span className={styles.shortName}>({item.name})</span>
               </div>
             ),
-          },
-          {
-            title: <FormattedMessage id={'ShortName'} />,
-            dataIndex: 'name',
           },
           {
             title: <FormattedMessage id={'OriginalChain'} />,

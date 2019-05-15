@@ -71,12 +71,9 @@ class PrimaryAssetTable extends Component {
                 <span>
                   <HoverTip tip={item.desc}>{value}</HoverTip>
                 </span>
+                <span className={styles.shortName}>({item.name})</span>
               </div>
             ),
-          },
-          {
-            title: <FormattedMessage id={'ShortName'} />,
-            dataIndex: 'name',
           },
           {
             title: <FormattedMessage id={'FreeBalance'} />,

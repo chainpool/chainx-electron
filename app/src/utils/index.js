@@ -9,6 +9,7 @@ import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { default as bitcoin } from 'bitcoinjs-lib';
+import { default as WAValidator } from 'wallet-address-validator';
 
 //------------------通用部分
 export { request } from './request';
@@ -89,13 +90,18 @@ export const Patterns = {
     }
   },
   isBTCAddress: (address, isTestNet, errMsg = 'AddressFormatError') => {
-    const net = isTestNet ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    try {
-      bitcoin.address.toOutputScript(address, net);
+    const valid = WAValidator.validate(address, 'BTC', isTestNet ? 'testnet' : 'prod');
+    if (valid) {
       return '';
-    } catch (e) {
-      return errMsg;
     }
+    return errMsg;
+  },
+  isEthereumAddress: (address, isTestNet, errMsg = 'AddressFormatError') => {
+    const valid = WAValidator.validate(address, 'ETH', isTestNet ? 'testnet' : 'prod');
+    if (valid) {
+      return '';
+    }
+    return errMsg;
   },
   isChainXAddress: (address, errMsg = 'AddressFormatError') => {
     try {

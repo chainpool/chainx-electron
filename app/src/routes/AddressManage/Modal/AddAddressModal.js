@@ -21,8 +21,20 @@ class AddAddressModal extends Component {
       return errMsg;
     },
     checkAddress: () => {
-      const { address } = this.state;
-      const errMsg = Patterns.check('required')(address);
+      const { address, chain } = this.state;
+      const {
+        model: { isTestBitCoinNetWork },
+      } = this.props;
+      let errMsg = Patterns.check('required')(address);
+      if (!errMsg) {
+        if (chain.label === 'Bitcoin') {
+          errMsg = Patterns.check('isBTCAddress')(address, isTestBitCoinNetWork());
+        } else if (chain.label === 'ChainX') {
+          errMsg = Patterns.check('isChainXAddress')(address);
+        } else if (chain.label === 'Ethereum') {
+          errMsg = Patterns.check('isEthereumAddress')(address, isTestBitCoinNetWork());
+        }
+      }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
