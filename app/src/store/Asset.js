@@ -13,6 +13,7 @@ import {
   bindTxHash,
   getMinimalWithdrawalValueByToken,
   getBlockTime,
+  revokeWithdraw,
 } from '../services';
 import { computed } from 'mobx';
 import { moment, formatNumber, _, observable } from '../utils/index';
@@ -333,6 +334,14 @@ export default class Asset extends ModelExtend {
   verifyAddressValidity = async ({ token, address, remark }) => {
     const res = await verifyAddressValidity(token, address, remark);
     return !res;
+  };
+
+  revokeWithdraw = async ({ id }) => {
+    const extrinsic = revokeWithdraw(id);
+    return {
+      extrinsic,
+      success: this.reload(),
+    };
   };
 
   bindTxHash = async ({ params }) => {

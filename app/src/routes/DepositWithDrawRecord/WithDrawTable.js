@@ -1,8 +1,9 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _ } from '../../utils';
+import { observer, _, setBlankSpace } from '../../utils';
 import { blockChain } from '../../constants';
+import removewithdrawl from '../../resource/removewithdrawl.png';
 
 @observer
 class WithDrawTable extends Mixin {
@@ -16,7 +17,7 @@ class WithDrawTable extends Mixin {
 
   render() {
     const {
-      model: { onChainAccountWithdrawList },
+      model: { onChainAccountWithdrawList, dispatch, openModal },
     } = this.props;
 
     const tableProps = {
@@ -58,11 +59,45 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'Status'} />,
           dataIndex: 'statusValue',
           render: (value, item = {}) => {
-            if (value.toUpperCase() === 'CONFIRMING') {
+            const statusValue = _.get(item, 'status.value') || '';
+            if (statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  {value}({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')})
+                  ({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')}) {value}
                 </>
+              );
+            }
+            if (statusValue.toUpperCase() === 'APPLYING') {
+              return (
+                <div className={styles.removewithdrawl}>
+                  {value}
+                  <img
+                    src={removewithdrawl}
+                    alt={'removewithdrawl'}
+                    onClick={() => {
+                      openModal({
+                        name: 'SignModal',
+                        data: {
+                          description: [
+                            { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
+                            {
+                              name: () => <FormattedMessage id={'WithdrawAmount'} />,
+                              value: setBlankSpace(item.balanceShow, item.token),
+                            },
+                          ],
+                          callback: () => {
+                            return dispatch({
+                              type: 'revokeWithdraw',
+                              payload: {
+                                id: item.id,
+                              },
+                            });
+                          },
+                        },
+                      });
+                    }}
+                  />
+                </div>
               );
             }
             return value;

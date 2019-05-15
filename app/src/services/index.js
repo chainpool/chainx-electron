@@ -75,6 +75,8 @@ export const setupBitcoinTrustee = (...payload) => stake.setupBitcoinTrustee(...
 
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
+export const revokeWithdraw = (...payload) => asset.revokeWithdraw(...payload);
+
 export const getWithdrawalListByAccount = (...payload) =>
   checkLogin(() => asset.getWithdrawalListByAccount(...payload));
 

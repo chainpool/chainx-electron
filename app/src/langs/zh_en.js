@@ -64,6 +64,7 @@ const zh_en = {
   TrusteeSettings: ['信托设置', 'Trustee Settings'],
   SetupTrustee: ['设置信托', 'Setup Trustee'],
   WithdrawalList: ['提现列表', 'Withdrawal List'],
+  CancelWithdrawal: ['撤销提现', 'Cancel Withdraw'],
   OriginalDataToSigned: ['待签原文', 'Original data to be signed'],
   WithdrawAmount: ['提现数量', 'Withdrawal Amount'],
   BuildMultiSigWithdrawal: ['构造多签提现', 'Build MultiSig Withdrawal'],
@@ -197,6 +198,7 @@ const zh_en = {
   YouAre: ['您当前是', 'You are'],
   Price: ['价格', 'Price'],
   Total: ['累计', 'Total'],
+
   Revoke: ['撤销', 'Cancel'],
   FilledAverage: ['成交均价', 'Average'],
   FilledTotal: ['成交总额', 'Total'],
