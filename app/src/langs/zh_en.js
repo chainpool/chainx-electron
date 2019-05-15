@@ -43,10 +43,23 @@ const zh_en = {
   Contact: ['联系人', 'Contact'],
   CrossChainAssets: ['跨链资产', 'Cross-chain Assets'],
   ValidatorNode: ['验证节点', 'Validator'],
+  ValidatorNodeTip: [
+    '负责全链用户交易的记账处理和打包出块',
+    'Validators participates in consensus with other validators, packing extrinsics and block authoring',
+  ],
   TrusteeNode: ['信托节点', 'Trustee Node'],
   StandbyNode: ['候选节点', 'Standby'],
+  StandbyNodeTip: [
+    '负责搭建同步节点接收交易和广播数据',
+    'The standby setup the sync node and broadcast the messages in the network.',
+  ],
+
   MyNominations: ['我的投票', 'My Nominations'],
   UpdateNode: ['更新节点', 'Update Node'],
+  UpdateNodeTip: [
+    '负责全链用户交易的记账处理和打包出块',
+    'Update your block authoring address, website, about and desire to be a validator(active/inactive)',
+  ],
   RegisterNode: ['注册节点', 'Register Node'],
   TrusteeSettings: ['信托设置', 'Trustee Settings'],
   SetupTrustee: ['设置信托', 'Setup Trustee'],
@@ -266,7 +279,7 @@ const zh_en = {
   BlockTime: ['出块时间', 'Block Time'],
   SwitchBestNodeAuto: ['自动切换最优节点', 'Switch to the best node automatically'],
   SwitchBestApiAuto: ['自动切换最优Api', 'Switch to the best API automatically'],
-  TestNet: ['测试网', 'test net'],
+  TestNet: ['测试网', 'testnet'],
   RecommendationFee: ['推荐手续费', 'recommend fee'],
   EstimationFinalTransactionLength: ['最终交易长度预估', 'final transaction length'],
   Right: ['正确', 'Right'],

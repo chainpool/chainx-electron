@@ -33,12 +33,20 @@ class Election extends Mixin {
 
     const tabs = currentAddress
       ? [
-          <HoverTip tip={'负责全链⽤户交易的记账处理和打包出块'}>
-            <FormattedMessage id={'ValidatorNode'} />
-          </HoverTip>,
-          <HoverTip tip={'负责搭建同步节点接收交易和广播数据'}>
-            <FormattedMessage id={'StandbyNode'} />
-          </HoverTip>,
+          <FormattedMessage id={'ValidatorNodeTip'}>
+            {msg => (
+              <HoverTip tip={msg}>
+                <FormattedMessage id={'ValidatorNode'} />
+              </HoverTip>
+            )}
+          </FormattedMessage>,
+          <FormattedMessage id={'StandbyNodeTip'}>
+            {msg => (
+              <HoverTip tip={msg}>
+                <FormattedMessage id={'StandbyNode'} />
+              </HoverTip>
+            )}
+          </FormattedMessage>,
           <FormattedMessage id={'MyNominations'} />,
         ]
       : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
@@ -55,9 +63,13 @@ class Election extends Mixin {
                 });
               }}>
               <Icon name="icon-xiugaipeizhi" />
-              <HoverTip tip="更新出块地址、网址、简介和节点状态 (参选/退选)">
-                <FormattedMessage id={'UpdateNode'} />
-              </HoverTip>
+              <FormattedMessage id={'UpdateNodeTip'}>
+                {msg => (
+                  <HoverTip tip={msg}>
+                    <FormattedMessage id={'UpdateNode'} />
+                  </HoverTip>
+                )}
+              </FormattedMessage>
             </Button>
           </li>
         ) : (

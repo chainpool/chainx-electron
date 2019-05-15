@@ -108,7 +108,7 @@ class PrimaryAssetTable extends Component {
             dataIndex: '_action',
             render: (value, item) => (
               <ButtonGroup>
-                {isTestNet && (
+                {isTestNet && false && (
                   <Button
                     type="warn"
                     onClick={() => {

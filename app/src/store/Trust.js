@@ -90,18 +90,19 @@ export default class Trust extends ModelExtend {
       }
 
       let state = withdraw.status;
-      switch (withdraw.status.value) {
-        case 'applying':
+      const statusValue = _.get(withdraw.status, 'value') || '';
+      switch (statusValue.toUpperCase()) {
+        case 'APPLYING':
           state = '申请中';
           break;
-        case 'signing':
-        case 'processing':
+        case 'SIGNING':
+        case 'PROCESSING':
           state = '处理中';
           break;
-        case 'notApplying':
+        case 'NOTAPPLYING':
           state = '未申请';
           break;
-        case 'unknown':
+        case 'UNKNOWN':
         default:
           state = '未知错误';
       }
@@ -463,7 +464,7 @@ export default class Trust extends ModelExtend {
     const { address } = currentAccount;
     const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey } = obj;
     const findOne = trusts.filter(
-      (item = {}) => item.address === address && item.chain === chain && (item.net || 'test') === currentNetWork.value
+      (item = {}) => item.address === address && item.chain === chain && item.net === currentNetWork.value
     )[0];
     if (!findOne) {
       trusts.push({

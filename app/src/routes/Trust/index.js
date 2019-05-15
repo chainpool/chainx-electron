@@ -84,9 +84,9 @@ class Trust extends Mixin {
     const isShowConstructureWithdraw =
       isTrustee &&
       normalizedOnChainAllWithdrawList.filter(
-        (item = {}) => item.status.value === 'signing' || item.status.value === 'processing'
+        (item = {}) => item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING'
       ).length === 0 &&
-      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value === 'applying').length > 0;
+      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
     const renderSignLi = (one, index) => {
       return (

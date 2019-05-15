@@ -36,12 +36,12 @@ class WithdrawSignModal extends Component {
     const { activeIndex, password, passwordErrMsg } = this.state;
     const {
       model: { openModal, dispatch, tx, redeemScript, isTestBitCoinNetWork },
-      globalStore: {
-        modal: {
-          data: { desc, withdrawList, tx: tx_toBeSigned },
-        },
-      },
+      globalStore: { modal: { data: { desc, withdrawList, tx: tx_toBeSigned } = {} } = {} },
     } = this.props;
+
+    const signButtons = desc
+      ? [<FormattedMessage id={'Sign'} />]
+      : [<FormattedMessage id={'Sign'} />, <FormattedMessage id={'VetoedSign'} />];
 
     return (
       <Modal
@@ -128,7 +128,7 @@ class WithdrawSignModal extends Component {
             </div>
           </div>
           <ButtonGroup className={styles.buttonselect}>
-            {[<FormattedMessage id={'Sign'} />, <FormattedMessage id={'VetoedSign'} />].map((item, index) => (
+            {signButtons.map((item, index) => (
               <Button
                 type="confirm"
                 key={index}

@@ -81,7 +81,7 @@ class CrossChainAssetTable extends Mixin {
               const isBTC = item.name === 'BTC';
               return (
                 <ButtonGroup>
-                  {isTestNet && isBTC ? (
+                  {isTestNet && false && isBTC ? (
                     <Button
                       type="warn"
                       onClick={() => {

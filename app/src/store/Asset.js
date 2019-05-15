@@ -148,32 +148,39 @@ export default class Asset extends ModelExtend {
   };
 
   processTxState = txstate => {
-    switch (txstate) {
+    switch (txstate.toUpperCase()) {
       case '0':
+      case 'NOTAPPLYING':
       case 'NotApplying':
       case 'notApplying':
         return '未申请';
       case '1':
+      case 'APPLYING':
       case 'Applying':
       case 'applying':
         return '申请中';
       case '2':
+      case 'SIGNING':
       case 'Signing':
       case 'signing':
         return '签名中';
       case '3':
+      case 'BROADCASTING':
       case 'Broadcasting':
       case 'broadcasting':
         return '广播中';
       case '4':
+      case 'PROCESSING':
       case 'Processing':
       case 'processing':
         return '处理中';
       case '5':
+      case 'CONFIRMING':
       case 'Confirming':
       case 'confirming':
         return '确认中';
       case '6':
+      case 'CONFIRMED':
       case 'Confirmed':
       case 'confirmed':
         return '已确认';
@@ -254,7 +261,7 @@ export default class Asset extends ModelExtend {
             return {
               ...item,
               balanceShow: this.setPrecision(item.balance, item.token),
-              statusValue: this.processTxState(item.status.value),
+              statusValue: this.processTxState(_.get(item, 'status.value')),
             };
           }),
         });

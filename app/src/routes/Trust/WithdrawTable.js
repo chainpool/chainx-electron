@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, Table } from '../../components';
-import { observer } from '../../utils';
+import { _, observer } from '../../utils';
 
 @observer
 class WithdrawTable extends Component {
@@ -51,6 +51,17 @@ class WithdrawTable extends Component {
           width: 80,
           ellipse: 0,
           dataIndex: 'state',
+          render: (value, item = {}) => {
+            const statusValue = _.get(item, 'status') || '';
+            if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
+              return (
+                <>
+                  {value}({_.get(item.status, 'confirm') / _.get(item.status, 'total_confirm')})
+                </>
+              );
+            }
+            return value;
+          },
         },
       ],
       dataSource: normalizedOnChainAllWithdrawList,
