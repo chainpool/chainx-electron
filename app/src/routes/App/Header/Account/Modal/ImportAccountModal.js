@@ -15,15 +15,9 @@ class ImportAccountModal extends Component {
     checkMnemonicWord: () => {
       const { mnemonicWord } = this.state;
 
-      const errMsg = mnemonicWord.some(item => {
-        return !!Patterns.check('required')(item);
-      }) ? (
-        <FormattedMessage id={'CompleteTheForm'} />
-      ) : (
-        Patterns.check('isMnemonicValid')(
-          mnemonicWord.join(' '),
-          <FormattedMessage id={'AccountImportMnemonicNotFormat'} />
-        )
+      const errMsg = Patterns.check('isMnemonicValid')(
+        mnemonicWord.join(' '),
+        <FormattedMessage id={'AccountImportMnemonicNotFormat'} />
       );
 
       this.setState({ MnemonicWordErrMsg: errMsg });
@@ -120,10 +114,10 @@ class ImportAccountModal extends Component {
                   </li>
                 ))}
               </ul>
-              {MnemonicWordErrMsg ? <div className={styles.errMsg}>{MnemonicWordErrMsg}</div> : null}
               <div className={styles.warn}>
                 <FormattedMessage id={'InputMnemonicOrder'} />
               </div>
+              {MnemonicWordErrMsg ? <div className={styles.errMsg}>{MnemonicWordErrMsg}</div> : null}
             </>
           ) : (
             <Input.Text
