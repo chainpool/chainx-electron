@@ -178,7 +178,14 @@ class WithdrawConstructModal extends Component {
             }}
             onBlur={checkAll.checkWithDrawIndexSignList}
           />
-          <Input.Text errMsgIsOutside value={tx} errMsg={txErrMsg} isTextArea label={'OriginalDataToSigned'} rows={5} />
+          <Input.Text
+            errMsgIsOutside
+            value={tx}
+            errMsg={txErrMsg}
+            isTextArea
+            label={<FormattedMessage id={'OriginalDataToSigned'} />}
+            rows={5}
+          />
           <Input.Text
             isDecimal="decimal"
             precision={8}

@@ -294,7 +294,10 @@ export default class Trust extends ModelExtend {
             toString: () => 'UTXONotEnoughFee',
           });
         }
-        txb.addOutput(multisigAddress, change);
+        if (change > 1000) {
+          txb.addOutput(multisigAddress, change);
+        }
+
         rawTransaction = txb.buildIncomplete().toHex();
         caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       } else {
