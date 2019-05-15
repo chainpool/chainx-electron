@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router';
-import { _ } from '../../../src/utils';
+import { _, classNames } from '../../../src/utils';
 import * as styles from './index.less';
 
 @withRouter
@@ -25,7 +25,12 @@ class RouterGo extends PureComponent {
     const url = !/http/.test(pathname) ? `http://${pathname}` : pathname;
 
     return isOutSide ? (
-      <a className={styles.url} style={style} rel="noopener noreferrer" href={url} target="_blank">
+      <a
+        className={classNames(styles.url, className)}
+        style={style}
+        rel="noopener noreferrer"
+        href={url}
+        target="_blank">
         {children || pathname}
       </a>
     ) : (

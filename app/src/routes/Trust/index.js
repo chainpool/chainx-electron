@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage } from '../../components';
+import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
 import * as styles from './index.less';
 import { TableTitle } from '../components';
 import { Inject } from '../../utils';
@@ -10,6 +10,7 @@ import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
+import { blockChain } from '../../constants';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
@@ -83,9 +84,9 @@ class Trust extends Mixin {
 
     const isShowConstructureWithdraw =
       isTrustee &&
-      normalizedOnChainAllWithdrawList.filter(
-        (item = {}) => item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING'
-      ).length === 0 &&
+      normalizedOnChainAllWithdrawList.filter((item = {}) => {
+        return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
+      }).length === 0 &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
     const renderSignLi = (one, index) => {
@@ -144,7 +145,11 @@ class Trust extends Mixin {
                   <div>
                     <FormattedMessage id={'TransactionHash'} />
                   </div>
-                  <div className={styles.hashvalue}>{signHash}</div>
+                  <div>
+                    <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
+                      {signHash}
+                    </RouterGo>
+                  </div>
                 </div>
               </div>
             )}

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { FormattedMessage, Table } from '../../components';
-import { _, observer } from '../../utils';
+import { FormattedMessage, RouterGo, Table } from '../../components';
+import { _, observer, toJS } from '../../utils';
+import { blockChain } from '../../constants';
 
 @observer
 class WithdrawTable extends Component {
@@ -26,6 +27,11 @@ class WithdrawTable extends Component {
           title: <FormattedMessage id={'AccountAddress'} />,
           ellipse: true,
           dataIndex: 'address',
+          render: (value, item) => (
+            <RouterGo isOutSide go={{ pathname: blockChain.accountId(item.accountId) }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
           title: <FormattedMessage id={'Asset'} />,
@@ -36,6 +42,11 @@ class WithdrawTable extends Component {
           title: <FormattedMessage id={'OriginalChainAddr'} />,
           ellipse: true,
           dataIndex: 'addr',
+          render: value => (
+            <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
           title: <FormattedMessage id={'Balance'} />,
@@ -52,11 +63,11 @@ class WithdrawTable extends Component {
           ellipse: 0,
           dataIndex: 'state',
           render: (value, item = {}) => {
-            const statusValue = _.get(item, 'status') || '';
+            const statusValue = _.get(item, 'status.value') || '';
             if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  {value}({_.get(item.status, 'confirm') / _.get(item.status, 'total_confirm')})
+                  {value}({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'total_confirm')}`})
                 </>
               );
             }

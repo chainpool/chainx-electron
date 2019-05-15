@@ -73,7 +73,10 @@ export const AjaxCallTime = 5000;
 export const ConfigureVersion = 22;
 
 export const blockChain = {
-  tx: v => `https://www.blockchain.com/btctest/tx/${v}`,
+  // tx: v => `https://www.blockchain.com/btc/tx/${v}`,
+  tx: v => `https://live.blockcypher.com/btc/tx/${v}`,
+  accountId: v => `https://scan.chainx.org/accounts/${v}`,
+  address: v => `https://live.blockcypher.com/btc/address/${v}`,
 };
 
 export const OrderStatus = {

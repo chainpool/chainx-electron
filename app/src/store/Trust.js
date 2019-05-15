@@ -91,24 +91,48 @@ export default class Trust extends ModelExtend {
 
       let state = withdraw.status;
       const statusValue = _.get(withdraw.status, 'value') || '';
+
       switch (statusValue.toUpperCase()) {
+        case 'NOTAPPLYING':
+          state = '未申请';
+          break;
         case 'APPLYING':
           state = '申请中';
           break;
         case 'SIGNING':
+          state = '签名中';
+          break;
+        case 'BROADCASTING':
+          state = '广播中';
+          break;
         case 'PROCESSING':
           state = '处理中';
           break;
-        case 'NOTAPPLYING':
-          state = '未申请';
+        case 'CONFIRMING':
+          state = '确认中';
           break;
-        case 'UNKNOWN':
+        case 'CONFIRMED':
+          state = '已确认';
+          break;
+        case 'NORMALFINISH':
+          state = '完成';
+          break;
+        case 'ROOTFINISH':
+          state = '系统结束';
+          break;
+        case 'NORMALCANCEL':
+          state = '取消';
+          break;
+        case 'ROOTCANCEL':
+          state = '系统取消';
+          break;
         default:
-          state = '未知错误';
+          state = '未知';
       }
 
       return {
         id: withdraw.id,
+        accountId: withdraw.accountid,
         timeShow: withdraw.blockHeight ? withdraw.blockHeight : moment_helper.formatHMS(withdraw.time), // 申请时间
         address: ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
         token: withdraw.token, // 币种
