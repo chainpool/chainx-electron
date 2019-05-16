@@ -334,7 +334,7 @@ class CrossChainBindModal extends Mixin {
               </div>
             </div>
             <div className={styles.OP_RETURNtitle}>
-              OP_RETURN中需要输入的信息：
+              Data中需要输入的信息：
               <Clipboard
                 id="copy"
                 outInner={
