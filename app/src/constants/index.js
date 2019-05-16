@@ -11,24 +11,13 @@ export const PATH = {
   trust: '/trust',
 };
 
-export const ErrMsg = {
-  passNotEqual: '两次输入的密码不一致',
-  privateKeyNotFormat: '私钥错误，请核对后重新输入',
-  mnemonicOrderNotFormat: '助记词顺序错误，请核对后重新输入',
-  mnemonicNotFormat: '助记词错误，请核对后重新输入',
-};
-
 export const PlaceHolder = (() => {
-  const setLength = length => {
-    return `${length}个字符以内`;
-  };
   return {
-    setLength,
-    setInputLength: setLength(12),
-    getInputLength: 12,
-    setTextAreaLength: setLength(64),
+    //setInputLength: setLength(12),
+    // getInputLength: 12,
+    //setTextAreaLength: setLength(64),
+    //password: '输入密码',
     getTextAreaLength: 64,
-    password: '输入密码',
   };
 })();
 
@@ -46,10 +35,6 @@ export const NetWork = [
     value: 'main',
   },
 ];
-
-export const API = {
-  status: 'API即将开放',
-};
 
 export const Chain = {
   nativeChain: 'ChainX',

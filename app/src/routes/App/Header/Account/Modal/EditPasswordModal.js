@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
-import { ErrMsg } from '../../../../../constants';
 import { ChainX, Patterns } from '../../../../../utils';
 
 class EditPasswordModal extends Component {
@@ -24,31 +23,44 @@ class EditPasswordModal extends Component {
       return errMsg;
     },
     checkPassword: () => {
-      const { password, confirmPassword } = this.state;
-      const errMsg =
+      const { password } = this.state;
+      let errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(
           6,
           password.length,
           <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }} />
-        ) ||
-        Patterns.check('equal')(password, confirmPassword, ErrMsg.passNotEqual);
+        );
+      if (!errMsg) {
+        errMsg = this.checkAll.checkEqual();
+      }
       this.setState({
         passwordErrMsg: errMsg,
-        confirmPasswordErrMsg: errMsg === ErrMsg.passNotEqual ? errMsg : '',
       });
       return errMsg;
     },
     checkConfirmPassword: () => {
-      const { password, confirmPassword } = this.state;
-      const errMsg =
-        Patterns.check('required')(confirmPassword) ||
-        Patterns.check('equal')(password, confirmPassword, <FormattedMessage id={'PasswordNotEqual'} />);
+      const { confirmPassword } = this.state;
+      let errMsg = Patterns.check('required')(confirmPassword);
+      if (!errMsg) {
+        errMsg = this.checkAll.checkEqual();
+      }
       this.setState({
-        passwordErrMsg: errMsg === ErrMsg.passNotEqual ? errMsg : '',
         confirmPasswordErrMsg: errMsg,
       });
       return errMsg;
+    },
+
+    checkEqual: () => {
+      const { password, confirmPassword } = this.state;
+      if (password && confirmPassword) {
+        const errMsg = Patterns.check('equal')(password, confirmPassword, <FormattedMessage id={'PasswordNotEqual'} />);
+        this.setState({
+          passwordErrMsg: errMsg,
+          confirmPasswordErrMsg: errMsg,
+        });
+        return errMsg;
+      }
     },
 
     confirm: () => {
@@ -95,6 +107,7 @@ class EditPasswordModal extends Component {
           <FormattedMessage id={'InputPassword'}>
             {msg => (
               <Input.Text
+                errMsgIsOutside
                 isPassword
                 placeholder={msg}
                 label={<FormattedMessage id={'PrimaryPassword'} />}
@@ -112,6 +125,7 @@ class EditPasswordModal extends Component {
           <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }}>
             {msg => (
               <Input.Text
+                errMsgIsOutside
                 isPassword
                 placeholder={msg}
                 label={<FormattedMessage id={'NewPassword'} />}

@@ -107,14 +107,14 @@ export const Patterns = {
       return errMsg;
     }
   },
-  isPrivateKey: (privateKey, errMsg = ErrMsg.privateKeyNotFormat) => {
+  isPrivateKey: (privateKey, errMsg = 'AccountImportPrivateKeyNotFormat') => {
     try {
       return /^0x[0-9a-fA-F]{64}$/.test(privateKey) || /^0x[0-9a-fA-F]{170}$/.test(privateKey) ? '' : errMsg;
     } catch (err) {
       return errMsg;
     }
   },
-  isMnemonicValid: (mnemonic, errMsg = ErrMsg.mnemonicNotFormat) => {
+  isMnemonicValid: (mnemonic, errMsg = 'AccountImportMnemonicNotFormat') => {
     try {
       return ChainX.account.isMnemonicValid(mnemonic) ? '' : errMsg;
     } catch (err) {
