@@ -1,5 +1,5 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, toJS } from '../utils';
+import { _, localSave, convertAddressChecksumAll, convertAddressChecksumAccount } from '../utils';
 import ModelExtend from './ModelExtend';
 import { Toast } from '../components';
 
@@ -17,12 +17,14 @@ export default class Store extends ModelExtend {
     });
   }
 
-  @observable accountsTest = localSave.get('accountsTest') || localSave.get('accounts') || [];
-  @observable accountsMain = localSave.get('accountsMain') || [];
-  @observable accountsPreMain = localSave.get('accountsPreMain') || [];
-  @observable currentSelectTest = localSave.get('currentSelectTest') || {};
-  @observable currentSelectMain = localSave.get('currentSelectMain') || {};
-  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || {};
+  @observable accountsTest = convertAddressChecksumAll(
+    localSave.get('accountsTest') || localSave.get('accounts') || []
+  );
+  @observable accountsMain = convertAddressChecksumAll(localSave.get('accountsMain') || []);
+  @observable accountsPreMain = convertAddressChecksumAll(localSave.get('accountsPreMain') || []);
+  @observable currentSelectTest = convertAddressChecksumAccount(localSave.get('currentSelectTest') || {});
+  @observable currentSelectMain = convertAddressChecksumAccount(localSave.get('currentSelectMain') || {});
+  @observable currentSelectPreMain = convertAddressChecksumAccount(localSave.get('currentSelectPreMain') || {});
 
   @computed
   get currentAccount() {

@@ -41,6 +41,38 @@ const getBestNode = () => {
 const [bestAddress, otherNodesAddress] = getBestNode();
 export const ChainX = new Chainx(bestAddress, otherNodesAddress);
 
+export const convertAddressChecksum = address => {
+  try {
+    ChainX.account.decodeAddress(address, false);
+    return address;
+  } catch (error) {
+    if (error && error.message && error.message.includes('checksum')) {
+      return ChainX.account.encodeAddress(ChainX.account.decodeAddress(address, true));
+    } else {
+      throw new Error('Invalid address');
+    }
+  }
+};
+
+export const convertAddressChecksumAccount = (account = {}) => {
+  if (!account.address) return {};
+  try {
+    return {
+      ...account,
+      address: convertAddressChecksum(account.address),
+    };
+  } catch (err) {
+    return account;
+  }
+};
+
+export const convertAddressChecksumAll = (accounts = []) => {
+  if (!accounts.length) return accounts;
+  return accounts.map((item = {}) => {
+    return convertAddressChecksumAccount(item);
+  });
+};
+
 export const resOk = result => {
   console.log(result);
   return result && result.result === 'ExtrinsicSuccess';
