@@ -9,6 +9,7 @@ import {
   moment_helper,
   hexPrefix,
   toJS,
+  convertAddressChecksumAll,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -181,6 +182,11 @@ export default class Trust extends ModelExtend {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
     this.rootStore.electionStore.getIntentions();
+  };
+
+  updateAllTrust = () => {
+    const trusts = [...this._trusts];
+    this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
   sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {

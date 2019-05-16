@@ -17,14 +17,27 @@ import * as styles from './index.less';
 
 addLocaleData([...zh, ...en]);
 
-@Inject(({ globalStore, accountStore, electionStore, configureStore, tradeStore, chainStore }) => ({
-  globalStore,
-  accountStore,
-  electionStore,
-  configureStore,
-  tradeStore,
-  chainStore,
-}))
+@Inject(
+  ({
+    globalStore,
+    accountStore,
+    electionStore,
+    configureStore,
+    tradeStore,
+    chainStore,
+    trustStore,
+    addressManageStore,
+  }) => ({
+    globalStore,
+    accountStore,
+    electionStore,
+    configureStore,
+    tradeStore,
+    chainStore,
+    trustStore,
+    addressManageStore,
+  })
+)
 class Main extends Component {
   render() {
     const {

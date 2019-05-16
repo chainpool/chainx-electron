@@ -1,5 +1,5 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, convertAddressChecksumAll, convertAddressChecksumAccount } from '../utils';
+import { _, localSave, convertAddressChecksumAll } from '../utils';
 import ModelExtend from './ModelExtend';
 import { Toast } from '../components';
 
@@ -17,14 +17,12 @@ export default class Store extends ModelExtend {
     });
   }
 
-  @observable accountsTest = convertAddressChecksumAll(
-    localSave.get('accountsTest') || localSave.get('accounts') || []
-  );
-  @observable accountsMain = convertAddressChecksumAll(localSave.get('accountsMain') || []);
-  @observable accountsPreMain = convertAddressChecksumAll(localSave.get('accountsPreMain') || []);
-  @observable currentSelectTest = convertAddressChecksumAccount(localSave.get('currentSelectTest') || {});
-  @observable currentSelectMain = convertAddressChecksumAccount(localSave.get('currentSelectMain') || {});
-  @observable currentSelectPreMain = convertAddressChecksumAccount(localSave.get('currentSelectPreMain') || {});
+  @observable accountsTest = localSave.get('accountsTest') || localSave.get('accounts') || [];
+  @observable accountsMain = localSave.get('accountsMain') || [];
+  @observable accountsPreMain = localSave.get('accountsPreMain') || [];
+  @observable currentSelectTest = localSave.get('currentSelectTest') || {};
+  @observable currentSelectMain = localSave.get('currentSelectMain') || {};
+  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || {};
 
   @computed
   get currentAccount() {
@@ -99,6 +97,11 @@ export default class Store extends ModelExtend {
   @computed get currentAddress() {
     return this.currentAccount && this.currentAccount.address;
   }
+
+  updateAllAccounts = () => {
+    const accounts = [...this.accounts];
+    this.changeModel('accounts', convertAddressChecksumAll(accounts));
+  };
 
   setCurrentAccount(address = '') {
     let newCurrentAccount = this.accounts.filter(item => item.address === this.currentAccount.address)[0];

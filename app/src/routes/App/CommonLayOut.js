@@ -25,6 +25,8 @@ class CommonLayOut extends Component {
       configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
       tradeStore: { dispatch: dispatchTrade },
       chainStore: { dispatch: dispatchChain },
+      trustStore: { dispatch: dispatchTrust },
+      addressManageStore: { dispatch: dispatchAddressManage },
       history: {
         location: { search },
       },
@@ -34,12 +36,6 @@ class CommonLayOut extends Component {
       type: 'setHistory',
       payload: {
         history: this.props.history,
-      },
-    });
-    await dispatchAccount({
-      type: 'switchAccount',
-      payload: {
-        address,
       },
     });
     const wsPromise = () =>
@@ -61,6 +57,15 @@ class CommonLayOut extends Component {
         } else {
           setNet('mainnet');
         }
+        await dispatchAccount({ type: 'updateAllAccounts' });
+        await dispatchTrust({ type: 'updateAllTrust' });
+        await dispatchAddressManage({ type: 'updateAllAddress' });
+        await dispatchAccount({
+          type: 'switchAccount',
+          payload: {
+            address,
+          },
+        });
         await dispatchGlobal({ type: 'getAllAssets' });
         await dispatchElection({ type: 'getIntentions' });
         await dispatchTrade({ type: 'getOrderPairs' });

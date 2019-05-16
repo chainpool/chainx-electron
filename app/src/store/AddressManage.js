@@ -1,5 +1,5 @@
 import { observable, autorun } from 'mobx';
-import { computed, localSave, convertAddressChecksumAll } from '../utils';
+import { computed, convertAddressChecksumAll, localSave } from '../utils';
 import ModelExtend from './ModelExtend';
 
 export default class AddressMannage extends ModelExtend {
@@ -13,9 +13,9 @@ export default class AddressMannage extends ModelExtend {
     });
   }
 
-  @observable testAddresses = convertAddressChecksumAll(localSave.get('testAddresses') || []);
-  @observable mainAddresses = convertAddressChecksumAll(localSave.get('mainAddresses') || []);
-  @observable premainAddresses = convertAddressChecksumAll(localSave.get('premainAddresses') || []);
+  @observable testAddresses = localSave.get('testAddresses') || [];
+  @observable mainAddresses = localSave.get('mainAddresses') || [];
+  @observable premainAddresses = localSave.get('premainAddresses') || [];
 
   @computed
   get addresses() {
@@ -37,6 +37,11 @@ export default class AddressMannage extends ModelExtend {
       this.premainAddresses = addresses;
     }
   }
+
+  updateAllAddress = () => {
+    const addresses = [...this.addresses];
+    this.changeModel('addresses', convertAddressChecksumAll(addresses));
+  };
 
   addAddress(address) {
     this.changeModel('addresses', [...this.addresses, address]);
