@@ -11,10 +11,12 @@ class InactiveVoteConfirmModal extends Component {
     } = this.props;
     return (
       <Modal
-        title={'确定要投票吗？'}
+        title={<FormattedMessage id={'SureWantToVote'} />}
         button={
           <div className={styles.InactiveVoteConfirmModal}>
-            <div className={styles.desc}>当前节点为退选状态，您的投票在退选期间不会获得任何收益</div>
+            <div className={styles.desc}>
+              <FormattedMessage id={'NoRevenueIfDelected'} />
+            </div>
             <ButtonGroup>
               <Button
                 size="bigger"

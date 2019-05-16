@@ -152,6 +152,11 @@ const zh_en = {
   PublicMultiSigTrusteeAddress: ['公共多签托管地址', 'Public MultiSig Trustee Address'],
   CopyMessage: ['复制信息', 'Copy'],
   RecommendedChannelNode: ['输入推荐渠道的节点名称 (选填)', 'Recommended Channel Node (optional)'],
+  SureWantToVote: ['确定要投票吗?', 'Are you sure you want to vote?'],
+  NoRevenueIfDelected: [
+    '当前节点为退选状态，您的投票在退选期间不会获得任何收益',
+    'The current node is de-elected, and your vote will not gain any revenue during the de-election period.',
+  ],
   GetWithdrawFee: ['收取提现手续费', 'Required Fee'],
   BindedAddress: ['已绑定地址', 'Binded Address'],
   BindNewAddress: ['绑定新地址', 'Bind new Address'],
