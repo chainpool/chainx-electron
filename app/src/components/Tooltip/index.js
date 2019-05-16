@@ -21,6 +21,7 @@ export default class Tooltip extends PureComponent {
     } = this.props;
 
     function fixedLengthFormatString(str, num) {
+      if (!_.isString(str)) return str;
       if (str == null || str == undefined) return null;
       if (!/^[0-9]*[1-9][0-9]*$/.test(num)) return null;
       const array = new Array();
@@ -41,7 +42,7 @@ export default class Tooltip extends PureComponent {
       <>
         {type === 'hover' ? (
           <>
-            <span data-for={uid} data-tip={tip} className={styles.tip}>
+            <span data-for={uid} data-tip={tip} className={styles.tip} data-iscapture="true">
               {children}
             </span>
             <ReactTooltip
@@ -51,12 +52,14 @@ export default class Tooltip extends PureComponent {
               id={uid}
               place={place}
               className={classNames(styles.tool, styles[size])}>
-              {multiTip.map((item, ins) => (
-                <span key={ins}>
-                  {item}
-                  <br />
-                </span>
-              ))}
+              {_.isArray(multiTip)
+                ? multiTip.map((item, ins) => (
+                    <span key={ins}>
+                      {item}
+                      <br />
+                    </span>
+                  ))
+                : multiTip}
             </ReactTooltip>
           </>
         ) : (

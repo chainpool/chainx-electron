@@ -65,8 +65,10 @@ class Modal extends Component {
               <i className="iconfont icon-icon-guanbi" />
             </span>
           </div>
-          {children}
-          {button ? <div className={styles.button}>{button}</div> : null}
+          <div className={styles.content}>
+            {children}
+            {button ? <div className={styles.button}>{button}</div> : null}
+          </div>
         </div>
       </ReactModal>
     );
