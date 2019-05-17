@@ -182,6 +182,7 @@ export default class Trust extends ModelExtend {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
     this.rootStore.electionStore.getIntentions();
+    this.getSomeOneInfo();
   };
 
   updateAllTrust = () => {
@@ -495,7 +496,7 @@ export default class Trust extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey, hotPubKeyColdPubKey } = obj;
     const findOne = trusts.filter(
       (item = {}) => item.address === address && item.chain === chain && item.net === currentNetWork.value
     )[0];
@@ -505,12 +506,19 @@ export default class Trust extends ModelExtend {
         chain,
         hotPubKey,
         coldPubKey,
+        hotPubKeyColdPubKey,
         net: currentNetWork.value,
       });
     } else {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
       if (node) findOne.node = node;
+      if (hotPubKeyColdPubKey) {
+        if (findOne.decodedHotPrivateKey && hotPubKeyColdPubKey !== findOne.hotPubKeyColdPubKey) {
+          findOne.decodedHotPrivateKey = '';
+        }
+        findOne.hotPubKeyColdPubKey = hotPubKeyColdPubKey;
+      }
       if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
@@ -521,13 +529,11 @@ export default class Trust extends ModelExtend {
     const extrinsic = setupBitcoinTrustee(about, hexPrefix(hotPubKey), hexPrefix(coldPubKey));
     return {
       extrinsic,
-      success: () => {
-        this.getSomeOneInfo({ decodedHotPrivateKey: '' });
-      },
+      success: this.reload,
     };
   };
 
-  getSomeOneInfo = async (payload = {}) => {
+  getSomeOneInfo = async () => {
     const chain = 'Bitcoin';
     const currentAccount = this.getCurrentAccount();
     const { address } = currentAccount;
@@ -540,7 +546,7 @@ export default class Trust extends ModelExtend {
         chain,
         hotPubKey,
         coldPubKey,
-        ...payload,
+        hotPubKeyColdPubKey: `${hotPubKey}${coldPubKey}`,
       };
       this.updateTrust(obj);
       return obj;
