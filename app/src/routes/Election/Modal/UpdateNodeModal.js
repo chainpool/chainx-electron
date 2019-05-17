@@ -62,6 +62,7 @@ class UpdateNodeModal extends Component {
     const { address, addressErrMsg, website, websiteErrMsg, willParticipating, about, aboutErrMsg } = this.state;
     const {
       model: { dispatch, openModal },
+      electionStore: { accountValidator: { sessionAddress } = {} },
     } = this.props;
 
     return (
@@ -96,7 +97,7 @@ class UpdateNodeModal extends Component {
                         payload: {
                           url: website,
                           participating: willParticipating,
-                          address,
+                          address: address === sessionAddress ? null : address,
                           about,
                         },
                       });
