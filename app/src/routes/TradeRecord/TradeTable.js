@@ -35,8 +35,9 @@ class TradeTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Operation'} />,
-          width: 80,
+          width: 150,
           dataIndex: 'operation',
+          render: value => <FormattedMessage id={value} />,
         },
         {
           title: <FormattedMessage id={'ParamsInfo'} />,

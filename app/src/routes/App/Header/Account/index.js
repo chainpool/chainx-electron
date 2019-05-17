@@ -135,7 +135,7 @@ class Account extends Mixin {
       <div className={styles.account}>
         {isLogin() ? (
           <div className={styles.login}>
-            <Icon name="icon-zhanghu" />
+            <Icon name="icon-zhanghu" style={{ fontSize: 16 }} />
             <span style={{ marginLeft: 9 }}>{currentAccount.tag}</span>
             <div className={classNames(styles.accountlist)}>
               <div>

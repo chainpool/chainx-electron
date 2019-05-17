@@ -77,7 +77,7 @@ class Header extends Component {
                       <RouterGo
                         go={{ pathname: PATH.configure }}
                         className={pathname === PATH.configure ? styles.active : null}>
-                        <Icon name="icon-shezhi" />
+                        <Icon name="icon-shezhi" style={{ fontSize: 16 }} />
                       </RouterGo>
                       {isTestNet && (
                         <div className={classNames(styles.testlogo, styles.warn, !isLogin() ? styles.notlogin : null)}>
