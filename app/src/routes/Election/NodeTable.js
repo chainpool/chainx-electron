@@ -38,7 +38,7 @@ class NodeTable extends Component {
           render: (value, item, index) => {
             return (
               <div className={styles.trustee}>
-                {index + 1}
+                <span className={styles.rank}>{index + 1}</span>
                 {item.isTrustee && item.isTrustee.length ? (
                   <HoverTip tip={'负责联合托管⽤户的链外资产'}>
                     <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />

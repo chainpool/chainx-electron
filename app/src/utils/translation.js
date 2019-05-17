@@ -2,10 +2,10 @@ import _ from 'lodash';
 import { setBlankSpace } from '../utils';
 
 const calls = {
-  unnominate: '撤销投票',
+  unnominate: 'DecreaseNomination',
   sudo: 'Setup',
-  set_block_producer: '设置出块人',
-  push_header: '提交块头',
+  set_block_producer: 'SetBlockProducer',
+  push_header: 'PushHeader',
   final_hint: 'Setup',
   claim: 'ClaimDividend',
   set: 'Setup',
@@ -14,16 +14,16 @@ const calls = {
   nominate: 'Nominate',
   renominate: 'SwitchNominate',
   create_withdraw_tx: 'ApplicationWithdrawal',
-  sign_withdraw_tx: '响应提现',
-  cancel_order: '撤单',
-  register: '注册节点',
-  put_order: '挂单',
-  unfreeze: '解冻',
-  push_transaction: '提交交易',
+  sign_withdraw_tx: 'ResponseWithDraw',
+  cancel_order: 'CancelOrder',
+  register: 'RegisterNode',
+  put_order: 'PlaceOrder',
+  unfreeze: 'Unfreeze',
+  push_transaction: 'SubmittingTransactions',
   transfer: 'Transfer',
-  refresh: '更新节点',
-  remove_multi_sig_for: '删除多签',
-  setup_bitcoin_trustee: '设置信托',
+  refresh: 'UpdateNode',
+  remove_multi_sig_for: 'RemoveMultiSign',
+  setup_bitcoin_trustee: 'SetupTrustee',
 };
 
 const argvs = {
