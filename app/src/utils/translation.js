@@ -23,6 +23,7 @@ const calls = {
   transfer: '转账',
   refresh: '更新节点',
   remove_multi_sig_for: '删除多签',
+  setup_bitcoin_trustee: '设置信托',
 };
 
 const argvs = {
@@ -261,6 +262,10 @@ const translation = ({
     }
     case 'XMultiSig|remove_multi_sig_for': {
       info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'multi_sig_id' }]);
+      break;
+    }
+    case 'XBridgeFeatures|setup_bitcoin_trustee': {
+      info = merge(args, [{ name: 'hot_entity' }, { name: 'cold_entity' }]);
       break;
     }
   }
