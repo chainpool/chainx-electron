@@ -14,9 +14,6 @@ class InactiveVoteConfirmModal extends Component {
         title={<FormattedMessage id={'SureWantToVote'} />}
         button={
           <div className={styles.InactiveVoteConfirmModal}>
-            <div className={styles.desc}>
-              <FormattedMessage id={'NoRevenueIfDelected'} />
-            </div>
             <ButtonGroup>
               <Button
                 size="bigger"
@@ -35,8 +32,11 @@ class InactiveVoteConfirmModal extends Component {
               </Button>
             </ButtonGroup>
           </div>
-        }
-      />
+        }>
+        <div className={styles.desc}>
+          <FormattedMessage id={'NoRevenueIfDelected'} />
+        </div>
+      </Modal>
     );
   }
 }

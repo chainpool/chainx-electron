@@ -112,32 +112,6 @@ class NodeTable extends Component {
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
-              {currentAddress ? (
-                <Button
-                  onClick={() => {
-                    const vote = () =>
-                      openModal({
-                        name: 'VoteModal',
-                        data: {
-                          target: item.account,
-                          myTotalVote: item.myTotalVote,
-                          isCurrentAccount: item.address === currentAccount.address,
-                        },
-                      });
-                    if (!item.isActive) {
-                      openModal({
-                        name: 'InactiveVoteConfirmModal',
-                        data: {
-                          callback: vote,
-                        },
-                      });
-                    } else {
-                      vote();
-                    }
-                  }}>
-                  <FormattedMessage id={'Nominate'} />
-                </Button>
-              ) : null}
               {item.myRevocation ? (
                 <Button
                   onClick={() => {
@@ -174,6 +148,32 @@ class NodeTable extends Component {
                     });
                   }}>
                   <FormattedMessage id={'ClaimDividend'} />
+                </Button>
+              ) : null}
+              {currentAddress ? (
+                <Button
+                  onClick={() => {
+                    const vote = () =>
+                      openModal({
+                        name: 'VoteModal',
+                        data: {
+                          target: item.account,
+                          myTotalVote: item.myTotalVote,
+                          isCurrentAccount: item.address === currentAccount.address,
+                        },
+                      });
+                    if (!item.isActive) {
+                      openModal({
+                        name: 'InactiveVoteConfirmModal',
+                        data: {
+                          callback: vote,
+                        },
+                      });
+                    } else {
+                      vote();
+                    }
+                  }}>
+                  <FormattedMessage id={'Nominate'} />
                 </Button>
               ) : null}
             </ButtonGroup>
