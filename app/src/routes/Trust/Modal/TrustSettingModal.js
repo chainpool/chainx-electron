@@ -29,6 +29,8 @@ class TrustSettingModal extends Component {
           options: [{ label: chain, value: chain }],
           hotPubKey,
           coldPubKey,
+          hotPubKeyPrev: hotPubKey,
+          coldPubKeyPrev: coldPubKey,
         });
       }
     });
@@ -61,9 +63,19 @@ class TrustSettingModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { options = [], chain, chainErrMsg, hotPubKey, hotPubKeyErrMsg, coldPubKey, coldPubKeyErrMsg } = this.state;
     const {
-      model: { dispatch, openModal },
+      options = [],
+      chain,
+      chainErrMsg,
+      hotPubKey,
+      hotPubKeyPrev,
+      hotPubKeyErrMsg,
+      coldPubKey,
+      coldPubKeyPrev,
+      coldPubKeyErrMsg,
+    } = this.state;
+    const {
+      model: { dispatch, openModal, closeModal },
     } = this.props;
 
     return (
@@ -75,21 +87,25 @@ class TrustSettingModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                openModal({
-                  name: 'SignModal',
-                  data: {
-                    description: [{ name: 'operation', value: () => <FormattedMessage id={'SetupTrustee'} /> }],
-                    callback: () => {
-                      return dispatch({
-                        type: 'updateTrustToChain',
-                        payload: {
-                          hotPubKey,
-                          coldPubKey,
-                        },
-                      });
+                if (hotPubKeyPrev === hotPubKey && coldPubKey === coldPubKeyPrev) {
+                  closeModal();
+                } else {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [{ name: 'operation', value: () => <FormattedMessage id={'SetupTrustee'} /> }],
+                      callback: () => {
+                        return dispatch({
+                          type: 'updateTrustToChain',
+                          payload: {
+                            hotPubKey,
+                            coldPubKey,
+                          },
+                        });
+                      },
                     },
-                  },
-                });
+                  });
+                }
               }
             }}>
             <FormattedMessage id={'Confirm'} />
