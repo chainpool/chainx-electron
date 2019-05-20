@@ -333,7 +333,7 @@ class InputAddress extends React.Component {
 
   onChange = event => {
     const { onChange = x => x } = this.props;
-    onChange(event.target.value);
+    onChange(event.target.value.trim());
   };
 
   onFocus = event => {
