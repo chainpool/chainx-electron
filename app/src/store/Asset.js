@@ -314,7 +314,14 @@ export default class Asset extends ModelExtend {
     return addresses.hotEntity.addr;
   }
 
-  getMinimalWithdrawalValueByToken = async ({ token }) => await getMinimalWithdrawalValueByToken(token);
+  getMinimalWithdrawalValueByToken = async ({ token }) => {
+    const res = await getMinimalWithdrawalValueByToken(token);
+    const { fee, minimalWithdrawal } = res;
+    return {
+      fee,
+      minimalWithdrawal,
+    };
+  };
 
   transfer = ({ dest, token, amount, remark }) => {
     amount = this.setPrecision(amount, token, true);

@@ -25,17 +25,17 @@ const getBestApi = () => {
   return api.filter((item = {}) => item.best)[0] || {};
 };
 
-const { stake, asset, chain, trade } = ChainX;
+const { stake, asset, chain, trade, trustee } = ChainX;
 
 const API = getBestApi().address;
 
 export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
-export const createWithdrawTx = (...payload) => asset.createWithdrawTx(...payload);
+export const createWithdrawTx = (...payload) => trustee.createWithdrawTx(...payload);
 
-export const getWithdrawTx = (...payload) => asset.getWithdrawTx(...payload);
+export const getWithdrawTx = (...payload) => trustee.getWithdrawTx(...payload);
 
-export const signWithdrawTx = (...payload) => asset.signWithdrawTx(...payload);
+export const signWithdrawTx = (...payload) => trustee.signWithdrawTx(...payload);
 
 export const register = (...payload) => stake.register(...payload);
 
@@ -43,7 +43,7 @@ export const transfer = (...payload) => asset.transfer(...payload);
 
 export const withdraw = (...payload) => asset.withdraw(...payload);
 
-export const getMinimalWithdrawalValueByToken = (...payload) => asset.getMinimalWithdrawalValueByToken(...payload);
+export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdrawalLimitByToken(...payload);
 
 export const getIntentions = (...payload) => stake.getIntentions(...payload);
 
@@ -69,9 +69,9 @@ export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...pa
 
 export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
 
-export const getTrusteeInfoByAccount = (...payload) => stake.getTrusteeInfoByAccount(...payload);
+export const getTrusteeInfoByAccount = (...payload) => trustee.getTrusteeInfoByAccount(...payload);
 
-export const setupBitcoinTrustee = (...payload) => stake.setupBitcoinTrustee(...payload);
+export const setupBitcoinTrustee = (...payload) => trustee.setupBitcoinTrustee(...payload);
 
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
@@ -172,7 +172,7 @@ export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...
 
 export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
 
-export const getTrusteeSessionInfo = (...payload) => asset.getTrusteeSessionInfo(...payload);
+export const getTrusteeSessionInfo = (...payload) => trustee.getTrusteeSessionInfo(...payload);
 
 export const getBlockPeriod = (...payload) => chain.getMinimumPeriod(...payload);
 

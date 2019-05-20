@@ -70,7 +70,12 @@ export default class Trust extends ModelExtend {
   @computed
   get trusts() {
     const currentAccount = this.getCurrentAccount();
-    return this._trusts.filter((item = {}) => item.address === currentAccount.address) || [];
+    const currentNetWork = this.getCurrentNetWork();
+    return (
+      this._trusts.filter(
+        (item = {}) => item.address === currentAccount.address && item.net === currentNetWork.value
+      ) || []
+    );
   }
 
   set trusts(value) {
@@ -213,6 +218,12 @@ export default class Trust extends ModelExtend {
     }
     const nodeUrl = findOne.node;
     const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
+    if (!minerFee) {
+      throw new Error({
+        info: '未获取到提现手续费',
+        toString: () => 'NotFindTrusteeFee',
+      });
+    }
 
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
@@ -289,7 +300,7 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = withdraw.amount - minerFee;
+          const fee = withdraw.amount - minerFee.fee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });

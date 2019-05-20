@@ -29,7 +29,7 @@ class WithdrawModal extends Mixin {
     }).then(res => {
       if (res) {
         this.changeState({
-          fee: res + 10000,
+          fee: res.minimalWithdrawal,
         });
       }
     });

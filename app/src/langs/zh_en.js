@@ -243,6 +243,7 @@ const zh_en = {
   NodeLinkFail: ['节点连接失败', 'This node linked Fail'],
   NotGetNodeNetType: ['未获取到该节点的网络类型', 'Not get this node net type'],
   NotFindTrusteeAddress: ['未获取到信托地址', 'Not Found Trustee Address'],
+  NotFindTrusteeFee: ['未获取到提现手续费', 'Not Found withdrawal fee'],
   ResponseList: ['响应列表', 'Response List'],
   HaveSigned: ['已签名', 'Signed'],
   Sign: ['签名', 'Sign'],
