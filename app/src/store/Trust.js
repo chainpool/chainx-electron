@@ -536,7 +536,7 @@ export default class Trust extends ModelExtend {
     this.subScribeNodeStatus();
   };
 
-  updateTrustToChain = ({ about = 'bitocin', hotPubKey, coldPubKey }) => {
+  updateTrustToChain = ({ about = '', hotPubKey, coldPubKey }) => {
     const extrinsic = setupBitcoinTrustee(about, hexPrefix(hotPubKey), hexPrefix(coldPubKey));
     return {
       extrinsic,
