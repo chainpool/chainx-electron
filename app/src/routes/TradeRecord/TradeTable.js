@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, Mixin, RouterGo, FormattedMessage } from '../../components';
-import { observer } from '../../utils';
+import { observer, toJS } from '../../utils';
 
 @observer
 class TradeTable extends Mixin {
@@ -43,16 +43,18 @@ class TradeTable extends Mixin {
           title: <FormattedMessage id={'ParamsInfo'} />,
           ellipse: 0,
           dataIndex: 'info',
-          render: (v = []) => (
-            <ul className={styles.info}>
-              {v.map((item, index) => (
-                <li key={index}>
-                  {<FormattedMessage id={item.label} />}:{item.value}
-                  {index === v.length - 1 ? '' : ','}
-                </li>
-              ))}
-            </ul>
-          ),
+          render: (v = []) => {
+            return (
+              <ul className={styles.info}>
+                {(v || []).map((item, index) => (
+                  <li key={index}>
+                    {<FormattedMessage id={item.label} />}:{item.value}
+                    {index === v.length - 1 ? '' : ','}
+                  </li>
+                ))}
+              </ul>
+            );
+          },
         },
       ],
       dataSource: tradeRecords,
