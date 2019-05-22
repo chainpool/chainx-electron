@@ -27,44 +27,44 @@ const calls = {
 };
 
 const argvs = {
-  token: '币种',
-  memo: '备注',
-  dest: '目标账户',
-  target: '目标账户',
-  value: '数量',
-  tx: '原文',
-  pair_index: '交易对id',
-  order_type: '订单类型',
-  order_index: '委托编号',
-  revocation_index: '解冻编号',
-  withdrawal_id_list: '提现编号',
-  direction: '方向',
-  price: '价格',
-  desire_to_run: '参选',
-  amount: '数量',
-  next_key: '出块地址',
-  about: '简介',
-  ext: '备注',
-  chain: '链',
-  hot_entity: '热公钥',
-  cold_entity: '冷公钥',
+  token: 'Token',
+  memo: 'Memo',
+  dest: 'TargetAccount',
+  target: 'TargetAccount',
+  value: 'Amount',
+  tx: 'Tx',
+  pair_index: 'TradingPairID',
+  order_type: 'OrderType',
+  order_index: 'OrderNumber',
+  revocation_index: 'RevocationNumber',
+  withdrawal_id_list: 'WithdrawNumber',
+  direction: 'Direction',
+  price: 'Price',
+  desire_to_run: 'Participate',
+  amount: 'Amount',
+  next_key: 'BlockAuthoringAddress',
+  about: 'BriefIntroduction',
+  ext: 'Memo',
+  chain: 'Chain',
+  hot_entity: 'HotEntity',
+  cold_entity: 'ColdEntity',
   ethereum_signature: 'ethereum_signature',
   sign_data: 'sign_data',
-  input_data: '目标账户',
-  header: '块头',
-  from: '源节点',
-  to: '目标节点',
-  multi_sig_addr: '多签地址',
-  proposal: '签名',
-  multi_sig_id: '多签id',
+  input_data: 'TargetAccount',
+  header: 'BlockHeader',
+  from: 'SourceNode',
+  to: 'TargetAccount',
+  multi_sig_addr: 'PublicMultiSigTrusteeAddress',
+  proposal: 'Sign',
+  multi_sig_id: 'SigTrusteeID',
 };
 
 const values = {
-  Sell: '卖出',
-  Buy: '买入',
-  Limit: '限价单',
-  false: '否',
-  true: '是',
+  Sell: 'Sell',
+  Buy: 'Buy',
+  Limit: 'LimitOrder',
+  false: 'False',
+  true: 'True',
 };
 
 const translation = ({
@@ -119,11 +119,12 @@ const translation = ({
       }
       return result;
     }, []);
-    return result.reduce((sum, next, index) => {
-      return `${sum}${next.label}:${next.value !== undefined ? next.value : ''}${
-        index === result.length - 1 ? '' : ','
-      }`;
-    }, '');
+    return result.reduce((sum, next) => {
+      return sum.concat({
+        label: next.label,
+        value: next.value ? next.value : 'NoThing',
+      });
+    }, []);
   };
   let [operation, info] = ['', ''];
   operation = calls[call];
@@ -147,7 +148,7 @@ const translation = ({
       break;
     }
     case 'XBridgeOfSDOT|claim': {
-      operation = '领SDOT';
+      operation = 'GetSDOT';
       info = merge(args, [{ name: 'input_data', dataTrans: v => v }]);
       break;
     }
@@ -217,7 +218,7 @@ const translation = ({
     }
     case 'XStaking|refresh': {
       info = merge(args, [
-        { name: 'url', nameTrans: () => '官网域名' },
+        { name: 'url', nameTrans: () => 'Website' },
         { name: 'desire_to_run' },
         { name: 'next_key' },
         { name: 'about' },
@@ -228,7 +229,7 @@ const translation = ({
       info = merge(args, [
         { name: 'token' },
         { name: 'value', dataTrans: (v, r) => setPrecision(v, r.token) },
-        { name: 'addr', nameTrans: () => '收款地址' },
+        { name: 'addr', nameTrans: () => 'ReceiptAddress' },
         { name: 'ext' },
       ]);
       break;
@@ -243,7 +244,7 @@ const translation = ({
       break;
     }
     case 'XStaking|register': {
-      info = merge(args, [{ name: 'name', nameTrans: '节点名称' }]);
+      info = merge(args, [{ name: 'name', nameTrans: 'NodeName' }]);
       break;
     }
     case 'XBridgeOfBTC|push_header': {
@@ -251,12 +252,12 @@ const translation = ({
       break;
     }
     case 'XMultiSig|execute': {
-      operation = '执行多签';
+      operation = 'ExecuteMultiSign';
       info = merge(args, [{ name: 'multi_sig_addr' }, { name: 'proposal' }]);
       break;
     }
     case 'XMultiSig|confirm': {
-      operation = '确认多签';
+      operation = 'ConfirmMultiSign';
       info = merge(args, [{ name: 'multi_sig_addr' }]);
       break;
     }

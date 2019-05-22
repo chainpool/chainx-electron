@@ -43,6 +43,16 @@ class TradeTable extends Mixin {
           title: <FormattedMessage id={'ParamsInfo'} />,
           ellipse: 0,
           dataIndex: 'info',
+          render: (v = []) => (
+            <ul className={styles.info}>
+              {v.map((item, index) => (
+                <li key={index}>
+                  {<FormattedMessage id={item.label} />}:{item.value}
+                  {index === v.length - 1 ? '' : ','}
+                </li>
+              ))}
+            </ul>
+          ),
         },
       ],
       dataSource: tradeRecords,
