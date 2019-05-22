@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { classNames } from '../../../utils';
 import * as styles from './index.less';
 
 class InputHorizotalList extends Component {
   render() {
-    const { left, right } = this.props;
+    const { left, right, className } = this.props;
     return (
-      <ul className={styles.inputHorizotalList}>
+      <ul className={classNames(styles.inputHorizotalList, className)}>
         <li>{left}</li>
         <li>{right}</li>
       </ul>

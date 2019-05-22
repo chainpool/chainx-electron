@@ -174,6 +174,7 @@ class VoteModal extends Mixin {
 
           {action === 'add' && (
             <InputHorizotalList
+              className={styles.addvote}
               left={
                 <Input.Text
                   errMsgIsOutside

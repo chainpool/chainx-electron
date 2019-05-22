@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { default as ReactModal } from 'react-modal';
-import { _, Inject } from '../../utils';
+import { _, Inject, classNames } from '../../utils';
 import * as styles from './index.less';
 
 @Inject(({ globalStore: model }) => ({ model }))
@@ -26,6 +26,7 @@ class Modal extends Component {
       onAfterOpen,
       style = {},
       isOverflow = false,
+      className,
     } = this.props;
 
     return (
@@ -54,7 +55,7 @@ class Modal extends Component {
         }}
         onAfterOpen={onAfterOpen}
         isOpen={status}>
-        <div className={styles.modalcontainer}>
+        <div className={classNames(styles.modalcontainer, className)}>
           <div className={styles.header}>
             <div className={styles.label}>{title}</div>
             <span
@@ -67,7 +68,7 @@ class Modal extends Component {
           </div>
           <div className={styles.content}>
             {children}
-            {button ? <div className={styles.button}>{button}</div> : null}
+            {button ? <div className={classNames(styles.button, 'button')}>{button}</div> : null}
           </div>
         </div>
       </ReactModal>

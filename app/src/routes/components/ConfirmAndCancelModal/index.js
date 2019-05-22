@@ -12,6 +12,7 @@ class ConfirmAndCancelModal extends Component {
     return (
       <Modal
         title={title}
+        className={styles.group}
         button={
           <div className={styles.confirmAndCancelModal}>
             <ButtonGroup>
