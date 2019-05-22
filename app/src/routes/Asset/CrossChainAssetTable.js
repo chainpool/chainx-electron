@@ -14,7 +14,7 @@ class CrossChainAssetTable extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
-    dispatch({ type: 'getAccountBTCAddresses' });
+    this.fetchPoll(() => dispatch({ type: 'getAccountBTCAddresses' }));
   };
 
   render() {

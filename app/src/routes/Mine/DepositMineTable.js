@@ -11,9 +11,11 @@ class DepositMineTable extends Mixin {
       model: { dispatch },
     } = this.props;
 
-    dispatch({
-      type: 'getPseduIntentions',
-    });
+    this.fetchPoll(() =>
+      dispatch({
+        type: 'getPseduIntentions',
+      })
+    );
   };
 
   render() {

@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Button, Mixin, Table } from '../../components';
+import { Mixin, Table } from '../../components';
 
 @observer
 class CertTable extends Mixin {
   render() {
     const {
-      model: { openModal, certs = [] },
+      model: { certs = [] },
       widths,
     } = this.props;
 
@@ -31,24 +31,6 @@ class CertTable extends Mixin {
             title: '剩余节点额度',
             dataIndex: 'remainingShares',
           },
-          // {
-          //   title: '',
-          //   dataIndex: '_action',
-          //   render: (value, item = {}) => (
-          //     <Button
-          //       onClick={() => {
-          //         openModal({
-          //           name: 'RegisterNode',
-          //           data: {
-          //             certName: item.name,
-          //             remainingShares: item.remainingShares,
-          //           },
-          //         });
-          //       }}>
-          //       注册
-          //     </Button>
-          //   ),
-          // },
         ],
         widths
       ),

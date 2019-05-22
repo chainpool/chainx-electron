@@ -17,7 +17,7 @@ class Election extends Mixin {
       model: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getIntentions' });
+    this.fetchPoll(() => dispatch({ type: 'getIntentions' }));
   };
 
   render() {

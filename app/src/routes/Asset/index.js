@@ -22,10 +22,11 @@ class Asset extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
-
-    dispatch({
-      type: 'getAccountAssets',
-    });
+    this.fetchPoll(() =>
+      dispatch({
+        type: 'getAccountAssets',
+      })
+    );
   };
 
   render() {
