@@ -36,8 +36,12 @@ class Node extends Component {
           closeButton: true,
           newContent: (
             <div className={styles.toast}>
-              <div className={styles.title}>节点未完全同步</div>
-              <Warn>所选节点未完全同步，页面数据不是最新。请切换至其他已同步节点。</Warn>
+              <div className={styles.title}>
+                <FormattedMessage id={'NodeIncompleteSync'} />
+              </div>
+              <Warn>
+                <FormattedMessage id={'NodeIncompleteSyncDesc'} />
+              </Warn>
             </div>
           ),
         });
@@ -104,7 +108,7 @@ class Node extends Component {
                     key={ins}
                     onClick={() => {
                       if (!item.block) {
-                        return Toast.warn(`未获取到当前${index ? 'Api' : '节点'}同步状态，无法连接`);
+                        return Toast.warn(<FormattedMessage id={index ? 'NodeNotConnection' : 'ApiNotConnection'} />);
                       }
                       if (item.best) return false;
                       dispatch({
@@ -121,9 +125,13 @@ class Node extends Component {
                         },
                       });
                     }}>
-                    <div className={styles.name}>{item.name}</div>
+                    <div className={styles.name}>
+                      {item.name === 'ThisMachine' ? <FormattedMessage id={item.name} /> : item.name}
+                    </div>
                     {item.delay === 'timeOut' ? (
-                      <span className={getColorFromDelay(item.delay)}>超时</span>
+                      <span className={getColorFromDelay(item.delay)}>
+                        <FormattedMessage id={'OverTime'} />
+                      </span>
                     ) : (
                       <span className={classNames(styles.time, getColorFromDelay(item.delay))}>{`${
                         item.delay

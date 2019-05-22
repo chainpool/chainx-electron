@@ -27,13 +27,17 @@ class Kline extends SwitchPair {
     const { language: languagePrev } = prevProps;
     const { language } = this.props;
     if (languagePrev !== language && this.widget) {
-      this.widget.setLanguage(language);
+      try {
+        this.widget.setLanguage(language);
+      } catch {}
     }
   };
 
   startInit = () => {
     if (this.widget) {
-      this.widget.chart().setSymbol(this.getSymbol());
+      try {
+        this.widget.chart().setSymbol(this.getSymbol());
+      } catch {}
     } else {
       this.startKline();
     }

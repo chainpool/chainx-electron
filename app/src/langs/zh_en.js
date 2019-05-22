@@ -340,6 +340,19 @@ const zh_en = {
   NormalCancel: ['取消', 'Normal Cancel'],
   RootCancel: ['系统取消', 'Root Cancel'],
   Unknown: ['未知', 'Unknown'],
+  NodeIncompleteSync: ['节点未完全同步', 'Node incomplete synchronization'],
+  NodeIncompleteSyncDesc: [
+    '所选节点未完全同步，页面数据不是最新。请切换至其他已同步节点',
+    'The selected node is not fully synchronized and the page data is not up to date. Please switch to other synchronized nodes',
+  ],
+  NodeNotConnection: [
+    '未获取到当前节点同步状态，无法连接',
+    'The current node synchronization status was not obtained and the connection could not be made.',
+  ],
+  ApiNotConnection: [
+    '未获取到当前Api同步状态，无法连接',
+    'The current api synchronization status was not obtained and the connection could not be made.',
+  ],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于手续费', 'Amount must greater than fee'],
