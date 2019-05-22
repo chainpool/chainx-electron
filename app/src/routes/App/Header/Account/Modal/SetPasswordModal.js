@@ -22,7 +22,7 @@ class SetPasswordModal extends Component {
     },
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg = Patterns.check('required')(label);
+      const errMsg = Patterns.check('required')(label.trim());
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -74,7 +74,7 @@ class SetPasswordModal extends Component {
                 dispatch({
                   type: 'addAccount',
                   payload: {
-                    tag: label,
+                    tag: label.trim(),
                     address: account.address(),
                     encoded,
                   },
@@ -89,6 +89,7 @@ class SetPasswordModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 placeholder={msg}
                 label={<FormattedMessage id={'Label'} />}
                 value={label}

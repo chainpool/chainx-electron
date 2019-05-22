@@ -22,7 +22,7 @@ class RegisterNodeModal extends Component {
     checkName: () => {
       const { name } = this.state;
       const errMsg =
-        Patterns.check('required')(name) ||
+        Patterns.check('required')(name.trim()) ||
         Patterns.check('smallerOrEqual')(
           2,
           name.length,
@@ -85,13 +85,13 @@ class RegisterNodeModal extends Component {
                     data: {
                       description: [
                         { name: 'operation', value: () => <FormattedMessage id={'RegisterNode'} /> },
-                        { name: () => <FormattedMessage id={'Name'} />, value: name },
+                        { name: () => <FormattedMessage id={'Name'} />, value: name.trim() },
                       ],
                       callback: () => {
                         return dispatch({
                           type: 'register',
                           payload: {
-                            name,
+                            name: name.trim(),
                           },
                         });
                       },
@@ -107,6 +107,7 @@ class RegisterNodeModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: '2-12' }}>
             {msg => (
               <Input.Text
+                trim={false}
                 placeholder={msg}
                 label={
                   <div>

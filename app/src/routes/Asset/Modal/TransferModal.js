@@ -77,7 +77,7 @@ class TransferModal extends Component {
                         value: `${setBlankSpace(amount, token)}`,
                       },
                       { name: () => <FormattedMessage id={'ReceiveAddress'} />, value: address, toastShow: false },
-                      { name: () => <FormattedMessage id={'Memo'} />, value: remark },
+                      { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                     ],
                     callback: ({ token }) => {
                       return dispatch({
@@ -86,7 +86,7 @@ class TransferModal extends Component {
                           dest: address,
                           token,
                           amount,
-                          remark,
+                          remark: remark.trim(),
                         },
                       });
                     },
@@ -128,6 +128,7 @@ class TransferModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 isTextArea
                 rows={1}
                 label={<FormattedMessage id={'Memo'} />}

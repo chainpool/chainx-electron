@@ -226,6 +226,7 @@ class InputText extends Mixin {
       isDecimal = false,
       precision,
       errMsgIsOutside = false,
+      trim = true,
       helpContent,
     } = this.props;
 
@@ -253,7 +254,7 @@ class InputText extends Mixin {
             });
           }
 
-          _.isFunction(onChange) && onChange(e.target.value.trim());
+          _.isFunction(onChange) && onChange(trim ? e.target.value.trim() : e.target.value);
         }
       },
       onBlur: e => {

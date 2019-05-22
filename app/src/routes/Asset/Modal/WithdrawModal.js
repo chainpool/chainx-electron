@@ -48,7 +48,7 @@ class WithdrawModal extends Mixin {
           payload: {
             token,
             address,
-            remark: '备注',
+            remark: '',
           },
         });
         if (!!res) return <FormattedMessage id={'AddressFormatError'} />;
@@ -125,7 +125,7 @@ class WithdrawModal extends Mixin {
                       { name: 'operation', value: () => <FormattedMessage id={'Withdraw'} /> },
                       { name: () => <FormattedMessage id={'ReceiptAddress'} />, value: address, toastShow: false },
                       { name: () => <FormattedMessage id={'Amount'} />, value: setBlankSpace(amount, token) },
-                      { name: () => <FormattedMessage id={'Memo'} />, value: remark },
+                      { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                     ],
                     callback: () => {
                       return dispatch({
@@ -134,7 +134,7 @@ class WithdrawModal extends Mixin {
                           token, // 注意这里的token不要用callback的参数
                           amount,
                           dest: address,
-                          remark,
+                          remark: remark.trim(),
                         },
                       });
                     },
@@ -198,6 +198,7 @@ class WithdrawModal extends Mixin {
           <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 isTextArea
                 rows={1}
                 label={<FormattedMessage id={'Memo'} />}

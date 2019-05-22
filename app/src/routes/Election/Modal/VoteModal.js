@@ -121,7 +121,7 @@ class VoteModal extends Mixin {
                     description: [
                       { name: 'operation', value: () => operation },
                       { name: () => operationAmount, value: setBlankSpace(amount, token) },
-                      { name: () => <FormattedMessage id={'Memo'} />, value: remark },
+                      { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                     ],
                     callback: () => {
                       return dispatch({
@@ -129,7 +129,7 @@ class VoteModal extends Mixin {
                         payload: {
                           target,
                           amount,
-                          remark,
+                          remark: remark.trim(),
                           ...(action === 'switch' ? { to: selectNode.value } : {}),
                         },
                       });
@@ -223,6 +223,7 @@ class VoteModal extends Mixin {
           <FormattedMessage id={'CharacterLength'} values={{ length: 64 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 isTextArea
                 rows={1}
                 label={<FormattedMessage id={'Memo'} />}

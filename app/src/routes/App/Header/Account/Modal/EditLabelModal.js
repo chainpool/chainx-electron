@@ -10,7 +10,7 @@ class EditLabelModal extends Component {
   checkAll = {
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg = Patterns.check('required')(label);
+      const errMsg = Patterns.check('required')(label.trim());
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -39,7 +39,7 @@ class EditLabelModal extends Component {
                   type: 'updateTag',
                   payload: {
                     address,
-                    tag: label,
+                    tag: label.trim(),
                   },
                 });
                 closeModal();
@@ -52,6 +52,7 @@ class EditLabelModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 placeholder={msg}
                 label={<FormattedMessage id={'Label'} />}
                 value={label}

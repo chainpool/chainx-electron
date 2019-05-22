@@ -24,7 +24,7 @@ class OperationNodeModal extends Mixin {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg = Patterns.check('required')(name);
+      const errMsg = Patterns.check('required')(name.trim());
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
@@ -84,7 +84,7 @@ class OperationNodeModal extends Mixin {
                 _.isFunction(callback) &&
                   callback({
                     action,
-                    name,
+                    name: name.trim(),
                     address,
                   });
                 closeModal();
@@ -97,6 +97,7 @@ class OperationNodeModal extends Mixin {
           <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 placeholder={msg}
                 label={<FormattedMessage id={'Name'} />}
                 value={name}

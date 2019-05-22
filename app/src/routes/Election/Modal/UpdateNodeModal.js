@@ -89,7 +89,7 @@ class UpdateNodeModal extends Component {
                         name: () => <FormattedMessage id={'ParticipateStatus'} />,
                         value: () => <FormattedMessage id={willParticipating ? 'Participate' : 'Elect'} />,
                       },
-                      { name: () => <FormattedMessage id={'BriefIntroduction'} />, value: about },
+                      { name: () => <FormattedMessage id={'BriefIntroduction'} />, value: about.trim() },
                     ],
                     callback: () => {
                       return dispatch({
@@ -98,7 +98,7 @@ class UpdateNodeModal extends Component {
                           url: website,
                           participating: willParticipating,
                           address: address === sessionAddress ? null : address,
-                          about,
+                          about: about.trim(),
                         },
                       });
                     },
@@ -137,6 +137,7 @@ class UpdateNodeModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 128 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 label={<FormattedMessage id={'BriefIntroduction'} />}
                 placeholder={msg}
                 value={about}

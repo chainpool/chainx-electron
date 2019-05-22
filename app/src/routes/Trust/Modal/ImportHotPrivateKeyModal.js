@@ -122,16 +122,21 @@ class ImportHotPrivateKeyModal extends Component {
           </Button>
         }>
         <div className={styles.hello}>
-          <Input.Text
-            placeholder="热私钥将加密存储于本地，用于手动提现，请确保本机安全"
-            label={<FormattedMessage id={'HotPrivateEntity'} />}
-            value={hotPrivateKey}
-            errMsg={hotPrivateKeyErrMsg}
-            onChange={value => {
-              this.setState({ hotPrivateKey: value });
-            }}
-            onBlur={checkAll.checkHotPrivateKey}
-          />
+          <FormattedMessage id={'HotPrivateKeyStoreLocal'}>
+            {msg => (
+              <Input.Text
+                placeholder={msg}
+                label={<FormattedMessage id={'HotPrivateEntity'} />}
+                value={hotPrivateKey}
+                errMsg={hotPrivateKeyErrMsg}
+                onChange={value => {
+                  this.setState({ hotPrivateKey: value });
+                }}
+                onBlur={checkAll.checkHotPrivateKey}
+              />
+            )}
+          </FormattedMessage>
+
           <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }}>
             {msg => (
               <Input.Text

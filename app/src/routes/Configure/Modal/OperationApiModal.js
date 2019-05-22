@@ -21,7 +21,7 @@ class OperationApiModal extends Component {
   checkAll = {
     checkName: () => {
       const { name } = this.state;
-      const errMsg = Patterns.check('required')(name);
+      const errMsg = Patterns.check('required')(name.trim());
       this.setState({ nameErrMsg: errMsg });
       return errMsg;
     },
@@ -57,7 +57,7 @@ class OperationApiModal extends Component {
                   _.isFunction(callback) &&
                     callback({
                       action,
-                      name,
+                      name: name.trim(),
                       address,
                     });
                   closeModal();
@@ -71,6 +71,7 @@ class OperationApiModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 placeholder={msg}
                 label={<FormattedMessage id={'Name'} />}
                 value={name}

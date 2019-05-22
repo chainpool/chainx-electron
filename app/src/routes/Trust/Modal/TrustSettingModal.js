@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
 import { Patterns } from '../../../utils';
+import * as styles from './TrustSettingModal.less';
 
 class TrustSettingModal extends Component {
   state = {
@@ -113,6 +114,7 @@ class TrustSettingModal extends Component {
         }>
         <div>
           <InputHorizotalList
+            className={styles.chain}
             left={
               <Input.Select
                 label={<FormattedMessage id={'ChooseChain'} />}

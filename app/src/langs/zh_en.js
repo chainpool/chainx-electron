@@ -197,6 +197,10 @@ const zh_en = {
   HotEntity: ['热公钥', 'Hot Public Key'],
   HotPrivateEntity: ['热私钥', 'Hot private Key'],
   HotPrivateEntityPassword: ['热私钥密码', 'Password from Hot private Key'],
+  HotPrivateKeyStoreLocal: [
+    '热私钥将加密存储于本地，用于手动提现，请确保本机安全',
+    'The hot private key stores the encryption locally for withdraw. Please ensure local security.',
+  ],
   ColdEntity: ['冷公钥', 'Cold Public Key'],
   ImportHotPrivateKey: ['导入热私钥', ' Import Hot Private Key'],
   SetupNode: ['设置节点', 'Setup Node'],
