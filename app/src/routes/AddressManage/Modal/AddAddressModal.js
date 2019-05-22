@@ -40,7 +40,7 @@ class AddAddressModal extends Component {
     },
     checkLabel: () => {
       const { label } = this.state;
-      const errMsg = Patterns.check('required')(label);
+      const errMsg = Patterns.check('required')(label.trim());
       this.setState({ labelErrMsg: errMsg });
       return errMsg;
     },
@@ -73,7 +73,7 @@ class AddAddressModal extends Component {
                 dispatch({
                   type: 'addAddress',
                   payload: {
-                    label: this.state.label,
+                    label: this.state.label.trim(),
                     token: target.name,
                     chain: target.chain,
                     address: this.state.address,
@@ -111,6 +111,7 @@ class AddAddressModal extends Component {
           <FormattedMessage id={'CharacterLength'} values={{ length: 12 }}>
             {msg => (
               <Input.Text
+                trim={false}
                 label={<FormattedMessage id={'Label'} />}
                 placeholder={msg}
                 value={label}
