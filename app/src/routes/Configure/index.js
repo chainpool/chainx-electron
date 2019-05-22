@@ -34,6 +34,7 @@ class Configure extends Mixin {
           <div>
             <Input.Select
               value={{ label: currentNetWork.name, value: currentNetWork.value }}
+              getOptionLabel={item => <FormattedMessage id={item.label} />}
               options={netWork.map(({ name, value }) => ({ label: name, value }))}
               onChange={({ label: name, value }) => {
                 dispatch({

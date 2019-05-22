@@ -23,7 +23,7 @@ export const PlaceHolder = (() => {
 
 export const NetWork = [
   // {
-  //   name: '测试网',
+  //   name: 'TestNet',
   //   value: 'test',
   // },
   // {
@@ -31,7 +31,7 @@ export const NetWork = [
   //   value: 'premain',
   // },
   {
-    name: '主网预演',
+    name: 'MainnetPrepair',
     value: 'main',
   },
 ];

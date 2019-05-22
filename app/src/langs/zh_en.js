@@ -127,7 +127,7 @@ const zh_en = {
   OrderPrice: ['委托价格', 'Order Price'],
   OrderAmount: ['委托数量', 'Order Amount'],
   Offer: ['报价', 'Offer'],
-  CurrentChainID: ['本连交易ID', 'Trading ID'],
+  CurrentChainID: ['本链交易ID', 'Trading ID'],
   Account: ['账户', 'Account'],
 
   Name: ['名称', 'Name'],
@@ -308,6 +308,7 @@ const zh_en = {
   SystemDefault: ['系统默认', 'System Default'],
   UserDefined: ['自定义', 'UserD-defined'],
   ThisMachine: ['本机', 'This Machine'],
+  MainnetPrepair: ['主网预演', 'Mainnet Prepair'],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于手续费', 'Amount must greater than fee'],
