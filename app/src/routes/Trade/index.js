@@ -37,9 +37,12 @@ class Trade extends SwitchPair {
     const { show } = this.state;
     const {
       configureStore: { TradeVersion },
+      globalStore: { language },
     } = this.props;
+
     const props = {
       ...this.props,
+      language,
     };
 
     return show ? (

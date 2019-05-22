@@ -38,6 +38,7 @@ class ApiManageTable extends Mixin {
           {
             title: <FormattedMessage id={'Type'} />,
             dataIndex: 'type',
+            render: v => <FormattedMessage id={v} />,
           },
           {
             title: <FormattedMessage id={'Name'} />,

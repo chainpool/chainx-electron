@@ -45,6 +45,11 @@ export default class Configure extends ModelExtend {
           return item;
         });
       }
+      selfNodesOrApi = selfNodesOrApi.map(item => ({
+        ...item,
+        type: 'UserDefined',
+        name: item.name === 'ThisMachine' ? 'ThisMachine' : item.name,
+      }));
       return defaultNodesOrApi.concat(selfNodesOrApi);
     };
 
@@ -73,7 +78,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'api.chainx.org',
               best: true,
               address: 'https://api.chainx.org',
@@ -91,7 +96,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'api.chainx.org',
               best: true,
               address: 'https://api.chainx.org',
@@ -109,7 +114,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'api.chainx.org',
               best: true,
               address: 'https://api.chainx.org',
@@ -127,7 +132,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w1',
               best: true,
               isSystem: true,
@@ -135,14 +140,14 @@ export default class Configure extends ModelExtend {
               address: 'wss://w1.chainx.org/ws',
             },
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w2',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
             },
             {
-              type: '系统默认',
-              name: '本机',
+              type: 'SystemDefault',
+              name: 'ThisMachine',
               address: 'ws://localhost:8087',
               isSystem: true,
               isLocalhost: true,
@@ -158,7 +163,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w1',
               best: true,
               isSystem: true,
@@ -166,14 +171,14 @@ export default class Configure extends ModelExtend {
               address: 'wss://w1.chainx.org/ws',
             },
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w2',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
             },
             {
-              type: '系统默认',
-              name: '本机',
+              type: 'SystemDefault',
+              name: 'ThisMachine',
               address: 'ws://localhost:8087',
               isSystem: true,
               isLocalhost: true,
@@ -189,7 +194,7 @@ export default class Configure extends ModelExtend {
       : this.concatNodeOrApi(
           [
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w1',
               best: true,
               isSystem: true,
@@ -197,14 +202,14 @@ export default class Configure extends ModelExtend {
               address: 'wss://w1.chainx.org/ws',
             },
             {
-              type: '系统默认',
+              type: 'SystemDefault',
               name: 'w2',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
             },
             {
-              type: '系统默认',
-              name: '本机',
+              type: 'SystemDefault',
+              name: 'ThisMachine',
               address: 'ws://localhost:8087',
               isSystem: true,
               isLocalhost: true,
@@ -481,7 +486,7 @@ export default class Configure extends ModelExtend {
     switch (action) {
       case 'add':
         list.push({
-          type: '自定义',
+          type: 'UserDefined',
           name,
           address,
         });

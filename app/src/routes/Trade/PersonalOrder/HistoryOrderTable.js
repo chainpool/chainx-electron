@@ -66,7 +66,7 @@ class HistoryOrderTable extends SwitchPair {
   };
 
   render() {
-    const widths = [130, 80, 100, 60, undefined, undefined, 220, undefined, undefined, 100];
+    const widths = [130, 80, 100, 70, undefined, undefined, 220, undefined, undefined, 100];
     const { changeExpandIsOpen, getHistoryAccountOrder } = this;
     const { historyOrderList } = this.state;
     const {

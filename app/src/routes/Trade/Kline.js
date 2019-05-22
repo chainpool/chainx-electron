@@ -23,6 +23,14 @@ class Kline extends SwitchPair {
     };
   }
 
+  componentUpdate = prevProps => {
+    const { language: languagePrev } = prevProps;
+    const { language } = this.props;
+    if (languagePrev !== language && this.widget) {
+      this.widget.setLanguage(language);
+    }
+  };
+
   startInit = () => {
     if (this.widget) {
       this.widget.chart().setSymbol(this.getSymbol());
@@ -92,6 +100,7 @@ class Kline extends SwitchPair {
   startKline = () => {
     const {
       model: { dispatch, currentPair: { precision, unitPrecision } = {} },
+      language,
     } = this.props;
     const TradingView = window.TradingView;
     const tradeView = document.getElementById('tradeView');
@@ -121,7 +130,7 @@ class Kline extends SwitchPair {
       timezone: 'Asia/Hong_Kong',
       custom_css_url: '/override.css',
       container_id: 'tradeView',
-      locale: 'zh',
+      locale: language,
       interval: this.getDefaultInterval(),
       overrides: {
         'paneProperties.legendProperties.showLegend': false,

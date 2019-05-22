@@ -38,10 +38,12 @@ class NodeManageTable extends Mixin {
           {
             title: <FormattedMessage id={'Type'} />,
             dataIndex: 'type',
+            render: v => <FormattedMessage id={v} />,
           },
           {
             title: <FormattedMessage id={'Name'} />,
             dataIndex: 'name',
+            render: v => (v === 'ThisMachine' ? <FormattedMessage id={v} /> : v),
           },
           {
             title: <FormattedMessage id={'NodeAddress'} />,
