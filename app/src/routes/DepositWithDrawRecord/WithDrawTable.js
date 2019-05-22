@@ -66,14 +66,15 @@ class WithDrawTable extends Mixin {
             if (statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')}) {value}
+                  ({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')}){' '}
+                  {<FormattedMessage id={value} />}
                 </>
               );
             }
             if (statusValue.toUpperCase() === 'APPLYING') {
               return (
                 <div className={styles.removewithdrawl}>
-                  {value}
+                  <FormattedMessage id={value} />
                   {item.id && (
                     <img
                       src={removewithdrawl}
@@ -105,7 +106,7 @@ class WithDrawTable extends Mixin {
                 </div>
               );
             }
-            return value;
+            return <FormattedMessage id={value} />;
           },
         },
       ],

@@ -151,29 +151,29 @@ export default class Asset extends ModelExtend {
   processTxState = txstate => {
     switch (txstate && txstate.toUpperCase()) {
       case 'NOTAPPLYING':
-        return '未申请';
+        return 'NotApplying';
       case 'APPLYING':
-        return '申请中';
+        return 'Applying';
       case 'SIGNING':
-        return '签名中';
+        return 'Singing';
       case 'BROADCASTING':
-        return '广播中';
+        return 'BroadCasting';
       case 'PROCESSING':
-        return '处理中';
+        return 'Processing';
       case 'CONFIRMING':
-        return '确认中';
+        return 'Confirming';
       case 'CONFIRMED':
-        return '已确认';
+        return 'Confirmed';
       case 'NORMALFINISH':
-        return '完成';
+        return 'NormalFinish';
       case 'ROOTFINISH':
-        return '系统结束';
+        return 'RootFinish';
       case 'NORMALCANCEL':
-        return '取消';
+        return 'NormalCancel';
       case 'ROOTCANCEL':
-        return '系统取消';
+        return 'RootCancel';
       default:
-        return '未知';
+        return 'Unknown';
     }
   };
 

@@ -59,7 +59,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'Status'} />,
-          width: 80,
+          width: 100,
           ellipse: 0,
           dataIndex: 'state',
           render: (value, item = {}) => {
@@ -67,14 +67,14 @@ class WithdrawTable extends Component {
             if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  {value}
+                  <FormattedMessage id={value} />
                   {_.get(item.status, 'confirm') && (
                     <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'total_confirm')}`})</span>
                   )}
                 </>
               );
             }
-            return value;
+            return <FormattedMessage id={value} />;
           },
         },
       ],

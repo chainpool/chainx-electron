@@ -100,40 +100,40 @@ export default class Trust extends ModelExtend {
 
       switch (statusValue.toUpperCase()) {
         case 'NOTAPPLYING':
-          state = '未申请';
+          state = 'NotApplying';
           break;
         case 'APPLYING':
-          state = '申请中';
+          state = 'Applying';
           break;
         case 'SIGNING':
-          state = '签名中';
+          state = 'Singing';
           break;
         case 'BROADCASTING':
-          state = '广播中';
+          state = 'BroadCasting';
           break;
         case 'PROCESSING':
-          state = '处理中';
+          state = 'Processing';
           break;
         case 'CONFIRMING':
-          state = '确认中';
+          state = 'Confirming';
           break;
         case 'CONFIRMED':
-          state = '已确认';
+          state = 'Confirmed';
           break;
         case 'NORMALFINISH':
-          state = '完成';
+          state = 'NormalFinish';
           break;
         case 'ROOTFINISH':
-          state = '系统结束';
+          state = 'RootFinish';
           break;
         case 'NORMALCANCEL':
-          state = '取消';
+          state = 'NormalCancel';
           break;
         case 'ROOTCANCEL':
-          state = '系统取消';
+          state = 'RootCancel';
           break;
         default:
-          state = '未知';
+          state = 'Unknown';
       }
 
       return {
