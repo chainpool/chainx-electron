@@ -13,11 +13,12 @@ class UpdateNodeModal extends Component {
     willParticipating: true,
     about: '',
     aboutErrMsg: '',
+    blockInfo: {},
   };
 
   componentDidMount() {
     const {
-      electionStore: { accountValidator = {} },
+      electionStore: { accountValidator = {}, dispatch },
     } = this.props;
     this.setState({
       address: accountValidator.sessionAddress,
@@ -25,12 +26,25 @@ class UpdateNodeModal extends Component {
       about: accountValidator.about,
       willParticipating: accountValidator.isActive,
     });
+
+    dispatch({
+      type: 'getIntentionsByAccount',
+    }).then(res => {
+      this.setState({
+        blockInfo: res,
+      });
+    });
   }
 
   checkAll = {
     checkAddress: () => {
       const { address } = this.state;
-      const errMsg = Patterns.check('required')(address) || Patterns.check('isChainXAddress')(address);
+      let errMsg = Patterns.check('required')(address);
+      if (!errMsg) {
+        const checkAddress =
+          Patterns.check('isChainXAddress')(address) && Patterns.check('isChainXAccountPubkey')(address);
+        errMsg = checkAddress;
+      }
       this.setState({ addressErrMsg: errMsg });
       return errMsg;
     },
@@ -59,9 +73,18 @@ class UpdateNodeModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, website, websiteErrMsg, willParticipating, about, aboutErrMsg } = this.state;
     const {
-      model: { dispatch, openModal },
+      address,
+      addressErrMsg,
+      website,
+      websiteErrMsg,
+      willParticipating,
+      about,
+      aboutErrMsg,
+      blockInfo = {},
+    } = this.state;
+    const {
+      model: { dispatch, openModal, encodeAddressAccountId },
       electionStore: { accountValidator: { sessionAddress } = {} },
     } = this.props;
 
@@ -92,12 +115,15 @@ class UpdateNodeModal extends Component {
                       { name: () => <FormattedMessage id={'BriefIntroduction'} />, value: about.trim() },
                     ],
                     callback: () => {
+                      const addressTrans = !Patterns.check('isChainXAddress')(address)
+                        ? address
+                        : encodeAddressAccountId(address);
                       return dispatch({
                         type: 'refresh',
                         payload: {
                           url: website,
                           participating: willParticipating,
-                          address: address === sessionAddress ? null : address,
+                          address: addressTrans === sessionAddress ? null : addressTrans,
                           about: about.trim(),
                         },
                       });
@@ -110,6 +136,20 @@ class UpdateNodeModal extends Component {
           </Button>
         }>
         <div className={styles.updateNodeModal}>
+          <ul className={styles.intentionsInfo}>
+            <li>
+              <span>当前出块公钥:</span>
+              {blockInfo.sessionKey}
+            </li>
+            <li>
+              <span>当前出块地址:</span>
+              {blockInfo.sessionKeyAddress}
+            </li>
+            <li>
+              <span>当前奖池地址:</span>
+              {blockInfo.jackpotAddress}
+            </li>
+          </ul>
           <Input.Text
             prefix="ChainX"
             label={<FormattedMessage id={'BlockAuthoringAddress'} />}

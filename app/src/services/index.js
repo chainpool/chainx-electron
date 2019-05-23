@@ -47,6 +47,8 @@ export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdra
 
 export const getIntentions = (...payload) => stake.getIntentions(...payload);
 
+export const getIntentionsByAccount = (...payload) => stake.getIntentionByAccount(...payload);
+
 export const nominate = (...payload) => stake.nominate(...payload);
 
 export const renominate = (...payload) => stake.renominate(...payload);

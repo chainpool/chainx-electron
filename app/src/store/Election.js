@@ -15,6 +15,7 @@ import {
   unnominate,
   voteClaim,
   renominate,
+  getIntentionsByAccount,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -187,6 +188,20 @@ export default class Election extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     if (currentAccount.address) {
       return await getNominationRecords(currentAccount.address);
+    }
+  };
+
+  getIntentionsByAccount = async () => {
+    const currentAccount = this.getCurrentAccount();
+    if (currentAccount.address) {
+      const res = await getIntentionsByAccount(currentAccount.address);
+      if (res) {
+        return {
+          sessionKeyAddress: this.decodeAddressAccountId(res.sessionKey),
+          sessionKey: res.sessionKey,
+          jackpotAddress: this.encodeAddressAccountId(res.jackpotAddress),
+        };
+      }
     }
   };
 

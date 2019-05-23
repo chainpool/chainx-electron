@@ -325,7 +325,7 @@ const zh_en = {
   NoRewardsAfterWithdrawal: ['退选后不会再有奖惩和惩罚', 'There will be no more rewards, penalties after withdrawal'],
   NotSupport: ['暂不支持隔离见证地址', 'Isolated witness address is not supported'],
   SystemDefault: ['系统默认', 'System Default'],
-  UserDefined: ['自定义', 'UserD-defined'],
+  UserDefined: ['自定义', 'User-defined'],
   ThisMachine: ['本机', 'This Machine'],
   MainnetPrepair: ['主网预演', 'Mainnet Prepair'],
   NotApplying: ['未申请', 'Not Applying'],

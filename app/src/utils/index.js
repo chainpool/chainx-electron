@@ -41,6 +41,13 @@ const getBestNode = () => {
 const [bestAddress, otherNodesAddress] = getBestNode();
 export const ChainX = new Chainx(bestAddress, otherNodesAddress);
 
+export const hexPrefix = hex => {
+  if (/^0x/.test(hex)) {
+    return hex;
+  }
+  return `0x${hex}`;
+};
+
 export const convertAddressChecksum = address => {
   try {
     ChainX.account.decodeAddress(address, false);
@@ -138,6 +145,17 @@ export const Patterns = {
   isChainXAddress: (address, errMsg = 'AddressFormatError') => {
     try {
       const result = ChainX.account.isAddressValid(address);
+      if (!result) {
+        return errMsg;
+      }
+      return '';
+    } catch (err) {
+      return errMsg;
+    }
+  },
+  isChainXAccountPubkey: (accountId, errMsg = 'AddressFormatError') => {
+    try {
+      const result = ChainX.account.encodeAddress(hexPrefix(accountId));
       if (!result) {
         return errMsg;
       }
@@ -466,10 +484,3 @@ export const SetFullScreen = Ele => {
 };
 
 export const setNet = net => ChainX.account.setNet(net);
-
-export const hexPrefix = hex => {
-  if (/^0x/.test(hex)) {
-    return hex;
-  }
-  return `0x${hex}`;
-};
