@@ -14,7 +14,7 @@ const checkLogin = func => {
 
 const getBestApi = () => {
   const currentNetWork = localSave.get('currentNetWork') || { value: 'test' };
-  let api;
+  let api = [];
   if (currentNetWork.value === 'test') {
     api = localSave.get('testApi') || [];
   } else if (currentNetWork.value === 'premain') {
