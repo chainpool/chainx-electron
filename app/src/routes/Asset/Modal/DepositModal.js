@@ -73,8 +73,7 @@ class DepositModal extends Mixin {
             </div>
             <Warn>
               <div>
-                使用已绑定地址可直接向公共多签托管地址充值，使用未绑定地址充值无法到账。充值完成后ChainX会在
-                1小时内发放PCX奖励至您的资产。
+                <FormattedMessage id={'BTCBindWWarn'} />
                 <RouterGo
                   isOutSide
                   go={{

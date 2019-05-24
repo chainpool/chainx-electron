@@ -355,6 +355,15 @@ const zh_en = {
     '未获取到当前Api同步状态，无法连接',
     'The current api synchronization status was not obtained and the connection could not be made.',
   ],
+  Wallet: ['钱包', ' wallet'],
+  BTCWarn: [
+    '推荐使用BitX_replace进行首次跨链充值，如果不添加OP_RETURN信息，则充值无法到账。ChainX会在BTC充值交易确认后立即向当前地址发放PCX奖励。',
+    'BitX_replace is highly recommended for the your initial  deposit and it will never succeed without the above information filled in OP_RETURN. ChainX will immedidately issue PCX reward accordingly to the current address accordingly once the BTC deposit transaction is confirmed.',
+  ],
+  BTCBindWWarn: [
+    '使用已绑定地址可直接向公共多签托管地址充值，使用未绑定地址充值无法到账。充值完成后ChainX会在1小时内发放PCX奖励至您的资产。',
+    'Please use the already binded addresses to deposit BTC to the BTC MultiSig address. ChainX will immedidately issue PCX reward accordingly to the current address accordingly once the BTC deposit transaction is confirmed.',
+  ],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于手续费', 'Amount must greater than fee'],

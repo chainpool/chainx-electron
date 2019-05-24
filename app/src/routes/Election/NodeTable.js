@@ -32,7 +32,7 @@ class NodeTable extends Component {
       columns: [
         {
           title: <FormattedMessage id={'Rank'} />,
-          width: 100,
+          width: 110,
           ellipse: 8,
           dataIndex: 'name',
           render: (value, item, index) => {

@@ -99,49 +99,67 @@ class CrossChainBindModal extends Mixin {
         warn: (
           <Warn>
             <div className={styles.hoverImg}>
-              <strong>
-                推荐使用
-                {[
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://bitx.chainx.org/' }}>
-                        BitX
-                      </RouterGo>
-                    ),
-                    style: { left: -100 },
-                    imgWidth: 244,
-                    show: true,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
-                        Trezor
-                      </RouterGo>
-                    ),
-                    style: { left: -160 },
-                    src: trezor,
-                    imgWidth: 352,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
-                        Coinb.in
-                      </RouterGo>
-                    ),
-                    style: { left: -160 },
-                    src: coinbin,
-                    imgWidth: 352,
-                  },
-                ]
-                  .filter(item => item.show)
-                  .map((item, index) => (
-                    <span key={index} className={styles.anchor}>
-                      <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                        {item.content}
-                      </HoverTip>
-                    </span>
-                  ))}
-                钱包进行首次跨链充值，如果不添加OP_RETURN信息，则充值无法到账。ChainX会在BTC充值交易确认后立即向当前地址发放PCX奖励。
+              <span>
+                {
+                  <FormattedMessage id={'BTCWarn'}>
+                    {msg => {
+                      const link = (
+                        <span>
+                          {[
+                            {
+                              content: (
+                                <RouterGo isOutSide go={{ pathname: 'https://bitx.chainx.org/' }}>
+                                  BitX
+                                  <FormattedMessage id={'Wallet'} />
+                                </RouterGo>
+                              ),
+                              style: { left: -100 },
+                              imgWidth: 244,
+                              show: true,
+                            },
+                            {
+                              content: (
+                                <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                                  Trezor
+                                </RouterGo>
+                              ),
+                              style: { left: -160 },
+                              src: trezor,
+                              imgWidth: 352,
+                            },
+                            {
+                              content: (
+                                <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                                  Coinb.in
+                                </RouterGo>
+                              ),
+                              style: { left: -160 },
+                              src: coinbin,
+                              imgWidth: 352,
+                            },
+                          ]
+                            .filter(item => item.show)
+                            .map((item, index) => (
+                              <span key={index} className={styles.anchor}>
+                                <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                                  {item.content}
+                                </HoverTip>
+                              </span>
+                            ))}
+                        </span>
+                      );
+                      const msgs = msg.split('BitX_replace');
+
+                      return (
+                        <span>
+                          {msgs[0]}
+                          <strong>{link}</strong>
+                          {msgs[1]}
+                        </span>
+                      );
+                    }}
+                  </FormattedMessage>
+                }
                 <RouterGo
                   isOutSide
                   go={{
@@ -150,7 +168,7 @@ class CrossChainBindModal extends Mixin {
                   }}>
                   查看充值奖励规则
                 </RouterGo>
-              </strong>
+              </span>
             </div>
           </Warn>
         ),
