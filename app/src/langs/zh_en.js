@@ -126,6 +126,8 @@ const zh_en = {
   Time: ['时间', 'Date'],
   predict: ['预估', 'predict'],
   BlockAuthoringAddress: ['出块地址', 'Block Authoring Address'],
+  BlockAuthoringPubkey: ['出块公钥', 'Block Authoring Pubkey'],
+  BlockAuthoringAddressPubkey: ['出块地址/出块公钥', 'Block Authoring Address/Pubkey'],
   OrderNumber: ['委托编号', 'Number'],
   RevocationNumber: ['解冻编号', 'Revocation Number'],
   TradingPair: ['交易对', 'Pair'],

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormattedMessage, Input, Modal } from '../../../components';
+import { Button, FormattedMessage, Icon, Input, Modal, RouterGo } from '../../../components';
 import { Inject, Patterns } from '../../../utils';
 import * as styles from './UpdateNodeModal.less';
 
@@ -103,7 +103,15 @@ class UpdateNodeModal extends Component {
                     description: [
                       { name: 'operation', value: () => <FormattedMessage id={'UpdateNode'} /> },
                       {
-                        name: () => <FormattedMessage id={'BlockAuthoringAddress'} />,
+                        name: () => (
+                          <FormattedMessage
+                            id={
+                              !Patterns.check('isChainXAddress')(address)
+                                ? 'BlockAuthoringAddress'
+                                : 'BlockAuthoringPubkey'
+                            }
+                          />
+                        ),
                         value: address,
                         toastShow: false,
                       },
@@ -152,12 +160,24 @@ class UpdateNodeModal extends Component {
           </ul>
           <Input.Text
             prefix="ChainX"
-            label={<FormattedMessage id={'BlockAuthoringAddress'} />}
+            label={
+              <>
+                <FormattedMessage id={'BlockAuthoringAddressPubkey'} />
+              </>
+            }
             value={address}
             errMsg={addressErrMsg}
             onChange={value => this.setState({ address: value })}
-            onBlur={checkAll.checkAddress}
-          />
+            onBlur={checkAll.checkAddress}>
+            <Button type="blank">
+              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
+                <Icon name="icon-jiedianbushuwendang" />
+                <span className={styles.document}>
+                  <FormattedMessage id={'SeeNodeDeployDocument'} />
+                </span>
+              </RouterGo>
+            </Button>
+          </Input.Text>
           <FormattedMessage id={'CharacterLength'} values={{ length: '4-24' }}>
             {msg => (
               <Input.Text

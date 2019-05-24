@@ -100,7 +100,7 @@ class CrossChainBindModal extends Mixin {
           <Warn>
             <div className={styles.hoverImg}>
               <strong>
-                目前支持OP_RETURN的钱包有:
+                推荐使用
                 {[
                   {
                     content: (
@@ -110,6 +110,7 @@ class CrossChainBindModal extends Mixin {
                     ),
                     style: { left: -100 },
                     imgWidth: 244,
+                    show: true,
                   },
                   {
                     content: (
@@ -131,15 +132,16 @@ class CrossChainBindModal extends Mixin {
                     src: coinbin,
                     imgWidth: 352,
                   },
-                ].map((item, index) => (
-                  <span key={index} className={styles.anchor}>
-                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                      {item.content}
-                    </HoverTip>
-                    {index === 2 ? null : '、'}
-                  </span>
-                ))}
-                等，如果不添加OP_RETURN信息，则充值无法到账。充值完成后ChainX会在 1小时内发放PCX奖励至您的资产。
+                ]
+                  .filter(item => item.show)
+                  .map((item, index) => (
+                    <span key={index} className={styles.anchor}>
+                      <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                        {item.content}
+                      </HoverTip>
+                    </span>
+                  ))}
+                钱包进行首次跨链充值，如果不添加OP_RETURN信息，则充值无法到账。ChainX会在BTC充值交易确认后立即向当前地址发放PCX奖励。
                 <RouterGo
                   isOutSide
                   go={{
