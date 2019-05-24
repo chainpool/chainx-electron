@@ -69,7 +69,7 @@ class WithdrawTable extends Component {
                 <>
                   <FormattedMessage id={value} />
                   {_.get(item.status, 'confirm') && (
-                    <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'total_confirm')}`})</span>
+                    <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'totalConfirm')}`})</span>
                   )}
                 </>
               );

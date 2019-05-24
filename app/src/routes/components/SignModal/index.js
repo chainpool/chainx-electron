@@ -1,7 +1,6 @@
 import React from 'react';
 import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
 import { Modal, Button, Input, Mixin, Slider, Toast, FormattedMessage } from '../../../components';
-import { PlaceHolder } from '../../../constants';
 
 import * as styles from './index.less';
 

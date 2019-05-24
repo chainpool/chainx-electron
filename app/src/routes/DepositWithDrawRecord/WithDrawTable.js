@@ -66,8 +66,7 @@ class WithDrawTable extends Mixin {
             if (statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'total_confirm')}){' '}
-                  {<FormattedMessage id={value} />}
+                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
                 </>
               );
             }
