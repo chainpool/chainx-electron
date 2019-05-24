@@ -445,11 +445,12 @@ export default class Trust extends ModelExtend {
       url = url.split('@')[1];
     }
     return fetchFromHttp({
+      // url: `/getTrustNodeStatus?url=http://${url}`,
       url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
       methodAlias: 'listunspent',
       method: 'POST',
-      timeOut: 3500,
-      params: [0, 99999999, [trusteeAddress]],
+      timeOut: Authorization ? 6500 : 3500,
+      params: [0, 9999, [trusteeAddress]],
       header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
     })
       .then(res => {
