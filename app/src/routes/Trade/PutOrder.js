@@ -32,7 +32,7 @@ class PutOrder extends SwitchPair {
         model: { setPrecision },
       } = this.props;
       if (amount !== '' && price) {
-        const errMsg = Patterns.check('smaller')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
+        const errMsg = Patterns.check('smallerOrEqual')(setPrecision(1, this.getMaxTradePrecision()), price * amount);
         const err = errMsg ? <FormattedMessage id={'TradingVolumeTooSmall'} /> : '';
         this.changeBS(action, { tradeErrMsg: err });
         return err;
