@@ -27,6 +27,8 @@ const zh_en = {
     '不要将您的私钥存储在您的电脑上，或者网上某处。任何能够访问您备份私钥的人就能取用您的资金。',
     "Don't store your private key on your computer or somewhere online. Anyone who has access to your backup private key can access your funds",
   ],
+  DownloadWallet: ['下载钱包', 'Download Wallet'],
+  SetupAccount: ['请先设置账户', 'Setup Account'],
 
   Complete: ['完成', 'Complete'],
   Asset: ['资产', 'Assets'],

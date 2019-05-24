@@ -364,7 +364,9 @@ class PutOrder extends SwitchPair {
           </div>
           {!isLogin() ? (
             <div className={styles.download}>
-              <span>请先设置账户</span>
+              <span>
+                <FormattedMessage id={'SetupAccount'} />
+              </span>
               <ButtonGroup>
                 <Button
                   onClick={() => {
@@ -372,7 +374,7 @@ class PutOrder extends SwitchPair {
                       name: 'ImportAccountModal',
                     });
                   }}>
-                  导入账户
+                  <FormattedMessage id={'ImportAccount'} />
                 </Button>
                 <Button
                   onClick={() => {
@@ -380,9 +382,11 @@ class PutOrder extends SwitchPair {
                       name: 'CreateAccountModal',
                     });
                   }}>
-                  新增账户
+                  <FormattedMessage id={'NewAccount'} />
                 </Button>
-                <Button type="warn">下载钱包</Button>
+                <Button type="warn">
+                  <FormattedMessage id={'DownloadWallet'} />
+                </Button>
               </ButtonGroup>
             </div>
           ) : null}
