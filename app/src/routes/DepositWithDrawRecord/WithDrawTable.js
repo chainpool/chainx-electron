@@ -74,7 +74,7 @@ class WithDrawTable extends Mixin {
               return (
                 <div className={styles.removewithdrawl}>
                   <FormattedMessage id={value} />
-                  {item.id && (
+                  {item.id !== undefined ? (
                     <img
                       src={removewithdrawl}
                       alt={'removewithdrawl'}
@@ -101,7 +101,7 @@ class WithDrawTable extends Mixin {
                         });
                       }}
                     />
-                  )}
+                  ) : null}
                 </div>
               );
             }

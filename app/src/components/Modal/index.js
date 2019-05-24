@@ -27,6 +27,7 @@ class Modal extends Component {
       style = {},
       isOverflow = false,
       className,
+      scroll = true,
     } = this.props;
 
     return (
@@ -66,7 +67,7 @@ class Modal extends Component {
               <i className="iconfont icon-icon-guanbi" />
             </span>
           </div>
-          <div className={styles.content}>
+          <div className={classNames(scroll ? styles.content : null)}>
             {children}
             {button ? <div className={classNames(styles.button, 'button')}>{button}</div> : null}
           </div>

@@ -14,6 +14,7 @@ class WithdrawModal extends Mixin {
     amountErrMsg: '',
     remark: '',
     fee: '',
+    minValue: '',
   };
 
   startInit = () => {
@@ -29,7 +30,8 @@ class WithdrawModal extends Mixin {
     }).then(res => {
       if (res) {
         this.changeState({
-          fee: res.minimalWithdrawal,
+          fee: res.fee,
+          minValue: res.minimalWithdrawal,
         });
       }
     });
@@ -68,11 +70,11 @@ class WithdrawModal extends Mixin {
       const {
         globalStore: { modal: { data: { freeShow, token } = {} } = {} },
       } = this.props;
-      const { amount, fee } = this.state;
+      const { amount, minValue } = this.state;
       const errMsg =
         Patterns.check('required')(amount) ||
-        Patterns.check('smaller')(
-          Number(this.props.model.setPrecision(fee, token)),
+        Patterns.check('smallerOrEqual')(
+          Number(this.props.model.setPrecision(minValue, token)),
           amount,
           <FormattedMessage id={'WithdrawAmountMustOverFee'} />
         ) ||
@@ -90,7 +92,7 @@ class WithdrawModal extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { address, addressErrMsg, amount, amountErrMsg, remark, fee } = this.state;
+    const { address, addressErrMsg, amount, amountErrMsg, remark, fee, minValue } = this.state;
     const {
       model: { openModal, dispatch, getPrecision, setPrecision },
       globalStore: { modal: { data: { token, freeShow, chain } = {} } = {} },
@@ -107,6 +109,7 @@ class WithdrawModal extends Mixin {
       });
 
     const feeShow = setPrecision(fee, token);
+    const minValueShow = setPrecision(minValue, token);
     const factTransferValue = formatNumber.toFixed(Number(amount) - Number(feeShow), getPrecision(token));
 
     return (
@@ -174,8 +177,8 @@ class WithdrawModal extends Mixin {
                   <div className={styles.bitcoinfee}>
                     <FormattedMessage id={'WithdrawAmount'} />
                     <span>
-                      (<FormattedMessage id={'GetWithdrawFee'} />
-                      {setBlankSpace(feeShow, token)})
+                      (<FormattedMessage id={'GetWithdrawFee'} /> {setBlankSpace(feeShow, token)},
+                      <FormattedMessage id={'MinWithdrawValue'} /> {setBlankSpace(minValueShow, token)})
                     </span>
                   </div>
                 }

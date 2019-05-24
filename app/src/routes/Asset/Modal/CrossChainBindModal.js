@@ -416,6 +416,7 @@ class CrossChainBindModal extends Mixin {
 
     return (
       <Modal
+        scroll={step !== 0}
         title={
           <>
             {token === 'SDOT' ? (
