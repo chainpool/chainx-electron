@@ -133,6 +133,8 @@ export default class Asset extends ModelExtend {
 
   reload = () => {
     this.getAccountAssets();
+    this.getWithdrawalListByAccount();
+    this.getDepositRecords();
   };
 
   getAccountBTCAddresses = async () => {
@@ -337,7 +339,7 @@ export default class Asset extends ModelExtend {
     const extrinsic = withdraw(token, Number(amount), dest, remark);
     return {
       extrinsic,
-      success: this.reload(),
+      success: () => this.reload(),
     };
   };
 
@@ -350,7 +352,7 @@ export default class Asset extends ModelExtend {
     const extrinsic = revokeWithdraw(id);
     return {
       extrinsic,
-      success: this.reload(),
+      success: () => this.reload(),
     };
   };
 
