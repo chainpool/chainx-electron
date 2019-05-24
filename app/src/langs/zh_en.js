@@ -331,7 +331,7 @@ const zh_en = {
   SystemDefault: ['系统默认', 'System Default'],
   UserDefined: ['自定义', 'User-defined'],
   ThisMachine: ['本机', 'This Machine'],
-  MainnetPrepair: ['主网预演', 'Mainnet Prepair'],
+  MainnetPrepair: ['主网', 'Mainnet'],
   NotApplying: ['未申请', 'Not Applying'],
   Applying: ['申请中', 'Applying'],
   Singing: ['签名中', 'Singing'],
