@@ -199,7 +199,7 @@ export default class Election extends ModelExtend {
         return {
           sessionKeyAddress: this.decodeAddressAccountId(res.sessionKey),
           sessionKey: res.sessionKey,
-          jackpotAddress: this.encodeAddressAccountId(res.jackpotAddress),
+          jackpotAddress: this.encodeAddressAccountId(res.jackpotAddress || res.jackpotAccount),
         };
       }
     }
