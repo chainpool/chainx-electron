@@ -58,6 +58,17 @@ class Header extends Component {
           <div className={styles.right}>
             <div>
               <ul>
+                <li>
+                  <RouterGo
+                    isOutSide
+                    go={{ pathname: 'https://chainx.org/help' }}
+                    className={pathname === PATH.tradeRecord ? styles.active : null}>
+                    <Icon name="icon-jieshishuoming" />
+                    <span style={{ marginLeft: 9 }} className={styles.help}>
+                      <FormattedMessage id={'Help'} />
+                    </span>
+                  </RouterGo>
+                </li>
                 <AuthorityComponent>
                   <li>
                     <RouterGo
