@@ -102,6 +102,7 @@ class AddAddressModal extends Component {
             right=""
           />
           <Input.Text
+            errMsgIsOutside
             label={<FormattedMessage id={'AddAddress'} />}
             value={address}
             errMsg={addressErrMsg}
