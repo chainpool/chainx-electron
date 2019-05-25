@@ -361,7 +361,7 @@ const zh_en = {
   ],
   Wallet: ['钱包', ' wallet'],
   BTCWarn: [
-    '目前只支持使用BitX_replace进行跨链充值，如果不添加OP_RETURN信息，则充值无法到账，注意使用imtoken发送比特币的memo不是OP_RETURN，会导致充值失败暂时无法退回。ChainX会在BTC充值交易确认后立即向当前地址发放PCX奖励。',
+    '目前只支持使用BitX_replace进行跨链充值，如果不添加OP_RETURN信息，则充值无法到账，BitX_replace注意使用imtoken发送比特币的memo不是OP_RETURN，会导致充值失败暂时无法退回。BitX_replace ChainX会在BTC充值交易确认后立即向当前地址发放PCX奖励。',
     "BitX_replace is the only tool for the your initial deposit and it will never succeed without the above information filled in OP_RETURN. BitX_replace WARN：Can't use imtoken to deposit BTC, due to memo not OP_RETURN. BitX_replace ChainX will immedidately issue PCX reward accordingly to the current address accordingly once the BTC deposit transaction is confirmed.",
   ],
   BTCBindWWarn: [
