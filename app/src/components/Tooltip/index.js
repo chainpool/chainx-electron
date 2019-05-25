@@ -21,11 +21,22 @@ export default class Tooltip extends PureComponent {
       className,
     } = this.props;
 
+    function strLength(str) {
+      if (!_.isString(str)) return str;
+      if (str === null || str === undefined) return null;
+      let intLength = 0;
+      for (let i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) < 0 || str.charCodeAt(i) > 128) intLength = intLength + 2;
+        else intLength = intLength + 1;
+      }
+      return intLength;
+    }
+
     function fixedLengthFormatString(str, num) {
       if (!_.isString(str)) return str;
-      if (str == null || str == undefined) return null;
+      if (str === null || str === undefined) return null;
       if (!/^[0-9]*[1-9][0-9]*$/.test(num)) return null;
-      const array = new Array();
+      const array = [];
       const len = str.length;
       for (let i = 0; i < len / num; i++) {
         if ((i + 1) * num > len) {
@@ -37,7 +48,7 @@ export default class Tooltip extends PureComponent {
       return array;
     }
 
-    const multiTip = fixedLengthFormatString(tip, 50);
+    const multiTip = fixedLengthFormatString(tip, 48);
 
     return (
       <>

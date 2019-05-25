@@ -123,6 +123,7 @@ class InputSelect extends React.Component {
       placeholder = <FormattedMessage id={'PleaseSelect'} />,
       allowCreate = true,
       isSearchable = true,
+      maxHeight = 150,
     } = this.props;
     const errMsg = errMsgIsOutside ? this.props.errMsg : this.state.errMsg;
     const Ele = allowCreate ? CreatableSelect : Select;
@@ -162,7 +163,7 @@ class InputSelect extends React.Component {
                   display: 'flex',
                 }),
                 menuList: () => ({
-                  maxHeight: 150,
+                  maxHeight,
                   overflowY: 'auto',
                 }),
               }}

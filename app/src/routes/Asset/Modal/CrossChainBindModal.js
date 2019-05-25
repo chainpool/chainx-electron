@@ -260,7 +260,7 @@ class CrossChainBindModal extends Mixin {
                 },
                 {
                   content: (
-                    <RouterGo isOutSide go={{ pathname: 'coinomi' }}>
+                    <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
                       coinomi
                     </RouterGo>
                   ),
@@ -432,6 +432,7 @@ class CrossChainBindModal extends Mixin {
           {step === 0 ? (
             <div>
               <Input.Select
+                maxHeight={300}
                 allowCreate={false}
                 value={recommendChannelSelect}
                 placeholder={<FormattedMessage id={'RecommendedChannelNode'} />}

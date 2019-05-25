@@ -147,6 +147,18 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
+              name: 'hashquark',
+              isSystem: true,
+              address: 'wss://chainx.hashquark.io',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'buildlinks',
+              isSystem: true,
+              address: 'wss://chainx.buildlinks.org',
+            },
+            {
+              type: 'SystemDefault',
               name: 'ThisMachine',
               address: 'ws://localhost:8087',
               isSystem: true,
@@ -206,6 +218,18 @@ export default class Configure extends ModelExtend {
               name: 'w2',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'hashquark',
+              isSystem: true,
+              address: 'wss://chainx.hashquark.io',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'buildlinks',
+              isSystem: true,
+              address: 'wss://chainx.buildlinks.org',
             },
             {
               type: 'SystemDefault',

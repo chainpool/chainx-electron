@@ -21,7 +21,7 @@ class UpdateNodeModal extends Component {
       electionStore: { accountValidator = {}, dispatch },
     } = this.props;
     this.setState({
-      address: accountValidator.sessionAddress,
+      address: '', //accountValidator.sessionAddress,
       website: accountValidator.url,
       about: accountValidator.about,
       willParticipating: accountValidator.isActive,

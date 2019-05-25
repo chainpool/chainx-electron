@@ -197,9 +197,9 @@ export default class Election extends ModelExtend {
       const res = await getIntentionsByAccount(currentAccount.address);
       if (res) {
         return {
-          sessionKeyAddress: this.decodeAddressAccountId(res.sessionKey),
+          sessionKeyAddress: this.encodeAddressAccountId(res.sessionKey),
           sessionKey: res.sessionKey,
-          jackpotAddress: this.encodeAddressAccountId(res.jackpotAddress || res.jackpotAccount),
+          jackpotAddress: this.encodeAddressAccountId(res.jackpotAccount),
         };
       }
     }
