@@ -384,9 +384,9 @@ class PutOrder extends SwitchPair {
                   }}>
                   <FormattedMessage id={'NewAccount'} />
                 </Button>
-                <Button type="warn">
-                  <FormattedMessage id={'DownloadWallet'} />
-                </Button>
+                {/*<Button type="warn">*/}
+                {/*<FormattedMessage id={'DownloadWallet'} />*/}
+                {/*</Button>*/}
               </ButtonGroup>
             </div>
           ) : null}
