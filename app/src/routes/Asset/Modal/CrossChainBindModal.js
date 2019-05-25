@@ -108,7 +108,7 @@ class CrossChainBindModal extends Mixin {
                           {[
                             {
                               content: (
-                                <RouterGo isOutSide go={{ pathname: 'https://bitx.chainx.org/' }}>
+                                <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
                                   BitX
                                   <FormattedMessage id={'Wallet'} />
                                 </RouterGo>
