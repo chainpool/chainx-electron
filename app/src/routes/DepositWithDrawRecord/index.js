@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, Tabs, FormattedMessage } from '../../components';
+import { Mixin, Tabs, FormattedMessage, RouterGo } from '../../components';
 import { BreadCrumb } from '../components';
 import DepositTable from './DepositTable';
 import WithDrawTable from './WithDrawTable';
@@ -12,6 +12,14 @@ class DepositWithDrawRecord extends Mixin {
     return (
       <div className={styles.depositWithDrawRecord}>
         <BreadCrumb />
+        <div className={styles.notgetdeposit}>
+          <strong>
+            如果你的充值未到账，可能是OP_RETURN格式错误，需要重新绑定以领取，
+            <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
+              点击查看充值未认领列表
+            </RouterGo>
+          </strong>
+        </div>
         <div className={styles.tabLine}>
           <Tabs tabs={[<FormattedMessage id={'DepositRecords'} />, <FormattedMessage id={'WithdrawalRecords'} />]}>
             {activeIndex => (
