@@ -88,10 +88,15 @@ class CrossChainBindModal extends Mixin {
     const show = {
       BTC: {
         desc1: (
-          <span>
-            用户需使用<strong>支持OP_RETURN</strong>的BTC钱包向<strong>公共多签托管</strong>地址进行充值，并且在
-            <strong>OP_RETURN</strong>中输入下方信息以完成与ChainX的绑定：
-          </span>
+          <>
+            <div className={styles.isolatedWitness}>
+              <strong>当前不支持隔离见证地址的充值</strong>
+            </div>
+            <span>
+              用户需使用<strong>支持OP_RETURN</strong>的BTC钱包向<strong>公共多签托管</strong>地址进行充值，并且在
+              <strong>OP_RETURN</strong>中输入下方信息以完成与ChainX的绑定：
+            </span>
+          </>
         ),
         value1: chainxAddressHex,
         desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
@@ -155,6 +160,8 @@ class CrossChainBindModal extends Mixin {
                           {msgs[0]}
                           <strong>{link}</strong>
                           {msgs[1]}
+                          <strong>{msgs[2]}</strong>
+                          {msgs[3]}
                         </span>
                       );
                     }}
