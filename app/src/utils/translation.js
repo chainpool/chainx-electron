@@ -122,7 +122,7 @@ const translation = ({
     return result.reduce((sum, next) => {
       return sum.concat({
         label: next.label,
-        value: next.value ? next.value : 'NoThing',
+        value: next.value !== undefined ? next.value : 'NoThing',
       });
     }, []);
   };

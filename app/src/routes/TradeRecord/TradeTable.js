@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Table, Mixin, RouterGo, FormattedMessage } from '../../components';
-import { observer, toJS } from '../../utils';
+import { observer } from '../../utils';
 
 @observer
 class TradeTable extends Mixin {
@@ -48,7 +48,8 @@ class TradeTable extends Mixin {
               <ul className={styles.info}>
                 {(v || []).map((item, index) => (
                   <li key={index}>
-                    {<FormattedMessage id={item.label} />}:{item.value}
+                    {<FormattedMessage id={item.label} />}:
+                    {item.value === 'NoThing' ? <FormattedMessage id={'NoThing'} /> : item.value}
                     {index === v.length - 1 ? '' : ','}
                   </li>
                 ))}

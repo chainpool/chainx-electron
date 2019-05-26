@@ -219,14 +219,16 @@ class Trust extends Mixin {
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
             <ButtonGroup>
-              <Button
-                {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}
-                onClick={() => {
-                  openModal({ name: 'WithdrawConstructModal' });
-                }}>
-                <Icon name="icon-goujiantixian" />
-                <FormattedMessage id={'BuildMultiSigWithdrawal'} />
-              </Button>
+              {isTrustee && (
+                <Button
+                  {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}
+                  onClick={() => {
+                    openModal({ name: 'WithdrawConstructModal' });
+                  }}>
+                  <Icon name="icon-goujiantixian" />
+                  <FormattedMessage id={'BuildMultiSigWithdrawal'} />
+                </Button>
+              )}
             </ButtonGroup>
           </TableTitle>
           <WithdrawTable {...props} />
