@@ -407,7 +407,6 @@ class CrossChainBindModal extends Mixin {
               {btcAddresses.map((address, index) => {
                 return (
                   <li key={index}>
-                    <span>Bitcoin:</span>
                     <div>{address}</div>
                   </li>
                 );
