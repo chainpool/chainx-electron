@@ -174,7 +174,7 @@ const zh_en = {
   PublicMultiSigTrusteeAddress: ['公共多签托管地址', 'Public MultiSig Trustee Address'],
   SigTrusteeID: ['多签Id', 'Multi-sign Id'],
   CopyMessage: ['复制信息', 'Copy'],
-  RecommendedChannelNode: ['输入推荐渠道的节点名称 (选填)', 'Recommended Channel Node (optional)'],
+  RecommendedChannelNode: ['输入推荐渠道的节点名称 (选填)', 'Referrer’s node name (optional)'],
   SureWantToVote: ['确定要投票吗?', 'Are you sure you want to vote?'],
   NoRevenueIfDelected: [
     '当前节点为退选状态，您的投票在退选期间不会获得任何收益',
