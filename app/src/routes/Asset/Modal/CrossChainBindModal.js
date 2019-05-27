@@ -331,7 +331,9 @@ class CrossChainBindModal extends Mixin {
     const BTC = (
       <>
         <div className={styles.desc}>{findOne.desc1}</div>
-        <div className={classNames(styles.grayblock, styles.addressall)}>
+        <div
+          style={{ height: (findOne.value1.length / 60) * 65 }}
+          className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNcopy}>
               <span id="copy">{findOne.value1}</span>
@@ -394,7 +396,9 @@ class CrossChainBindModal extends Mixin {
           </span>
           {findOne.desc1}
         </div>
-        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
+        <div
+          style={{ height: (findOne.value1.length / 60) * 75 }}
+          className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNcopy}>
               <div>
