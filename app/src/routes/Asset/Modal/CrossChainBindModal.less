@@ -69,14 +69,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 68px;
     background: #f2f3f4;
     border: 1px solid #dce0e2;
     margin-bottom: 24px;
-    padding:0 16px;
+
     >div{
+      padding:16px;
       line-height: 20px;
-      //background: red;
     }
 
   }
@@ -98,7 +97,11 @@
     }
     &.addressall {
       &.sdot{
-        height:130px;
+        &.en{
+          min-height: 135px;
+        }
+        min-height: 105px;
+        padding:8px 16px;
         .OP_RETURNcopy{
           .dataerror{
             margin-top: 2px;

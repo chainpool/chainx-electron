@@ -368,6 +368,27 @@ const zh_en = {
     '使用已绑定地址可直接向公共多签托管地址充值，使用未绑定地址充值无法到账。充值完成后ChainX会在1小时内发放PCX奖励至您的资产。',
     'Please use the already binded addresses to deposit BTC to the BTC MultiSig address. ChainX will immedidately issue PCX reward accordingly to the current address accordingly once the BTC deposit transaction is confirmed.',
   ],
+  SDOTICO: [
+    '参与了Polkadot第一期ICO的用户SDOT_replace，可以将锁定的DOT 1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。',
+    'Anyone who participated in the Polkadot ICO in 2017 SDOT_replace can map the untransferrable DOT to SDOT on ChainX in 1:1, enjoying the benefits of deposits mining in ChainX permanently.',
+  ],
+  SDOTStepFirst: [
+    '由持有DOT的地址向任意地址 (建议向自己) 发起任意金额 (建议为0) 的转账交易，并在SDOT_replace Data SDOT_replace中输入下方信息:',
+    ' you need to send a transaction from the address with DOT token to any ETH address(yourself is recommended) with any value(0 is recommended), filling the following information in the SDOT_replace Data SDOT_replace field:',
+  ],
+  ViewETHList: ['点击查看参与用户地址列表', 'View the list of all qualified ETH addresses.'],
+  FistStep: ['第一步', 'Firstly'],
+  SecondStep: ['第二步', 'Secondly'],
+  InformationToFilled: ['Data中需要输入的信息：', 'Information to be filled in the Data field:'],
+  IncorrectDataFormat: [
+    '如果出现 SDOT_replace “Data格式不正确” SDOT_replace 的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
+    'Try appending `0x` at the beginning of the message if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',
+  ],
+  SDOTMapToChainXAddress: ['本次SDOT跨链映射的ChainX地址(16进制)', 'Your SDOT mapped ChainX address(hex)'],
+  SDOTSent: [
+    '交易打包成功后，在下方输入 SDOT_replace 交易ID (Txid/TxHash)。SDOT_replace 待交易签名验证无误，即可完成映射, SDOT会立即发放。',
+    'copy and paste the SDOT_replace transaction ID(Txid/TxHash) SDOT_replace you sent in the first step bellow. SDOT will be issued to your mapped ChainX address immediately once the transaction signature is validated successfully.',
+  ],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于等于最小提现额', 'Amount must greater or equal than min value'],

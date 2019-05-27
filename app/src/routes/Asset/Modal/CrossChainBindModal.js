@@ -73,6 +73,7 @@ class CrossChainBindModal extends Mixin {
       assetStore: { btcTrusteeAddress, dispatch },
       electionStore: { originIntentions = [] },
       globalStore: {
+        language,
         modal: {
           data: { token },
         },
@@ -183,8 +184,18 @@ class CrossChainBindModal extends Mixin {
       SDOT: {
         desc1: (
           <span>
-            由持有DOT的地址向任意地址 (建议向自己) 发起任意金额 (建议为0) 的转账交易，并在<strong>Data</strong>
-            中输入下方信息：
+            <FormattedMessage id={'SDOTStepFirst'}>
+              {msg => {
+                const msgs = msg.split('SDOT_replace');
+                return (
+                  <span>
+                    {msgs[0]}
+                    <strong>{msgs[1]}</strong>
+                    {msgs[2]}
+                  </span>
+                );
+              }}
+            </FormattedMessage>
           </span>
         ),
         value1: `${chainxAddressHex}`,
@@ -329,37 +340,59 @@ class CrossChainBindModal extends Mixin {
       <>
         <div className={styles.grayblock1}>
           <div>
-            <strong>参与了Polkadot第一期ICO的用户</strong>，可以将锁定的DOT
-            1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。{' '}
+            <FormattedMessage id={'SDOTICO'}>
+              {msg => {
+                const msgs = msg.split('SDOT_replace');
+                return (
+                  <span>
+                    <strong>{msgs[0]}</strong>
+                    {msgs[1]}
+                  </span>
+                );
+              }}
+            </FormattedMessage>
             <RouterGo
               style={{ fontWeight: 'bold' }}
               isOutSide
               go={{
                 pathname: 'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
               }}>
-              点击查看参与用户地址列表
+              <FormattedMessage id={'ViewETHList'} />
             </RouterGo>
           </div>
         </div>
         <div className={styles.desc}>
-          <span className={styles.step}>第一步</span>
+          <span className={styles.step}>
+            <FormattedMessage id={'FistStep'} />
+          </span>
           {findOne.desc1}
         </div>
-        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot)}>
+        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNcopy}>
               <div>
                 <span id="copy">{findOne.value1}</span>
-                <HoverTip tip="本次SDOT跨链映射的ChainX地址(16进制)">
+                <HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>
                   <Icon name={'icon-jieshishuoming'} />
                 </HoverTip>
                 <div className={styles.dataerror}>
-                  如果出现<span>“Data格式不正确”</span>的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。
+                  <FormattedMessage id={'IncorrectDataFormat'}>
+                    {msg => {
+                      const msgs = msg.split('SDOT_replace');
+                      return (
+                        <>
+                          {msgs[0]}
+                          <span>{msgs[1]}</span>
+                          {msgs[2]}
+                        </>
+                      );
+                    }}
+                  </FormattedMessage>
                 </div>
               </div>
             </div>
             <div className={styles.OP_RETURNtitle}>
-              Data中需要输入的信息：
+              <FormattedMessage id={'InformationToFilled'} />
               <Clipboard
                 id="copy"
                 outInner={
@@ -372,9 +405,21 @@ class CrossChainBindModal extends Mixin {
           </div>
         </div>
         <div className={styles.desc}>
-          <span className={styles.step}>第二步</span>
-          交易打包成功后，在下方输入<strong>交易ID (Txid/TxHash)</strong>。待交易签名验证无误，即可完成映射,
-          SDOT会立即发放。
+          <span className={styles.step}>
+            <FormattedMessage id={'SecondStep'} />
+          </span>
+          <FormattedMessage id={'SDOTSent'}>
+            {msg => {
+              const msgs = msg.split('SDOT_replace');
+              return (
+                <span>
+                  {msgs[0]}
+                  <strong>{msgs[1]}</strong>
+                  {msgs[2]}
+                </span>
+              );
+            }}
+          </FormattedMessage>
         </div>
         <div className={styles.tradeid}>
           <Input.Text
