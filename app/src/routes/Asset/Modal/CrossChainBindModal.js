@@ -204,97 +204,106 @@ class CrossChainBindModal extends Mixin {
         warn: (
           <Warn>
             <div className={styles.hoverImg}>
-              目前支持Data的钱包有:{' '}
-              {[
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
-                      ImToken
-                    </RouterGo>
-                  ),
-                  style: { left: -100 },
-                  src: imtoken,
-                  imgWidth: 244,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
-                      Parity
-                    </RouterGo>
-                  ),
-                  style: { left: -160 },
-                  src: parity,
-                  imgWidth: 352,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
-                      MyEtherWallet
-                    </RouterGo>
-                  ),
-                  style: { left: -120 },
-                  src: myEtherWallet,
-                  imgWidth: 352,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
-                      Jaxx
-                    </RouterGo>
-                  ),
-                  style: { left: -160 },
-                  src: Jaxx,
-                  imgWidth: 352,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
-                      MyCrypto
-                    </RouterGo>
-                  ),
-                  style: { left: -160 },
-                  src: myCrypto,
-                  imgWidth: 352,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
-                      Trust
-                    </RouterGo>
-                  ),
-                  style: { left: -160 },
-                  src: trust,
-                  imgWidth: 352,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
-                      bitpie
-                    </RouterGo>
-                  ),
-                  style: { left: -100 },
-                  src: bitpie,
-                  imgWidth: 244,
-                },
-                {
-                  content: (
-                    <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
-                      coinomi
-                    </RouterGo>
-                  ),
-                  style: { left: -160 },
-                  src: coinomi,
-                  imgWidth: 352,
-                },
-              ].map((item, index) => (
-                <span key={index} className={styles.anchor}>
-                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                    {item.content}
-                  </HoverTip>
-                  {index === 7 ? null : '、'}
-                </span>
-              ))}{' '}
-              等。
+              <FormattedMessage id={'WalletCurrentlySupport'}>
+                {msg => {
+                  const links = [
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
+                          ImToken
+                        </RouterGo>
+                      ),
+                      style: { left: -100 },
+                      src: imtoken,
+                      imgWidth: 244,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
+                          Parity
+                        </RouterGo>
+                      ),
+                      style: { left: -160 },
+                      src: parity,
+                      imgWidth: 352,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
+                          MyEtherWallet
+                        </RouterGo>
+                      ),
+                      style: { left: -120 },
+                      src: myEtherWallet,
+                      imgWidth: 352,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
+                          Jaxx
+                        </RouterGo>
+                      ),
+                      style: { left: -160 },
+                      src: Jaxx,
+                      imgWidth: 352,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
+                          MyCrypto
+                        </RouterGo>
+                      ),
+                      style: { left: -160 },
+                      src: myCrypto,
+                      imgWidth: 352,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
+                          Trust
+                        </RouterGo>
+                      ),
+                      style: { left: -160 },
+                      src: trust,
+                      imgWidth: 352,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                          bitpie
+                        </RouterGo>
+                      ),
+                      style: { left: -100 },
+                      src: bitpie,
+                      imgWidth: 244,
+                    },
+                    {
+                      content: (
+                        <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
+                          coinomi
+                        </RouterGo>
+                      ),
+                      style: { left: -160 },
+                      src: coinomi,
+                      imgWidth: 352,
+                    },
+                  ].map((item, index) => (
+                    <span key={index} className={styles.anchor}>
+                      <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                        {item.content}
+                      </HoverTip>
+                      {index === 7 ? null : '、'}
+                    </span>
+                  ));
+                  const msgs = msg.split('SDOT_replace');
+                  return (
+                    <>
+                      {msgs[0]}
+                      {links} {msgs[1]}
+                    </>
+                  );
+                }}
+              </FormattedMessage>
             </div>
           </Warn>
         ),

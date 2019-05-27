@@ -382,12 +382,16 @@ const zh_en = {
   InformationToFilled: ['Data中需要输入的信息：', 'Information to be filled in the Data field:'],
   IncorrectDataFormat: [
     '如果出现 SDOT_replace “Data格式不正确” SDOT_replace 的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
-    'Try appending `0x` at the beginning of the message if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',
+    'Try appending `0x` at the beginning if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',
   ],
   SDOTMapToChainXAddress: ['本次SDOT跨链映射的ChainX地址(16进制)', 'Your SDOT mapped ChainX address(hex)'],
   SDOTSent: [
     '交易打包成功后，在下方输入 SDOT_replace 交易ID (Txid/TxHash)。SDOT_replace 待交易签名验证无误，即可完成映射, SDOT会立即发放。',
     'copy and paste the SDOT_replace transaction ID(Txid/TxHash) SDOT_replace you sent in the first step bellow. SDOT will be issued to your mapped ChainX address immediately once the transaction signature is validated successfully.',
+  ],
+  WalletCurrentlySupport: [
+    '目前支持Data的钱包有: SDOT_replace 等。',
+    'Wallets with Data support currently: SDOT_replace ,etc',
   ],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
