@@ -19,6 +19,7 @@ export default class Tooltip extends PureComponent {
       place = 'bottom',
       tip = 'tooltip提示',
       className,
+      width,
     } = this.props;
 
     function strLength(str) {
@@ -63,7 +64,7 @@ export default class Tooltip extends PureComponent {
               multiline
               id={uid}
               place={place}
-              className={classNames(styles.tool, styles[size], className)}>
+              className={classNames(styles.tool, styles[size], className, width ? styles.noMaxWidth : null)}>
               {_.isArray(multiTip)
                 ? multiTip.map((item, ins) => (
                     <span key={ins}>

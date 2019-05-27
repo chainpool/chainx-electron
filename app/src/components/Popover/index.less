@@ -7,5 +7,15 @@
   svg{
     display: none;
   }
+}
 
+:global{
+  .Popover {
+    transform : translateY(0px) !important;
+    transition-duration: 0ms;
+    transition-property: transform !important;
+    .Popover-tip{
+      transition: -webkit-transform 0ms ease-in !important;
+    }
+  }
 }

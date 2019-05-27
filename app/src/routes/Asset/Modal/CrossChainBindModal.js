@@ -128,7 +128,7 @@ class CrossChainBindModal extends Mixin {
                       <strong>{msgs[5]}</strong>
                       {msgs[6]}
                       <strong className={styles.isolatedWitness}>
-                        ( <FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
+                        (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
                       </strong>
                     </>
                   );
@@ -624,11 +624,11 @@ class CrossChainBindModal extends Mixin {
                     </RouterGo>
                   ),
                   src: coinbin,
-                  imgWidth: 352,
+                  imgWidth: 652,
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
                     {item.content}
                   </HoverTip>
                 </span>

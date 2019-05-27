@@ -87,34 +87,18 @@ class CrossChainAssetTable extends Mixin {
                       <FormattedMessage id={'GetFreeCoin'} />
                     </Button>
                   ) : null}
-                  {hasBindAddress && isBTC ? (
-                    <Button
-                      onClick={() => {
-                        openModal({
-                          name: 'DepositModal',
-                          data: {
-                            token: item.name,
-                            trusteeAddr: item.trusteeAddr,
-                            chain: item.chain,
-                          },
-                        });
-                      }}>
-                      <FormattedMessage id={'Deposit'} />
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => {
-                        openModal({
-                          name: 'CrossChainBindModal',
-                          data: {
-                            token: item.name,
-                            trusteeAddr: item.trusteeAddr,
-                          },
-                        });
-                      }}>
-                      {isBTC ? <FormattedMessage id={'Deposit'} /> : <FormattedMessage id={'Mapping'} />}
-                    </Button>
-                  )}
+                  <Button
+                    onClick={() => {
+                      openModal({
+                        name: 'CrossChainBindModal',
+                        data: {
+                          token: item.name,
+                          trusteeAddr: item.trusteeAddr,
+                        },
+                      });
+                    }}>
+                    {isBTC ? <FormattedMessage id={'Deposit'} /> : <FormattedMessage id={'Mapping'} />}
+                  </Button>
                   {!isSDOT ? (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
