@@ -368,6 +368,15 @@ const zh_en = {
     '使用已绑定地址可直接向公共多签托管地址充值，使用未绑定地址充值无法到账。充值完成后ChainX会在1小时内发放PCX奖励至您的资产。',
     'Please use the already binded addresses to deposit BTC to the BTC MultiSig address. ChainX will immedidately issue PCX reward accordingly to the current address accordingly once the BTC deposit transaction is confirmed.',
   ],
+  BTCNotSupportSegWitAddress: [
+    '当前不支持隔离见证地址的充值',
+    "Please don't deposit BTC from SegWit address which is not supported at the moment.",
+  ],
+  BTCMapToChainXAddress: ['本次BTC跨链充值的ChainX地址(16进制)', 'Your BTC mapped ChainX address(hex)'],
+  DepositBTCSupportOP_RETURN: [
+    '用户需使用支持 BTC_replace OP_RETURN BTC_replace 的BTC钱包向 BTC_replace 公共多签托管地址 BTC_replace 进行充值，并且在 BTC_replace OP_RETURN BTC_replace 中输入下方信息以完成与ChainX的绑定:',
+    'You need to deposit to the BTC BTC_replace public MultiSig address BTC_replace using a BTC wallet which BTC_replace supports OP_RETURN, BTC_replace  filling the following message in the BTC_replace OP_RETURN BTC_replace field:',
+  ],
   SDOTICO: [
     '参与了Polkadot第一期ICO的用户SDOT_replace，可以将锁定的DOT 1：1映射为SDOT，享受在ChainX内永久参与充值挖矿的福利。',
     'Anyone who participated in the Polkadot ICO in 2017 SDOT_replace can map the untransferrable DOT to SDOT on ChainX in 1:1, enjoying the benefits of deposits mining in ChainX permanently.',
@@ -379,7 +388,7 @@ const zh_en = {
   ViewETHList: ['点击查看参与用户地址列表', 'View the list of all qualified ETH addresses.'],
   FistStep: ['第一步', 'Firstly'],
   SecondStep: ['第二步', 'Secondly'],
-  InformationToFilled: ['Data中需要输入的信息：', 'Information to be filled in the Data field:'],
+  InformationToFilled: ['{data}中需要输入的信息：', 'Information to be filled in the {data} field:'],
   IncorrectDataFormat: [
     '如果出现 SDOT_replace “Data格式不正确” SDOT_replace 的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
     'Try appending `0x` at the beginning if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',

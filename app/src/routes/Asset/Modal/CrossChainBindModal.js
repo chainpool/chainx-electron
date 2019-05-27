@@ -91,11 +91,27 @@ class CrossChainBindModal extends Mixin {
         desc1: (
           <>
             <div className={styles.isolatedWitness}>
-              <strong>当前不支持隔离见证地址的充值</strong>
+              <strong>
+                <FormattedMessage id={'BTCNotSupportSegWitAddress'} />
+              </strong>
             </div>
             <span>
-              用户需使用<strong>支持OP_RETURN</strong>的BTC钱包向<strong>公共多签托管</strong>地址进行充值，并且在
-              <strong>OP_RETURN</strong>中输入下方信息以完成与ChainX的绑定：
+              <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
+                {msg => {
+                  const msgs = msg.split('BTC_replace');
+                  return (
+                    <>
+                      {msgs[0]}
+                      <strong>{msgs[1]}</strong>
+                      {msgs[2]}
+                      <strong>{msgs[3]}</strong>
+                      {msgs[4]}
+                      <strong>{msgs[5]}</strong>
+                      {msgs[6]}
+                    </>
+                  );
+                }}
+              </FormattedMessage>
             </span>
           </>
         ),
@@ -319,12 +335,14 @@ class CrossChainBindModal extends Mixin {
           <div className={styles.address}>
             <div className={styles.OP_RETURNcopy}>
               <span id="copy">{findOne.value1}</span>
-              <HoverTip tip="本次BTC跨链充值的ChainX地址(16进制)">
+              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
                 <Icon name={'icon-jieshishuoming'} />
               </HoverTip>
             </div>
             <div className={styles.OP_RETURNtitle}>
-              OP_RETURN中需要输入的信息：
+              <strong>
+                <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
+              </strong>
               <Clipboard
                 id="copy"
                 outInner={
@@ -401,7 +419,7 @@ class CrossChainBindModal extends Mixin {
               </div>
             </div>
             <div className={styles.OP_RETURNtitle}>
-              <FormattedMessage id={'InformationToFilled'} />
+              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
               <Clipboard
                 id="copy"
                 outInner={
