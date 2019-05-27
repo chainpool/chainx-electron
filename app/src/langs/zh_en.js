@@ -402,6 +402,7 @@ const zh_en = {
     '目前支持Data的钱包有: SDOT_replace 等。',
     'Wallets with Data support currently: SDOT_replace ,etc',
   ],
+  UserInstructions: ['用户须知', 'User Instructions'],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于等于最小提现额', 'Amount must greater or equal than min value'],

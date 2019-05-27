@@ -10,6 +10,7 @@ import {
   RouterGo,
   FormattedMessage,
   Icon,
+  Popover,
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
@@ -25,15 +26,28 @@ import bitpie from '../../../resource/bitpie.png';
 import coinomi from '../../../resource/coinomi.png';
 import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
+import QRious from 'qrious';
 
 @Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
 class CrossChainBindModal extends Mixin {
-  state = {
-    step: 0,
-    recommendChannelSelect: '',
-    tradeId: '',
-    tradeIdErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      globalStore: {
+        modal: {
+          data: { token },
+        },
+      },
+    } = this.props;
+    this.state = {
+      step: token === 'BTC' ? -1 : 0,
+      recommendChannelSelect: '',
+      tradeId: '',
+      tradeIdErrMsg: '',
+      qr: '',
+    };
+  }
+
   checkAll = {
     checkTradeId: () => {
       const { tradeId } = this.state;
@@ -61,16 +75,26 @@ class CrossChainBindModal extends Mixin {
       assetStore: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getTrusteeAddress', payload: { chain: 'Bitcoin' } });
+    dispatch({ type: 'getTrusteeAddress', payload: { chain: 'Bitcoin' } }).then(res => {
+      if (res) {
+        const qr = new QRious({
+          value: res,
+        });
+        this.setState({
+          qr: qr.toDataURL('image/jpeg'),
+        });
+      }
+    });
   };
 
   render() {
     const { checkAll } = this;
-    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg } = this.state;
+    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg, qr } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress, closeModal },
-      assetStore: { btcTrusteeAddress, dispatch },
+      assetStore: { btcAddresses = [], btcTrusteeAddress, dispatch },
+
       electionStore: { originIntentions = [] },
       globalStore: {
         language,
@@ -90,11 +114,6 @@ class CrossChainBindModal extends Mixin {
       BTC: {
         desc1: (
           <>
-            <div className={styles.isolatedWitness}>
-              <strong>
-                <FormattedMessage id={'BTCNotSupportSegWitAddress'} />
-              </strong>
-            </div>
             <span>
               <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
                 {msg => {
@@ -108,6 +127,9 @@ class CrossChainBindModal extends Mixin {
                       {msgs[4]}
                       <strong>{msgs[5]}</strong>
                       {msgs[6]}
+                      <strong className={styles.isolatedWitness}>
+                        ( <FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
+                      </strong>
                     </>
                   );
                 }}
@@ -357,11 +379,44 @@ class CrossChainBindModal extends Mixin {
           </div>
         </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
-          <span className={styles.label}>{findOne.desc2}</span>
+          <div className={styles.depositaddresstitle}>
+            <span className={styles.label}>
+              {findOne.desc2}
+              <span>（向该地址充值）</span>
+            </span>
+            <Button type={'outline'}>
+              <Popover body={<img src={qr} />}>
+                <span>
+                  <Icon name={'erweima'} />
+                  地址二维码
+                </span>
+              </Popover>
+            </Button>
+          </div>
           <Clipboard>
             <span className={styles.depositaddressvalue}>{findOne.value2}</span>
           </Clipboard>
         </div>
+        {btcAddresses.length > 0 && (
+          <div className={classNames(styles.grayblock, styles.bitcoinlinks)}>
+            <div>
+              <strong>与当前账户已建立绑定关系的Bitcoin地址</strong>
+              <HoverTip tip={'使用已建立绑定关系的地址进行充值，无需携带OP_RETURN'}>
+                <Icon name={'icon-jieshishuoming'} />
+              </HoverTip>
+            </div>
+            <ul>
+              {btcAddresses.map((address, index) => {
+                return (
+                  <li key={index}>
+                    <span>Bitcoin:</span>
+                    <div>{address}</div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </>
     );
 
@@ -497,22 +552,154 @@ class CrossChainBindModal extends Mixin {
       </>
     );
 
+    const BTCGuide = (
+      <div className={styles.userInstructions}>
+        <div className={styles.description}>
+          <div className={styles.chinxbitoin}>
+            ChainX是去中心化跨链交易所，需要将ChainX的地址和Bitcoin的地址建立联系，
+            <span>
+              <strong>因此需要Bitcoin发送携带OP_RETURN的交易</strong>
+            </span>
+            。
+          </div>
+          <div className={styles.supportopreturn}>
+            <span>
+              <strong>目前支持发送OP_RETURN交易的钱包有：</strong>
+              {[
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      BitX、
+                    </RouterGo>
+                  ),
+                },
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                      Trezor、
+                    </RouterGo>
+                  ),
+                },
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                      Coinb.in。
+                    </RouterGo>
+                  ),
+                },
+              ].map((item, index) => (
+                <span key={index} className={styles.anchor}>
+                  {item.content}
+                </span>
+              ))}
+            </span>
+            <div className={styles.notice}>注：类似imToken钱包的memo不是OP_RETURN。</div>
+          </div>
+          <div className={styles.twosorts}>
+            <strong>目前支持发送OP_RETURN的钱包分为两类：</strong>
+          </div>
+          <div className={styles.sortfirst}>
+            <div className={styles.sorttitle}>
+              <span>第一类</span>每次充值都需要携带OP_RETURN
+            </div>
+            <div>
+              由于Bitcoin安全策略，一般情况下每次发送交易后地址都会发生变化，因此该类钱包每次充值都需要携带OP_RETURN。
+            </div>
+            <div className={styles.examplewallet}>
+              这类钱包有：{' '}
+              {[
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                      Trezor、
+                    </RouterGo>
+                  ),
+                  src: trezor,
+                  imgWidth: 352,
+                },
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                      Coinb.in。
+                    </RouterGo>
+                  ),
+                  src: coinbin,
+                  imgWidth: 352,
+                },
+              ].map((item, index) => (
+                <span key={index} className={styles.anchor}>
+                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                    {item.content}
+                  </HoverTip>
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className={styles.sortsecond}>
+            <div className={styles.sorttitle}>
+              <span>第二类</span>只需要第一次充值携带OP_RETURN
+            </div>
+            <div>
+              支持使用相同地址发送交易的钱包，只需第一次充值携带OP_RETURN，便可与ChainX建立绑定关系，后续充值不需要再携带OP_RETURN。
+            </div>
+            <div className={styles.examplewallet}>
+              这类钱包有：
+              {[
+                {
+                  content: (
+                    <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      BitX。
+                    </RouterGo>
+                  ),
+                  imgWidth: 244,
+                  show: true,
+                },
+              ].map((item, index) => (
+                <span key={index} className={styles.anchor}>
+                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                    {item.content}
+                  </HoverTip>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Button
+          className={styles.agree}
+          size="full"
+          type="confirm"
+          onClick={() => this.setState({ step: btcAddresses.length ? 1 : 0 })}>
+          同意
+        </Button>
+        <Warn className={styles.warning}>
+          <div>
+            <strong>若充值时未携带OP_RETURN，则充值无法到账，</strong>
+            只需使用相同的Bitcoin地址再发送一笔携带OP_RETURN的交易，即可完成该Bitcoin地址下的所有充值。
+            <strong>(当前不支持隔离见证地址的充值)</strong>
+          </div>
+        </Warn>
+      </div>
+    );
+
     return (
       <Modal
-        scroll={step !== 0}
+        scroll={step === 1}
         title={
           <>
-            {token === 'SDOT' ? (
-              <FormattedMessage id={'CrossChainMapping'} />
+            {token === 'BTC' && step === -1 ? (
+              <FormattedMessage id={'UserInstructions'} />
             ) : (
-              <FormattedMessage id={'CrossChainDeposit'} />
+              <>
+                {token === 'SDOT' && <FormattedMessage id={'CrossChainMapping'} />}
+                {token === 'BTC' && <FormattedMessage id={'CrossChainDeposit'} />}({token})
+              </>
             )}
-            ({token})
           </>
         }
         isOverflow>
         <div className={styles.crossChainBind}>
-          {step === 0 ? (
+          {step === -1 && BTCGuide}
+          {step === 0 && (
             <div>
               <Input.Select
                 maxHeight={300}
@@ -549,7 +736,8 @@ class CrossChainBindModal extends Mixin {
                 </Button>
               </ButtonGroup>
             </div>
-          ) : (
+          )}
+          {step === 1 && (
             <>
               {token === 'BTC' && BTC}
               {token === 'SDOT' && SDOT}

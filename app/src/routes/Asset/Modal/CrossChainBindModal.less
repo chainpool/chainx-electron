@@ -56,13 +56,53 @@
     height:72px !important;
     flex-direction: column;
     padding:16px;
+    .depositaddresstitle{
+      width:100%;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      button{
+        i{
+          color: @yellow;
+        }
+        padding:0;
+        height:unset;
+      }
+    }
     .label{
       font-weight: bold;
-      margin-bottom: 12px;
+      span{
+        font-weight: 400;
+      }
+
     }
     .depositaddressvalue{
       color:#959595;
     }
+  }
+  .bitcoinlinks{
+    padding:20px 16px;
+    justify-content: flex-start !important;
+    display: flex;
+    flex-wrap: wrap;
+    height:unset !important;
+    i{
+      color:#7B7F82;
+      margin-left: 4px;
+    }
+    ul{
+      margin-top: 16px;
+
+      width:100%;
+      li+li{
+        margin-top: 10px;
+      }
+      li{
+        color: #959595;
+        display: flex;
+      }
+    }
+
   }
 
   .grayblock1{
@@ -181,4 +221,57 @@
 
 .isolatedWitness{
   color:@red;
+}
+
+.userInstructions{
+  line-height: 20px;
+  .description{
+    background: #F2F3F4;
+    border: 1px solid #DCE0E2;
+    border-radius: 1px;
+    padding:16px 20px;
+    .chinxbitoin{
+      margin-bottom: 10px;
+      span{
+        color:@red;
+      }
+    }
+    .supportopreturn{
+      margin-bottom: 16px;
+      .notice{
+        font-size: 12px;
+        color:@red;
+      }
+    }
+    .twosorts{
+      margin-bottom: 16px;
+    }
+    .sortfirst,.sortsecond{
+      .sorttitle{
+        margin-bottom: 10px;
+        font-weight: bold;
+        span{
+          color:@yellow;
+          margin-right: 10px;
+        }
+
+      }
+      .examplewallet{
+        font-weight: bold;
+      }
+    }
+    .sortfirst{
+      margin-bottom: 16px;
+    }
+  }
+
+  .agree{
+    margin:20px 0 16px;
+  }
+  .warning{
+    strong{
+      color:@red;
+    }
+  }
+
 }

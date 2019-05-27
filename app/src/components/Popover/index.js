@@ -10,39 +10,29 @@ export default class Popover extends PureComponent {
 
   render() {
     const { isOpen } = this.state;
-    const { children, body, className, target, appendTarget } = this.props;
+    const { children, body, className, place = 'above', ...rest } = this.props;
     return (
       <Pop
-        target={target}
-        appendTarget={appendTarget}
-        preferPlace="below"
+        className={styles.popoverride}
+        target={children}
+        {...rest}
         isOpen={isOpen}
-        body={
-          <div
-            className={classNames(styles.popovercontainer, className)}
-            onClick={() => {
-              this.setState({
-                isOpen: false,
-              });
-            }}>
-            {children}
-          </div>
-        }
-        onOuterAction={e => {
+        body={body}
+        place={place}
+        preferPlace={'end'}
+        onOuterAction={() => {
           this.setState({
             isOpen: false,
           });
-        }}
-        className={styles.popoverride}>
-        <div
-          className="me"
-          onClick={e => {
+        }}>
+        <span
+          onClick={() => {
             this.setState({
               isOpen: !isOpen,
             });
           }}>
-          {body}
-        </div>
+          {children}
+        </span>
       </Pop>
     );
   }
