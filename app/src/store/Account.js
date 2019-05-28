@@ -1,8 +1,6 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, convertAddressChecksumAll } from '../utils';
+import { _, localSave, accountSave, convertAddressChecksumAll } from '../utils';
 import ModelExtend from './ModelExtend';
-import { default as downloadFile } from 'downloadjs';
-import uniqid from 'uniqid';
 import { Toast } from '../components';
 
 export default class Store extends ModelExtend {
@@ -13,18 +11,18 @@ export default class Store extends ModelExtend {
       localSave.set('currentSelectTest', this.currentSelectTest);
       localSave.set('currentSelectMain', this.currentSelectMain);
       localSave.set('currentSelectPreMain', this.currentSelectPreMain);
-      localSave.set('accountsTest', this.accountsTest);
-      localSave.set('accountsMain', this.accountsMain);
-      localSave.set('accountsPreMain', this.accountsPreMain);
+      accountSave.set('accountsTest', this.accountsTest);
+      accountSave.set('accountsMain', this.accountsMain);
+      accountSave.set('accountsPreMain', this.accountsPreMain);
     });
   }
 
-  @observable accountsTest = localSave.get('accountsTest') || localSave.get('accounts') || [];
-  @observable accountsMain = localSave.get('accountsMain') || [];
-  @observable accountsPreMain = localSave.get('accountsPreMain') || [];
-  @observable currentSelectTest = localSave.get('currentSelectTest') || {};
-  @observable currentSelectMain = localSave.get('currentSelectMain') || {};
-  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || {};
+  @observable accountsTest = accountSave.get('accountsTest') || [];
+  @observable accountsMain = accountSave.get('accountsMain') || [];
+  @observable accountsPreMain = accountSave.get('accountsPreMain') || [];
+  @observable currentSelectTest = localSave.get('currentSelectTest') || '';
+  @observable currentSelectMain = localSave.get('currentSelectMain') || '';
+  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || '';
 
   @computed
   get currentAccount() {
@@ -128,7 +126,7 @@ export default class Store extends ModelExtend {
     this.changeModel('currentAccount', newCurrentAccount);
   }
 
-  addAccount({ tag, address, encoded, download = true }) {
+  addAccount({ tag, address, encoded }) {
     // address已经存在的不再重复加入
     const filterOne = this.accounts.filter(item => item.address === address)[0];
     const currentNetWork = this.getCurrentNetWork();
@@ -136,11 +134,7 @@ export default class Store extends ModelExtend {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
       return;
     }
-    const user = { tag, address, encoded, net: currentNetWork.value };
-    this.changeModel('accounts', [...this.accounts, user]);
-    if (download) {
-      this.exportKeystore(user);
-    }
+    this.changeModel('accounts', [...this.accounts, { tag, address, encoded, net: currentNetWork.value }]);
     this.setCurrentAccount(address);
   }
 
@@ -180,11 +174,6 @@ export default class Store extends ModelExtend {
     this.changeModel('accounts', accounts);
     this.setCurrentAccount();
   }
-
-  exportKeystore = ({ address, tag, encoded, net }) => {
-    const user = { address, tag, encoded, net };
-    downloadFile(JSON.stringify(user), `${tag.replace(' ', '')}_${uniqid()}_keystore.txt`, 'text/plain');
-  };
 
   switchAccount({ address }) {
     this.setCurrentAccount(address);
