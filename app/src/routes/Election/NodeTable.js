@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { Inject } from '../../utils';
+import { Inject, _ } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
@@ -180,7 +180,18 @@ class NodeTable extends Component {
           ),
         },
       ],
-      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => b.totalNomination - a.totalNomination),
+      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => {
+        const aLength = _.get(a, 'isTrustee.length');
+        const bLength = _.get(b, 'isTrustee.length');
+        if (aLength || bLength) {
+          if (aLength && bLength) {
+            return b.totalNomination - a.totalNomination;
+          } else {
+            return bLength - aLength;
+          }
+        }
+        return b.totalNomination - a.totalNomination;
+      }),
     };
     return <Table {...tableProps} />;
   }
