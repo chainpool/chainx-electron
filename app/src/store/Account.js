@@ -183,7 +183,7 @@ export default class Store extends ModelExtend {
 
   exportKeystore = ({ address, tag, encoded, net }) => {
     const user = { address, tag, encoded, net };
-    downloadFile(JSON.stringify(user), `${tag.replace(' ', '')}_${uniqid()}_keystore.txt`, 'text/plain');
+    downloadFile(JSON.stringify(user), `${address}`);
   };
 
   switchAccount({ address }) {
