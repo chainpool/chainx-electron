@@ -21,7 +21,7 @@
     "clipboard": "^2.0.4",
     "current-device": "^0.7.8",
     "downloadjs": "^1.4.7",
-    "electron": "^4.0.4",
+    "electron": "^5.0.2",
     "js-base64": "^2.5.1",
     "lodash": "^4.17.11",
     "mobx": "^5.5.0",

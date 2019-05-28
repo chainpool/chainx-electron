@@ -1,5 +1,5 @@
 import React, { Suspense, Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import { addLocaleData, IntlProvider } from 'react-intl';

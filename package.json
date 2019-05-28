@@ -3,9 +3,9 @@
   "productName": "ChainX",
   "version": "1.0.2",
   "description": "My Electron application description",
-  "main": "src/main.js",
+  "main": "main.js",
   "scripts": {
-    "start": "electron . --debug",
+    "start": "NODE_ENV=development electron . --debug",
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
     "dist": "rimraf dist&&electron-builder --config ./electron-builder.js"
@@ -13,19 +13,12 @@
   "keywords": [],
   "author": "myapp",
   "license": "MIT",
-  "dependencies": {
-    "app-root-dir": "^1.0.2",
-    "electron-is-dev": "^1.0.1",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-updater": "^4.0.6",
-    "mkdirp": "^0.5.1",
-    "pg": "^7.7.1",
-    "unzip": "^0.1.11"
-  },
   "devDependencies": {
     "electron": "^5.0.0",
     "electron-builder": "^20.38.3",
-    "nodemon": "^1.18.8",
-    "rimraf": "^2.6.2"
+    "electron-debug": "^3.0.0"
+  },
+  "dependencies": {
+    "electron-updater": "^4.0.6"
   }
 }
