@@ -4,7 +4,6 @@ import {
   Mixin,
   Modal,
   Input,
-  ButtonGroup,
   Button,
   Toast,
   RouterGo,
@@ -40,11 +39,12 @@ class CrossChainBindModal extends Mixin {
       },
     } = this.props;
     this.state = {
-      step: token === 'BTC' ? -1 : 0,
-      recommendChannelSelect: '',
+      step: token === 'BTC' ? -1 : 1,
+      recommendChannelSelect: {},
       tradeId: '',
       tradeIdErrMsg: '',
       qr: '',
+      isAddChanel: false,
     };
   }
 
@@ -89,7 +89,7 @@ class CrossChainBindModal extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg, qr } = this.state;
+    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg, qr, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress, closeModal },
@@ -348,6 +348,37 @@ class CrossChainBindModal extends Mixin {
 
     const findOne = show[token];
 
+    const OptionalChannel = (
+      <div>
+        <Input.Checkbox
+          value={isAddChanel}
+          size="small"
+          className={styles.addChannel}
+          onClick={() => {
+            this.setState({
+              isAddChanel: !isAddChanel,
+              recommendChannelSelect: {},
+            });
+          }}>
+          <span className={!isAddChanel ? styles.addChanneldesc : null}>添加渠道（非必选）</span>
+        </Input.Checkbox>
+        {isAddChanel && (
+          <Input.Select
+            maxHeight={150}
+            allowCreate={false}
+            value={recommendChannelSelect}
+            placeholder={<FormattedMessage id={'RecommendedChannelNode'} />}
+            options={selectNameOptions}
+            onChange={value => {
+              this.setState({
+                recommendChannelSelect: value,
+              });
+            }}
+          />
+        )}
+      </div>
+    );
+
     const BTC = (
       <>
         <div className={styles.desc}>{findOne.desc1}</div>
@@ -414,6 +445,7 @@ class CrossChainBindModal extends Mixin {
             </ul>
           </div>
         )}
+        {btcAddresses.length > 0 ? null : OptionalChannel}
       </>
     );
 
@@ -518,6 +550,7 @@ class CrossChainBindModal extends Mixin {
             }}
             onBlur={checkAll.checkTradeId}
           />
+          {OptionalChannel}
           <Button
             size="full"
             type="confirm"
@@ -665,7 +698,7 @@ class CrossChainBindModal extends Mixin {
           className={styles.agree}
           size="full"
           type="confirm"
-          onClick={() => this.setState({ step: btcAddresses.length ? 1 : 0 })}>
+          onClick={() => this.setState({ step: btcAddresses.length ? 1 : 1 })}>
           同意
         </Button>
         <Warn className={styles.warning}>
@@ -680,7 +713,7 @@ class CrossChainBindModal extends Mixin {
 
     return (
       <Modal
-        scroll={step === 1}
+        scroll={token === 'SDOT'}
         title={
           <>
             {token === 'BTC' && step === -1 ? (
@@ -696,44 +729,6 @@ class CrossChainBindModal extends Mixin {
         isOverflow>
         <div className={styles.crossChainBind}>
           {step === -1 && BTCGuide}
-          {step === 0 && (
-            <div>
-              <Input.Select
-                maxHeight={300}
-                allowCreate={false}
-                value={recommendChannelSelect}
-                placeholder={<FormattedMessage id={'RecommendedChannelNode'} />}
-                options={selectNameOptions}
-                onChange={value => {
-                  this.setState({
-                    recommendChannelSelect: value,
-                  });
-                }}
-              />
-              <ButtonGroup className={styles.recommendChannel}>
-                <Button
-                  onClick={() => {
-                    this.setState({
-                      step: 1,
-                      recommendChannelSelect: {},
-                    });
-                  }}>
-                  <FormattedMessage id={'Skip'} />
-                </Button>
-                <Button
-                  type="confirm"
-                  onClick={() => {
-                    if (recommendChannel) {
-                      this.setState({
-                        step: 1,
-                      });
-                    }
-                  }}>
-                  <FormattedMessage id={'Confirm'} />
-                </Button>
-              </ButtonGroup>
-            </div>
-          )}
           {step === 1 && (
             <>
               {token === 'BTC' && BTC}
