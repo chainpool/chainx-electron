@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const path = require('path')
 
 class AppUpdater {
   constructor() {
@@ -44,11 +45,11 @@ app.on('ready', async () => {
     show: false,
     width: 1280,
     height: 765,
-    webPreferences: { nodeIntegration: true },
+    webPreferences: { preload: path.join(__dirname, 'preload.js') },
   });
 
   mainWindow.loadURL(
-    process.env.NODE_ENV !== 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
+    process.env.NODE_ENV === 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
   );
 
   mainWindow.webContents.on('did-finish-load', () => {

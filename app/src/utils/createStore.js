@@ -1,4 +1,4 @@
-import ElectronStore from 'electron-store';
+const ElectronStore = window.electronStore;
 const stores = {};
 
 const getStore = name => {
@@ -17,7 +17,7 @@ export default function createStore(storageName) {
       estore.set(key, value);
     },
     remove: function(key) {
-      estore.delete(key, value);
+      estore.delete(key);
     },
     clearAll: function() {
       estore.clear();
