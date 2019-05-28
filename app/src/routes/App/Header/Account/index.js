@@ -9,7 +9,8 @@ import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
 import ForgetAccountModal from './Modal/ForgetAccountModal';
 import CreateAccountModal from './Modal/CreateAccountModal';
-import SetKeystorePassword from './Modal/SetKeystorePassword';
+import SetKeystorePasswordModal from './Modal/SetKeystorePasswordModal';
+import ExportKeystoreModal from './Modal/ExportKeystoreModal';
 import * as styles from './index.less';
 import Linux from '../../../../resource/Linux.png';
 import Mac from '../../../../resource/Mac.png';
@@ -116,6 +117,21 @@ class Account extends Mixin {
                           });
                         }}>
                         <FormattedMessage id={'ExportPrivateKey'} />
+                      </li>
+                      <li
+                        onClick={e => {
+                          e.stopPropagation();
+                          openModal({
+                            name: 'ExportKeystoreModal',
+                            data: {
+                              tag: item.tag,
+                              address: item.address,
+                              encoded: item.encoded,
+                              net: item.net,
+                            },
+                          });
+                        }}>
+                        <FormattedMessage id={'ExportKeystore'} />
                       </li>
                     </ul>
                   </div>
@@ -264,7 +280,8 @@ class Account extends Mixin {
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
         {name === 'CreateAccountModal' ? <CreateAccountModal {...this.props} /> : null}
-        {name === 'SetKeystorePassword' ? <SetKeystorePassword {...this.props} /> : null}
+        {name === 'SetKeystorePasswordModal' ? <SetKeystorePasswordModal {...this.props} /> : null}
+        {name === 'ExportKeystoreModal' ? <ExportKeystoreModal {...this.props} /> : null}
       </div>
     );
   }

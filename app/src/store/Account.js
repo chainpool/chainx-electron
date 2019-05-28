@@ -139,7 +139,7 @@ export default class Store extends ModelExtend {
     const user = { tag, address, encoded, net: currentNetWork.value };
     this.changeModel('accounts', [...this.accounts, user]);
     if (download) {
-      downloadFile(JSON.stringify(user), `${tag.replace(' ', '')}_${uniqid()}_keystore.txt`, 'text/plain');
+      this.exportKeystore(user);
     }
     this.setCurrentAccount(address);
   }
@@ -180,6 +180,11 @@ export default class Store extends ModelExtend {
     this.changeModel('accounts', accounts);
     this.setCurrentAccount();
   }
+
+  exportKeystore = ({ address, tag, encoded, net }) => {
+    const user = { address, tag, encoded, net };
+    downloadFile(JSON.stringify(user), `${tag.replace(' ', '')}_${uniqid()}_keystore.txt`, 'text/plain');
+  };
 
   switchAccount({ address }) {
     this.setCurrentAccount(address);

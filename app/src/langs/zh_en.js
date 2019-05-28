@@ -403,6 +403,7 @@ const zh_en = {
     'Wallets with Data support currently: SDOT_replace ,etc',
   ],
   UserInstructions: ['用户须知', 'User Instructions'],
+  ExportKeystore: ['导出Keystore', 'Export Keystore'],
 
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于等于最小提现额', 'Amount must greater or equal than min value'],

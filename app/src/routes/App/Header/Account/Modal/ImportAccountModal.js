@@ -121,7 +121,7 @@ class ImportAccountModal extends Component {
                           throw new Error(errMsg);
                         }
                         openModal({
-                          name: 'SetKeystorePassword',
+                          name: 'SetKeystorePasswordModal',
                           data: {
                             tag,
                             address,

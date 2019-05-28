@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
+import { Modal, Input, Button, ButtonGroup, FormattedMessage } from '../../../../../components';
 import { Patterns } from '../../../../../utils';
-import * as styles from './SetPasswordModal.less';
+import * as styles from './ExportKeystoreModal.less';
 
-class SetKeystorePassword extends Component {
+class ForgetAccountModal extends Component {
   state = {
     password: '',
     passwordErrMsg: '',
@@ -27,38 +27,38 @@ class SetKeystorePassword extends Component {
     const { checkAll } = this;
     const { password, passwordErrMsg } = this.state;
     const {
-      model: { dispatch, closeModal },
-      globalStore: { modal: { data: { tag, address, encoded } = {} } = {} },
+      model: { closeModal, dispatch },
+      globalStore: { modal: { data } = {} },
     } = this.props;
     return (
       <Modal
-        title={
-          <span>
-            <FormattedMessage id={'ImportAccount'} /> (<span className={styles.step}>{2}</span>/{2})
-          </span>
-        }
+        title={<FormattedMessage id={'ExportKeystore'} />}
         button={
-          <Button
-            size="full"
-            type="confirm"
-            onClick={() => {
-              if (checkAll.confirm()) {
-                dispatch({
-                  type: 'addAccount',
-                  payload: {
-                    tag,
-                    address,
-                    encoded,
-                    download: false,
-                  },
-                });
+          <ButtonGroup className={styles.group}>
+            <Button
+              size="bigger"
+              onClick={() => {
                 closeModal();
-              }
-            }}>
-            <FormattedMessage id={'Complete'} />
-          </Button>
+              }}>
+              <FormattedMessage id={'Cancel'} />
+            </Button>
+            <Button
+              size="bigger"
+              type="success"
+              onClick={() => {
+                if (checkAll.confirm()) {
+                  dispatch({
+                    type: 'exportKeystore',
+                    payload: data,
+                  });
+                  closeModal();
+                }
+              }}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+          </ButtonGroup>
         }>
-        <div className={styles.setPasswordModal}>
+        <div className={styles.ExportKeystoreModal}>
           <FormattedMessage id={'InputPassword'}>
             {msg => (
               <Input.Text
@@ -80,4 +80,4 @@ class SetKeystorePassword extends Component {
   }
 }
 
-export default SetKeystorePassword;
+export default ForgetAccountModal;
