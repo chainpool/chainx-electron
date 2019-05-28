@@ -229,6 +229,8 @@ export default class Trust extends ModelExtend {
     const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
     const filterUnspentsByAmount = (unspents = [], amount) => {
       const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
+      nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
+
       const result = [];
       let sum = new BigNumber(0);
       for (let utxo of nonZeroUnspents) {
