@@ -382,28 +382,27 @@ class CrossChainBindModal extends Mixin {
     const BTC = (
       <>
         <div className={styles.desc}>{findOne.desc1}</div>
-        <div
-          style={{ height: (findOne.value1.length / 60) * 65 }}
-          className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
+        <div className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
           <div className={styles.address}>
-            <div className={styles.OP_RETURNcopy}>
-              <span id="copy">{findOne.value1}</span>
-              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
-                <Icon name={'icon-jieshishuoming'} />
-              </HoverTip>
-            </div>
             <div className={styles.OP_RETURNtitle}>
               <strong>
                 <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
               </strong>
               <Clipboard
                 id="copy"
+                dataText={findOne.value1}
                 outInner={
                   <span className={styles.desc}>
                     <FormattedMessage id={'CopyMessage'} />
                   </span>
                 }
               />
+            </div>
+            <div className={styles.OP_RETURNcopy}>
+              <span id="copy">{findOne.value1}</span>
+              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
+                <Icon name={'icon-jieshishuoming'} />
+              </HoverTip>
             </div>
           </div>
         </div>
@@ -480,10 +479,20 @@ class CrossChainBindModal extends Mixin {
           </span>
           {findOne.desc1}
         </div>
-        <div
-          style={{ height: (findOne.value1.length / 60) * 75 }}
-          className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
+        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
           <div className={styles.address}>
+            <div className={styles.OP_RETURNtitle}>
+              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
+              <Clipboard
+                id="copy"
+                dataText={findOne.value1}
+                outInner={
+                  <span className={styles.desc}>
+                    <FormattedMessage id={'CopyMessage'} />
+                  </span>
+                }
+              />
+            </div>
             <div className={styles.OP_RETURNcopy}>
               <div>
                 <span id="copy">{findOne.value1}</span>
@@ -505,17 +514,6 @@ class CrossChainBindModal extends Mixin {
                   </FormattedMessage>
                 </div>
               </div>
-            </div>
-            <div className={styles.OP_RETURNtitle}>
-              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
-              <Clipboard
-                id="copy"
-                outInner={
-                  <span className={styles.desc}>
-                    <FormattedMessage id={'CopyMessage'} />
-                  </span>
-                }
-              />
             </div>
           </div>
         </div>

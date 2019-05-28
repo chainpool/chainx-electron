@@ -16,7 +16,7 @@ export default class Clipboard extends PureComponent {
 
   render() {
     const { uid } = this.state;
-    const { children, className, width, outInner = '' } = this.props;
+    const { children, className, width, outInner = '', dataText } = this.props;
     return (
       <span className={classNames(styles.clipboard, className)}>
         <span id={uid} className={classNames(styles.children, width ? styles.ellipse : null)} style={{ width }}>
@@ -31,7 +31,10 @@ export default class Clipboard extends PureComponent {
                 style={{ marginLeft: children ? 8 : null }}
               />
               {outInner ? (
-                <span className={classNames('outerInner', styles.outerInner)} data-clipboard-target={`#${uid}`}>
+                <span
+                  className={classNames('outerInner', styles.outerInner)}
+                  data-clipboard-target={`#${uid}`}
+                  data-clipboard-text={dataText}>
                   {outInner}
                 </span>
               ) : null}

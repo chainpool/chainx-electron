@@ -393,7 +393,7 @@ const zh_en = {
   SecondStep: ['第二步', 'Secondly'],
   InformationToFilled: ['{data}中需要输入的信息：', 'Information to be filled in the {data} field:'],
   IncorrectDataFormat: [
-    '如果出现 SDOT_replace “Data格式不正确” SDOT_replace 的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
+    '如果出现SDOT_replace“Data格式不正确”SDOT_replace的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
     'Try appending `0x` at the beginning if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',
   ],
   SDOTMapToChainXAddress: ['本次SDOT跨链映射的ChainX地址(16进制)', 'Your SDOT mapped ChainX address(hex)'],

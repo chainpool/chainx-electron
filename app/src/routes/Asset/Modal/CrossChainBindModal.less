@@ -138,16 +138,19 @@
     &.addressall {
       &.btcopreturn{
         height:unset;
+        .address{
+          display: unset;
+        }
       }
       &.sdot{
         height:unset;
-        padding:8px 16px;
+        padding:16px;
         &.en{
           min-height: 135px;
         }
         .OP_RETURNcopy{
           .dataerror{
-            margin-top: 2px;
+            margin-top: 10px;
             font-weight: bold;
             font-size: 12px;
             color:#3F3F3F;
@@ -176,23 +179,20 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        .OP_RETURNcopy{
-          line-height: 18px;
-          position:absolute;
-          bottom:0;
-          top:40px;
-          color: #959595;
-          text-align: left;
-          i{
-            margin-left: 6px;
-          }
-        }
-
         .OP_RETURNtitle{
           font-weight:bold;
           display: flex;
           justify-content: space-between;
           align-items: center;
+        }
+        .OP_RETURNcopy{
+          line-height: 18px;
+          margin-top: 15px;
+          color: #959595;
+          text-align: left;
+          i{
+            margin-left: 6px;
+          }
         }
       }
     }
