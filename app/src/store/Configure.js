@@ -121,6 +121,12 @@ export default class Configure extends ModelExtend {
               isSystem: true,
               Version: ConfigureVersion,
             },
+            {
+              type: 'SystemDefault',
+              name: 'api.chainx.org.cn',
+              address: 'https://api.chainx.org.cn',
+              isSystem: true,
+            },
           ],
           (localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem)
         )

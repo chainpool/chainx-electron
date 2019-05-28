@@ -40,7 +40,7 @@ class CrossChainBindModal extends Mixin {
     } = this.props;
     this.state = {
       step: token === 'BTC' ? -1 : 1,
-      recommendChannelSelect: {},
+      recommendChannelSelect: '',
       tradeId: '',
       tradeIdErrMsg: '',
       qr: '',
@@ -357,24 +357,28 @@ class CrossChainBindModal extends Mixin {
           onClick={() => {
             this.setState({
               isAddChanel: !isAddChanel,
-              recommendChannelSelect: {},
+              recommendChannelSelect: '',
             });
           }}>
           <span className={!isAddChanel ? styles.addChanneldesc : null}>添加渠道（非必选）</span>
         </Input.Checkbox>
         {isAddChanel && (
-          <Input.Select
-            maxHeight={150}
-            allowCreate={false}
-            value={recommendChannelSelect}
-            placeholder={<FormattedMessage id={'RecommendedChannelNode'} />}
-            options={selectNameOptions}
-            onChange={value => {
-              this.setState({
-                recommendChannelSelect: value,
-              });
-            }}
-          />
+          <FormattedMessage id={'NodeName'}>
+            {msg => (
+              <Input.Select
+                maxHeight={150}
+                allowCreate={false}
+                value={recommendChannelSelect}
+                placeholder={msg}
+                options={selectNameOptions}
+                onChange={value => {
+                  this.setState({
+                    recommendChannelSelect: value,
+                  });
+                }}
+              />
+            )}
+          </FormattedMessage>
         )}
       </div>
     );
