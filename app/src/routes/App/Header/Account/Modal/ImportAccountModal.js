@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, Icon, FormattedMessage } from '../../../../../components';
+import { Modal, Input, Button, Icon, FormattedMessage, Toast } from '../../../../../components';
 import { ChainX, Patterns } from '../../../../../utils';
 import * as styles from './ImportAccountModal.less';
 
 class ImportAccountModal extends Component {
-  state = {
-    step: 1,
-    mnemonicWord: new Array(12).fill(''),
-    MnemonicWordErrMsg: '',
-    secretKey: '',
-    secretKeyErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    this.inputFileRef = React.createRef();
+    this.state = {
+      step: 'mnemonic',
+      mnemonicWord: new Array(12).fill(''),
+      MnemonicWordErrMsg: '',
+      secretKey: '',
+      secretKeyErrMsg: '',
+    };
+  }
+
   checkAll = {
     checkMnemonicWord: () => {
       const { mnemonicWord } = this.state;
@@ -29,12 +34,11 @@ class ImportAccountModal extends Component {
 
     confirm: () => {
       const { step } = this.state;
-      if (step === 1) {
+      if (step === 'mnemonic') {
         return !this.checkAll.checkMnemonicWord();
-      } else if (step === 2) {
+      } else if (step === 'secretKey') {
         return !this.checkAll.checkSecretKey();
       }
-
       return true;
     },
   };
@@ -60,8 +64,7 @@ class ImportAccountModal extends Component {
               onClick={() => {
                 if (checkAll.confirm()) {
                   const account =
-                    step === 1 ? ChainX.account.from(mnemonicWord.join(' ')) : ChainX.account.from(secretKey);
-
+                    step === 'mnemonic' ? ChainX.account.from(mnemonicWord.join(' ')) : ChainX.account.from(secretKey);
                   openModal({
                     name: 'SetPasswordModal',
                     data: {
@@ -78,20 +81,65 @@ class ImportAccountModal extends Component {
         <div className={styles.importAccountModal}>
           <div className={styles.title}>
             <span>
-              {step === 1 ? <FormattedMessage id={'ImportMnemonic'} /> : <FormattedMessage id={'ImportPrivateKey'} />}
+              {step === 'mnemonic' && <FormattedMessage id={'ImportMnemonic'} />}
+              {step === 'secretKey' && <FormattedMessage id={'ImportPrivateKey'} />}
             </span>
-            <Button
-              type="blank"
-              onClick={() => {
-                this.setState({
-                  step: step === 1 ? 2 : 1,
-                });
-              }}>
-              <Icon name="icon-daoruzhanghu" className={styles.importicon} />
-              {step === 1 ? <FormattedMessage id={'ImportPrivateKey'} /> : <FormattedMessage id={'ImportMnemonic'} />}
-            </Button>
+            <div className={styles.icons}>
+              <Button
+                type="blank"
+                onClick={() => {
+                  this.setState({
+                    step: step === 'mnemonic' ? 'secretKey' : 'mnemonic',
+                  });
+                }}>
+                <Icon name="icon-daoruzhanghu" className={styles.importicon} />
+                {step === 'mnemonic' && <FormattedMessage id={'ImportPrivateKey'} />}
+                {step === 'secretKey' && <FormattedMessage id={'ImportMnemonic'} />}
+              </Button>
+              <Button type="blank" onClick={() => {}}>
+                <label htmlFor="upload-file">
+                  <Icon name="icon-daoruzhanghu" className={styles.importicon} />
+                  Keystore File
+                </label>
+                <input
+                  ref={this.inputFileRef}
+                  id="upload-file"
+                  type="file"
+                  style={{ position: 'absolute', display: 'none' }}
+                  onChange={e => {
+                    const file = e.currentTarget.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.readAsText(file, 'UTF-8');
+                    reader.onload = e => {
+                      const errMsg = '数据格式错误，请检查文件数据';
+                      try {
+                        const result = JSON.parse(e.target.result);
+                        const { tag, address, encoded, net } = result;
+                        const isNotValidAddress = Patterns.check('isChainXAddress')(address);
+                        if (!tag || !address || !encoded || !net || isNotValidAddress) {
+                          throw new Error(errMsg);
+                        }
+                        openModal({
+                          name: 'SetKeystorePassword',
+                          data: {
+                            tag,
+                            address,
+                            encoded,
+                            net,
+                          },
+                        });
+                      } catch (err) {
+                        this.inputFileRef.current.value = '';
+                        Toast.warn(errMsg);
+                      }
+                    };
+                  }}
+                />
+              </Button>
+            </div>
           </div>
-          {step === 1 ? (
+          {step === 'mnemonic' && (
             <>
               <ul>
                 {mnemonicWord.map((item, index) => (
@@ -116,7 +164,8 @@ class ImportAccountModal extends Component {
                 <div className={styles.errMsg}>{<FormattedMessage id={MnemonicWordErrMsg} />}</div>
               ) : null}
             </>
-          ) : (
+          )}
+          {step === 'secretKey' && (
             <Input.Text
               isTextArea
               rows={3}

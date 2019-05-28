@@ -1,6 +1,8 @@
 import { autorun, computed, observable } from 'mobx';
 import { _, localSave, convertAddressChecksumAll } from '../utils';
 import ModelExtend from './ModelExtend';
+import { default as downloadFile } from 'downloadjs';
+import uniqid from 'uniqid';
 import { Toast } from '../components';
 
 export default class Store extends ModelExtend {
@@ -126,7 +128,7 @@ export default class Store extends ModelExtend {
     this.changeModel('currentAccount', newCurrentAccount);
   }
 
-  addAccount({ tag, address, encoded }) {
+  addAccount({ tag, address, encoded, download = true }) {
     // address已经存在的不再重复加入
     const filterOne = this.accounts.filter(item => item.address === address)[0];
     const currentNetWork = this.getCurrentNetWork();
@@ -134,7 +136,11 @@ export default class Store extends ModelExtend {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
       return;
     }
-    this.changeModel('accounts', [...this.accounts, { tag, address, encoded, net: currentNetWork.value }]);
+    const user = { tag, address, encoded, net: currentNetWork.value };
+    this.changeModel('accounts', [...this.accounts, user]);
+    if (download) {
+      downloadFile(JSON.stringify(user), `${tag.replace(' ', '')}_${uniqid()}_keystore.txt`, 'text/plain');
+    }
     this.setCurrentAccount(address);
   }
 

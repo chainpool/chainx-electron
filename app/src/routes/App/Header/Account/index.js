@@ -9,6 +9,7 @@ import EditPasswordModal from './Modal/EditPasswordModal';
 import EditLabelModal from './Modal/EditLabelModal';
 import ForgetAccountModal from './Modal/ForgetAccountModal';
 import CreateAccountModal from './Modal/CreateAccountModal';
+import SetKeystorePassword from './Modal/SetKeystorePassword';
 import * as styles from './index.less';
 import Linux from '../../../../resource/Linux.png';
 import Mac from '../../../../resource/Mac.png';
@@ -263,6 +264,7 @@ class Account extends Mixin {
         {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ForgetAccountModal' ? <ForgetAccountModal {...this.props} /> : null}
         {name === 'CreateAccountModal' ? <CreateAccountModal {...this.props} /> : null}
+        {name === 'SetKeystorePassword' ? <SetKeystorePassword {...this.props} /> : null}
       </div>
     );
   }
