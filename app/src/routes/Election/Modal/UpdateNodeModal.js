@@ -146,15 +146,21 @@ class UpdateNodeModal extends Component {
         <div className={styles.updateNodeModal}>
           <ul className={styles.intentionsInfo}>
             <li>
-              <span>当前出块公钥:</span>
+              <span>
+                <FormattedMessage id={'CurrentSessionPubkey'} />:
+              </span>
               {blockInfo.sessionKey}
             </li>
             <li>
-              <span>当前出块地址:</span>
+              <span>
+                <FormattedMessage id={'CurrentSessionAddress'} />:
+              </span>
               {blockInfo.sessionKeyAddress}
             </li>
             <li>
-              <span>当前奖池地址:</span>
+              <span>
+                <FormattedMessage id={'CurrentJackpotAddress'} />:
+              </span>
               {blockInfo.jackpotAddress}
             </li>
           </ul>
