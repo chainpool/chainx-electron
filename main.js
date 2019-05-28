@@ -48,7 +48,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(
-    process.env.NODE_ENV === 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
+    process.env.NODE_ENV !== 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
   );
 
   mainWindow.webContents.on('did-finish-load', () => {
