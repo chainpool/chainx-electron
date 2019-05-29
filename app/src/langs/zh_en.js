@@ -215,7 +215,7 @@ const zh_en = {
   ImportHotPrivateKey: ['导入热私钥', ' Import Hot Private Key'],
   SetupNode: ['设置节点', 'Setup Node'],
   Imported: ['已导入', 'Imported'],
-  LockTime: ['锁定期{time}分钟', 'Lock {time}m'],
+  LockTime: ['锁定期{time}天', 'Lock {time} days'],
   NominationAmountAfterModified: ['修改后投票数', 'Nomination amount after modified'],
   Website: ['官网域名', 'Website'],
 
