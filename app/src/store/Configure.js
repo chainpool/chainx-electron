@@ -395,9 +395,9 @@ export default class Configure extends ModelExtend {
     const reloadPage = () => {
       clearInterval(this.interval);
       this.interval = setTimeout(() => {
-        const { pathname, search } = this.setQueryParams('bestNode', true);
+        const { search } = this.setQueryParams('bestNode', true);
         if (refresh) {
-          window.location.href = `${pathname}${search}`;
+          window.location.search = search;
         }
       }, 60 * 1000);
     };
