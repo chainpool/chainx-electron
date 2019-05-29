@@ -29,7 +29,7 @@ class RouterGo extends PureComponent {
         className={classNames(styles.url, className)}
         style={style}
         rel="noopener noreferrer"
-        href={url}
+        click={() => openExternal(url)}
         target="_blank">
         {children || pathname}
       </a>
