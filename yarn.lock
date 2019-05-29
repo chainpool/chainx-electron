@@ -672,7 +672,7 @@ electron-updater@^4.0.6:
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
-electron@^5.0.0:
+electron@^5.0.2:
   version "5.0.2"
   resolved "https://registry.npm.taobao.org/electron/download/electron-5.0.2.tgz#0f6b38ae7e344b94f433d9171e50568f56962fc7"
   integrity sha1-D2s4rn40S5T0M9kXHlBWj1aWL8c=
