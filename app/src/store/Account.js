@@ -175,6 +175,11 @@ export default class Store extends ModelExtend {
     this.setCurrentAccount();
   }
 
+  exportKeystore = ({ address, tag, encoded, net }) => {
+    const user = { address, tag, encoded, net };
+    downloadFile(JSON.stringify(user), `${address}`);
+  };
+
   switchAccount({ address }) {
     this.setCurrentAccount(address);
   }

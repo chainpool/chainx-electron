@@ -20,7 +20,7 @@ class Configure extends Mixin {
 
     const tableProps = {
       ...this.props,
-      widths: [150, 150, 250, 150, 150],
+      widths: [150, 160, 250, 150, 150],
     };
     return (
       <div className={styles.configure}>
