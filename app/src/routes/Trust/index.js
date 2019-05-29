@@ -75,18 +75,14 @@ class Trust extends Mixin {
     )[0];
 
     const isShowResponseWithdraw =
-      isTrustee &&
-      currentTrustNode &&
-      currentTrustNode.connected &&
-      currentTrustNode.decodedHotPrivateKey &&
-      normalizedOnChainAllWithdrawList.length > 0 &&
-      !isSelfSign;
+      isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
 
     const isShowConstructureWithdraw =
       isTrustee &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => {
         return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
       }).length === 0 &&
+      currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
     const renderSignLi = (one, index) => {

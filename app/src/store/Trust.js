@@ -466,7 +466,13 @@ export default class Trust extends ModelExtend {
   };
 
   fetchNodeFeeRate = async url => {
+    let Authorization;
     if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
       url = url.split('@')[1];
     }
     const res = await fetchFromHttp({
@@ -475,6 +481,7 @@ export default class Trust extends ModelExtend {
       method: 'POST',
       timeOut: 3500,
       params: [10],
+      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
     });
     if (res && res.result) {
       return res.result.feerate / 1024;
