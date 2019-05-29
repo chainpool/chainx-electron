@@ -86,7 +86,7 @@ class VoteModal extends Mixin {
     } = this.props;
 
     const bondingSeconds =
-      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60);
+      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60 * 60 * 24);
 
     let operation;
     let operationAmount;
