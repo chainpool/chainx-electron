@@ -196,80 +196,79 @@ export default class Trust extends ModelExtend {
   };
 
   sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-    if (!findOne || (findOne && !findOne.node)) {
-      throw new Error({
-        info: '未设置节点',
-        toString: () => 'NotSetNode',
-      });
-    }
-    if (!findOne.connected) {
-      throw new Error({
-        info: '节点未连接',
-        toString: () => 'NodeNotLink',
-      });
-    }
-    const multisigAddress = await this.getBitcoinTrusteeAddress();
-    if (!multisigAddress) {
-      throw new Error({
-        info: '未获取到信托地址',
-        toString: () => 'NotFindTrusteeAddress',
-      });
-    }
-    const nodeUrl = findOne.node;
-    const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
-    if (!minerFee) {
-      throw new Error({
-        info: '未获取到提现手续费',
-        toString: () => 'NotFindTrusteeFee',
-      });
-    }
-
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
-    const filterUnspentsByAmount = (unspents = [], amount) => {
-      const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
-      nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
-
-      const result = [];
-      let sum = new BigNumber(0);
-      for (let utxo of nonZeroUnspents) {
-        result.push(utxo);
-        const value = new BigNumber(10).exponentiatedBy(8).multipliedBy(utxo.amount);
-        sum = sum.plus(value);
-        if (sum.isGreaterThan(amount)) {
-          break;
-        }
-      }
-      return sum.isLessThan(amount) ? [] : result;
-    };
-
-    const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
-      const fee = await this.fetchNodeFeeRate(url);
-      const res = await this.getTrusteeSessionInfo('Bitcoin');
-      const { maxSignCount: n, totalSignCount: m } = res;
-      const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
-      const result = formatNumber.toFixed(bytes * fee, 8);
-      console.log(
-        inputLength,
-        withdrawalLength,
-        fee,
-        n,
-        m,
-        bytes,
-        result,
-        'inputLength,withdrawalLength,fee,n,m,bytes,result'
-      );
-      if (result) {
-        this.changeModel('commentFee', result);
-        this.changeModel('lastPredictTradeLength', bytes);
-      }
-    };
-
     const compose = async () => {
       let rawTransaction;
-      const utxos = await getUnspents(nodeUrl);
       if (withdrawList) {
+        const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+        if (!findOne || (findOne && !findOne.node)) {
+          throw new Error({
+            info: '未设置节点',
+            toString: () => 'NotSetNode',
+          });
+        }
+        if (!findOne.connected) {
+          throw new Error({
+            info: '节点未连接',
+            toString: () => 'NodeNotLink',
+          });
+        }
+        const multisigAddress = await this.getBitcoinTrusteeAddress();
+        if (!multisigAddress) {
+          throw new Error({
+            info: '未获取到信托地址',
+            toString: () => 'NotFindTrusteeAddress',
+          });
+        }
+        const nodeUrl = findOne.node;
+        const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
+        if (!minerFee) {
+          throw new Error({
+            info: '未获取到提现手续费',
+            toString: () => 'NotFindTrusteeFee',
+          });
+        }
+
+        const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
+        const filterUnspentsByAmount = (unspents = [], amount) => {
+          const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
+          nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
+
+          const result = [];
+          let sum = new BigNumber(0);
+          for (let utxo of nonZeroUnspents) {
+            result.push(utxo);
+            const value = new BigNumber(10).exponentiatedBy(8).multipliedBy(utxo.amount);
+            sum = sum.plus(value);
+            if (sum.isGreaterThan(amount)) {
+              break;
+            }
+          }
+          return sum.isLessThan(amount) ? [] : result;
+        };
+        const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
+          const fee = await this.fetchNodeFeeRate(url);
+          const res = await this.getTrusteeSessionInfo('Bitcoin');
+          const { maxSignCount: n, totalSignCount: m } = res;
+          const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
+          const result = formatNumber.toFixed(bytes * fee, 8);
+          console.log(
+            inputLength,
+            withdrawalLength,
+            fee,
+            n,
+            m,
+            bytes,
+            result,
+            'inputLength,withdrawalLength,fee,n,m,bytes,result'
+          );
+          if (result) {
+            this.changeModel('commentFee', result);
+            this.changeModel('lastPredictTradeLength', bytes);
+          }
+        };
+
+        const utxos = await getUnspents(nodeUrl);
         if (!utxos.length) {
           throw new Error({
             info: '当前节点无任何utxo',
