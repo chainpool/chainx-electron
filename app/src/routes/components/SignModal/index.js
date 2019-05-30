@@ -123,7 +123,7 @@ class SignModal extends Mixin {
         button={
           <Button
             size="full"
-            type={fee ? 'confirm' : 'disabeld'}
+            type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
             onClick={async () => {
               if (await checkAll.confirm()) {
                 if (this.result && this.result.extrinsic) {
