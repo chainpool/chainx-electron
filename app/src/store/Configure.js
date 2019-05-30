@@ -239,6 +239,12 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
+              name: 'w1.chainx.org.cn',
+              isSystem: true,
+              address: 'wss://w1.chainx.org.cn/ws',
+            },
+            {
+              type: 'SystemDefault',
               name: 'ThisMachine',
               address: 'ws://localhost:8087',
               isSystem: true,

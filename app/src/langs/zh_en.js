@@ -205,7 +205,8 @@ const zh_en = {
   UnLinked: ['未连接', 'UnLink'],
   HotEntity: ['热公钥', 'Hot Public Key'],
   HotPrivateEntity: ['热私钥', 'Hot private Key'],
-  HotPrivateEntityPassword: ['热私钥密码', 'Password from Hot private Key'],
+  NotImportHotPrivateEntity: ['未导入热私钥', 'Not Import hot private Key'],
+  HotPrivateEntityPassword: ['热私钥密码', 'Password from hot private Key'],
   HotPrivateKeyStoreLocal: [
     '热私钥将加密存储于本地，用于手动提现，请确保本机安全',
     'The hot private key stores the encryption locally for withdraw. Please ensure local security.',
@@ -214,7 +215,7 @@ const zh_en = {
   ImportHotPrivateKey: ['导入热私钥', ' Import Hot Private Key'],
   SetupNode: ['设置节点', 'Setup Node'],
   Imported: ['已导入', 'Imported'],
-  LockTime: ['锁定期{time}分钟', 'Lock {time}m'],
+  LockTime: ['锁定期{time}天', 'Lock {time} days'],
   NominationAmountAfterModified: ['修改后投票数', 'Nomination amount after modified'],
   Website: ['官网域名', 'Website'],
 

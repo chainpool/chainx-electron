@@ -24,9 +24,9 @@ class SignModal extends Mixin {
     const token = targetToken || 'PCX';
     if (_.isFunction(callback)) {
       this.result = await callback({ token });
-      if (this.result && this.result.extrinsic) {
-        this.getFee();
-      }
+      this.getFee();
+    } else {
+      console.error('callback不是函数');
     }
   };
 
@@ -35,28 +35,30 @@ class SignModal extends Mixin {
     const {
       model: { setDefaultPrecision, currentAccount },
     } = this.props;
-    const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
-    const result = setDefaultPrecision(fee);
-    this.setState({
-      fee: result,
-    });
-    return result;
+    if (this.result && this.result.extrinsic) {
+      const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
+      const result = setDefaultPrecision(fee);
+      this.setState({
+        fee: result,
+      });
+      return result;
+    }
   };
 
   checkAll = {
     checkPassword: async () => {
-      const { password } = this.state;
-      const fee = await this.getFee();
+      const { password, fee } = this.state;
       const {
         model: { currentAccount: { encoded } = {}, setPrecision },
         assetStore: { nativeAccountAssets = [] },
       } = this.props;
       const { free = 0, name } = nativeAccountAssets[0] || {};
       const errMsg =
+        Patterns.check('required')(fee, '手续费未获取到') ||
         Patterns.check('required')(password) ||
         Patterns.check('decode')(encoded, password) ||
-        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用') ||
-        Patterns.check('required')(fee, '手续费未获取到');
+        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用');
+
       this.setState({ passwordErrMsg: errMsg });
       return errMsg;
     },
@@ -121,10 +123,10 @@ class SignModal extends Mixin {
         button={
           <Button
             size="full"
-            type="confirm"
+            type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
             onClick={async () => {
               if (await checkAll.confirm()) {
-                if (this.result) {
+                if (this.result && this.result.extrinsic) {
                   const result = this.result;
                   const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
                   const toastOperation = description.filter(

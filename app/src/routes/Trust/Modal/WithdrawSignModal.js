@@ -17,6 +17,7 @@ class WithdrawSignModal extends Component {
       const { currentTrustNode } = this.props;
       const decodedHotPrivateKey = currentTrustNode.decodedHotPrivateKey;
       const errMsg =
+        Patterns.check('required')(decodedHotPrivateKey, <FormattedMessage id={'NotImportHotPrivateEntity'} />) ||
         Patterns.check('required')(password) ||
         Patterns.check('isHotPrivateKeyPassword')(decodedHotPrivateKey, password, decryptedKey => {
           this.decryptedKey = decryptedKey;
