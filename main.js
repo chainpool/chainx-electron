@@ -48,17 +48,19 @@ app.on('ready', async () => {
     minHeight: 600,
     height: 765,
     webPreferences: { preload: path.join(__dirname, 'preload.js') },
+    backgroundColor: '#f2f3f4'
   });
+
+  mainWindow.show();
 
   mainWindow.loadURL(
     process.env.NODE_ENV === 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
   );
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    mainWindow.show();
   });
 
   mainWindow.on('close', event => {
@@ -71,10 +73,7 @@ app.on('ready', async () => {
       }
     }
   });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
   new AppUpdater();
 });
+
+
