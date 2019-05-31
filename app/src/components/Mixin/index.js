@@ -10,6 +10,7 @@ class Mixin extends React.Component {
 
   async componentDidMount() {
     _.isFunction(this.startInit) && this.startInit();
+    _.isFunction(this.componentMount) && this.componentMount();
   }
 
   componentDidUpdate(prevProps) {

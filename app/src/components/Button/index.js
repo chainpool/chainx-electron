@@ -14,6 +14,7 @@ export class Button extends PureComponent {
       className,
       loading = false,
       Ele = 'button',
+      canClick = true,
     } = this.props;
     return (
       <Ele
@@ -24,10 +25,11 @@ export class Button extends PureComponent {
           styles[type],
           styles[shape],
           loading ? styles.loading : null,
+          !canClick ? styles.notClick : null,
           className
         )}
         onClick={() => {
-          _.isFunction(onClick) && onClick();
+          canClick && _.isFunction(onClick) && onClick();
         }}>
         {type === 'more' ? <>...</> : children}
       </Ele>

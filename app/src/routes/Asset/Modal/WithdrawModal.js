@@ -82,6 +82,10 @@ class WithdrawModal extends Mixin {
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
+    // checkSpecial:()=>{
+    //   const { amount,address } = this.state;
+    //   const {assetStore: { btcAddresses = [] }}=this.props
+    // },
 
     confirm: async () => {
       const result1 = await this.checkAll['checkAddress']();
