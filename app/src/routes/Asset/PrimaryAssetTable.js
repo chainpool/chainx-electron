@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { formatNumber, Inject, setColumnsWidth, fetchFromHttp, _ } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table, FormattedMessage } from '../../components';
+import { Button, ButtonGroup, Table, FormattedMessage, Icon } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import Asset from './components/Asset';
@@ -51,8 +51,8 @@ function drawCandies(address) {
 class PrimaryAssetTable extends Component {
   render() {
     const {
-      model: { openModal, nativeAccountAssets = [] },
-      globalStore: { nativeAssetPrecision },
+      model: { openModal, nativeAccountAssets = [], setPrecision },
+      globalStore: { nativeAssetPrecision, nativeAssetName },
       configureStore: { isTestNet },
       accountStore: { currentAddress },
       widths,
@@ -78,7 +78,23 @@ class PrimaryAssetTable extends Component {
           {
             title: <FormattedMessage id={'FreeBalance'} />,
             dataIndex: 'free',
-            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
+            render: value => {
+              const tip =
+                setPrecision(value, nativeAssetName) <= 0.001 ? (
+                  <HoverTip
+                    tip={
+                      '可用余额过低可能导致您无法支付链上操作的手续费,此时可从其他账户转入PCX，也可充值BTC获取PCX充值奖励'
+                    }>
+                    <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
+                  </HoverTip>
+                ) : null;
+              return (
+                <>
+                  <Asset value={value} precision={nativeAssetPrecision} />
+                  {tip}
+                </>
+              );
+            },
           },
           {
             title: <FormattedMessage id={'StakingReserved'} />,
