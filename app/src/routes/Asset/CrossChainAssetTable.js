@@ -87,7 +87,9 @@ class CrossChainAssetTable extends Mixin {
                       <FormattedMessage id={'GetFreeCoin'} />
                     </Button>
                   ) : null}
+
                   <Button
+                    {...(isBTC ? { type: 'disabeld' } : {})}
                     onClick={() => {
                       openModal({
                         name: 'CrossChainBindModal',
