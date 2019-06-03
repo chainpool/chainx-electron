@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const path = require('path')
+const path = require('path');
 
 class AppUpdater {
   constructor() {
@@ -43,12 +43,12 @@ app.on('activate', () => {
 app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1280,
+    width: 1320,
     minWidth: 800,
     minHeight: 600,
     height: 765,
     webPreferences: { preload: path.join(__dirname, 'preload.js') },
-    backgroundColor: '#f2f3f4'
+    backgroundColor: '#f2f3f4',
   });
 
   mainWindow.show();
@@ -56,12 +56,6 @@ app.on('ready', async () => {
   mainWindow.loadURL(
     process.env.NODE_ENV === 'development' ? `http://localhost:8000` : `file://${__dirname}/app/build/index.html`
   );
-
-  mainWindow.on('ready-to-show', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-  });
 
   mainWindow.on('close', event => {
     if (process.platform === 'darwin') {
@@ -73,7 +67,10 @@ app.on('ready', async () => {
       }
     }
   });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+
   new AppUpdater();
 });
-
-

@@ -108,7 +108,7 @@ class Node extends Component {
                     key={ins}
                     onClick={() => {
                       if (!item.block) {
-                        return Toast.warn(<FormattedMessage id={index ? 'NodeNotConnection' : 'ApiNotConnection'} />);
+                        return Toast.warn(<FormattedMessage id={index ? 'ApiNotConnection' : 'NodeNotConnection'} />);
                       }
                       if (item.best) return false;
                       dispatch({

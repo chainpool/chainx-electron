@@ -1,11 +1,14 @@
 import React from 'react';
-import { Modal, Input, Button, Mixin, FormattedMessage } from '../../../components';
+import { Modal, Input, Button, Mixin, FormattedMessage, Toast } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './WithdrawModal.less';
 
-@Inject(({ addressManageStore }) => ({ addressManageStore }))
+const withdrawWarnMessage =
+  'ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)';
+
+@Inject(({ addressManageStore, assetStore }) => ({ addressManageStore, assetStore }))
 class WithdrawModal extends Mixin {
   state = {
     address: '',
@@ -18,6 +21,7 @@ class WithdrawModal extends Mixin {
   };
 
   startInit = () => {
+    Toast.warn(withdrawWarnMessage);
     const {
       model: { dispatch },
       globalStore: { modal: { data: { token } = {} } = {} },
@@ -82,11 +86,23 @@ class WithdrawModal extends Mixin {
       this.setState({ amountErrMsg: errMsg });
       return errMsg;
     },
-
+    checkSpecial: () => {
+      const { amount, address } = this.state;
+      const {
+        assetStore: { btcAddresses = [] },
+      } = this.props;
+      if (Number(amount) > 5 && !btcAddresses.includes(address)) {
+        Toast.warn(withdrawWarnMessage);
+      }
+    },
     confirm: async () => {
       const result1 = await this.checkAll['checkAddress']();
       const result2 = await this.checkAll['checkAmount']();
-      return !result1 && !result2;
+      const result = !result1 && !result2;
+      if (result) {
+        this.checkAll['checkSpecial']();
+      }
+      return result;
     },
   };
 

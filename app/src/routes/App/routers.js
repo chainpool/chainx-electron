@@ -51,7 +51,7 @@ export default [
     title: 'AssetTrustee',
     path: PATH.trust,
     component: Trust,
-    authority: [1],
+    // authority: [1],
   },
   {
     title: 'DEX',
