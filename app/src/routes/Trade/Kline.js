@@ -103,7 +103,7 @@ class Kline extends SwitchPair {
 
   startKline = () => {
     const {
-      model: { dispatch, currentPair: { precision, unitPrecision } = {} },
+      model: { dispatch, orderPairs },
       language,
     } = this.props;
     const TradingView = window.TradingView;
@@ -147,13 +147,15 @@ class Kline extends SwitchPair {
           });
         },
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
+          const filterOne = orderPairs.filter((item = {}) => `${item.currency}/${item.assets}` === symbolName)[0];
+          const pricescale = filterOne.precision - filterOne.unitPrecision;
           setTimeout(() => {
             onSymbolResolvedCallback({
               name: symbolName,
               ticker: symbolName,
               timezone: 'Asia/Shanghai',
               minmov: 1, //最小波动
-              pricescale: Number(formatNumber.toPrecision(1, precision - unitPrecision, true)), //价格精度
+              pricescale: Number(formatNumber.toPrecision(1, pricescale, true)), //价格精度
               pointvalue: 1,
               session: '24x7',
               has_intraday: true, // 是否具有日内（分钟）历史数据
@@ -200,6 +202,7 @@ class Kline extends SwitchPair {
         try {
           this.changeTheme();
           this.widget = widget;
+
           this.widget.chart().createStudy('Moving Average', true, false, [5, 'close', 0], null, {
             'Plot.color': '#684A95',
           });
