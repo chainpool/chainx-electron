@@ -1,6 +1,10 @@
 const { app, BrowserWindow } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
+const utils = require('./utils');
+
+app.utils = utils;
+
 
 class AppUpdater {
   constructor() {
