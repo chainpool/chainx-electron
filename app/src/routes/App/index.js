@@ -8,7 +8,7 @@ import en from 'react-intl/locale-data/en';
 import { zh_CN, en_US } from '../../langs/zh_en.js';
 
 import CommonLayOut from './CommonLayOut';
-import { SignModal } from '../components';
+import { SignModal, LowerPCXWarn } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
@@ -83,6 +83,7 @@ class Main extends Component {
             </Switch>
           </Suspense>
           {name === 'SignModal' ? <SignModal {...this.props} /> : null}
+          {name === 'LowerPCXWarn' ? <LowerPCXWarn {...this.props} /> : null}
           <ToastContainer />
         </CommonLayOut>
       </IntlProvider>

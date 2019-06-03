@@ -2,7 +2,6 @@ import { autorun, computed, observable } from 'mobx';
 import { _, localSave, convertAddressChecksumAll } from '../utils';
 import ModelExtend from './ModelExtend';
 import { default as downloadFile } from 'downloadjs';
-import uniqid from 'uniqid';
 import { Toast } from '../components';
 
 export default class Store extends ModelExtend {
