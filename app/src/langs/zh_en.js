@@ -205,7 +205,8 @@ const zh_en = {
   UnLinked: ['未连接', 'UnLink'],
   HotEntity: ['热公钥', 'Hot Public Key'],
   HotPrivateEntity: ['热私钥', 'Hot private Key'],
-  HotPrivateEntityPassword: ['热私钥密码', 'Password from Hot private Key'],
+  NotImportHotPrivateEntity: ['未导入热私钥', 'Not Import hot private Key'],
+  HotPrivateEntityPassword: ['热私钥密码', 'Password from hot private Key'],
   HotPrivateKeyStoreLocal: [
     '热私钥将加密存储于本地，用于手动提现，请确保本机安全',
     'The hot private key stores the encryption locally for withdraw. Please ensure local security.',
@@ -214,7 +215,7 @@ const zh_en = {
   ImportHotPrivateKey: ['导入热私钥', ' Import Hot Private Key'],
   SetupNode: ['设置节点', 'Setup Node'],
   Imported: ['已导入', 'Imported'],
-  LockTime: ['锁定期{time}分钟', 'Lock {time}m'],
+  LockTime: ['锁定期{time}天', 'Lock {time} days'],
   NominationAmountAfterModified: ['修改后投票数', 'Nomination amount after modified'],
   Website: ['官网域名', 'Website'],
 
@@ -332,7 +333,7 @@ const zh_en = {
     'Make sure your nodes are properly deployed, or you will be punished.',
   ],
   NoRewardsAfterWithdrawal: ['退选后不会再有奖惩和惩罚', 'There will be no more rewards, penalties after withdrawal'],
-  NotSupport: ['暂不支持隔离见证地址', 'Isolated witness address is not supported'],
+  NotSupport: ['暂不支持bc1开头的隔离见证地址', 'Isolated witness address start with bc1 not support'],
   SystemDefault: ['系统默认', 'System Default'],
   UserDefined: ['自定义', 'User-defined'],
   ThisMachine: ['本机', 'This Machine'],

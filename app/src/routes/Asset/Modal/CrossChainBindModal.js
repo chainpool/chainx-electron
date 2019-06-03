@@ -521,6 +521,7 @@ class CrossChainBindModal extends Mixin {
             </div>
           </div>
         </div>
+        {OptionalChannel}
         <div className={styles.desc}>
           <span className={styles.step}>
             <FormattedMessage id={'SecondStep'} />
@@ -552,7 +553,7 @@ class CrossChainBindModal extends Mixin {
             }}
             onBlur={checkAll.checkTradeId}
           />
-          {OptionalChannel}
+
           <Button
             size="full"
             type="confirm"

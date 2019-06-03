@@ -23,12 +23,16 @@ export default class Tooltip extends PureComponent {
     } = this.props;
 
     function strLength(str) {
+      if (str.charCodeAt(0) < 0 || str.charCodeAt(0) > 128) return 2;
+      return 1;
+    }
+
+    function strsLength(str) {
       if (!_.isString(str)) return str;
       if (str === null || str === undefined) return null;
       let intLength = 0;
       for (let i = 0; i < str.length; i++) {
-        if (str.charCodeAt(i) < 0 || str.charCodeAt(i) > 128) intLength = intLength + 2;
-        else intLength = intLength + 1;
+        intLength = intLength + strLength(str[i]);
       }
       return intLength;
     }
@@ -39,14 +43,22 @@ export default class Tooltip extends PureComponent {
       if (!/^[0-9]*[1-9][0-9]*$/.test(num)) return null;
       const array = [];
       const len = str.length;
-      for (let i = 0; i < len / num; i++) {
-        if ((i + 1) * num > len) {
-          array.push(str.substring(i * num, len));
-        } else {
-          array.push(str.substring(i * num, (i + 1) * num));
+      let start = 0;
+      if (strsLength(str) <= num) {
+        array.push(str.slice());
+      } else {
+        for (let i = 0; i <= len; i++) {
+          const part = str.slice(start, i);
+          const partLength = strsLength(part);
+          if (partLength >= num) {
+            array.push(part);
+            start = i;
+          } else if (start === len - 1 || i === len - 1) {
+            array.push(str.slice(start));
+          }
         }
       }
-      return array;
+      return Array.from(new Set(array));
     }
 
     const multiTip = fixedLengthFormatString(tip, 48);

@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage } from '../../components';
+import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
 import { observer } from '../../utils';
 import { Balance, HoverTip } from '../components';
 
@@ -71,7 +71,15 @@ class DepositMineTable extends Mixin {
           render: value => <Balance value={value} />,
         },
         {
-          title: <FormattedMessage id={'UnclaimedDividend'}>{msg => `${msg}(PCX)`}</FormattedMessage>,
+          title: (
+            <>
+              <FormattedMessage id={'UnclaimedDividend'} />
+              (PCX)
+              <HoverTip tip={'待领利息由跨链资产票龄所占比例实时计算，出现波动为正常现象，建议适时领取'}>
+                <Icon name="icon-jieshishuoming" style={{ marginLeft: 5 }} />
+              </HoverTip>
+            </>
+          ),
           dataIndex: 'interest',
           render: value => <Balance value={value} />,
         },

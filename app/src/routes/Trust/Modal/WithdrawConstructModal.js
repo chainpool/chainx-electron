@@ -13,6 +13,7 @@ class WithdrawConstructModal extends Component {
     txErrMsg: '',
     fee: '',
     feeErrMsg: '',
+    loading: false,
   };
 
   checkAll = {
@@ -50,7 +51,9 @@ class WithdrawConstructModal extends Component {
     },
     checkFee: () => {
       const { fee } = this.state;
-      const errMsg = Patterns.check('required')(fee);
+      const errMsg =
+        Patterns.check('required')(fee) ||
+        Patterns.check('smaller')(0, fee, <FormattedMessage id={'AmountBiggerThan'} values={{ one: 0 }} />);
       this.setState({ feeErrMsg: errMsg });
       return errMsg;
     },
@@ -76,7 +79,7 @@ class WithdrawConstructModal extends Component {
   };
   render() {
     const { checkAll } = this;
-    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg, loading } = this.state;
     const {
       model: {
         normalizedOnChainAllWithdrawList = [],
@@ -98,6 +101,9 @@ class WithdrawConstructModal extends Component {
     const setTxFromIndexOrFee = async () => {
       const { withDrawIndexSignList, fee } = this.state;
       try {
+        this.setState({
+          loading: true,
+        });
         const tx = await dispatch({
           type: 'sign',
           payload: {
@@ -110,7 +116,12 @@ class WithdrawConstructModal extends Component {
             {
               tx,
             },
-            checkAll.checkTx
+            () => {
+              checkAll.checkTx();
+              this.setState({
+                loading: false,
+              });
+            }
           );
         }
       } catch (err) {
@@ -126,7 +137,7 @@ class WithdrawConstructModal extends Component {
         button={
           <Button
             size="full"
-            type="confirm"
+            type={loading ? 'disabeld' : 'confirm'}
             onClick={async () => {
               if (await checkAll.confirm()) {
                 openModal({
@@ -214,7 +225,7 @@ class WithdrawConstructModal extends Component {
                     </>
                   ) : null}
                 </span>
-                {commentFee && (
+                {commentFee && false && (
                   <span className={styles.bitcoinfee}>
                     <FormattedMessage id={'RecommendationFee'} />:{commentFee}
                   </span>

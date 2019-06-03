@@ -1,7 +1,7 @@
 import React from 'react';
 import { _, formatNumber, Inject, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage } from '../../components';
+import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
@@ -87,7 +87,9 @@ class CrossChainAssetTable extends Mixin {
                       <FormattedMessage id={'GetFreeCoin'} />
                     </Button>
                   ) : null}
+
                   <Button
+                    {...(isBTC ? { canClick: false } : {})}
                     onClick={() => {
                       openModal({
                         name: 'CrossChainBindModal',
@@ -97,19 +99,35 @@ class CrossChainAssetTable extends Mixin {
                         },
                       });
                     }}>
-                    {isBTC ? <FormattedMessage id={'Deposit'} /> : <FormattedMessage id={'Mapping'} />}
+                    {isBTC ? (
+                      <>
+                        <HoverTip tip={'暂停充值，详情请查看公告'}>
+                          <Icon name="icon-jinggao" className={styles.jinggaoicon} />
+                        </HoverTip>
+                        <FormattedMessage id={'Deposit'} />
+                      </>
+                    ) : (
+                      <FormattedMessage id={'Mapping'} />
+                    )}
                   </Button>
                   {!isSDOT ? (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
                         openModal({
-                          name: 'WithdrawModal',
+                          name: 'WithdrawWarnModal',
                           data: {
-                            token: item.name,
-                            freeShow: formatNumber.toPrecision(item.free, item.precision),
-                            free: item.free,
-                            chain: item.chain,
+                            callback: () => {
+                              openModal({
+                                name: 'WithdrawModal',
+                                data: {
+                                  token: item.name,
+                                  freeShow: formatNumber.toPrecision(item.free, item.precision),
+                                  free: item.free,
+                                  chain: item.chain,
+                                },
+                              });
+                            },
                           },
                         });
                       }}>

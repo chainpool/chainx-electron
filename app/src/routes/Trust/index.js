@@ -75,18 +75,14 @@ class Trust extends Mixin {
     )[0];
 
     const isShowResponseWithdraw =
-      isTrustee &&
-      currentTrustNode &&
-      currentTrustNode.connected &&
-      currentTrustNode.decodedHotPrivateKey &&
-      normalizedOnChainAllWithdrawList.length > 0 &&
-      !isSelfSign;
+      isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
 
     const isShowConstructureWithdraw =
       isTrustee &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => {
         return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
       }).length === 0 &&
+      currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
     const renderSignLi = (one, index) => {
@@ -133,7 +129,7 @@ class Trust extends Mixin {
             <SettingTable {...this.props} />
           </div>
         )}
-        {isTrustee && signTrusteeList.length && tx ? (
+        {isTrustee && signTrusteeList.length > 0 && tx ? (
           <div className={styles.signStatus}>
             {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
               <div className={styles.completeSign}>
@@ -219,7 +215,7 @@ class Trust extends Mixin {
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
             <ButtonGroup>
-              {isTrustee && (
+              {isTrustee ? (
                 <Button
                   {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}
                   onClick={() => {
@@ -228,7 +224,7 @@ class Trust extends Mixin {
                   <Icon name="icon-goujiantixian" />
                   <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
-              )}
+              ) : null}
             </ButtonGroup>
           </TableTitle>
           <WithdrawTable {...props} />

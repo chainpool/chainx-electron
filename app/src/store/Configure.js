@@ -115,7 +115,7 @@ export default class Configure extends ModelExtend {
           [
             {
               type: 'SystemDefault',
-              name: 'api.chainx.org',
+              name: 'api.org',
               best: true,
               address: 'https://api.chainx.org',
               isSystem: true,
@@ -123,7 +123,7 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'api.chainx.org.cn',
+              name: 'api.cn',
               address: 'https://api.chainx.org.cn',
               isSystem: true,
             },
@@ -139,7 +139,7 @@ export default class Configure extends ModelExtend {
           [
             {
               type: 'SystemDefault',
-              name: 'w1',
+              name: 'w1.org',
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
@@ -147,7 +147,7 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'w2',
+              name: 'w2.org',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
             },
@@ -213,7 +213,7 @@ export default class Configure extends ModelExtend {
           [
             {
               type: 'SystemDefault',
-              name: 'w1',
+              name: 'w1.org',
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
@@ -221,7 +221,7 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'w2',
+              name: 'w2.org',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
             },
@@ -236,6 +236,12 @@ export default class Configure extends ModelExtend {
               name: 'buildlinks',
               isSystem: true,
               address: 'wss://chainx.buildlinks.org',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'w1.cn',
+              isSystem: true,
+              address: 'wss://w1.chainx.org.cn/ws',
             },
             {
               type: 'SystemDefault',

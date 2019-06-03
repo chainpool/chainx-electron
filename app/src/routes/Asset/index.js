@@ -11,6 +11,8 @@ import CrossChainBindModal from './Modal/CrossChainBindModal';
 import GetCollarModal from './Modal/GetCollarModal';
 import GetCollarModalSDOT from './Modal/GetCollarModalSDOT';
 import BtcBindModal from './Modal/BtcBindModal';
+import StopDepositModal from './Modal/StopDepositModal';
+import WithdrawWarnModal from './Modal/WithdrawWarnModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -27,6 +29,17 @@ class Asset extends Mixin {
         type: 'getAccountAssets',
       })
     );
+  };
+
+  componentMount = () => {
+    if (Asset.notice) return;
+    const {
+      model: { openModal },
+    } = this.props;
+    openModal({
+      name: 'StopDepositModal',
+    });
+    Asset.notice = true;
   };
 
   render() {
@@ -83,6 +96,8 @@ class Asset extends Mixin {
         {name === 'GetCollarModal' ? <GetCollarModal {...this.props} /> : null}
         {name === 'GetCollarModalSDOT' ? <GetCollarModalSDOT {...this.props} /> : null}
         {name === 'BtcBindModal' ? <BtcBindModal {...this.props} /> : null}
+        {name === 'StopDepositModal' ? <StopDepositModal {...this.props} /> : null}
+        {name === 'WithdrawWarnModal' ? <WithdrawWarnModal {...this.props} /> : null}
       </div>
     );
   }

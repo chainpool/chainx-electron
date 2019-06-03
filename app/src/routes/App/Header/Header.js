@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { AuthorityComponent, Icon, RouterGo, FormattedMessage } from '../../../components';
 import { PATH, ShowLanguage } from '../../../constants';
 import routers from '../../App/routers';
@@ -58,17 +58,6 @@ class Header extends Component {
           <div className={styles.right}>
             <div>
               <ul>
-                <li>
-                  <RouterGo
-                    isOutSide
-                    go={{ pathname: 'https://chainx.org/help' }}
-                    className={pathname === PATH.tradeRecord ? styles.active : null}>
-                    <Icon name="icon-jieshishuoming" />
-                    <span style={{ marginLeft: 9 }} className={styles.help}>
-                      <FormattedMessage id={'Help'} />
-                    </span>
-                  </RouterGo>
-                </li>
                 <AuthorityComponent>
                   <li>
                     <RouterGo
@@ -84,18 +73,29 @@ class Header extends Component {
 
                 {[isLogin() ? 1 : 0, isLogin() ? 0 : 1].map((item, index) => {
                   return item === 0 ? (
-                    <li key={index} className={classNames(styles.navli, isTestNet ? styles.warn : null)}>
-                      <RouterGo
-                        go={{ pathname: PATH.configure }}
-                        className={pathname === PATH.configure ? styles.active : null}>
-                        <Icon name="icon-shezhi" style={{ fontSize: 16 }} />
-                      </RouterGo>
-                      {isTestNet && (
-                        <div className={classNames(styles.testlogo, styles.warn, !isLogin() ? styles.notlogin : null)}>
-                          <FormattedMessage id={'TestNet'} />
-                        </div>
-                      )}
-                    </li>
+                    <Fragment key={index}>
+                      <li>
+                        <RouterGo isOutSide go={{ pathname: 'https://chainx.org/help' }}>
+                          <Icon name="icon-jieshishuoming" className={styles.helpicon} />
+                          <span style={{ marginLeft: 9 }} className={styles.help}>
+                            <FormattedMessage id={'Help'} />
+                          </span>
+                        </RouterGo>
+                      </li>
+                      <li className={classNames(styles.navli, isTestNet ? styles.warn : null)}>
+                        <RouterGo
+                          go={{ pathname: PATH.configure }}
+                          className={pathname === PATH.configure ? styles.active : null}>
+                          <Icon name="icon-shezhi" style={{ fontSize: 16 }} />
+                        </RouterGo>
+                        {isTestNet && (
+                          <div
+                            className={classNames(styles.testlogo, styles.warn, !isLogin() ? styles.notlogin : null)}>
+                            <FormattedMessage id={'TestNet'} />
+                          </div>
+                        )}
+                      </li>
+                    </Fragment>
                   ) : item === 1 ? (
                     <li key={index} className={classNames(styles.navli)}>
                       <Account {...this.props} />
