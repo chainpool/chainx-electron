@@ -178,13 +178,12 @@ class Kline extends SwitchPair {
               endTime: endTime,
             },
           }).then((res = []) => {
-            // console.log(res, '---res');
             const data = res.map((item = {}) => ({
               close: item.closeShow,
               open: item.openShow,
               high: item.highShow,
               low: item.lowShow,
-              volume: item.volumeShow,
+              volume: Number(item.volumeShow),
               time: item.time * 1000,
             }));
             try {
