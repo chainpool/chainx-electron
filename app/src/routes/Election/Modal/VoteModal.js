@@ -77,7 +77,7 @@ class VoteModal extends Mixin {
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
-        modal: { data: { target, myTotalVote = 0, isCurrentAccount } = {} },
+        modal: { data: { target, myTotalVote = 0, isCurrentAccount, isActive } = {} },
         nativeAssetName: token,
       },
       chainStore: { blockDuration },
@@ -115,27 +115,39 @@ class VoteModal extends Mixin {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                openModal({
-                  name: 'SignModal',
-                  data: {
-                    description: [
-                      { name: 'operation', value: () => operation },
-                      { name: () => operationAmount, value: setBlankSpace(amount, token) },
-                      { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
-                    ],
-                    callback: () => {
-                      return dispatch({
-                        type: action === 'add' ? 'nominate' : action === 'cancel' ? 'unnominate' : 'renominate',
-                        payload: {
-                          target,
-                          amount,
-                          remark: remark.trim(),
-                          ...(action === 'switch' ? { to: selectNode.value } : {}),
-                        },
-                      });
+                const signModal = () =>
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [
+                        { name: 'operation', value: () => operation },
+                        { name: () => operationAmount, value: setBlankSpace(amount, token) },
+                        { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
+                      ],
+                      callback: () => {
+                        return dispatch({
+                          type: action === 'add' ? 'nominate' : action === 'cancel' ? 'unnominate' : 'renominate',
+                          payload: {
+                            target,
+                            amount,
+                            remark: remark.trim(),
+                            ...(action === 'switch' ? { to: selectNode.value } : {}),
+                          },
+                        });
+                      },
                     },
-                  },
-                });
+                  });
+
+                if (!isActive && action !== 'cancel') {
+                  openModal({
+                    name: 'InactiveVoteConfirmModal',
+                    data: {
+                      callback: signModal,
+                    },
+                  });
+                } else {
+                  signModal();
+                }
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -156,7 +168,7 @@ class VoteModal extends Mixin {
                       key={index}
                       className={action === item.value ? styles.active : null}
                       onClick={() => {
-                        this.setState({ action: item.value, amount: '' });
+                        this.setState({ action: item.value, amount: '', amountErrMsg: '' });
                       }}>
                       {item.label}
                     </li>

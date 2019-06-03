@@ -157,21 +157,13 @@ class NodeTable extends Component {
                       openModal({
                         name: 'VoteModal',
                         data: {
+                          isActive: item.isActive,
                           target: item.account,
                           myTotalVote: item.myTotalVote,
                           isCurrentAccount: item.address === currentAccount.address,
                         },
                       });
-                    if (!item.isActive) {
-                      openModal({
-                        name: 'InactiveVoteConfirmModal',
-                        data: {
-                          callback: vote,
-                        },
-                      });
-                    } else {
-                      vote();
-                    }
+                    vote();
                   }}>
                   <FormattedMessage id={'Nominate'} />
                 </Button>
