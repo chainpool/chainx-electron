@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent } from '../../components';
+import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { Inject, _ } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
@@ -94,7 +94,21 @@ class NodeTable extends Component {
         {
           title: <FormattedMessage id={'MyNominations'} />,
           dataIndex: 'myTotalVote',
-          render: value => <Balance value={setDefaultPrecision(value)} />,
+          render: (value, item) => {
+            const tip =
+              value && !item.isActive ? (
+                <HoverTip tip={'退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0'}>
+                  <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
+                </HoverTip>
+              ) : null;
+
+            return (
+              <>
+                <Balance value={setDefaultPrecision(value)} />
+                {tip}
+              </>
+            );
+          },
         },
         {
           title: <FormattedMessage id={'UnfreezeReserved'} />,
