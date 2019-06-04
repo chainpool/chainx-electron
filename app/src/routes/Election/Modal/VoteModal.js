@@ -104,7 +104,11 @@ class VoteModal extends Mixin {
       operationAmount = <FormattedMessage id={'SwitchAmount'} />;
     }
 
-    const nodesOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.account }));
+    const nodesOptions = originIntentions.map((item = {}) => ({
+      label: item.name,
+      value: item.account,
+      isActive: item.isActive,
+    }));
 
     return (
       <Modal
@@ -138,7 +142,7 @@ class VoteModal extends Mixin {
                     },
                   });
 
-                if (!isActive && action !== 'cancel') {
+                if ((action === 'add' && !isActive) || (action === 'switch' && !selectNode.isActive)) {
                   openModal({
                     name: 'InactiveVoteConfirmModal',
                     data: {
