@@ -75,7 +75,7 @@ before_script:
 
 branches:
   only:
-    - electron
+    - master
 
 script:
   - yarn
