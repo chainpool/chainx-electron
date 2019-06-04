@@ -27,10 +27,11 @@ class EditPasswordModal extends Component {
       let errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(
-          6,
+          8,
           password.length,
-          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }} />
-        );
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }} />
+        ) ||
+        Patterns.check('passwordUpperAndLower')(password);
       if (!errMsg) {
         errMsg = this.checkAll.checkEqual();
       }
@@ -122,7 +123,7 @@ class EditPasswordModal extends Component {
               />
             )}
           </FormattedMessage>
-          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }}>
+          <FormattedMessage id={'MinCharacterLengthAndUpperLowerCase'} values={{ length: 8 }}>
             {msg => (
               <Input.Text
                 errMsgIsOutside

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Patterns } from '../../../../../utils';
-import { ErrMsg } from '../../../../../constants';
 import * as styles from './SetPasswordModal.less';
 
 class SetPasswordModal extends Component {
@@ -31,12 +30,13 @@ class SetPasswordModal extends Component {
       const errMsg =
         Patterns.check('required')(password) ||
         Patterns.check('smallerOrEqual')(
-          6,
+          8,
           password.length,
-          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }} />
+          <FormattedMessage id={'MinCharacterLength' + ''} values={{ length: 8 }} />
         ) ||
-        this.checkAll.checkEqual();
+        Patterns.check('passwordUpperAndLower')(password);
       this.setState({ passwordErrMsg: errMsg });
+      this.checkAll.checkEqual();
       return errMsg;
     },
     checkConfirmPassword: () => {
@@ -102,7 +102,7 @@ class SetPasswordModal extends Component {
             )}
           </FormattedMessage>
 
-          <FormattedMessage id={'MinCharacterLength'} values={{ length: 6 }}>
+          <FormattedMessage id={'MinCharacterLengthAndUpperLowerCase'} values={{ length: 8 }}>
             {msg => (
               <Input.Text
                 isPassword
