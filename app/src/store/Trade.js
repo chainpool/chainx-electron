@@ -96,7 +96,8 @@ export default class Trade extends ModelExtend {
     });
     const show = value => {
       const filterPair = currentPair;
-      return this.setPrecision(value, filterPair.assets);
+      const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
+      return showUnit(this.setPrecision(value, filterPair.precision));
     };
     if (res && !res.length && interval === 60) {
       const obj = {
@@ -115,7 +116,7 @@ export default class Trade extends ModelExtend {
         highShow: show(item.high),
         lowShow: show(item.low),
         openShow: show(item.open),
-        volumeShow: show(item.volume),
+        volumeShow: this.setPrecision(item.volume, currentPair.assets),
       }));
       return res;
     }
