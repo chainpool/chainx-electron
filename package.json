@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX",
-  "version": "0.9.4",
+  "version": "0.9.6",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
@@ -35,7 +35,9 @@
     }
   },
   "dependencies": {
+    "@chainx/rpc-provider": "^2.13.0-alpha.4",
     "electron-store": "^3.2.0",
-    "electron-updater": "^4.0.6"
+    "electron-updater": "^4.0.6",
+    "ws": "^7.0.0"
   }
 }
