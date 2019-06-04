@@ -18,7 +18,7 @@ import Win from '../../../../resource/Win.png';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Mixin {
-  static AccountListLength = 6;
+  static AccountListLength = 5;
   startInit = () => {
     const {
       model: { dispatch },

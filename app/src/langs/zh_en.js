@@ -180,8 +180,8 @@ const zh_en = {
   RecommendedChannelNode: ['输入推荐渠道的节点名称 (选填)', 'Referrer’s node name (optional)'],
   SureWantToVote: ['确定要投票吗?', 'Are you sure you want to vote?'],
   NoRevenueIfDelected: [
-    '当前节点为退选状态，您的投票在退选期间不会获得任何收益',
-    'The current node is de-elected, and your vote will not gain any revenue during the de-election period.',
+    '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
+    'The amount of the prize pool of the withdrawing node will not increase, and your voting income may be very small or even zero.',
   ],
   GetWithdrawFee: ['手续费', 'Fee'],
   MinWithdrawValue: ['最小提现额', 'Min Value'],

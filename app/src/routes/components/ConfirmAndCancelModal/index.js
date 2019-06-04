@@ -6,8 +6,8 @@ import * as styles from './index.less';
 class ConfirmAndCancelModal extends Component {
   render() {
     const {
-      model: { closeModal },
-      globalStore: { modal: { data: { title, callback } = {} } = {} },
+      globalStore: { closeModal, modal: { data: { title, callback } = {} } = {} },
+      children,
     } = this.props;
     return (
       <Modal
@@ -34,8 +34,9 @@ class ConfirmAndCancelModal extends Component {
               </Button>
             </ButtonGroup>
           </div>
-        }
-      />
+        }>
+        {children}
+      </Modal>
     );
   }
 }
