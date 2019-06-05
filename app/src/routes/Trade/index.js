@@ -66,7 +66,7 @@ class Trade extends SwitchPair {
               <div className={styles.orderPair}>
                 <OrderPair {...props} data-desc="货币对" />
               </div>
-              <div className={styles.atestOrder}>
+              <div className={styles.latestOrder}>
                 <LatestOrder {...props} data-desc="最新成交列表" />
               </div>
             </div>
