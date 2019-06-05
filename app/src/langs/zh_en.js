@@ -409,10 +409,15 @@ const zh_en = {
   UserInstructions: ['用户须知', 'User Instructions'],
   ExportKeystore: ['导出Keystore', 'Export Keystore'],
 
+  PasswordUpperAndLower: ['必须包含大小写字母', 'Must contain upper and lower case letters'],
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于等于最小提现额', 'Amount must greater or equal than min value'],
   CharacterLength: ['{length}个字符以内', 'Within {length} characters'],
   MinCharacterLength: ['最少{length}个字符长度', 'At least {length} characters'],
+  MinCharacterLengthAndUpperLowerCase: [
+    '最少{length}个字符长度,并包含大小写字母',
+    'At least {length} characters and contain upper and lower case letters',
+  ],
   MaxCharacterLength: ['不能超过{length}个字符长度', 'At most {length} characters'],
   AmountBiggerThan: ['数量必须大于{one}', 'must greater than {one}'],
   AddressFormatError: ['地址格式错误', 'Address format error'],

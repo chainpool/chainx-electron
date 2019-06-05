@@ -228,12 +228,17 @@ export const Patterns = {
     result = inputValue.length > maxLength ? `最多${maxLength}个字符` : result;
     return result;
   },
-  precision: (inputValue, precision, errMsg = '小数位数') => {
+  precision: (inputValue, precision) => {
     if (inputValue && !_.isNaN(precision)) {
       inputValue = String(inputValue).replace(/(\.\d+?)0*$/, '$1'); //parseFloat(inputValue);
       const length = _.get(String(inputValue).split('.')[1] || 0, 'length');
       return length > Number(precision) ? `小数位数最大${precision}位` : '';
     }
+  },
+  passwordUpperAndLower: (value, errMsg = 'PasswordUpperAndLower') => {
+    const result = RegEx.checkUpperAndCase.test(value);
+    if (result) return '';
+    return errMsg;
   },
 
   check: value => {
@@ -294,6 +299,7 @@ export const RegEx = {
   checkDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
   checkIsIP: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
   checkAuthorization: /^(\w+:.+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$)/,
+  checkUpperAndCase: /(?=.*[a-z])(?=.*[A-Z])/,
 };
 
 export const isEmpty = value => {

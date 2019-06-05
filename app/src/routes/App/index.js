@@ -12,10 +12,16 @@ import { SignModal, LowerPCXWarn } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
-import { Inject } from '../../utils';
+import { Inject, toJS } from '../../utils';
 import * as styles from './index.less';
 
 addLocaleData([...zh, ...en]);
+
+const log = console.log;
+console.log = (...payload) => {
+  const payloads = payload.map(item => toJS(item));
+  log(...payloads);
+};
 
 @Inject(
   ({
