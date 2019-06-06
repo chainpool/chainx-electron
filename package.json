@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
@@ -45,6 +45,9 @@
           "type": "link",
           "path": "/Applications"
         }
+      ],
+      "target": [
+        "zip"
       ]
     },
     "win": {
