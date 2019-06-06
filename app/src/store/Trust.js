@@ -58,10 +58,14 @@ export default class Trust extends ModelExtend {
   @observable signStatus = '';
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
-  @observable commentFee = '';
+  @observable commentFee = ''; // 推荐手续费
   @observable totalSignCount = '';
   @observable lastPredictTradeLength = '';
+  @observable BitCoinFee = '';
 
+  @computed get BitCoinFeeShow() {
+    return this.setPrecision(this.BitCoinFee, 8);
+  }
   @computed
   get maxSignCount() {
     return Math.ceil((this.totalSignCount * 2) / 3);
@@ -197,7 +201,24 @@ export default class Trust extends ModelExtend {
     });
   }
   @computed get txInputList() {
-    return [];
+    if (!this.tx) return [];
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transaction = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+    console.log(txb.__tx.ins);
+    return [
+      {
+        address: '',
+        value: 0,
+      },
+    ];
+    // return txb.__tx.ins.map((item = {}) => {
+    //   const address = bitcoin.address.fromOutputScript(item.script, network);
+    //   return {
+    //     address,
+    //     value: this.setPrecision(item.sequence, 8),
+    //   };
+    // });
   }
 
   reload = () => {
@@ -212,7 +233,7 @@ export default class Trust extends ModelExtend {
     this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0 }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
@@ -238,8 +259,8 @@ export default class Trust extends ModelExtend {
           });
         }
         const nodeUrl = findOne.node;
-        const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
-        if (!minerFee) {
+        const BitCoinFee = this.BitCoinFee;
+        if (!BitCoinFee) {
           throw new Error({
             info: '未获取到提现手续费',
             toString: () => 'NotFindTrusteeFee',
@@ -318,12 +339,12 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = withdraw.amount - minerFee.fee;
+          const fee = withdraw.amount - BitCoinFee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - feeSum - bitFee;
+        const change = totalInputAmount - feeSum - userInputbitFee;
         if (change < 0) {
           throw new Error({
             info: 'utxo总额不够支付手续费',
@@ -626,5 +647,12 @@ export default class Trust extends ModelExtend {
 
   getBitcoinTrusteeAddress = async () => {
     return await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+  };
+
+  getMinimalWithdrawalValueByToken = async () => {
+    const res = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
+    if (res && res.fee) {
+      this.changeModel('BitCoinFee', res.fee);
+    }
   };
 }

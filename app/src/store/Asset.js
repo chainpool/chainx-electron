@@ -320,8 +320,8 @@ export default class Asset extends ModelExtend {
     const res = await getMinimalWithdrawalValueByToken(token);
     const { fee, minimalWithdrawal } = res;
     return {
-      fee,
-      minimalWithdrawal,
+      fee, //信托构造多签交易手续交易
+      minimalWithdrawal, // 最小提现手续费
     };
   };
 

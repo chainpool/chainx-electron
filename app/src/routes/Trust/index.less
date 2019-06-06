@@ -48,14 +48,37 @@
 
 
 
+  .responsetitle{
+    font-weight: bold;
+    font-size: 16px;
+  }
   .signStatus{
+    .reslist{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .statusList{
+        display:flex;
+        li+li{
+          margin-left: 25px;
+        }
+        li{
+          i{
+            margin-right: 8px;
+          }
+          .count{
+            margin-left: 5px;
+          }
+        }
+      }
+    }
     position:relative;
     background: #F5F5F5;
     border: 1px solid #DCE0E2;
     border-radius: 2px;
     // border:1px solid @yellow;
      padding:20px;
-    margin:40px 0;
+    margin:20px 0;
     .completeSign{
       display: flex;
       flex-direction: column;
@@ -116,6 +139,33 @@
             border: 1px solid #E3E3E3;
             border-radius: 14px;
           }
+        }
+      }
+    }
+    .copytx{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin:20px  -20px 0;
+      height:38px;
+      background: #EEEEEE;
+      border: 1px solid #DCE0E2;
+      border-radius: 2px;
+      padding:0 20px;
+      .tx{
+        .txlabel{
+          font-weight: bold;
+          margin-right: 5px;
+        }
+      }
+      .fees{
+        display: flex;
+        >div{
+          font-weight: bold;
+          font-size: 12px;
+        }
+        >div+div{
+          margin-left: 10px;
         }
       }
     }

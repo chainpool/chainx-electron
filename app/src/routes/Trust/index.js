@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { TableTitle } from '../components';
-import { Inject } from '../../utils';
+import { Inject, formatNumber } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -18,6 +18,7 @@ class Trust extends Mixin {
     this.fetchPoll(this.getAllWithdrawalList);
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
+    this.getMinimalWithdrawalValueByToken();
   };
 
   getAllWithdrawalList = async () => {
@@ -33,6 +34,15 @@ class Trust extends Mixin {
     } = this.props;
     return dispatch({
       type: 'getSomeOneInfo',
+    });
+  };
+
+  getMinimalWithdrawalValueByToken = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    return dispatch({
+      type: 'getMinimalWithdrawalValueByToken',
     });
   };
 
@@ -70,6 +80,7 @@ class Trust extends Mixin {
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
         signHash,
+        BitCoinFeeShow,
       },
     } = this.props;
     const currentTrustNode =
@@ -94,6 +105,12 @@ class Trust extends Mixin {
       currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
+    const haveSignList = signTrusteeList.filter((item = {}) => item.trusteeSign);
+    const haveRefuseList = signTrusteeList.filter((item = {}) => item.trusteeSign === false);
+    const notResponseList = signTrusteeList.filter(
+      (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
+    );
+
     const renderSignLi = (one, index) => {
       return (
         <li key={index}>
@@ -113,14 +130,16 @@ class Trust extends Mixin {
         <div className={styles.input}>
           <div className={styles.title}>Input</div>
           <ul>
-            <li>
-              <div className={styles.amount}>0.1099999 BTC 从</div>
-              <div className={styles.from}>
-                <RouterGo isOutSide go={{ pathname: '' }}>
-                  19zdMbaZnD8ze6XUZuVTYtV8ze6XUZuVTYtVQ4
-                </RouterGo>
-              </div>
-            </li>
+            {txInputList.map((item, index) => (
+              <li key={index}>
+                <div className={styles.amount}>{item.value} BTC 从</div>
+                <div className={styles.from}>
+                  <RouterGo isOutSide go={{ pathname: '' }}>
+                    {item.address}
+                  </RouterGo>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
         <div className={styles.output}>
@@ -136,7 +155,9 @@ class Trust extends Mixin {
                     </RouterGo>
                   </div>
                 </div>
-                <div className={styles.right}>0.00190427 BTC</div>
+                <div className={styles.right}>
+                  {formatNumber.toFixed(Number(item.value) + Number(BitCoinFeeShow), 8)} BTC
+                </div>
               </li>
             ))}
           </ul>
@@ -175,92 +196,97 @@ class Trust extends Mixin {
           </div>
         )}
         {isTrustee && signTrusteeList.length > 0 && tx ? (
-          <div className={styles.signStatus}>
-            {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
-              <div className={styles.completeSign}>
-                <Icon name="dengdai" />
-                <div className={styles.resok}>
-                  <FormattedMessage id={'ResponseOkThenDealing'} />
-                </div>
-                <div className={styles.hash}>
-                  <div>
-                    <FormattedMessage id={'TransactionHash'} />
-                  </div>
-                  <div>
-                    <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
-                      {signHash}
-                    </RouterGo>
-                  </div>
-                </div>
+          <div>
+            <div className={styles.responsetitle}>
+              <FormattedMessage id={'ResponseList'} />
+            </div>
+            <div className={styles.signStatus}>
+              <div className={styles.reslist}>
+                <ul className={styles.statusList}>
+                  <li>
+                    <Icon name="icon-wancheng" className={'green'} />
+                    <span>
+                      <FormattedMessage id={'HaveSigned'} />
+                    </span>
+                    <span className={styles.count}>{`${haveSignList.length}/${maxSignCount}`}</span>
+                    {/*<ul>*/}
+                    {/*{signTrusteeList*/}
+                    {/*.filter((item = {}) => item.trusteeSign)*/}
+                    {/*.map((one, index) => renderSignLi(one, index))}*/}
+                    {/*</ul>*/}
+                  </li>
+                  <li>
+                    <Icon name="weixiangying" className={'yellow'} />
+                    <span>
+                      <FormattedMessage id={'NoResponseSign'} />
+                    </span>
+                    <span className={styles.count}>{notResponseList.length}</span>
+                    {/*<ul>*/}
+                    {/*{signTrusteeList*/}
+                    {/*.filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)*/}
+                    {/*.map((one, index) => renderSignLi(one, index))}*/}
+                    {/*</ul>*/}
+                  </li>
+                  <li>
+                    <Icon name="icon-cuowu" className={'red'} />
+                    <span>
+                      <FormattedMessage id={'HaveVetoedSign'} />
+                    </span>
+                    <span className={styles.count}>{haveRefuseList.length}</span>
+                    {/*<ul>*/}
+                    {/*{signTrusteeList*/}
+                    {/*.filter((item = {}) => item.trusteeSign === false)*/}
+                    {/*.map((one, index) => renderSignLi(one, index))}*/}
+                    {/*</ul>*/}
+                  </li>
+                </ul>
+                <ButtonGroup>
+                  <Button
+                    {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
+                    onClick={() => {
+                      openModal({ name: 'WithdrawSignModal' });
+                    }}>
+                    <FormattedMessage id={'RespondMultiSigWithdrawal'} />
+                  </Button>
+                </ButtonGroup>
               </div>
-            )}
 
-            <TableTitle title={<FormattedMessage id={'ResponseList'} />}>
-              <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
-                <span>{tx}</span>
-              </div>
-              <ButtonGroup>
-                <Button>
-                  <Clipboard
-                    id="copy"
-                    outInner={
-                      <span className={styles.desc}>
-                        <FormattedMessage id={'CopyOriginalDataToSigned'} />
-                      </span>
-                    }
-                  />
-                </Button>
-                <Button
-                  {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
-                  onClick={() => {
-                    openModal({ name: 'WithdrawSignModal' });
-                  }}>
-                  <FormattedMessage id={'RespondMultiSigWithdrawal'} />
-                </Button>
-              </ButtonGroup>
-            </TableTitle>
-            <ul>
-              <li>
-                <Icon name="icon-wancheng" className={'green'} />
-                <span>
-                  <FormattedMessage id={'HaveSigned'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-              <li>
-                <Icon name="icon-cuowu" className={'red'} />
-                <span>
-                  <FormattedMessage id={'HaveVetoedSign'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign === false)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-              <li>
-                <Icon name="weixiangying" className={'yellow'} />
-                <span>
-                  <FormattedMessage id={'NoResponseSign'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-            </ul>
-            <div style={{ background: 'red' }}>s</div>
-            <div className={styles.inputoutputContainer}>
-              {txInputList.length > 4 || txOutputList.length > 4 ? (
-                <Scroller scroll={{ y: 330 }}>InputOutputList</Scroller>
-              ) : (
-                InputOutputList
+              {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
+                <div className={styles.completeSign}>
+                  <Icon name="dengdai" />
+                  <div className={styles.resok}>
+                    <FormattedMessage id={'ResponseOkThenDealing'} />
+                  </div>
+                  <div className={styles.hash}>
+                    <div>
+                      <FormattedMessage id={'TransactionHash'} />
+                    </div>
+                    <div>
+                      <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
+                        {signHash}
+                      </RouterGo>
+                    </div>
+                  </div>
+                </div>
               )}
+
+              <div className={styles.copytx}>
+                <div className={styles.tx}>
+                  <span className={styles.txlabel}>待签原文:</span>
+                  <Clipboard width={400}>{tx}</Clipboard>
+                </div>
+                <div className={styles.fees}>
+                  <div>矿工手续费： BTC</div>
+                  <div>交易手续费：{BitCoinFeeShow} BTC</div>
+                </div>
+              </div>
+              <div className={styles.inputoutputContainer}>
+                {txInputList.length > 4 || txOutputList.length > 4 ? (
+                  <Scroller scroll={{ y: 330 }}>InputOutputList</Scroller>
+                ) : (
+                  InputOutputList
+                )}
+              </div>
             </div>
           </div>
         ) : null}
