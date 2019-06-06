@@ -183,6 +183,23 @@ export default class Trust extends ModelExtend {
     return '';
   }
 
+  @computed get txOutputList() {
+    if (!this.tx) return [];
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transaction = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+    return txb.__tx.outs.map((item = {}) => {
+      const address = bitcoin.address.fromOutputScript(item.script, network);
+      return {
+        address,
+        value: this.setPrecision(item.value, 8),
+      };
+    });
+  }
+  @computed get txInputList() {
+    return [];
+  }
+
   reload = () => {
     this.getAllWithdrawalList();
     this.getWithdrawTx();

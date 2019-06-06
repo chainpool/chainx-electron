@@ -50,8 +50,11 @@
 
   .signStatus{
     position:relative;
-    border:1px solid @yellow;
-    padding:20px;
+    background: #F5F5F5;
+    border: 1px solid #DCE0E2;
+    border-radius: 2px;
+    // border:1px solid @yellow;
+     padding:20px;
     margin:40px 0;
     .completeSign{
       display: flex;
@@ -116,6 +119,67 @@
         }
       }
     }
+    .inputoutputContainer{
+      // background: red;
+      margin:0  -20px -20px;
+
+      .inputoutput{
+        padding:12px 20px 20px;
+        //background: black;
+        display: flex;
+        justify-content: space-between;
+        .input,.output{
+          .title{
+            font-size: 14px;
+            color: #3F3F3F;
+            margin-bottom: 12px;
+            font-weight: bold;
+          }
+          ul{
+            li+li{
+              margin-top: 8px;
+            }
+            li{
+              width:532px;
+              height:64px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              padding:0 16px;
+              >div+div{
+                margin-top: 8px;
+              }
+            }
+          }
+        }
+        .input{
+          ul{
+            li{
+              background: #EEEEEE;
+              border: 1px solid #DCE0E2;
+              border-radius: 2px;
+            }
+          }
+        }
+        .output{
+          ul{
+            li{
+              flex-direction: row;
+              align-items: center;
+              justify-content: space-between;
+              background: #FFFFFF;
+              border: 1px solid #DCE0E2;
+              .left{
+                >div+div{
+                  margin-top: 8px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
 
   .withdrawTitle {

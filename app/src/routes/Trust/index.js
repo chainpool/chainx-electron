@@ -1,6 +1,5 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
-import * as styles from './index.less';
+import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { TableTitle } from '../components';
 import { Inject } from '../../utils';
 import SettingTable from './SettingTable';
@@ -11,6 +10,7 @@ import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
 import { blockChain } from '../../constants';
+import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
@@ -61,7 +61,16 @@ class Trust extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { tx, signTrusteeList = [], trusts = [], normalizedOnChainAllWithdrawList = [], maxSignCount, signHash },
+      model: {
+        tx,
+        txOutputList = [],
+        txInputList = [],
+        signTrusteeList = [],
+        trusts = [],
+        normalizedOnChainAllWithdrawList = [],
+        maxSignCount,
+        signHash,
+      },
     } = this.props;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -98,6 +107,42 @@ class Trust extends Mixin {
         </li>
       );
     };
+
+    const InputOutputList = (
+      <div className={styles.inputoutput}>
+        <div className={styles.input}>
+          <div className={styles.title}>Input</div>
+          <ul>
+            <li>
+              <div className={styles.amount}>0.1099999 BTC 从</div>
+              <div className={styles.from}>
+                <RouterGo isOutSide go={{ pathname: '' }}>
+                  19zdMbaZnD8ze6XUZuVTYtV8ze6XUZuVTYtVQ4
+                </RouterGo>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div className={styles.output}>
+          <div className={styles.title}>Output</div>
+          <ul>
+            {txOutputList.map((item, index) => (
+              <li key={index}>
+                <div className={styles.left}>
+                  <div className={styles.amount}>{item.value} BTC 从</div>
+                  <div className={styles.from}>
+                    <RouterGo isOutSide go={{ pathname: '' }}>
+                      {item.address}
+                    </RouterGo>
+                  </div>
+                </div>
+                <div className={styles.right}>0.00190427 BTC</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
 
     return (
       <div className={styles.trust}>
@@ -209,6 +254,14 @@ class Trust extends Mixin {
                 </ul>
               </li>
             </ul>
+            <div style={{ background: 'red' }}>s</div>
+            <div className={styles.inputoutputContainer}>
+              {txInputList.length > 4 || txOutputList.length > 4 ? (
+                <Scroller scroll={{ y: 330 }}>InputOutputList</Scroller>
+              ) : (
+                InputOutputList
+              )}
+            </div>
           </div>
         ) : null}
 
