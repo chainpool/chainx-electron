@@ -1,16 +1,50 @@
-const { app, BrowserWindow } = require('electron');
-const { autoUpdater } = require('electron-updater');
+const { app, BrowserWindow, dialog } = require('electron');
 const path = require('path');
+const semver = require('semver');
+const https = require('https');
 const utils = require('./utils');
 
-app.utils = utils;
-
-
-class AppUpdater {
-  constructor() {
-    autoUpdater.checkForUpdatesAndNotify();
-  }
+function requestUpdateInfo() {
+  const currentVersion = app.getVersion();
+  return new Promise((resolve, reject) => {
+    https
+      .get('https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/latest/update.json', res => {
+        let body = '';
+        res.on('data', d => {
+          body += d;
+        });
+        res.on('end', function() {
+          try {
+            const parsed = JSON.parse(body);
+            resolve(parsed);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      })
+      .on('error', e => {
+        reject(e);
+      });
+  })
+    .then(updateInfo => {
+      if (semver.gt(updateInfo.version, currentVersion)) {
+        dialog.showMessageBox(
+          {
+            title: "更新提示",
+            message: `检测到有新的更新，请前往 ${updateInfo.path} 下载安装更新`,
+          },
+          () => {
+            app.quit();
+          }
+        );
+      }
+    })
+    .catch(error => {});
 }
+
+requestUpdateInfo();
+
+app.utils = utils;
 
 let mainWindow = null;
 
@@ -75,6 +109,4 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  new AppUpdater();
 });
