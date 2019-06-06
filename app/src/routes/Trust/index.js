@@ -240,6 +240,24 @@ class Trust extends Mixin {
                     {/*</ul>*/}
                   </li>
                 </ul>
+                {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= 0 && (
+                  <div className={styles.completeSign}>
+                    <Icon name="dengdai" />
+                    <div className={styles.resok}>
+                      <FormattedMessage id={'ResponseOkThenDealing'} />
+                    </div>
+                    <div className={styles.hash}>
+                      <div>
+                        <FormattedMessage id={'TransactionHash'} />
+                      </div>
+                      <div>
+                        <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
+                          {signHash}
+                        </RouterGo>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <ButtonGroup>
                   <Button
                     {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
@@ -250,25 +268,6 @@ class Trust extends Mixin {
                   </Button>
                 </ButtonGroup>
               </div>
-
-              {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
-                <div className={styles.completeSign}>
-                  <Icon name="dengdai" />
-                  <div className={styles.resok}>
-                    <FormattedMessage id={'ResponseOkThenDealing'} />
-                  </div>
-                  <div className={styles.hash}>
-                    <div>
-                      <FormattedMessage id={'TransactionHash'} />
-                    </div>
-                    <div>
-                      <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
-                        {signHash}
-                      </RouterGo>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               <div className={styles.copytx}>
                 <div className={styles.tx}>
