@@ -4,16 +4,16 @@ matrix:
   include:
     - os: osx
       language: node_js
-      node_js:
-        - "10.15.3"
+      node_js: "10.15.3"
+      cache: yarn
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
     - os: linux
       language: node_js
-      node_js:
-        - "10.15.3"
+      node_js: "10.15.3"
+      cache: yarn
       addons:
         apt:
           sources:
@@ -30,8 +30,8 @@ matrix:
 
     - os: windows
       language: node_js
-      node_js:
-        - "10.15.3"
+      node_js: "10.15.3"
+      cache: yarn
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
