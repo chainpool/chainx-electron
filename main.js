@@ -27,7 +27,7 @@ function requestUpdateInfo() {
       });
   })
     .then(updateInfo => {
-      if (semver.gt(updateInfo.version, currentVersion)) {
+      if (updateInfo.forceUpdate && semver.gt(updateInfo.version, currentVersion)) {
         dialog.showMessageBox(
           {
             title: "更新提示",
