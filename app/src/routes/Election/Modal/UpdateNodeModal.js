@@ -176,7 +176,7 @@ class UpdateNodeModal extends Component {
             onChange={value => this.setState({ address: value })}
             onBlur={checkAll.checkAddress}>
             <Button type="blank">
-              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
+              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Join-ChainX-Mainnet' }}>
                 <Icon name="icon-jiedianbushuwendang" />
                 <span className={styles.document}>
                   <FormattedMessage id={'SeeNodeDeployDocument'} />

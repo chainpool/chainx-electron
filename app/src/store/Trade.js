@@ -343,7 +343,7 @@ export default class Trade extends ModelExtend {
 
   getQuotations = async ({ hasStarWith, callback } = {}) => {
     const currentPair = this.currentPair;
-    const count = 20;
+    const count = 50;
     return from(getQuotations(currentPair.id, 10))
       .pipe(
         hasStarWith ? startWith({ buy: [], sell: [] }) : tap(res => res),
