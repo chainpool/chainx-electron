@@ -28,7 +28,7 @@
       "app/build",
       "package.json",
       "resources",
-      "utils"
+      "utils.js"
     ],
     "publish": [
       "github"
