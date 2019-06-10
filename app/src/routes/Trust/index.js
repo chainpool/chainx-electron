@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
-import { TableTitle } from '../components';
+import { HoverTip, TableTitle } from '../components';
 import { Inject, formatNumber } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
@@ -208,39 +208,42 @@ class Trust extends Mixin {
                     <span>
                       <FormattedMessage id={'HaveSigned'} />
                     </span>
-                    <span className={styles.count}>{`${haveSignList.length}/${maxSignCount}`}</span>
-                    {/*<ul>*/}
-                    {/*{signTrusteeList*/}
-                    {/*.filter((item = {}) => item.trusteeSign)*/}
-                    {/*.map((one, index) => renderSignLi(one, index))}*/}
-                    {/*</ul>*/}
+                    <span className={styles.count}>
+                      <HoverTip
+                        className={styles.hoverTrusteeList}
+                        tip={<ul>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>}>{`${
+                        haveSignList.length
+                      }/${maxSignCount}`}</HoverTip>
+                    </span>
                   </li>
                   <li>
                     <Icon name="weixiangying" className={'yellow'} />
                     <span>
                       <FormattedMessage id={'NoResponseSign'} />
                     </span>
-                    <span className={styles.count}>{notResponseList.length}</span>
-                    {/*<ul>*/}
-                    {/*{signTrusteeList*/}
-                    {/*.filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)*/}
-                    {/*.map((one, index) => renderSignLi(one, index))}*/}
-                    {/*</ul>*/}
+                    <span className={styles.count}>
+                      <HoverTip
+                        className={styles.hoverTrusteeList}
+                        tip={<ul>{notResponseList.map((one, index) => renderSignLi(one, index))}</ul>}>
+                        {notResponseList.length}
+                      </HoverTip>
+                    </span>
                   </li>
                   <li>
                     <Icon name="icon-cuowu" className={'red'} />
                     <span>
                       <FormattedMessage id={'HaveVetoedSign'} />
                     </span>
-                    <span className={styles.count}>{haveRefuseList.length}</span>
-                    {/*<ul>*/}
-                    {/*{signTrusteeList*/}
-                    {/*.filter((item = {}) => item.trusteeSign === false)*/}
-                    {/*.map((one, index) => renderSignLi(one, index))}*/}
-                    {/*</ul>*/}
+                    <span className={styles.count}>
+                      <HoverTip
+                        className={styles.hoverTrusteeList}
+                        tip={<ul>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>}>
+                        {haveRefuseList.length}
+                      </HoverTip>
+                    </span>
                   </li>
                 </ul>
-                {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= 0 ? (
+                {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount ? (
                   <div className={styles.completeSign}>
                     <div className={styles.resok}>
                       <FormattedMessage id={'ResponseOkThenDealing'} />

@@ -58,8 +58,23 @@
       justify-content: space-between;
       align-items: center;
       .statusList{
+        :global{
+
+          .__react_component_tooltip.type-dark{
+            background-color:white;
+            font-size: 14px;
+            color: #3F3F3F;
+            box-shadow: 0 4px 10px 0 rgba(0,0,0,0.20);
+            &.place-top:after{
+              border-top-color:white;
+              font-size: 14px;
+              color: #3F3F3F;
+            }
+          }
+
+        }
         display:flex;
-        li+li{
+        >li+li{
           margin-left: 25px;
         }
         li{
@@ -93,6 +108,7 @@
         text-align: center;
         font-size: 12px;
         .hashvalue{
+          margin-right: 5px;
 
         }
       }
