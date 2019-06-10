@@ -45,17 +45,23 @@ class TransferModal extends Component {
       model: { dispatch, openModal, getPrecision },
       globalStore: { modal: { data: { token, freeShow } = {} } = {}, nativeAssetName },
       accountStore: { accountsList = [] },
-      addressManageStore: { addresses },
+      addressManageStore: { addresses, transferAddress = [], dispatch: dispatchAddressManage },
     } = this.props;
 
-    const allAccounts = accountsList.concat(
-      addresses
-        .filter(address => address.token === nativeAssetName)
-        .map(address => ({
-          label: address.label,
-          value: address.address,
-        }))
-    );
+    const allAccounts = transferAddress
+      .map((item = {}) => ({
+        label: item.address.slice(0, 5),
+        value: item.address,
+      }))
+      .concat(
+        addresses
+          .filter(address => address.token === nativeAssetName)
+          .map(address => ({
+            label: address.label,
+            value: address.address,
+          }))
+          .concat(accountsList)
+      );
 
     return (
       <Modal
@@ -66,6 +72,16 @@ class TransferModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
+                const filterOne = allAccounts.filter((item = {}) => item.value === address)[0];
+                if (!filterOne) {
+                  dispatchAddressManage({
+                    type: 'addTransferAddress',
+                    payload: {
+                      address: address,
+                    },
+                  });
+                }
+
                 openModal({
                   name: 'SignModal',
                   data: {

@@ -89,15 +89,19 @@ class CrossChainAssetTable extends Mixin {
                   ) : null}
 
                   <Button
-                    {...(isBTC ? { canClick: false } : {})}
+                    //{...(isBTC ? { canClick: false } : {})}
                     onClick={() => {
-                      openModal({
-                        name: 'CrossChainBindModal',
-                        data: {
-                          token: item.name,
-                          trusteeAddr: item.trusteeAddr,
-                        },
-                      });
+                      isBTC
+                        ? openModal({
+                            name: 'StopDepositModal',
+                          })
+                        : openModal({
+                            name: 'CrossChainBindModal',
+                            data: {
+                              token: item.name,
+                              trusteeAddr: item.trusteeAddr,
+                            },
+                          });
                     }}>
                     {isBTC ? (
                       <>

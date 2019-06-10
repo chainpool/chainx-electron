@@ -31,17 +31,6 @@ class Asset extends Mixin {
     );
   };
 
-  componentMount = () => {
-    if (Asset.notice) return;
-    const {
-      model: { openModal },
-    } = this.props;
-    openModal({
-      name: 'StopDepositModal',
-    });
-    Asset.notice = true;
-  };
-
   render() {
     const {
       globalStore: {
