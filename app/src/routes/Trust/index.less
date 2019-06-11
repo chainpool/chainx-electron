@@ -117,6 +117,20 @@
         color:@yellow;
       }
     }
+    .signButton,.refuseButton{
+      color:white;
+      &.disabeld{
+        background: #c7c8c9;
+        color:unset;
+        pointer-events: none;
+      }
+    }
+    .signButton{
+      background: @green;
+    }
+    .refuseButton{
+      background: @red;
+    }
     >ul{
       >li+li{
         margin-top: 10px;

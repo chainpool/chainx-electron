@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip, TableTitle } from '../components';
-import { Inject, formatNumber } from '../../utils';
+import { Inject, formatNumber, classNames } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -72,7 +72,9 @@ class Trust extends Mixin {
         modal: { name },
       },
       model: {
+        dispatch,
         tx,
+        redeemScript,
         txOutputList = [],
         txInputList = [],
         signTrusteeList = [],
@@ -259,12 +261,44 @@ class Trust extends Mixin {
                   </div>
                 ) : (
                   <ButtonGroup>
+                    {/*<Button*/}
+                    {/*{...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}*/}
+                    {/*onClick={() => {*/}
+                    {/*openModal({ name: 'WithdrawSignModal' });*/}
+                    {/*}}>*/}
+                    {/**/}
+                    {/*</Button>*/}
                     <Button
-                      {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
+                      className={classNames(styles.signButton, isShowResponseWithdraw ? null : styles.disabeld)}
+                      onClick={() => {}}>
+                      签名
+                    </Button>
+                    <Button
+                      className={classNames(styles.refuseButton, isShowResponseWithdraw ? null : styles.disabeld)}
                       onClick={() => {
-                        openModal({ name: 'WithdrawSignModal' });
+                        openModal({
+                          name: 'SignModal',
+                          data: {
+                            description: [
+                              { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                              {
+                                name: () => <FormattedMessage id={'WhetherSignature'} />,
+                                value: () => <FormattedMessage id={'FalseSign'} />,
+                              },
+                            ],
+                            callback: () => {
+                              return dispatch({
+                                type: 'signWithdrawTx',
+                                payload: {
+                                  tx: null,
+                                  redeemScript,
+                                },
+                              });
+                            },
+                          },
+                        });
                       }}>
-                      <FormattedMessage id={'RespondMultiSigWithdrawal'} />
+                      否决
                     </Button>
                   </ButtonGroup>
                 )}
