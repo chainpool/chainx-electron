@@ -9,6 +9,7 @@ import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
+import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -270,7 +271,11 @@ class Trust extends Mixin {
                     {/*</Button>*/}
                     <Button
                       className={classNames(styles.signButton, isShowResponseWithdraw ? null : styles.disabeld)}
-                      onClick={() => {}}>
+                      onClick={() => {
+                        openModal({
+                          name: 'SignChannelSelectModal',
+                        });
+                      }}>
                       签名
                     </Button>
                     <Button
@@ -347,6 +352,7 @@ class Trust extends Mixin {
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
+        {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
       </div>
     );
   }
