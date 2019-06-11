@@ -10,6 +10,7 @@ import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
+import SignResultModal from './Modal/SignResultModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -20,6 +21,9 @@ class Trust extends Mixin {
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
+    // this.props.model.openModal({
+    //   name: 'SignChannelSelectModal',
+    // });
   };
 
   getAllWithdrawalList = async () => {
@@ -353,6 +357,7 @@ class Trust extends Mixin {
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
         {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
+        {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
       </div>
     );
   }

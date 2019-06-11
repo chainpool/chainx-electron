@@ -140,31 +140,31 @@ class WithdrawConstructModal extends Component {
             type={loading ? 'disabeld' : 'confirm'}
             onClick={async () => {
               if (await checkAll.confirm()) {
-                openModal({
-                  name: 'WithdrawSignModal',
-                  data: {
-                    desc: 'createWithdrawTxAndSign',
-                    withdrawList: this.getWithdrawList(withDrawIndexSignList),
-                    tx,
-                  },
-                });
                 // openModal({
-                //   name: 'SignModal',
+                //   name: 'WithdrawSignModal',
                 //   data: {
-                //     description: [
-                //       { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
-                //     ],
-                //     callback: () => {
-                //       return dispatch({
-                //         type: 'createWithdrawTx',
-                //         payload: {
-                //           withdrawList: this.getWithdrawList(withDrawIndexSignList),
-                //           tx,
-                //         },
-                //       });
-                //     },
+                //     desc: 'createWithdrawTxAndSign',
+                //     withdrawList: this.getWithdrawList(withDrawIndexSignList),
+                //     tx,
                 //   },
                 // });
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description: [
+                      { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
+                    ],
+                    callback: () => {
+                      return dispatch({
+                        type: 'createWithdrawTx',
+                        payload: {
+                          withdrawList: this.getWithdrawList(withDrawIndexSignList),
+                          tx,
+                        },
+                      });
+                    },
+                  },
+                });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
