@@ -50,7 +50,7 @@ const zh_en = {
     'Validators participates in consensus with other validators, packing extrinsics and block authoring',
   ],
   TrusteeNode: ['信托节点', 'Trustee Node'],
-  StandbyNode: ['候选节点', 'Standby'],
+  StandbyNode: ['同步节点', 'Sync node'],
   StandbyNodeTip: [
     '负责搭建同步节点接收交易和广播数据',
     'The standby setup the sync node and broadcast the messages in the network.',

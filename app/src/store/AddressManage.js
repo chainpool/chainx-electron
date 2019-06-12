@@ -10,12 +10,15 @@ export default class AddressMannage extends ModelExtend {
       localSave.set('testAddresses', this.testAddresses);
       localSave.set('mainAddresses', this.mainAddresses);
       localSave.set('premainAddresses', this.testAddresses);
+      localSave.set('allTransferAddress', this.allTransferAddress);
     });
   }
 
   @observable testAddresses = localSave.get('testAddresses') || [];
   @observable mainAddresses = localSave.get('mainAddresses') || [];
   @observable premainAddresses = localSave.get('premainAddresses') || [];
+
+  @observable allTransferAddress = localSave.get('allTransferAddress') || [];
 
   @computed
   get addresses() {
@@ -37,6 +40,27 @@ export default class AddressMannage extends ModelExtend {
       this.premainAddresses = addresses;
     }
   }
+
+  @computed
+  get transferAddress() {
+    const currentNetWork = this.getCurrentNetWork();
+    return this.allTransferAddress.filter(item => item.net === currentNetWork.value);
+  }
+
+  set transferAddress(addresses) {
+    this.allTransferAddress = addresses;
+  }
+
+  addTransferAddress = ({ address }) => {
+    const currentNetWork = this.getCurrentNetWork();
+    this.changeModel('allTransferAddress', [
+      {
+        address,
+        net: currentNetWork.value,
+      },
+      ...this.allTransferAddress,
+    ]);
+  };
 
   updateAllAddress = () => {
     const addresses = [...this.addresses];
