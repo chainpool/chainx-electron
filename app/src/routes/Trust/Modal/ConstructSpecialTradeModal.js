@@ -6,9 +6,11 @@ import * as styles from './ConstructSpecialTradeModal.less';
 class ConstructSpecialTradeModal extends Component {
   state = {
     sender: '',
+    receiver: '',
+    balance: '',
   };
   render() {
-    const { sender } = this.state;
+    const { sender, receiver, balance } = this.state;
     const {
       model: { dispatch, openModal, closeModal },
     } = this.props;
@@ -34,19 +36,30 @@ class ConstructSpecialTradeModal extends Component {
           />
           <Input.Address
             label={'接收方地址'}
-            value={sender}
+            value={receiver}
             options={[{ label: '1', value: 1 }]}
             onChange={value => {
               this.setState({
-                sender: value,
+                receiver: value,
               });
             }}
           />
           <InputHorizotalList
-            left={<Input.Text label="金额" value={'jjjjjj'} suffix="BTC" />}
+            left={
+              <Input.Text
+                label="金额"
+                value={balance}
+                suffix="BTC"
+                onChange={value => {
+                  this.setState({
+                    balance: value,
+                  });
+                }}
+              />
+            }
             right={<Input.Text label="手续费率" value={'kkkk'} suffix="Satoshis/KB" />}
           />
-          <Input.Text isTextArea rows={10} disabled />
+          <Input.Text label="待签原文" isTextArea rows={10} disabled />
         </div>
       </Modal>
     );

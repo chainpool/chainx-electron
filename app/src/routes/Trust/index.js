@@ -12,6 +12,7 @@ import TrustSetting from './Modal/TrustSettingModal';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import SignResultModal from './Modal/SignResultModal';
 import ConstructSpecialTradeModal from './Modal/ConstructSpecialTradeModal';
+import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -22,9 +23,9 @@ class Trust extends Mixin {
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
-    this.props.model.openModal({
-      name: 'ConstructSpecialTradeModal',
-    });
+    // this.props.model.openModal({
+    //   name: 'ConstructSpecialTradeModal',
+    // });
   };
 
   getAllWithdrawalList = async () => {
@@ -211,7 +212,7 @@ class Trust extends Mixin {
                 <Button
                   type="blank"
                   onClick={() => {
-                    openModal({ name: 'TrustSetting' });
+                    openModal({ name: 'AnalyzeSpecialTradeModal' });
                   }}>
                   <Icon name="icon-shezhixintuo" />
                   <span>解析特殊交易</span>
@@ -378,6 +379,7 @@ class Trust extends Mixin {
         {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
         {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
         {name === 'ConstructSpecialTradeModal' ? <ConstructSpecialTradeModal {...props} /> : null}
+        {name === 'AnalyzeSpecialTradeModal' ? <AnalyzeSpecialTradeModal {...props} /> : null}
       </div>
     );
   }
