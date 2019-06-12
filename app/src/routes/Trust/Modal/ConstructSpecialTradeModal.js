@@ -46,6 +46,7 @@ class ConstructSpecialTradeModal extends Component {
             left={<Input.Text label="金额" value={'jjjjjj'} suffix="BTC" />}
             right={<Input.Text label="手续费率" value={'kkkk'} suffix="Satoshis/KB" />}
           />
+          <Input.Text isTextArea rows={10} disabled />
         </div>
       </Modal>
     );
