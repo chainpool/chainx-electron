@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX",
-  "version": "0.9.13",
+  "version": "0.9.14",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
@@ -30,9 +30,10 @@
       "resources",
       "utils.js"
     ],
-    "publish": [
-      "github"
-    ],
+    "publish": {
+      "provider": "github",
+      "repo": "chainx-org/chainx-wallet"
+    },
     "dmg": {
       "contents": [
         {
