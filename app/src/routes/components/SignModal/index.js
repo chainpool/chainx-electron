@@ -247,7 +247,10 @@ class SignModal extends Mixin {
                     }
                   }
                 };
-                if (_.function(checkNativeAsset) && !checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)) {
+                if (
+                  _.isFunction(checkNativeAsset) &&
+                  !checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)
+                ) {
                   openModal({
                     name: 'LowerPCXWarn',
                     data: {
