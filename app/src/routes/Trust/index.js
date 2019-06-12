@@ -11,6 +11,7 @@ import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import SignResultModal from './Modal/SignResultModal';
+import ConstructSpecialTradeModal from './Modal/ConstructSpecialTradeModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -21,9 +22,9 @@ class Trust extends Mixin {
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
-    // this.props.model.openModal({
-    //   name: 'SignChannelSelectModal',
-    // });
+    this.props.model.openModal({
+      name: 'ConstructSpecialTradeModal',
+    });
   };
 
   getAllWithdrawalList = async () => {
@@ -188,16 +189,34 @@ class Trust extends Mixin {
                 )}
                 )
               </span>
-              <Button
-                type="blank"
-                onClick={() => {
-                  openModal({ name: 'TrustSetting' });
-                }}>
-                <Icon name="icon-shezhixintuo" />
-                <span>
-                  <FormattedMessage id={'SetupTrustee'} />
-                </span>
-              </Button>
+              <ButtonGroup className={styles.setListbutton}>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({ name: 'TrustSetting' });
+                  }}>
+                  <Icon name="icon-shezhixintuo" />
+                  <span>
+                    <FormattedMessage id={'SetupTrustee'} />
+                  </span>
+                </Button>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({ name: 'ConstructSpecialTradeModal' });
+                  }}>
+                  <Icon name="icon-shezhixintuo" />
+                  <span>构造特殊交易</span>
+                </Button>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({ name: 'TrustSetting' });
+                  }}>
+                  <Icon name="icon-shezhixintuo" />
+                  <span>解析特殊交易</span>
+                </Button>
+              </ButtonGroup>
             </TableTitle>
             <SettingTable {...this.props} />
           </div>
@@ -358,6 +377,7 @@ class Trust extends Mixin {
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
         {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
         {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
+        {name === 'ConstructSpecialTradeModal' ? <ConstructSpecialTradeModal {...props} /> : null}
       </div>
     );
   }
