@@ -17,6 +17,14 @@ class SignModal extends Mixin {
     showSlider: true,
   };
 
+  checkNativeAssetDefault = (accountNativeAssetFreeBalance, fee, minValue) => {
+    if (minValue === 0) {
+      return accountNativeAssetFreeBalance - fee >= minValue;
+    } else {
+      return accountNativeAssetFreeBalance - fee > minValue;
+    }
+  };
+
   checkAll = {
     checkFee: () => {
       const { fee } = this.state;
@@ -39,7 +47,7 @@ class SignModal extends Mixin {
         assetStore: { accountNativeAssetFreeBalanceShow },
         globalStore: {
           modal: {
-            data: { checkNativeAsset },
+            data: { checkNativeAsset = this.checkNativeAssetDefault },
           },
         },
       } = this.props;
@@ -96,7 +104,7 @@ class SignModal extends Mixin {
       globalStore: {
         closeModal,
         nativeAssetName,
-        modal: { data: { description: descriptionAlias, checkNativeAsset } = {} } = {},
+        modal: { data: { description: descriptionAlias, checkNativeAsset = this.checkNativeAssetDefault } = {} } = {},
       },
       assetStore: { accountNativeAssetFreeBalanceShow },
       model: { currentAccount, openModal },
@@ -239,7 +247,7 @@ class SignModal extends Mixin {
                     }
                   }
                 };
-                if (!checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)) {
+                if (_.function(checkNativeAsset) && !checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)) {
                   openModal({
                     name: 'LowerPCXWarn',
                     data: {
