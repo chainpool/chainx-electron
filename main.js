@@ -46,7 +46,7 @@ function requestUpdateInfo() {
           dialog.showMessageBox(
             {
               title: '更新提示',
-              message: `检测到有新的更新，请更新到最新版本。`,
+              message: `检测到有新的更新，请更新到最新版本`,
               buttons: ['确认'],
               defaultId: 0,
             },
