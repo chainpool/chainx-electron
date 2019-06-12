@@ -17,6 +17,45 @@ class SignModal extends Mixin {
     showSlider: true,
   };
 
+  checkAll = {
+    checkFee: () => {
+      const { fee } = this.state;
+      const errMsg = Patterns.check('required')(fee, '手续费未获取到');
+      this.setState({ passwordErrMsg: errMsg });
+      return errMsg;
+    },
+    checkPassword: () => {
+      const { password } = this.state;
+      const {
+        model: { currentAccount: { encoded } = {} },
+      } = this.props;
+      const errMsg = Patterns.check('required')(password) || Patterns.check('decode')(encoded, password);
+      this.setState({ passwordErrMsg: errMsg });
+      return errMsg;
+    },
+    checkNativeAssetEnough: () => {
+      const { fee } = this.state;
+      const {
+        assetStore: { accountNativeAssetFreeBalanceShow },
+        globalStore: {
+          modal: {
+            data: { checkNativeAsset },
+          },
+        },
+      } = this.props;
+
+      const errMsg =
+        _.isFunction(checkNativeAsset) && checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0)
+          ? ''
+          : 'PCX余额不足以支付费用';
+      this.setState({ passwordErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkFee', 'checkNativeAssetEnough', 'checkPassword'].every(item => !this.checkAll[item]());
+    },
+  };
+
   startInit = async () => {
     const {
       globalStore: { modal: { data: { token: targetToken, callback } = {} } = {} },
@@ -38,36 +77,18 @@ class SignModal extends Mixin {
     if (this.result && this.result.extrinsic) {
       const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
       const result = setDefaultPrecision(fee);
-      this.setState({
-        fee: result,
-      });
+      this.setState(
+        {
+          fee: result,
+        },
+        () => {
+          this.checkAll.checkNativeAssetEnough();
+        }
+      );
       return result;
     }
   };
 
-  checkAll = {
-    checkPassword: async () => {
-      const { password, fee } = this.state;
-      const {
-        model: { currentAccount: { encoded } = {}, setPrecision },
-        assetStore: { nativeAccountAssets = [] },
-      } = this.props;
-      const { free = 0, name } = nativeAccountAssets[0] || {};
-      const errMsg =
-        Patterns.check('required')(fee, '手续费未获取到') ||
-        Patterns.check('required')(password) ||
-        Patterns.check('decode')(encoded, password) ||
-        Patterns.check('smallerOrEqual')(fee, setPrecision(free, name), '可用余额不足以支付费用');
-
-      this.setState({ passwordErrMsg: errMsg });
-      return errMsg;
-    },
-
-    confirm: async () => {
-      const result = await this.checkAll.checkPassword();
-      return !result;
-    },
-  };
   render() {
     const { checkAll } = this;
     const { defaultAcceleration, acceleration, fee, password, passwordErrMsg, showSlider } = this.state;
@@ -75,10 +96,9 @@ class SignModal extends Mixin {
       globalStore: {
         closeModal,
         nativeAssetName,
-        setPrecision,
-        modal: { data: { description: descriptionAlias } = {} } = {},
+        modal: { data: { description: descriptionAlias, checkNativeAsset } = {} } = {},
       },
-      assetStore: { accountNativeAssetFreeBalance },
+      assetStore: { accountNativeAssetFreeBalanceShow },
       model: { currentAccount, openModal },
     } = this.props;
     const description = descriptionAlias.map(item => {
@@ -112,7 +132,6 @@ class SignModal extends Mixin {
           },
           () => {
             this.getFee();
-            checkAll.checkPassword();
           }
         );
       },
@@ -130,8 +149,8 @@ class SignModal extends Mixin {
           <Button
             size="full"
             type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
-            onClick={async () => {
-              if (await checkAll.confirm()) {
+            onClick={() => {
+              if (checkAll.confirm()) {
                 const sign = () => {
                   if (this.result && this.result.extrinsic) {
                     const result = this.result;
@@ -220,11 +239,12 @@ class SignModal extends Mixin {
                     }
                   }
                 };
-                if (Number(setPrecision(accountNativeAssetFreeBalance, nativeAssetName) - Number(fee)) <= 0.001) {
+                if (!checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)) {
                   openModal({
                     name: 'LowerPCXWarn',
                     data: {
                       callback: sign,
+                      title: 'PCX余额过低预警',
                     },
                   });
                 } else {
@@ -285,7 +305,7 @@ class SignModal extends Mixin {
                 onChange={value => {
                   this.setState({ password: value });
                 }}
-                onBlur={checkAll.checkPassword}
+                onBlur={checkAll.confirm}
               />
             )}
           </FormattedMessage>
