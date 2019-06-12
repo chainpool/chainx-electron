@@ -57,6 +57,13 @@ class UnFreezeModal extends Component {
                     name: 'SignModal',
                     data: {
                       description: [{ name: 'operation', value: () => <FormattedMessage id={'Unfreeze'} /> }],
+                      checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                        if (minValue === 0) {
+                          return accountNativeAssetFreeBalance - fee >= minValue;
+                        } else {
+                          return Number(accountNativeAssetFreeBalance - fee) + Number(item.amount) > minValue;
+                        }
+                      },
                       callback: () => {
                         return dispatch({
                           type: 'unfreeze',
