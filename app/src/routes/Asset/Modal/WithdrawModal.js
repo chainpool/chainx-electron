@@ -146,6 +146,13 @@ class WithdrawModal extends Mixin {
                       { name: () => <FormattedMessage id={'Amount'} />, value: setBlankSpace(amount, token) },
                       { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                     ],
+                    checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                      if (minValue === 0) {
+                        return accountNativeAssetFreeBalance - fee >= minValue;
+                      } else {
+                        return accountNativeAssetFreeBalance - fee > minValue;
+                      }
+                    },
                     callback: () => {
                       return dispatch({
                         type: 'withdraw',
