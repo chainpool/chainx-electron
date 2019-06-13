@@ -490,3 +490,5 @@ export const SetFullScreen = Ele => {
 };
 
 export const setNet = net => ChainX.account.setNet(net);
+
+export const isElectron = () => window.electronStore;
