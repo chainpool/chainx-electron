@@ -14,10 +14,19 @@ class DepositWithDrawRecord extends Mixin {
         <BreadCrumb />
         <div className={styles.notgetdeposit}>
           <strong>
-            如果你的充值未到账，可能是OP_RETURN格式错误，需要重新绑定以领取，
-            <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
-              点击查看充值未认领列表
-            </RouterGo>
+            <FormattedMessage id={'DepositNotReceived'}>
+              {msg => {
+                const msgs = msg.split('deposit_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
+                      {msgs[1]}
+                    </RouterGo>
+                  </>
+                );
+              }}
+            </FormattedMessage>
           </strong>
         </div>
         <div className={styles.tabLine}>
