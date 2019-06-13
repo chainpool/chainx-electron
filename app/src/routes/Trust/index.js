@@ -141,11 +141,11 @@ class Trust extends Mixin {
           <ul>
             {txInputList.map((item, index) => (
               <li key={index}>
-                <div className={styles.amount}>{item.value} BTC 从</div>
                 <div className={styles.from}>
                   <RouterGo isOutSide go={{ pathname: '' }}>
                     {item.address}
                   </RouterGo>
+                  <span>({item.value})</span>
                 </div>
               </li>
             ))}
@@ -157,15 +157,12 @@ class Trust extends Mixin {
             {txOutputList.map((item, index) => (
               <li key={index}>
                 <div className={styles.left}>
-                  <div className={styles.amount}>{item.value} BTC 从</div>
                   <div className={styles.from}>
                     <RouterGo isOutSide go={{ pathname: '' }}>
                       {item.address}
                     </RouterGo>
+                    <span>({item.value})</span>
                   </div>
-                </div>
-                <div className={styles.right}>
-                  {formatNumber.toFixed(Number(item.value) + Number(BitCoinFeeShow), 8)} BTC
                 </div>
               </li>
             ))}
