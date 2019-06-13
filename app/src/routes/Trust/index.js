@@ -143,7 +143,7 @@ class Trust extends Mixin {
               <li key={index}>
                 <div className={styles.from}>
                   <RouterGo isOutSide go={{ pathname: '' }}>
-                    {item.address}
+                    <span className={styles.hash}>{item.hash}</span>
                   </RouterGo>
                   <span>({item.value})</span>
                 </div>

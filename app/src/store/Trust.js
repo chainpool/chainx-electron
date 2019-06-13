@@ -445,10 +445,10 @@ export default class Trust extends ModelExtend {
         const transaction = bitcoin.Transaction.fromHex(res.result);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const findOne = txb.__tx.outs[item.index];
-
         const address = bitcoin.address.fromOutputScript(findOne.script, network);
         return {
           address,
+          hash: item.hash,
           value: this.setPrecision(findOne.value, 8),
         };
       })
