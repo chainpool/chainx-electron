@@ -101,6 +101,10 @@ export default class Asset extends ModelExtend {
     return this.nativeAccountAssets[0].free;
   }
 
+  @computed get accountNativeAssetFreeBalanceShow() {
+    return this.setPrecision(this.nativeAccountAssets[0].free, this.nativeAccountAssets[0].name);
+  }
+
   @computed get normalizedAccountNativeAssetFreeBalance() {
     const asset = this.nativeAccountAssets[0];
     if (!asset) {

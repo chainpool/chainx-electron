@@ -128,6 +128,17 @@ class VoteModal extends Mixin {
                         { name: () => operationAmount, value: setBlankSpace(amount, token) },
                         { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                       ],
+                      ...(action === 'add'
+                        ? {
+                            checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                              if (minValue === 0) {
+                                return accountNativeAssetFreeBalance - fee - amount >= minValue;
+                              } else {
+                                return accountNativeAssetFreeBalance - fee - amount > minValue;
+                              }
+                            },
+                          }
+                        : {}),
                       callback: () => {
                         return dispatch({
                           type: action === 'add' ? 'nominate' : action === 'cancel' ? 'unnominate' : 'renominate',

@@ -124,6 +124,17 @@ class CurrentOrderTable extends SwitchPair {
                         value: setBlankSpace(item.amountShow, item.filterPair.assets),
                       },
                     ],
+                    ...(item.direction === 'Sell'
+                      ? {
+                          checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                            if (minValue === 0) {
+                              return accountNativeAssetFreeBalance - fee >= minValue;
+                            } else {
+                              return Number(accountNativeAssetFreeBalance - fee) + Number(item.amountShow) > minValue;
+                            }
+                          },
+                        }
+                      : {}),
                     callback: () => {
                       return dispatch({
                         type: 'cancelOrder',
