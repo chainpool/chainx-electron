@@ -10,8 +10,8 @@ import {
   hexPrefix,
   toJS,
   convertAddressChecksumAll,
-} from '../utils';
-import ModelExtend from './ModelExtend';
+} from '../../utils';
+import ModelExtend from '../ModelExtend';
 import {
   getWithdrawalList,
   createWithdrawTx,
@@ -23,7 +23,7 @@ import {
   getTrusteeSessionInfo,
   getUnspent,
   getTxFromTxhash,
-} from '../services';
+} from '../../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -31,6 +31,7 @@ import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
+import './signLedger';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
