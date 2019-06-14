@@ -1,4 +1,3 @@
-require("@babel/register");
 const { app, BrowserWindow, dialog, shell } = require("electron");
 const path = require("path");
 const semver = require("semver");
