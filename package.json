@@ -66,6 +66,9 @@
   },
   "dependencies": {
     "@chainx/rpc-provider": "^2.13.0-alpha.4",
+    "@ledgerhq/hw-app-btc": "^4.61.0",
+    "@ledgerhq/hw-transport-node-hid": "^4.61.1",
+    "babel-polyfill": "^6.26.0",
     "cross-env": "^5.2.0",
     "electron-store": "^3.2.0",
     "electron-updater": "^4.0.6",
