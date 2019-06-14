@@ -1,6 +1,11 @@
 require("babel-polyfill");
-const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid");
+
+const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid").default;
 const AppBtc = require("@ledgerhq/hw-app-btc").default;
+
+console.log("fuck world");
+console.log(TransportNodeHid);
+console.log(AppBtc);
 
 // const bitcore = require("bitcore-lib");
 // // const Script = bitcore.Script;

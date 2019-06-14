@@ -1,11 +1,11 @@
-const WebSocket = require('ws');
+const WebSocket = require("ws");
 let id = 0;
 
 function request({ url, id, method, params }) {
   let startTime;
   let endTime;
   return new Promise((resolve, reject) => {
-    const message = JSON.stringify({ id, jsonrpc: '2.0', method, params });
+    const message = JSON.stringify({ id, jsonrpc: "2.0", method, params });
     const ws = new WebSocket(url);
     ws.onmessage = m => {
       try {
@@ -14,7 +14,7 @@ function request({ url, id, method, params }) {
           endTime = Date.now();
           resolve({
             data: data.result,
-            wastTime: endTime - startTime,
+            wastTime: endTime - startTime
           });
           ws.close();
         }
@@ -40,9 +40,9 @@ module.exports.fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
       request({ url, method, params, id }),
       new Promise((resovle, reject) => {
         setTimeout(() => {
-          reject('请求超时');
+          reject("请求超时");
         }, timeOut);
-      }),
+      })
     ]);
   } else {
     return request({ url, method, params, id });
