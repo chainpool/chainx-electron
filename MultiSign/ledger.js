@@ -1,8 +1,6 @@
-import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import AppBtc from "@ledgerhq/hw-app-btc";
-
-// const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid");
-// const AppBtc = require("@ledgerhq/hw-app-btc").default;
+require("babel-polyfill");
+const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid");
+const AppBtc = require("@ledgerhq/hw-app-btc").default;
 
 // const bitcore = require("bitcore-lib");
 // // const Script = bitcore.Script;
