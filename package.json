@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cd app && yarn build",
     "start": "NODE_ENV=development electron . --debug",
-    "startWin": "set NODE_ENV=development &&electron . --debug",
+    "startWin": "cross-env NODE_ENV=development electron . --debug",
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
     "dist": "yarn build && rimraf dist && electron-builder"
@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@chainx/rpc-provider": "^2.13.0-alpha.4",
+    "cross-env": "^5.2.0",
     "electron-store": "^3.2.0",
     "electron-updater": "^4.0.6",
     "semver": "^6.1.1",
