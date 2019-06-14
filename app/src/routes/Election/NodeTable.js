@@ -150,6 +150,17 @@ class NodeTable extends Component {
                           { name: 'operation', value: () => <FormattedMessage id={'ClaimDividend'} /> },
                           { name: () => <FormattedMessage id={'AssetType'} />, value: nativeAssetName },
                         ],
+                        checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                          if (minValue === 0) {
+                            return accountNativeAssetFreeBalance - fee >= minValue;
+                          } else {
+                            return (
+                              Number(accountNativeAssetFreeBalance - fee) +
+                                Number(setDefaultPrecision(item.myInterest)) >
+                              minValue
+                            );
+                          }
+                        },
                         callback: () => {
                           return dispatch({
                             type: 'voteClaim',

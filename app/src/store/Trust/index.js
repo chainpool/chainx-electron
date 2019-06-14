@@ -10,8 +10,8 @@ import {
   hexPrefix,
   toJS,
   convertAddressChecksumAll,
-} from '../utils';
-import ModelExtend from './ModelExtend';
+} from '../../utils';
+import ModelExtend from '../ModelExtend';
 import {
   getWithdrawalList,
   createWithdrawTx,
@@ -21,7 +21,9 @@ import {
   setupBitcoinTrustee,
   getBlockTime,
   getTrusteeSessionInfo,
-} from '../services';
+  getUnspent,
+  getTxFromTxhash,
+} from '../../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
@@ -29,6 +31,7 @@ import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
+import './signLedger';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -58,10 +61,16 @@ export default class Trust extends ModelExtend {
   @observable signStatus = '';
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
-  @observable commentFee = '';
+  @observable commentFee = ''; // 推荐手续费
   @observable totalSignCount = '';
   @observable lastPredictTradeLength = '';
+  @observable BitCoinFee = '';
+  @observable txInputList = [];
+  @observable txOutputList = [];
 
+  @computed get BitCoinFeeShow() {
+    return this.setPrecision(this.BitCoinFee, 8);
+  }
   @computed
   get maxSignCount() {
     return Math.ceil((this.totalSignCount * 2) / 3);
@@ -195,7 +204,7 @@ export default class Trust extends ModelExtend {
     this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0 }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
@@ -207,12 +216,12 @@ export default class Trust extends ModelExtend {
             toString: () => 'NotSetNode',
           });
         }
-        if (!findOne.connected) {
-          throw new Error({
-            info: '节点未连接',
-            toString: () => 'NodeNotLink',
-          });
-        }
+        // if (!findOne.connected) {
+        //   throw new Error({
+        //     info: '节点未连接',
+        //     toString: () => 'NodeNotLink',
+        //   });
+        // }
         const multisigAddress = await this.getBitcoinTrusteeAddress();
         if (!multisigAddress) {
           throw new Error({
@@ -220,16 +229,21 @@ export default class Trust extends ModelExtend {
             toString: () => 'NotFindTrusteeAddress',
           });
         }
+
         const nodeUrl = findOne.node;
-        const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
-        if (!minerFee) {
+        const BitCoinFee = this.BitCoinFee;
+        if (!BitCoinFee) {
           throw new Error({
             info: '未获取到提现手续费',
             toString: () => 'NotFindTrusteeFee',
           });
         }
 
-        const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
+        const getUnspents = address =>
+          getUnspent({ address, isTest: this.isTestBitCoinNetWork() }).then((res = {}) => {
+            return res.result;
+          });
+
         const filterUnspentsByAmount = (unspents = [], amount) => {
           const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
           nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
@@ -268,16 +282,18 @@ export default class Trust extends ModelExtend {
           }
         };
 
-        const utxos = await getUnspents(nodeUrl);
-        if (!utxos.length) {
+        const utxos = await getUnspents(multisigAddress);
+        if (!(utxos && utxos.length)) {
           throw new Error({
             info: '当前节点无任何utxo',
             toString: () => 'NodeHasNoUTXO',
           });
         }
+
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
+
         if (totalWithdrawAmount <= 0) {
           throw new Error({
             info: '提现总额应大于0',
@@ -301,12 +317,12 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = withdraw.amount - minerFee.fee;
+          const fee = withdraw.amount - BitCoinFee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - feeSum - bitFee;
+        const change = totalInputAmount - feeSum - userInputbitFee;
         if (change < 0) {
           throw new Error({
             info: 'utxo总额不够支付手续费',
@@ -366,6 +382,7 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     const ids = withdrawList.map((item = {}) => item.id);
+    console.log(ids, tx, '----ids,tx');
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
@@ -389,6 +406,7 @@ export default class Trust extends ModelExtend {
         trusteeList,
         totalSignCount,
       });
+      this.getInputsAndOutputsFromTx(tx);
     } else {
       this.changeModel({
         tx: '',
@@ -398,6 +416,45 @@ export default class Trust extends ModelExtend {
         totalSignCount: '',
       });
     }
+  };
+
+  getInputsAndOutputsFromTx = async tx => {
+    if (!tx) return;
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
+    const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
+      const address = bitcoin.address.fromOutputScript(item.script, network);
+      return {
+        address,
+        value: this.setPrecision(item.value, 8),
+      };
+    });
+    this.changeModel('txOutputList', resultOutputs);
+    const ins = txbRAW.__tx.ins.map(item => {
+      return {
+        ...item,
+        hash: item.hash.reverse().toString('hex'),
+      };
+    });
+    const insTXs = await Promise.all(
+      ins.map(async (item = {}) => {
+        const res = await getTxFromTxhash({ txhash: item.hash, isTest: this.isTestBitCoinNetWork() });
+        if (!(res && res.result)) {
+          return {};
+        }
+        const transaction = bitcoin.Transaction.fromHex(res.result);
+        const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+        const findOne = txb.__tx.outs[item.index];
+        const address = bitcoin.address.fromOutputScript(findOne.script, network);
+        return {
+          address,
+          hash: item.hash,
+          value: this.setPrecision(findOne.value, 8),
+        };
+      })
+    );
+    this.changeModel('txInputList', insTXs);
   };
 
   getTrusteeSessionInfo = async chain => {
@@ -609,5 +666,12 @@ export default class Trust extends ModelExtend {
 
   getBitcoinTrusteeAddress = async () => {
     return await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
+  };
+
+  getMinimalWithdrawalValueByToken = async () => {
+    const res = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
+    if (res && res.fee) {
+      this.changeModel('BitCoinFee', res.fee);
+    }
   };
 }

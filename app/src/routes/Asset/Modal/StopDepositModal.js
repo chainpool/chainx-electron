@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button, FormattedMessage, Icon, LanguageContent } from '../../../components';
 import * as styles from './StopDepositModal.less';
-import { LowerPCXWarn } from '../../components';
 
 class StopDepositModal extends Component {
   render() {

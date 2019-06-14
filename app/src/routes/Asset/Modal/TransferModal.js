@@ -95,6 +95,18 @@ class TransferModal extends Component {
                       { name: () => <FormattedMessage id={'ReceiveAddress'} />, value: address, toastShow: false },
                       { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                     ],
+
+                    ...(token === nativeAssetName
+                      ? {
+                          checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
+                            if (minValue === 0) {
+                              return accountNativeAssetFreeBalance - fee - amount >= minValue;
+                            } else {
+                              return accountNativeAssetFreeBalance - fee - amount > minValue;
+                            }
+                          },
+                        }
+                      : {}),
                     callback: ({ token }) => {
                       return dispatch({
                         type: 'transfer',

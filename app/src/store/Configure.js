@@ -163,13 +163,6 @@ export default class Configure extends ModelExtend {
               isSystem: true,
               address: 'wss://chainx.buildlinks.org',
             },
-            {
-              type: 'SystemDefault',
-              name: 'ThisMachine',
-              address: 'ws://localhost:8087',
-              isSystem: true,
-              isLocalhost: true,
-            },
           ],
           (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)
         )
@@ -193,13 +186,6 @@ export default class Configure extends ModelExtend {
               name: 'w2',
               isSystem: true,
               address: 'wss://w2.chainx.org/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'ThisMachine',
-              address: 'ws://localhost:8087',
-              isSystem: true,
-              isLocalhost: true,
             },
           ],
           (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem)
@@ -242,13 +228,6 @@ export default class Configure extends ModelExtend {
               name: 'w1.cn',
               isSystem: true,
               address: 'wss://w1.chainx.org.cn/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'ThisMachine',
-              address: 'ws://localhost:8087',
-              isSystem: true,
-              isLocalhost: true,
             },
           ],
           (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)
