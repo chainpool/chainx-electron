@@ -22,7 +22,7 @@ import {
   getBlockTime,
   getTrusteeSessionInfo,
   getUnspent,
-  getTxFromTxhash,
+  getTxsFromTxidList,
 } from '../../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
@@ -385,7 +385,6 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = ({ withdrawList = [], tx }) => {
     const ids = withdrawList.map((item = {}) => item.id);
-    console.log(ids, tx, '----ids,tx');
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
@@ -440,24 +439,25 @@ export default class Trust extends ModelExtend {
         hash: item.hash.reverse().toString('hex'),
       };
     });
-    const insTXs = await Promise.all(
-      ins.map(async (item = {}) => {
-        const res = await getTxFromTxhash({ txhash: item.hash, isTest: this.isTestBitCoinNetWork() });
-        if (!(res && res.result)) {
-          return {};
-        }
-        const transaction = bitcoin.Transaction.fromHex(res.result);
+    const ids = ins.map(item => item.hash);
+
+    const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
+
+    if (result && result.length) {
+      const insTXs = result.map(item => {
+        const transaction = bitcoin.Transaction.fromHex(item.raw);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
-        const findOne = txb.__tx.outs[item.index];
+        const filterOne = ins.filter((one = {}) => one.hash === item.txid)[0];
+        const findOne = txb.__tx.outs[filterOne.index];
         const address = bitcoin.address.fromOutputScript(findOne.script, network);
         return {
           address,
-          hash: item.hash,
+          hash: item.txid,
           value: this.setPrecision(findOne.value, 8),
         };
-      })
-    );
-    this.changeModel('txInputList', insTXs);
+      });
+      this.changeModel('txInputList', insTXs);
+    }
   };
 
   getTrusteeSessionInfo = async chain => {

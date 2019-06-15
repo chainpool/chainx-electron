@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip, TableTitle } from '../components';
-import { Inject, formatNumber, classNames } from '../../utils';
+import { Inject, classNames } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -13,6 +13,8 @@ import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import SignResultModal from './Modal/SignResultModal';
 import ConstructSpecialTradeModal from './Modal/ConstructSpecialTradeModal';
 import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
+import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
+import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -24,7 +26,7 @@ class Trust extends Mixin {
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
     // this.props.model.openModal({
-    //   name: 'ConstructSpecialTradeModal',
+    //   name: 'ViewHardwarePubKey',
     // });
   };
 
@@ -213,6 +215,14 @@ class Trust extends Mixin {
                   <Icon name="icon-shezhixintuo" />
                   <span>解析特殊交易</span>
                 </Button>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({ name: 'ExportHardwarePubKey' });
+                  }}>
+                  <Icon name="icon-shezhixintuo" />
+                  <span>导出硬件公钥</span>
+                </Button>
               </ButtonGroup>
             </TableTitle>
             <SettingTable {...this.props} />
@@ -376,6 +386,8 @@ class Trust extends Mixin {
         {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
         {name === 'ConstructSpecialTradeModal' ? <ConstructSpecialTradeModal {...props} /> : null}
         {name === 'AnalyzeSpecialTradeModal' ? <AnalyzeSpecialTradeModal {...props} /> : null}
+        {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
+        {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
       </div>
     );
   }
