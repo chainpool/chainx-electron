@@ -319,6 +319,7 @@ export default class Trust extends ModelExtend {
         });
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - userInputbitFee;
+
         if (change < 0) {
           throw new Error({
             info: 'utxo总额不够支付手续费',

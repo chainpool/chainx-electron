@@ -28,7 +28,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: this.getWithdrawList(withDrawIndexSignList),
-            ...(fee ? { bitFee: setPrecision(fee, 8, true) } : {}),
+            ...(fee ? { userInputbitFee: setPrecision(fee, 8, true) } : {}),
           },
         });
       } catch (err) {
@@ -108,7 +108,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: this.getWithdrawList(withDrawIndexSignList),
-            ...(fee ? { bitFee: setPrecision(fee, 8, true) } : {}),
+            ...(fee ? { userInputbitFee: setPrecision(fee, 8, true) } : {}),
           },
         });
         if (tx) {
@@ -171,32 +171,6 @@ class WithdrawConstructModal extends Component {
           </Button>
         }>
         <div>
-          <Input.Select
-            errMsgIsOutside
-            errMsg={withDrawIndexSignListErrMsg}
-            multi={true}
-            label={<FormattedMessage id={'WithdrawalList'} />}
-            options={options}
-            onChange={value => {
-              this.setState(
-                {
-                  withDrawIndexSignList: value,
-                },
-                async () => {
-                  await setTxFromIndexOrFee();
-                }
-              );
-            }}
-            onBlur={checkAll.checkWithDrawIndexSignList}
-          />
-          <Input.Text
-            errMsgIsOutside
-            value={tx}
-            errMsg={txErrMsg}
-            isTextArea
-            label={<FormattedMessage id={'OriginalDataToSigned'} />}
-            rows={5}
-          />
           <Input.Text
             isDecimal="decimal"
             precision={8}
@@ -236,6 +210,32 @@ class WithdrawConstructModal extends Component {
               checkAll.checkFee();
               checkAll.checkWithDrawIndexSignList();
             }}
+          />
+          <Input.Select
+            errMsgIsOutside
+            errMsg={withDrawIndexSignListErrMsg}
+            multi={true}
+            label={<FormattedMessage id={'WithdrawalList'} />}
+            options={options}
+            onChange={value => {
+              this.setState(
+                {
+                  withDrawIndexSignList: value,
+                },
+                async () => {
+                  await setTxFromIndexOrFee();
+                }
+              );
+            }}
+            onBlur={checkAll.checkWithDrawIndexSignList}
+          />
+          <Input.Text
+            errMsgIsOutside
+            value={tx}
+            errMsg={txErrMsg}
+            isTextArea
+            label={<FormattedMessage id={'OriginalDataToSigned'} />}
+            rows={5}
           />
         </div>
       </Modal>

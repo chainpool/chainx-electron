@@ -21,6 +21,13 @@ class SignResultModal extends Component {
                 openModal({
                   name: 'SignModal',
                   data: {
+                    description: [
+                      { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                      {
+                        name: () => <FormattedMessage id={'WhetherSignature'} />,
+                        value: () => <FormattedMessage id={'TrueSign'} />,
+                      },
+                    ],
                     callback: () => {
                       return dispatch({
                         type: 'signWithdrawTx',

@@ -218,22 +218,22 @@ class Trust extends Mixin {
                         <Icon name="daochugongyue" />
                         <span>导出硬件公钥</span>
                       </li>
-                      <li
-                        type="blank"
-                        onClick={() => {
-                          openModal({ name: 'ConstructSpecialTradeModal' });
-                        }}>
-                        <Icon name="gouzaoteshujiaoyi" />
-                        <span>构造特殊交易</span>
-                      </li>
-                      <li
-                        type="blank"
-                        onClick={() => {
-                          openModal({ name: 'AnalyzeSpecialTradeModal' });
-                        }}>
-                        <Icon name="jiexi" />
-                        <span>解析特殊交易</span>
-                      </li>
+                      {/*<li*/}
+                      {/*type="blank"*/}
+                      {/*onClick={() => {*/}
+                      {/*openModal({ name: 'ConstructSpecialTradeModal' });*/}
+                      {/*}}>*/}
+                      {/*<Icon name="gouzaoteshujiaoyi" />*/}
+                      {/*<span>构造特殊交易</span>*/}
+                      {/*</li>*/}
+                      {/*<li*/}
+                      {/*type="blank"*/}
+                      {/*onClick={() => {*/}
+                      {/*openModal({ name: 'AnalyzeSpecialTradeModal' });*/}
+                      {/*}}>*/}
+                      {/*<Icon name="jiexi" />*/}
+                      {/*<span>解析特殊交易</span>*/}
+                      {/*</li>*/}
                     </ul>
                   </div>
                 </div>

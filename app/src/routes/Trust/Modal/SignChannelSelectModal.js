@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Icon, Modal } from '../../../components';
 import * as styles from './SignChannelSelectModal.less';
+import { classNames } from '../../../utils';
 
 class SignChannelSelectModal extends Component {
   state = {
@@ -14,7 +15,11 @@ class SignChannelSelectModal extends Component {
 
     return (
       <Modal
-        title={'签名'}
+        title={
+          <div>
+            签名<span className={styles.supportdesc}>(暂时只支持ledger)</span>
+          </div>
+        }
         button={
           <Button
             size="full"
@@ -37,12 +42,15 @@ class SignChannelSelectModal extends Component {
           <ul>
             {[
               { name: 'Ledger', icon: 'ledger' },
-              { name: 'Trezor', icon: 'trezor' },
-              { name: '手机冷钱包', icon: 'phone' },
-              { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他' },
+              { name: 'Trezor', icon: 'trezor', disabeld: true },
+              { name: '手机冷钱包', icon: 'phone', disabeld: true },
+              { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他', disabeld: true },
             ].map((item, index) => (
               <li
-                className={selectOne === item.name || selectOne === item.desc ? styles.active : null}
+                className={classNames(
+                  selectOne === item.name || selectOne === item.desc ? styles.active : null,
+                  item.disabeld ? styles.disabeld : null
+                )}
                 key={index}
                 onClick={() => {
                   this.setState({
