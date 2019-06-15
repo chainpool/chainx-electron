@@ -20,7 +20,52 @@ async function getPublicKey(network = "mainnet") {
   return compressed.toString("hex");
 }
 
-async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
+function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
+  const net =
+    network === "mainnet" ? bitcore.Networks.mainnet : bitcore.Networks.testnet;
+
+  const txObj = bitcore.Transaction();
+
+  const utxos = inputArr.map(input => {
+    const tx = bitcore.Transaction(input.raw);
+    const script = tx.outputs[index].script.toHex();
+    return {
+      txId: input.hash,
+      outputIndex: input.index,
+      address: input.address,
+      script,
+      satoshis: input.satoshi
+    };
+  });
+
+  const script = bitcore.Script.fromString(redeemScript);
+  const chunks = script.chunks.slice(1, script.chunks.length - 2);
+  const pubkeys = chunks.map(chunk => chunk.buf.toString("hex"));
+
+  for (let utxo of utxos) {
+    txObj.from(utxo, pubkeys, m, false, { noSorting: true });
+  }
+
+  const originTx = bitcore.Transaction(raw);
+  for (const ouput of originTx.outputs) {
+    const address = bitcore.Address.fromScript(ouput.script, net);
+
+    txObj.to(address.toString(), output.satoshis);
+  }
+
+  return txObj;
+}
+
+async function sign(
+  raw,
+  inputsObj,
+  redeemScript,
+  pubkey,
+  m = 2,
+  network = "mainnet"
+) {
+  console.log("arguments", arguments);
+
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
 
@@ -40,6 +85,8 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
     outputScript
   );
 
+  console.log("result", result);
+
   const signatureObjs = result.map(function(sig, index) {
     return {
       inputIndex: index,
@@ -55,7 +102,9 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
     };
   });
 
-  const finalTx = bitcore.Transaction.fromString(raw);
+  console.log(signatureObjs);
+
+  const finalTx = constructTxObj(raw, inputsObj, redeemScript, m, network);
   for (const signature of signatureObjs) {
     finalTx.applySignature(signature);
   }
