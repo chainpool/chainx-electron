@@ -1037,7 +1037,7 @@ bindings@~1.2.1:
 
 bitcore-lib@^8.3.4:
   version "8.3.4"
-  resolved "https://registry.npmjs.org/bitcore-lib/-/bitcore-lib-8.3.4.tgz#9a50bbbcc0e661886d26a5a2358f83653e893d9d"
+  resolved "https://registry.yarnpkg.com/bitcore-lib/-/bitcore-lib-8.3.4.tgz#9a50bbbcc0e661886d26a5a2358f83653e893d9d"
   integrity sha512-4wMOn3/QnzXhNwj/GONKz7T0WIlWMYChuYrYc4c/cL0Dz0jlHsd2KFkh/98qfG+/MlQOfeemx/g8D1qg1euLtQ==
   dependencies:
     bn.js "=4.11.8"
@@ -1863,10 +1863,10 @@ electron-updater@^4.0.6:
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
-electron@^5.0.2:
-  version "5.0.3"
-  resolved "https://registry.npmjs.org/electron/-/electron-5.0.3.tgz#919818962caffbd909af15bc8a3034be972fa76e"
-  integrity sha512-kgnxPQoTNzu0lKC8ToAktt93mTimgqHZGFCVmTaFjs1G2Bk9VqKHljbQemH+REKAaw1aEgIRn2JCrTe0Dy7fVQ==
+electron@^4.0.4:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-4.2.4.tgz#68ca7bd4ff2c16b9205549322f0f1cda4ebc9ff9"
+  integrity sha512-d4wEwJluMsRyRgbukLmFVTb6l1J+mc3RLB1ctbpMlSWDFvs+zknPWa+cHBzTWwrdgwINLddr69qsAW1ku6FqYw==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"

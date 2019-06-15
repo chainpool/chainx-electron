@@ -14,4 +14,10 @@ window.fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
 
 const { example } = require("./MultiSign/ledger");
 
+const { getPublicKey } = require("./MultiSign/ledger-interface");
+
 window.ledger = example;
+
+window.ledgerInterface = {
+  getPublicKey
+};
