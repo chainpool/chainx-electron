@@ -44,7 +44,7 @@ class CommonLayOut extends Component {
         new Promise((resovle, reject) => {
           setTimeout(() => {
             reject(new Error('请求超时'));
-          }, 10000);
+          }, 20000);
         }),
       ]);
     wsPromise()

@@ -111,7 +111,6 @@ class Trust extends Mixin {
       normalizedOnChainAllWithdrawList.filter((item = {}) => {
         return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
       }).length === 0 &&
-      currentTrustNode.decodedHotPrivateKey &&
       normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
 
     const haveSignList = signTrusteeList.filter((item = {}) => item.trusteeSign);

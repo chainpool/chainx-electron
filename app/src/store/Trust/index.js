@@ -32,7 +32,9 @@ import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
 
-//console.log(window.ledger);
+// setTimeout(() => {
+//   window.ledger();
+// }, 2000);
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -211,12 +213,12 @@ export default class Trust extends ModelExtend {
       let rawTransaction;
       if (withdrawList) {
         const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-        if (!findOne || (findOne && !findOne.node)) {
-          throw new Error({
-            info: '未设置节点',
-            toString: () => 'NotSetNode',
-          });
-        }
+        // if (!findOne || (findOne && !findOne.node)) {
+        //   throw new Error({
+        //     info: '未设置节点',
+        //     toString: () => 'NotSetNode',
+        //   });
+        // }
         // if (!findOne.connected) {
         //   throw new Error({
         //     info: '节点未连接',
@@ -335,7 +337,7 @@ export default class Trust extends ModelExtend {
         }
 
         rawTransaction = txb.buildIncomplete().toHex();
-        caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
+        //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
         const privateKeys = [privateKey];
