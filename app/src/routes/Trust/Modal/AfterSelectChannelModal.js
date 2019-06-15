@@ -7,6 +7,7 @@ class AfterSelectChannelModal extends Component {
     loading: false,
     linkStatus: false,
     signErrMsg: '',
+    signWarning: '',
     signResult: '',
   };
 
@@ -21,7 +22,8 @@ class AfterSelectChannelModal extends Component {
     } = this.props;
     this.setState({
       loading: true,
-      signErrMsg: `请查看${desc}硬件确认`,
+      signErrMsg: '',
+      signWarning: `请查看${desc}硬件确认`,
     });
     const res = await dispatch({
       type: 'signWithHardware',
@@ -29,6 +31,7 @@ class AfterSelectChannelModal extends Component {
       this.setState({
         signErrMsg: err.message,
         loading: false,
+        signWarning: '',
       });
     });
 
@@ -37,13 +40,15 @@ class AfterSelectChannelModal extends Component {
         signResult: res,
         linkStatus: true,
         loading: false,
+        signWarning: '',
+        signErrMsg: '',
       });
       return res;
     }
   };
 
   render() {
-    const { linkStatus, signErrMsg, loading } = this.state;
+    const { linkStatus, signErrMsg, loading, signWarning } = this.state;
     const {
       globalStore: {
         modal: {
@@ -59,6 +64,7 @@ class AfterSelectChannelModal extends Component {
         button={
           <>
             {signErrMsg && <div className={styles.errmsg}>{signErrMsg}</div>}
+            {signWarning && <div className={styles.warning}>{signWarning}</div>}
             <Button
               loading={loading}
               size="full"
