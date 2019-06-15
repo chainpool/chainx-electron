@@ -20,7 +20,7 @@ async function getPublicKey(network = "mainnet") {
   return compressed.toString("hex");
 }
 
-function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
+function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
   const net =
     network === "mainnet" ? bitcore.Networks.mainnet : bitcore.Networks.testnet;
 
@@ -41,6 +41,7 @@ function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
   const script = bitcore.Script.fromString(redeemScript);
   const chunks = script.chunks.slice(1, script.chunks.length - 2);
   const pubkeys = chunks.map(chunk => chunk.buf.toString("hex"));
+  const m = script.chunks[0].opcodenum - 80;
 
   for (let utxo of utxos) {
     txObj.from(utxo, pubkeys, m, false, { noSorting: true });
@@ -56,14 +57,7 @@ function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
   return txObj;
 }
 
-async function sign(
-  raw,
-  inputsObj,
-  redeemScript,
-  pubkey,
-  m = 2,
-  network = "mainnet"
-) {
+async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
 
@@ -98,7 +92,7 @@ async function sign(
     };
   });
 
-  const finalTx = constructTxObj(raw, inputsObj, redeemScript, m, network);
+  const finalTx = constructTxObj(raw, inputsObj, redeemScript, network);
   for (const signature of signatureObjs) {
     finalTx.applySignature(signature);
   }
