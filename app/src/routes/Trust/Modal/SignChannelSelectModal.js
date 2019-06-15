@@ -21,15 +21,17 @@ class SignChannelSelectModal extends Component {
             type="confirm"
             onClick={() => {
               if (selectOne === 'Ledger') {
-                dispatch({
-                  type: 'signWithHardware',
+                openModal({
+                  name: 'SignResultModal',
+                  data: {
+                    desc: selectOne,
+                    callback: () => {
+                      return dispatch({
+                        type: 'signWithHardware',
+                      });
+                    },
+                  },
                 });
-                // openModal({
-                //   name: 'SignResultModal',
-                //   data: {
-                //     desc: selectOne,
-                //   },
-                // });
               }
             }}>
             <FormattedMessage id={'Confirm'} />

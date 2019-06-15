@@ -16,9 +16,9 @@ class ViewHardwarePubKey extends Component {
       },
     } = this.props;
     const res = await callback().catch(err => console.log(err));
-    if (res && res.publicKey)
+    if (res)
       this.setState({
-        pubKey: res.publicKey,
+        pubKey: res,
         linkStatus: true,
       });
   }

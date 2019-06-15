@@ -3,6 +3,19 @@ import { Button, FormattedMessage, Modal, Input } from '../../../components';
 import * as styles from './SignResultModal.less';
 
 class SignResultModal extends Component {
+  async componentDidMount() {
+    const {
+      globalStore: { modal: { data: { callback } } = {} },
+    } = this.props;
+
+    const res = await callback();
+    if (res) {
+      console.log(res, 'ledger签名结果');
+      this.setState({
+        signResult: res,
+      });
+    }
+  }
   state = {
     signResult: '',
   };
@@ -17,7 +30,26 @@ class SignResultModal extends Component {
       <Modal
         title={<span>签名结果{desc === 'other' ? <span className={styles.other}>(其他)</span> : null}</span>}
         button={
-          <Button size="full" type="confirm" onClick={() => {}}>
+          <Button
+            size="full"
+            type="confirm"
+            onClick={() => {
+              if (signResult) {
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    callback: () => {
+                      return dispatch({
+                        type: 'signWithdrawTx',
+                        payload: {
+                          tx: signResult,
+                        },
+                      });
+                    },
+                  },
+                });
+              }
+            }}>
             <FormattedMessage id={'Confirm'} />
           </Button>
         }>

@@ -92,6 +92,7 @@ class Trust extends Mixin {
         maxSignCount,
         signHash,
         BitCoinFeeShow,
+        isTestBitCoinNetWork,
       },
     } = this.props;
     const currentTrustNode =
@@ -143,7 +144,7 @@ class Trust extends Mixin {
             {txInputList.map((item, index) => (
               <li key={index}>
                 <div className={styles.from}>
-                  <RouterGo isOutSide go={{ pathname: '' }}>
+                  <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
                     <span className={styles.hash}>{item.hash}</span>
                   </RouterGo>
                   <span>({item.value})</span>
@@ -159,7 +160,7 @@ class Trust extends Mixin {
               <li key={index}>
                 <div className={styles.left}>
                   <div className={styles.from}>
-                    <RouterGo isOutSide go={{ pathname: '' }}>
+                    <RouterGo isOutSide go={{ pathname: blockChain.address(item.address, isTestBitCoinNetWork()) }}>
                       {item.address}
                     </RouterGo>
                     <span>({item.value})</span>
@@ -353,8 +354,8 @@ class Trust extends Mixin {
                   <Clipboard width={400}>{tx}</Clipboard>
                 </div>
                 <div className={styles.fees}>
-                  <div>矿工手续费： BTC</div>
-                  <div>交易手续费：{BitCoinFeeShow} BTC</div>
+                  <div>收取手续费： BTC</div>
+                  <div>实付手续费：{BitCoinFeeShow} BTC</div>
                 </div>
               </div>
               <div className={styles.inputoutputContainer}>

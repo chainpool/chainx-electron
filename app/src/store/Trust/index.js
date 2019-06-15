@@ -62,6 +62,7 @@ export default class Trust extends ModelExtend {
   @observable trusteeList = []; //已签名的节点列表
   @observable commentFee = ''; // 推荐手续费
   @observable totalSignCount = '';
+  @observable maxSignCount = '';
   @observable lastPredictTradeLength = '';
   @observable BitCoinFee = '';
   @observable txInputList = [];
@@ -69,10 +70,6 @@ export default class Trust extends ModelExtend {
 
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee, 8);
-  }
-  @computed
-  get maxSignCount() {
-    return Math.ceil((this.totalSignCount * 2) / 3);
   }
 
   @computed
@@ -396,15 +393,14 @@ export default class Trust extends ModelExtend {
         this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount } = resRede || {};
-
-      console.log(resRede, '---resRede');
+      const { redeemScript, totalSignCount, maxSignCount } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
         redeemScript,
         trusteeList,
         totalSignCount,
+        maxSignCount,
       });
       this.getInputsAndOutputsFromTx(tx);
     } else {
@@ -414,6 +410,7 @@ export default class Trust extends ModelExtend {
         redeemScript: '',
         trusteeList: [],
         totalSignCount: '',
+        maxSignCount: '',
       });
     }
   };
@@ -454,6 +451,7 @@ export default class Trust extends ModelExtend {
           address,
           hash: item.txid,
           value: this.setPrecision(findOne.value, 8),
+          satoshi: findOne.value,
         };
       });
       this.changeModel('txInputList', insTXs);
@@ -469,21 +467,27 @@ export default class Trust extends ModelExtend {
       };
     } else {
       const res = await getTrusteeSessionInfo(chain);
-      const { hotEntity: { redeemScript } = {}, trusteeList = [] } = res || {};
+      const {
+        hotEntity: { redeemScript } = {},
+        trusteeList = [], //暂时没用
+        counts: { total, required },
+      } = res || {};
       return {
         redeemScript,
-        totalSignCount: trusteeList.length,
+        totalSignCount: total,
+        maxSignCount: required,
       };
     }
   };
 
   signWithHardware = async () => {
+    const filterTrust = this.trusts.filter(item => item.chain === 'Bitcoin')[0];
     const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
     console.log(
       this.tx,
       this.txInputList,
       this.redeemScript,
-      '035b8fb240f808f4d3d0d024fdf3b185b942e984bba81b6812b8610f66d59f3a84',
+      filterTrust.hotPubKey,
       network,
       '--------签名输入所有参数'
     );
@@ -491,18 +495,18 @@ export default class Trust extends ModelExtend {
       this.tx.replace(/^0x/, ''),
       this.txInputList,
       this.redeemScript.replace(/^0x/, ''),
-      '035b8fb240f808f4d3d0d024fdf3b185b942e984bba81b6812b8610f66d59f3a84',
+      filterTrust.hotPubKey.replace(/^0x/, ''),
       network
     ).catch(err => console.log(err));
-    console.log(res, '---------------res');
+    return res;
   };
 
   signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
     let tx_trans = null;
     if (tx) {
       tx = tx.replace(/^0x/, '');
-      redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = await this.sign({ tx, redeemScript, privateKey });
+      //redeemScript = redeemScript.replace(/^0x/, '');
+      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey });
     }
 
     const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
