@@ -28,7 +28,7 @@ function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
 
   const utxos = inputArr.map(input => {
     const tx = bitcore.Transaction(input.raw);
-    const script = tx.outputs[index].script.toHex();
+    const script = tx.outputs[input.index].script.toHex();
     return {
       txId: input.hash,
       outputIndex: input.index,
@@ -47,8 +47,8 @@ function constructTxObj(raw, inputArr, redeemScript, m, network = "mainnet") {
   }
 
   const originTx = bitcore.Transaction(raw);
-  for (const ouput of originTx.outputs) {
-    const address = bitcore.Address.fromScript(ouput.script, net);
+  for (const output of originTx.outputs) {
+    const address = bitcore.Address.fromScript(output.script, net);
 
     txObj.to(address.toString(), output.satoshis);
   }
@@ -64,8 +64,6 @@ async function sign(
   m = 2,
   network = "mainnet"
 ) {
-  console.log("arguments", arguments);
-
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
 
@@ -85,8 +83,6 @@ async function sign(
     outputScript
   );
 
-  console.log("result", result);
-
   const signatureObjs = result.map(function(sig, index) {
     return {
       inputIndex: index,
@@ -101,8 +97,6 @@ async function sign(
       })
     };
   });
-
-  console.log(signatureObjs);
 
   const finalTx = constructTxObj(raw, inputsObj, redeemScript, m, network);
   for (const signature of signatureObjs) {
