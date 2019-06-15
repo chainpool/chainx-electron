@@ -496,6 +496,7 @@ export default class Trust extends ModelExtend {
       this.txInputList,
       this.redeemScript.replace(/^0x/, ''),
       filterTrust.hotPubKey.replace(/^0x/, ''),
+      this.maxSignCount,
       network
     ).catch(err => console.log(err));
     return res;
