@@ -28,9 +28,61 @@
         margin-left: 8px;
       }
       .setListbutton{
-        button+button{
+        display: flex;
+
+
+        .utils{
+          cursor: pointer;
           margin-left: 32px;
+          font-weight: bold;
+          i{
+            margin-right: 8px;
+            color: #F6C94A;
+          }
+          position:relative;
+          &:hover{
+            .utilsContainer{
+
+              display: block;
+            }
+
+          }
+          .utilsContainer{
+            padding-top: 10px;
+            width:162px;
+            right:0;
+            //background: red;
+            z-index: 1;
+            position: absolute;
+            display: none;
+            ul{
+              background: #FFFFFF;
+              border: 1px solid #DCE0E2;
+              box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+              border-radius: 4px;
+              padding:12px 0;
+              display: flex;
+              flex-direction: column;
+              li+li{
+                margin-left: unset;
+              }
+              li{
+                width:100%;
+                &:hover{
+                  background: #F8F8F8;
+                }
+                i{
+                  margin-right: 16px;
+                }
+                height:38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
         }
+
         button{
           span{
             font-weight: bold !important;

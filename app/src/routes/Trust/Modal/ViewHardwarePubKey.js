@@ -4,10 +4,34 @@ import * as styles from './ViewHardwarePubKey.less';
 
 class ViewHardwarePubKey extends Component {
   state = {
-    pubKey: '1234555',
+    pubKey: '',
+    linkStatus: false,
   };
+  async componentDidMount() {
+    const {
+      globalStore: {
+        modal: {
+          data: { callback },
+        },
+      },
+    } = this.props;
+    const res = await callback().catch(err => console.log(err));
+    if (res && res.publicKey)
+      this.setState({
+        pubKey: res.publicKey,
+        linkStatus: true,
+      });
+  }
+
   render() {
-    const { pubKey } = this.state;
+    const { pubKey, linkStatus } = this.state;
+    const {
+      globalStore: {
+        modal: {
+          data: { Path },
+        },
+      },
+    } = this.props;
 
     return (
       <Modal
@@ -25,11 +49,11 @@ class ViewHardwarePubKey extends Component {
           <ul>
             <li>
               <span>状态：</span>
-              <span>未连接</span>
+              <span>{linkStatus ? '已连接' : '未连接'}</span>
             </li>
             <li>
               <span>PATH：</span>
-              <span>m/45'/0/0/0</span>
+              <span>{Path}</span>
             </li>
           </ul>
           <div className={styles.secret}>

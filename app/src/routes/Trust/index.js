@@ -188,7 +188,7 @@ class Trust extends Mixin {
                 )}
                 )
               </span>
-              <ButtonGroup className={styles.setListbutton}>
+              <div className={styles.setListbutton}>
                 <Button
                   type="blank"
                   onClick={() => {
@@ -199,31 +199,39 @@ class Trust extends Mixin {
                     <FormattedMessage id={'SetupTrustee'} />
                   </span>
                 </Button>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({ name: 'ConstructSpecialTradeModal' });
-                  }}>
-                  <Icon name="icon-shezhixintuo" />
-                  <span>构造特殊交易</span>
-                </Button>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({ name: 'AnalyzeSpecialTradeModal' });
-                  }}>
-                  <Icon name="icon-shezhixintuo" />
-                  <span>解析特殊交易</span>
-                </Button>
-                <Button
-                  type="blank"
-                  onClick={() => {
-                    openModal({ name: 'ExportHardwarePubKey' });
-                  }}>
-                  <Icon name="icon-shezhixintuo" />
-                  <span>导出硬件公钥</span>
-                </Button>
-              </ButtonGroup>
+                <div className={styles.utils}>
+                  <Icon name="xintuogongju" />
+                  信托工具
+                  <div className={styles.utilsContainer}>
+                    <ul>
+                      <li
+                        type="blank"
+                        onClick={() => {
+                          openModal({ name: 'ExportHardwarePubKey' });
+                        }}>
+                        <Icon name="daochugongyue" />
+                        <span>导出硬件公钥</span>
+                      </li>
+                      <li
+                        type="blank"
+                        onClick={() => {
+                          openModal({ name: 'ConstructSpecialTradeModal' });
+                        }}>
+                        <Icon name="gouzaoteshujiaoyi" />
+                        <span>构造特殊交易</span>
+                      </li>
+                      <li
+                        type="blank"
+                        onClick={() => {
+                          openModal({ name: 'AnalyzeSpecialTradeModal' });
+                        }}>
+                        <Icon name="jiexi" />
+                        <span>解析特殊交易</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </TableTitle>
             <SettingTable {...this.props} />
           </div>

@@ -9,7 +9,7 @@ class ExportHardwarePubKey extends Component {
   render() {
     const { selectOne } = this.state;
     const {
-      model: { openModal },
+      model: { openModal, isTestBitCoinNetWork },
     } = this.props;
 
     return (
@@ -24,6 +24,14 @@ class ExportHardwarePubKey extends Component {
                 name: 'ViewHardwarePubKey',
                 data: {
                   desc: selectOne,
+                  Path: isTestBitCoinNetWork() ? "m/45'/1'/0'/0/0" : "m/45'/0'/0'/0/0",
+                  callback: () => {
+                    if (selectOne === 'Ledger') {
+                      return window.LedgerInterface.getPublicKey(isTestBitCoinNetWork() ? 'testnet' : 'mainnet');
+                    } else {
+                      return Promise.reject('qita');
+                    }
+                  },
                 },
               });
             }}>
