@@ -3,27 +3,10 @@ import { Button, FormattedMessage, Modal, Input } from '../../../components';
 import * as styles from './SignResultModal.less';
 
 class SignResultModal extends Component {
-  async componentDidMount() {
-    const {
-      globalStore: { modal: { data: { callback } } = {} },
-    } = this.props;
-
-    const res = await callback();
-    if (res) {
-      console.log(res, 'ledger签名结果');
-      this.setState({
-        signResult: res,
-      });
-    }
-  }
-  state = {
-    signResult: '',
-  };
   render() {
-    const { selectOne, signResult } = this.state;
     const {
-      model: { dispatch, openModal, closeModal },
-      globalStore: { modal: { data: { desc } = {} } = {} },
+      model: { dispatch, openModal },
+      globalStore: { modal: { data: { desc, signResult } = {} } = {} },
     } = this.props;
 
     return (
@@ -57,7 +40,7 @@ class SignResultModal extends Component {
           <Input.Text
             isTextArea
             value={signResult}
-            rows={8}
+            rows={10}
             onChange={value => {
               this.setState({
                 signResult: value,

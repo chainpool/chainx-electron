@@ -36,7 +36,7 @@ class ViewHardwarePubKey extends Component {
 
     return (
       <Modal
-        title={<FormattedMessage id={'ExportPrivateKey'} />}
+        title={'查看公钥'}
         button={
           pubKey ? (
             ''

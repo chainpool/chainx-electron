@@ -425,6 +425,7 @@ export default class Trust extends ModelExtend {
       return {
         address,
         value: this.setPrecision(item.value, 8),
+        satoshi: item.value,
       };
     });
     this.changeModel('txOutputList', resultOutputs);
@@ -488,6 +489,7 @@ export default class Trust extends ModelExtend {
       this.txInputList,
       this.redeemScript,
       filterTrust.hotPubKey,
+      this.maxSignCount,
       network,
       '--------签名输入所有参数'
     );
@@ -496,9 +498,8 @@ export default class Trust extends ModelExtend {
       this.txInputList,
       this.redeemScript.replace(/^0x/, ''),
       filterTrust.hotPubKey.replace(/^0x/, ''),
-      this.maxSignCount,
       network
-    ).catch(err => console.log(err));
+    ).catch(err => Promise.reject(err));
     return res;
   };
 

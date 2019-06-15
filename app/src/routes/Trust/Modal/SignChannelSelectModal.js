@@ -9,7 +9,7 @@ class SignChannelSelectModal extends Component {
   render() {
     const { selectOne } = this.state;
     const {
-      model: { dispatch, openModal, closeModal },
+      model: { openModal, tx },
     } = this.props;
 
     return (
@@ -22,14 +22,10 @@ class SignChannelSelectModal extends Component {
             onClick={() => {
               if (selectOne === 'Ledger') {
                 openModal({
-                  name: 'SignResultModal',
+                  name: 'AfterSelectChannelModal',
                   data: {
                     desc: selectOne,
-                    callback: () => {
-                      return dispatch({
-                        type: 'signWithHardware',
-                      });
-                    },
+                    tx,
                   },
                 });
               }

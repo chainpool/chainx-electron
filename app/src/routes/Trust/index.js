@@ -15,6 +15,7 @@ import ConstructSpecialTradeModal from './Modal/ConstructSpecialTradeModal';
 import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
 import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
 import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
+import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
@@ -81,6 +82,7 @@ class Trust extends Mixin {
         modal: { name },
       },
       model: {
+        setPrecision,
         dispatch,
         tx,
         redeemScript,
@@ -121,6 +123,9 @@ class Trust extends Mixin {
     const notResponseList = signTrusteeList.filter(
       (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
     );
+
+    const totalInputValue = txInputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
+    const totalOutputValue = txOutputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
 
     const renderSignLi = (one, index) => {
       return (
@@ -354,8 +359,8 @@ class Trust extends Mixin {
                   <Clipboard width={400}>{tx}</Clipboard>
                 </div>
                 <div className={styles.fees}>
-                  <div>收取手续费： BTC</div>
-                  <div>实付手续费：{BitCoinFeeShow} BTC</div>
+                  <div>收取手续费： {BitCoinFeeShow} BTC</div>
+                  <div>实付手续费：{setPrecision(totalInputValue - totalOutputValue, 'BTC')} BTC</div>
                 </div>
               </div>
               <div className={styles.inputoutputContainer}>
@@ -397,6 +402,7 @@ class Trust extends Mixin {
         {name === 'AnalyzeSpecialTradeModal' ? <AnalyzeSpecialTradeModal {...props} /> : null}
         {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
         {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
+        {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
       </div>
     );
   }
