@@ -25,7 +25,7 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
   const btc = new AppBtc(transport);
 
   const toSignInputs = inputsObj.map(({ raw, index }) => {
-    const tx = btc.splitTransaction(input.raw);
+    const tx = btc.splitTransaction(raw);
     return [tx, index, redeemScript];
   });
 

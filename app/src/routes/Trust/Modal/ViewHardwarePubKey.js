@@ -30,6 +30,7 @@ class ViewHardwarePubKey extends Component {
         modal: {
           data: { Path },
         },
+        closeModal,
       },
     } = this.props;
 
@@ -40,7 +41,12 @@ class ViewHardwarePubKey extends Component {
           pubKey ? (
             ''
           ) : (
-            <Button size="full" type="confirm" onClick={() => {}}>
+            <Button
+              size="full"
+              type="confirm"
+              onClick={() => {
+                closeModal();
+              }}>
               <FormattedMessage id={'Confirm'} />
             </Button>
           )

@@ -32,10 +32,6 @@ import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
 
-// setTimeout(() => {
-//   window.ledger();
-// }, 2000);
-
 export default class Trust extends ModelExtend {
   constructor(props) {
     super(props);
@@ -401,6 +397,8 @@ export default class Trust extends ModelExtend {
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
       const { redeemScript, totalSignCount } = resRede || {};
+
+      console.log(resRede, '---resRede');
       this.changeModel({
         tx,
         signStatus,
@@ -451,6 +449,8 @@ export default class Trust extends ModelExtend {
         const findOne = txb.__tx.outs[filterOne.index];
         const address = bitcoin.address.fromOutputScript(findOne.script, network);
         return {
+          index: filterOne.index,
+          raw: item.raw,
           address,
           hash: item.txid,
           value: this.setPrecision(findOne.value, 8),
@@ -475,6 +475,26 @@ export default class Trust extends ModelExtend {
         totalSignCount: trusteeList.length,
       };
     }
+  };
+
+  signWithHardware = async () => {
+    const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
+    console.log(
+      this.tx,
+      this.txInputList,
+      this.redeemScript,
+      '035b8fb240f808f4d3d0d024fdf3b185b942e984bba81b6812b8610f66d59f3a84',
+      network,
+      '--------签名输入所有参数'
+    );
+    const res = await window.LedgerInterface.sign(
+      this.tx.replace(/^0x/, ''),
+      this.txInputList,
+      this.redeemScript.replace(/^0x/, ''),
+      '035b8fb240f808f4d3d0d024fdf3b185b942e984bba81b6812b8610f66d59f3a84',
+      network
+    ).catch(err => console.log(err));
+    console.log(res, '---------------res');
   };
 
   signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {

@@ -4,7 +4,7 @@ import * as styles from './SignChannelSelectModal.less';
 
 class SignChannelSelectModal extends Component {
   state = {
-    selectOne: 'other',
+    selectOne: 'Ledger',
   };
   render() {
     const { selectOne } = this.state;
@@ -20,13 +20,16 @@ class SignChannelSelectModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              if (selectOne === 'other') {
-                openModal({
-                  name: 'SignResultModal',
-                  data: {
-                    desc: selectOne,
-                  },
+              if (selectOne === 'Ledger') {
+                dispatch({
+                  type: 'signWithHardware',
                 });
+                // openModal({
+                //   name: 'SignResultModal',
+                //   data: {
+                //     desc: selectOne,
+                //   },
+                // });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
