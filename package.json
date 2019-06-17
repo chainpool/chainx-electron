@@ -11,7 +11,7 @@
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
     "dist": "yarn build && rimraf dist && electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-rebuild"
   },
   "license": "MIT",
   "devDependencies": {
@@ -30,7 +30,8 @@
       "app/build",
       "package.json",
       "resources",
-      "utils.js"
+      "utils.js",
+      "MultiSign"
     ],
     "publish": {
       "provider": "github",
@@ -67,9 +68,6 @@
     }
   },
   "dependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/register": "^7.4.4",
     "@ledgerhq/hw-app-btc": "^4.61.0",
     "@ledgerhq/hw-transport-node-hid": "^4.61.1",
     "add": "^2.0.6",
