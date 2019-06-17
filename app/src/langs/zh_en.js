@@ -408,6 +408,10 @@ const zh_en = {
   ],
   UserInstructions: ['用户须知', 'User Instructions'],
   ExportKeystore: ['导出Keystore', 'Export Keystore'],
+  DepositNotReceived: [
+    '如果你的充值未到账，可能是OP_RETURN格式错误，需要重新绑定以领取，deposit_replace 点击查看充值未认领列表',
+    'If your deposit is not received, it may be because the OP_RETURN format is wrong, thus you have to re-bind. deposit_replace Click to view the unclaimed deposits list.',
+  ],
 
   PasswordUpperAndLower: ['必须包含大小写字母', 'Must contain upper and lower case letters'],
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
