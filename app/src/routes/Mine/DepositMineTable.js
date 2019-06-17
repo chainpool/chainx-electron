@@ -75,9 +75,13 @@ class DepositMineTable extends Mixin {
             <>
               <FormattedMessage id={'UnclaimedDividend'} />
               (PCX)
-              <HoverTip tip={'待领利息由跨链资产票龄所占比例实时计算，出现波动为正常现象，建议适时领取'}>
-                <Icon name="icon-jieshishuoming" style={{ marginLeft: 5 }} />
-              </HoverTip>
+              <FormattedMessage id={'RecommendedClaimInterestRegularly'}>
+                {msg => (
+                  <HoverTip tip={msg}>
+                    <Icon name="icon-jieshishuoming" style={{ marginLeft: 5 }} />
+                  </HoverTip>
+                )}
+              </FormattedMessage>
             </>
           ),
           dataIndex: 'interest',

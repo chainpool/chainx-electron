@@ -81,12 +81,13 @@ class PrimaryAssetTable extends Component {
             render: value => {
               const tip =
                 setPrecision(value, nativeAssetName) <= 0.001 ? (
-                  <HoverTip
-                    tip={
-                      '可用余额过低可能导致您无法支付链上操作的手续费,此时可从其他账户转入PCX，也可充值BTC获取PCX充值奖励'
-                    }>
-                    <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
-                  </HoverTip>
+                  <FormattedMessage id={'LowerAvailableBalanceWarn'}>
+                    {msg => (
+                      <HoverTip tip={msg}>
+                        <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
+                      </HoverTip>
+                    )}
+                  </FormattedMessage>
                 ) : null;
               return (
                 <>

@@ -360,7 +360,9 @@ class CrossChainBindModal extends Mixin {
               recommendChannelSelect: '',
             });
           }}>
-          <span className={!isAddChanel ? styles.addChanneldesc : null}>添加渠道（非必选）</span>
+          <span className={!isAddChanel ? styles.addChanneldesc : null}>
+            <FormattedMessage id={'AddOptionalChannel'} />
+          </span>
         </Input.Checkbox>
         {isAddChanel && (
           <FormattedMessage id={'NodeName'}>

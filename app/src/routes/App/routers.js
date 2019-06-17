@@ -63,6 +63,7 @@ export default [
     path: '/dapp',
     component: Trade,
     status: 'awaiting',
+    show: false,
     warn: 'ComingSoon',
   },
   {
