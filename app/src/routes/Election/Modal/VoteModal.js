@@ -83,6 +83,7 @@ class VoteModal extends Mixin {
       chainStore: { blockDuration },
       electionStore: { bondingDuration, intentionBondingDuration },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
+      accountStore: { isValidator },
     } = this.props;
 
     const bondingSeconds =
