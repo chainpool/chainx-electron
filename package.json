@@ -11,7 +11,7 @@
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
     "dist": "yarn build && rimraf dist && electron-builder",
-    "postinstall": "electron-rebuild"
+    "postinstall": "electron-builder install-app-deps"
   },
   "license": "MIT",
   "devDependencies": {

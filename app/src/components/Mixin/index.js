@@ -69,6 +69,27 @@ class Mixin extends React.Component {
     }
   };
 
+  fetchPollIfFail = (callback, ...args) => {
+    const time = args[0];
+    if (callback && callback.interval) {
+      clearTimeout(callback.interval);
+      callback.interval = null;
+    }
+
+    if (!this._isMounted) return;
+    if (_.isFunction(callback)) {
+      const result = callback(...args);
+      if (result && result.catch) {
+        if (!this._isMounted) return;
+        result.catch(() => {
+          callback.interval = setTimeout(() => {
+            this.fetchPollIfFail(callback, ...args);
+          }, time || AjaxCallTime);
+        });
+      }
+    }
+  };
+
   fetchTimeOut = (callback, test) => {
     if (!test) return;
     clearTimeout(this.interval);
