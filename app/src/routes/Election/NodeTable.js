@@ -40,14 +40,22 @@ class NodeTable extends Component {
               <div className={styles.trustee}>
                 <span className={styles.rank}>{index + 1}</span>
                 {item.isTrustee && item.isTrustee.length ? (
-                  <HoverTip tip={'负责联合托管⽤户的链外资产'}>
-                    <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />
-                  </HoverTip>
+                  <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                    {msg => (
+                      <HoverTip tip={msg}>
+                        <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />
+                      </HoverTip>
+                    )}
+                  </FormattedMessage>
                 ) : null}
                 {!item.isActive && (
-                  <HoverTip tip={'无法参与验证节点的选举，并且没有任何收益'}>
-                    <LanguageContent zh={<img src={inactive_zh} alt="" />} en={<img src={inactive_en} alt="" />} />
-                  </HoverTip>
+                  <FormattedMessage id={'ElectionValidatorUnableParticipate'}>
+                    {msg => (
+                      <HoverTip tip={msg}>
+                        <LanguageContent zh={<img src={inactive_zh} alt="" />} en={<img src={inactive_en} alt="" />} />
+                      </HoverTip>
+                    )}
+                  </FormattedMessage>
                 )}
               </div>
             );
@@ -97,9 +105,13 @@ class NodeTable extends Component {
           render: (value, item) => {
             const tip =
               value && !item.isActive ? (
-                <HoverTip tip={'退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0'}>
-                  <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
-                </HoverTip>
+                <FormattedMessage id={'InactiveJackpotNotIncrease'}>
+                  {msg => (
+                    <HoverTip tip={msg}>
+                      <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
+                    </HoverTip>
+                  )}
+                </FormattedMessage>
               ) : null;
 
             return (

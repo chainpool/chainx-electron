@@ -105,9 +105,14 @@ class CrossChainAssetTable extends Mixin {
                     }}>
                     {isBTC ? (
                       <>
-                        <HoverTip tip={'暂停充值，详情请查看公告'}>
-                          <Icon name="icon-jinggao" className={styles.jinggaoicon} />
-                        </HoverTip>
+                        <FormattedMessage id={'SuspensionDeposit'}>
+                          {msg => (
+                            <HoverTip tip={msg}>
+                              <Icon name="icon-jinggao" className={styles.jinggaoicon} />
+                            </HoverTip>
+                          )}
+                        </FormattedMessage>
+
                         <FormattedMessage id={'Deposit'} />
                       </>
                     ) : (

@@ -412,6 +412,36 @@ const zh_en = {
     '如果你的充值未到账，可能是OP_RETURN格式错误，需要重新绑定以领取，deposit_replace 点击查看充值未认领列表',
     'If your deposit is not received, it may be because the OP_RETURN format is wrong, thus you have to re-bind. deposit_replace Click to view the unclaimed deposits list.',
   ],
+  AddOptionalChannel: ['添加渠道（非必选）', 'Add a referrer (optional)'],
+  RecommendedClaimInterestRegularly: [
+    '待领利息由跨链资产票龄所占比例实时计算，出现波动为正常现象，建议适时领取',
+    'The interest to be paid is calculated by the proportion of the inter-chain assets in real time, so fluctuations are natural. It is recommended to claim your interest regularly.',
+  ],
+  ManageUserOutsidechainAssets: ['负责联合托管⽤户的链外资产', 'Manage users’ outside-the-chain assets collectively'],
+  ElectionValidatorUnableParticipate: [
+    '无法参与验证节点的选举，并且没有任何收益',
+    'Unable to participate in the election of validator nodes, and with no income.',
+  ],
+  InactiveJackpotNotIncrease: [
+    '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
+    'The jackpot of inactive nodes will not increase, and your voting income may be very low or even zero.',
+  ],
+  RecommendedUseBindedAddress: [
+    ' ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)',
+    'It\'s highly recommended to use the binded address for the withdrawal in large amounts. Using a new address will lengthen the review time (the withdrawal can be cancelled on the "Recharge record" page)',
+  ],
+  SuspensionDeposit: [
+    '暂停充值，详情请查看公告',
+    'Suspension of deposit. Please check the announcement for more details.',
+  ],
+  LowerAvailableBalanceWarn: [
+    '可用余额过低可能导致您无法支付链上操作的手续费,此时可从其他账户转入PCX，也可充值BTC获取PCX充值奖励',
+    'Lower available balance may prevent you from paying the charges for chain operations. At this time, you can transfer PCX from other account or you can deposit BTC to get the PCX deposit reward.',
+  ],
+  OperationResultBalanceTooLow: [
+    '此操作将导致您的PCX余额过低，后续可能无法支付链上操作的手续费',
+    'This operation will result in your PCX balance too low and you may not be able to pay the transaction fee for any operation in the future.',
+  ],
 
   PasswordUpperAndLower: ['必须包含大小写字母', 'Must contain upper and lower case letters'],
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
