@@ -1,4 +1,3 @@
-require("@babel/register");
 const electronStore = require("electron-store");
 const { shell, remote } = require("electron");
 const { example } = require("./MultiSign/ledger");
