@@ -17,7 +17,8 @@ class SignChannelSelectModal extends Component {
       <Modal
         title={
           <div>
-            签名<span className={styles.supportdesc}>(暂时只支持ledger)</span>
+            签名
+            {/*<span className={styles.supportdesc}>(暂时只支持ledger)</span>*/}
           </div>
         }
         button={

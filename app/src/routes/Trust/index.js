@@ -17,6 +17,7 @@ import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
 import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
 import NormalResponseList from './NormalResponseList';
+import SpecialResponseList from './SpecialResponseList';
 import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
@@ -161,6 +162,8 @@ class Trust extends Mixin {
             <SettingTable {...this.props} />
           </div>
         )}
+
+        {null && <SpecialResponseList {...this.props} />}
         <NormalResponseList {...this.props} />
 
         <div className={styles.withdraw}>

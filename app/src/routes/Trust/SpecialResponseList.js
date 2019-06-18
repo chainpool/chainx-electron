@@ -6,7 +6,7 @@ import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
-class NormalResponseList extends Component {
+class SpecialResponseList extends Component {
   render() {
     const {
       accountStore: {
@@ -102,7 +102,7 @@ class NormalResponseList extends Component {
 
     return isTrustee && signTrusteeList.length > 0 && tx ? (
       <div>
-        <div className={styles.responsetitle}>多签提现</div>
+        <div className={styles.responsetitle}>特殊交易</div>
         <div className={styles.signStatus}>
           <div className={styles.reslist}>
             <ul className={styles.statusList}>
@@ -196,7 +196,7 @@ class NormalResponseList extends Component {
                       },
                     });
                   }}>
-                  否决
+                  取消
                 </Button>
               </ButtonGroup>
             )}
@@ -225,4 +225,4 @@ class NormalResponseList extends Component {
   }
 }
 
-export default NormalResponseList;
+export default SpecialResponseList;
