@@ -21,22 +21,38 @@ class SignResultModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              if (signResult) {
+              const description = [
+                { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                {
+                  name: () => <FormattedMessage id={'WhetherSignature'} />,
+                  value: () => <FormattedMessage id={'TrueSign'} />,
+                },
+              ];
+              if (desc !== 'other' && signResult) {
                 openModal({
                   name: 'SignModal',
                   data: {
-                    description: [
-                      { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
-                      {
-                        name: () => <FormattedMessage id={'WhetherSignature'} />,
-                        value: () => <FormattedMessage id={'TrueSign'} />,
-                      },
-                    ],
+                    description,
                     callback: () => {
                       return dispatch({
                         type: 'signWithdrawTx',
                         payload: {
                           tx: signResult,
+                        },
+                      });
+                    },
+                  },
+                });
+              } else if (desc === 'other') {
+                openModal({
+                  name: 'SignModal',
+                  data: {
+                    description,
+                    callback: () => {
+                      return dispatch({
+                        type: 'signWithdrawTx',
+                        payload: {
+                          tx: otherSignResult,
                         },
                       });
                     },

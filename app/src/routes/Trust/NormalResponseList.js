@@ -152,7 +152,10 @@ class NormalResponseList extends Component {
                   <FormattedMessage id={'ResponseOkThenDealing'} />
                 </div>
                 <div className={styles.hash}>
-                  <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
+                  <RouterGo
+                    isOutSide
+                    go={{ pathname: blockChain.tx(signHash, isTestBitCoinNetWork()) }}
+                    className={styles.hashvalue}>
                     {signHash}
                   </RouterGo>
                   <div>

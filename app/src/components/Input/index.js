@@ -388,6 +388,7 @@ class InputAddress extends React.Component {
       getOptionValue = (item = {}) => item.value,
       prefix = '',
       placeholder = '',
+      showMatchOption = true,
     } = this.props;
 
     const matchOption = options.find(option => getOptionValue(option) === value);
@@ -398,7 +399,9 @@ class InputAddress extends React.Component {
           <div className={styles.label}>
             <span>
               {label}
-              {matchOption && <span className={styles.labelName}>（{getOptionLabel(matchOption)}）</span>}
+              {showMatchOption && matchOption && (
+                <span className={styles.labelName}>（{getOptionLabel(matchOption)}）</span>
+              )}
             </span>
           </div>
         ) : null}
