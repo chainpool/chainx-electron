@@ -275,7 +275,7 @@ class InputText extends Mixin {
       onFocus,
     };
     const input = isTextArea ? (
-      <textarea {...props} rows={rows} />
+      <textarea {...props} rows={rows} style={{ overflowY: 'auto' }} />
     ) : (
       <>
         {isPassword ? <input type="password" name="password" style={{ display: 'none' }} /> : null}
