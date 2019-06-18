@@ -392,7 +392,7 @@ export default class Configure extends ModelExtend {
         if (refresh) {
           window.location.search = search;
         }
-      }, 60 * 1000);
+      }, 0);
     };
 
     const caculatePercent = currentIndex => {
