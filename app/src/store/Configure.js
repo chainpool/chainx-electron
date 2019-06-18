@@ -229,6 +229,12 @@ export default class Configure extends ModelExtend {
               isSystem: true,
               address: 'wss://w1.chainx.org.cn/ws',
             },
+            {
+              type: 'SystemDefault',
+              name: 'exinpool',
+              isSystem: true,
+              address: 'wss://exinpool-chainx.872369.com',
+            },
           ],
           (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)
         )
