@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, ButtonGroup, FormattedMessage } from '../../../../../components';
-import { _, Patterns, ChainX, classNames, isRepeat } from '../../../../../utils';
+import { _, Patterns, ChainX, classNames } from '../../../../../utils';
 import { ErrMsg } from '../../../../../constants';
 import * as styles from './CreateAccountModal.less';
 
@@ -9,13 +9,15 @@ class CreateAccountModal extends Component {
     super(props);
     const generateWords = () => {
       const words = ChainX.account.newMnemonic().split(' ');
-      if (isRepeat(words)) {
-        return generateWords();
-      } else {
-        return words;
-      }
+      return words;
+      // if (isRepeat(words)) {
+      //   return generateWords();
+      // } else {
+      //   return words;
+      // }
     };
-    const generateMnemonic = generateWords();
+    const generateMnemonic = generateWords().map((item, index) => ({ value: item, ins: index }));
+
     this.state = {
       step: 1,
       mnemonicWord: generateMnemonic,
@@ -30,8 +32,8 @@ class CreateAccountModal extends Component {
     checkUserSelectMnemonicWord: () => {
       const { userSelectMnemonicWord, mnemonicWord } = this.state;
       const errMsg = Patterns.check('strictEqual')(
-        userSelectMnemonicWord.join(),
-        mnemonicWord.join(),
+        userSelectMnemonicWord.map(item => item.value).join(),
+        mnemonicWord.map(item => item.value).join(),
         <FormattedMessage id={'AccountImportMnemonicNotEqual'} />
       );
       this.setState({ userSelectMnemonicWordErrMsg: errMsg });
@@ -52,7 +54,7 @@ class CreateAccountModal extends Component {
     } = this.props;
 
     if (checkAll.confirm()) {
-      const account = ChainX.account.from(mnemonicWord.join(' '));
+      const account = ChainX.account.from(mnemonicWord.map(item => item.value).join(' '));
       openModal({
         name: 'SetPasswordModal',
         data: {
@@ -97,7 +99,7 @@ class CreateAccountModal extends Component {
                       disabled
                       className={styles.word}
                       label=""
-                      value={mnemonicWord[index]}
+                      value={item.value}
                       errMsg={''}
                       onChange={value => {
                         mnemonicWord.splice(index, 1, value);
@@ -125,13 +127,7 @@ class CreateAccountModal extends Component {
               <ul className={styles.userInputMnemonicWord}>
                 {userSelectMnemonicWord.map((item, index) => (
                   <li key={index}>
-                    <Input.Text
-                      disabled
-                      className={styles.word}
-                      label=""
-                      value={userSelectMnemonicWord[index]}
-                      errMsg={''}
-                    />
+                    <Input.Text disabled className={styles.word} label="" value={item.value} errMsg={''} />
                   </li>
                 ))}
               </ul>
@@ -143,11 +139,11 @@ class CreateAccountModal extends Component {
                   <li
                     key={index}
                     onClick={() => {
-                      const pos = _.findIndex(userSelectMnemonicWord, item => item === shuffleMnemonicWord[index]);
+                      const pos = _.findIndex(userSelectMnemonicWord, one => one.ins === item.ins);
                       if (pos > -1) {
                         userSelectMnemonicWord.splice(pos, 1);
                       } else {
-                        userSelectMnemonicWord.splice(userSelectMnemonicWord.length, 1, shuffleMnemonicWord[index]);
+                        userSelectMnemonicWord.splice(userSelectMnemonicWord.length, 1, item);
                       }
 
                       this.setState({
@@ -157,11 +153,9 @@ class CreateAccountModal extends Component {
                     <div
                       className={classNames(
                         styles.word,
-                        _.findIndex(userSelectMnemonicWord, item => item === shuffleMnemonicWord[index]) > -1
-                          ? styles.selected
-                          : null
+                        _.findIndex(userSelectMnemonicWord, one => one.ins === item.ins) > -1 ? styles.selected : null
                       )}>
-                      {shuffleMnemonicWord[index]}
+                      {item.value}
                     </div>
                   </li>
                 ))}
