@@ -3,7 +3,11 @@ import { Button, FormattedMessage, Modal, Input } from '../../../components';
 import * as styles from './SignResultModal.less';
 
 class SignResultModal extends Component {
+  state = {
+    otherSignResult: '',
+  };
   render() {
+    const { otherSignResult } = this.state;
     const {
       model: { dispatch, openModal },
       globalStore: { modal: { data: { desc, signResult } = {} } = {} },
@@ -46,12 +50,18 @@ class SignResultModal extends Component {
         <div className={styles.SignChannelSelectModal}>
           <Input.Text
             isTextArea
-            value={signResult}
+            value={desc === 'other' ? otherSignResult : signResult}
             rows={10}
             onChange={value => {
-              this.setState({
-                signResult: value,
-              });
+              if (desc === 'other') {
+                this.setState({
+                  otherSignResult: value.trim(),
+                });
+              } else {
+                this.setState({
+                  signResult: value,
+                });
+              }
             }}
           />
         </div>

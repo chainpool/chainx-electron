@@ -33,6 +33,14 @@ class SignChannelSelectModal extends Component {
                     tx,
                   },
                 });
+              } else if (selectOne === 'other') {
+                openModal({
+                  name: 'SignResultModal',
+                  data: {
+                    desc: selectOne,
+                    signResult: '',
+                  },
+                });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -44,7 +52,7 @@ class SignChannelSelectModal extends Component {
               { name: 'Ledger', icon: 'ledger' },
               { name: 'Trezor', icon: 'trezor', disabeld: true },
               { name: '手机冷钱包', icon: 'phone', disabeld: true },
-              { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他', disabeld: true },
+              { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他' },
             ].map((item, index) => (
               <li
                 className={classNames(
