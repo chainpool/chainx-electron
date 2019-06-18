@@ -357,6 +357,7 @@ export default class Configure extends ModelExtend {
           url: httpUrl,
           method: 'POST',
           methodAlias: 'chain_getBlock',
+          timeOut: 7000,
         });
       };
 
@@ -364,6 +365,7 @@ export default class Configure extends ModelExtend {
         return fetchFromWs({
           url,
           method: 'chain_getBlock',
+          timeOut: 7000,
         });
       };
 
