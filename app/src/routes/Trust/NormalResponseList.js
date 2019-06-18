@@ -73,7 +73,7 @@ class NormalResponseList extends Component {
               <li key={index}>
                 <div className={styles.from}>
                   <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
-                    <span className={styles.hash}>{item.hash}</span>
+                    <span className={styles.hash}>{`0x${item.hash}`}</span>
                   </RouterGo>
                   <span>({item.value})</span>
                 </div>
@@ -164,7 +164,7 @@ class NormalResponseList extends Component {
                     isOutSide
                     go={{ pathname: blockChain.tx(signHash, isTestBitCoinNetWork()) }}
                     className={styles.hashvalue}>
-                    {signHash}
+                    {`0x${signHash}`}
                   </RouterGo>
                 </div>
               </div>
