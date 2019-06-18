@@ -68,7 +68,6 @@ function applyAlreadyExistedSig(txObj, raw, network) {
       : bitcoinjs.networks.testnet
   );
 
-  console.log(txb.__inputs);
   txb.__inputs.forEach((input, index) => {
     if (!input.pubkeys) {
       return;
@@ -113,9 +112,10 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
     .toString("hex");
 
   const path = network === "mainnet" ? mainnetPath : testnetPath;
+  const paths = toSignInputs.map(() => path);
   const result = await btc.signP2SHTransaction(
     toSignInputs,
-    [path],
+    paths,
     outputScript
   );
 
