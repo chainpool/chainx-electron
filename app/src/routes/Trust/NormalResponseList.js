@@ -25,6 +25,7 @@ class NormalResponseList extends Component {
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
+        totalSignCount,
         signHash,
         BitCoinFeeShow,
         isTestBitCoinNetWork,
@@ -106,6 +107,23 @@ class NormalResponseList extends Component {
         <div className={styles.signStatus}>
           <div className={styles.reslist}>
             <ul className={styles.statusList}>
+              <li className={styles.notdealwith}>
+                <Icon name="weixiangying" className={'yellow'} />
+                <span>
+                  <FormattedMessage id={'NoResponseSign'} />
+                </span>
+                <span className={styles.count}>
+                  <HoverTip
+                    className={styles.hoverTrusteeList}
+                    tip={
+                      <ul className={styles.account}>
+                        {notResponseList.map((one, index) => renderSignLi(one, index))}
+                      </ul>
+                    }>
+                    {notResponseList.length}/{totalSignCount}
+                  </HoverTip>
+                </span>
+              </li>
               <li>
                 <Icon name="icon-wancheng" className={'green'} />
                 <span>
@@ -114,24 +132,12 @@ class NormalResponseList extends Component {
                 <span className={styles.count}>
                   <HoverTip
                     className={styles.hoverTrusteeList}
-                    tip={<ul>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>}>{`${
-                    haveSignList.length
-                  }/${maxSignCount}`}</HoverTip>
+                    tip={
+                      <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
+                    }>{`${haveSignList.length}/${maxSignCount}`}</HoverTip>
                 </span>
               </li>
-              <li>
-                <Icon name="weixiangying" className={'yellow'} />
-                <span>
-                  <FormattedMessage id={'NoResponseSign'} />
-                </span>
-                <span className={styles.count}>
-                  <HoverTip
-                    className={styles.hoverTrusteeList}
-                    tip={<ul>{notResponseList.map((one, index) => renderSignLi(one, index))}</ul>}>
-                    {notResponseList.length}
-                  </HoverTip>
-                </span>
-              </li>
+
               <li>
                 <Icon name="icon-cuowu" className={'red'} />
                 <span>
@@ -140,8 +146,10 @@ class NormalResponseList extends Component {
                 <span className={styles.count}>
                   <HoverTip
                     className={styles.hoverTrusteeList}
-                    tip={<ul>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>}>
-                    {haveRefuseList.length}
+                    tip={
+                      <ul className={styles.account}>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>
+                    }>
+                    {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
                   </HoverTip>
                 </span>
               </li>
@@ -158,9 +166,6 @@ class NormalResponseList extends Component {
                     className={styles.hashvalue}>
                     {signHash}
                   </RouterGo>
-                  <div>
-                    <FormattedMessage id={'TransactionHash'} />
-                  </div>
                 </div>
               </div>
             ) : (

@@ -69,7 +69,7 @@ export default class Trust extends ModelExtend {
   @observable txOutputList = [];
 
   @computed get BitCoinFeeShow() {
-    return this.setPrecision(this.BitCoinFee, 8);
+    return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
   }
 
   @computed
@@ -200,25 +200,18 @@ export default class Trust extends ModelExtend {
     this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0 }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0, url }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
       if (withdrawList) {
         const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-        // if (!findOne || (findOne && !findOne.node)) {
-        //   throw new Error({
-        //     info: '未设置节点',
-        //     toString: () => 'NotSetNode',
-        //   });
-        // }
-        // if (!findOne.connected) {
-        //   throw new Error({
-        //     info: '节点未连接',
-        //     toString: () => 'NodeNotLink',
-        //   });
-        // }
-        const multisigAddress = await this.getBitcoinTrusteeAddress();
+        let multisigAddress = await this.getBitcoinTrusteeAddress();
+        if (url) {
+          multisigAddress = url;
+        } else {
+          multisigAddress = await this.getBitcoinTrusteeAddress();
+        }
         if (!multisigAddress) {
           throw new Error({
             info: '未获取到信托地址',
