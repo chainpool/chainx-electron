@@ -28,6 +28,8 @@ class AfterSelectChannelModal extends Component {
     const res = await dispatch({
       type: 'signWithHardware',
     }).catch(err => {
+      console.error(err);
+
       this.setState({
         signErrMsg: err.message,
         loading: false,
