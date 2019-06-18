@@ -1,6 +1,6 @@
 {
   "name": "chainx",
-  "productName": "ChainX",
+  "productName": "ChainX-Wallet-Test",
   "version": "1.0.1",
   "description": "My Electron application description",
   "main": "./main.js",
@@ -22,8 +22,8 @@
     "rimraf": "^2.6.3"
   },
   "build": {
-    "productName": "ChainX Wallet",
-    "appId": "org.chainx.wallet",
+    "productName": "ChainX Wallet(Test)",
+    "appId": "org.chainx.wallet-test",
     "files": [
       "preload.js",
       "main.js",
