@@ -1,6 +1,7 @@
 require("babel-polyfill");
 const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid").default;
 const AppBtc = require("@ledgerhq/hw-app-btc").default;
+const bitcoinjs = require("bitcoinjs-lib");
 
 const bitcore = require("bitcore-lib");
 const mainnetPath = "m/45'/0'/0'/0/0";
@@ -53,8 +54,48 @@ function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
 
     txObj.to(address.toString(), output.satoshis);
   }
+  applyAlreadyExistedSig(txObj, raw, network);
 
   return txObj;
+}
+
+function applyAlreadyExistedSig(txObj, raw, network) {
+  const tx = bitcoinjs.Transaction.fromHex(raw);
+  const txb = bitcoinjs.TransactionBuilder.fromTransaction(
+    tx,
+    network === "mainnet"
+      ? bitcoinjs.networks.bitcoin
+      : bitcoinjs.networks.testnet
+  );
+
+  txb.__inputs.forEach((input, index) => {
+    if (!input.pubkeys) {
+      return;
+    }
+
+    const pubkyes = input.pubkeys.map(key => key.toString("hex"));
+    input.signatures.forEach((sig, sigIdx) => {
+      if (typeof sig === "undefined") {
+        return;
+      }
+
+      const pubkey = pubkyes[sigIdx];
+      const obj = {
+        inputIndex: index,
+        signature: bitcore.crypto.Signature.fromBuffer(sig, false),
+        sigtype: bitcore.crypto.Signature.SIGHASH_ALL,
+        publicKey: bitcore.PublicKey(pubkey, {
+          network:
+            network === "mainnet"
+              ? bitcore.Networks.mainnet
+              : bitcore.Networks.testnet,
+          compressed: true
+        })
+      };
+
+      txObj.applySignature(obj);
+    });
+  });
 }
 
 async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
@@ -71,9 +112,10 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
     .toString("hex");
 
   const path = network === "mainnet" ? mainnetPath : testnetPath;
+  const paths = toSignInputs.map(() => path);
   const result = await btc.signP2SHTransaction(
     toSignInputs,
-    [path],
+    paths,
     outputScript
   );
 
