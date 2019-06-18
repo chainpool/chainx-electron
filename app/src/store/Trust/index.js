@@ -256,6 +256,15 @@ export default class Trust extends ModelExtend {
           }
           return sum.isLessThan(amount) ? [] : result;
         };
+
+        const caculateCommentFeeFromSatoshiKB = async (satoshiKB, inputLength, withdrawalLength) => {
+          const fee = satoshiKB;
+          const res = await this.getTrusteeSessionInfo('Bitcoin');
+          const { maxSignCount: n, totalSignCount: m } = res;
+          const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
+          return formatNumber.toFixed((bytes / 1024) * fee, 8);
+        };
+
         const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
           const fee = await this.fetchNodeFeeRate(url);
           const res = await this.getTrusteeSessionInfo('Bitcoin');
@@ -317,6 +326,7 @@ export default class Trust extends ModelExtend {
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
+        console.log(await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length));
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - userInputbitFee;
 
