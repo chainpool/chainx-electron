@@ -240,6 +240,18 @@ export const Patterns = {
     if (result) return '';
     return errMsg;
   },
+  isTransactionTx: (tx, isTest, errMsg = 'NotMathTheFormat') => {
+    try {
+      const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
+      bitcoin.TransactionBuilder.fromTransaction(
+        transactionRaw,
+        isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
+      );
+      return '';
+    } catch {
+      return errMsg;
+    }
+  },
 
   check: value => {
     return (...params) => {

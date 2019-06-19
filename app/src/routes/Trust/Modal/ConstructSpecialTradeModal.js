@@ -7,21 +7,20 @@ import * as styles from './ConstructSpecialTradeModal.less';
 @Inject(({ assetStore }) => ({ assetStore }))
 class ConstructSpecialTradeModal extends Component {
   state = {
-    sender: '2N4EDAYQCcRERSnT7xei9uFU5X97nesgUrH',
+    sender: '',
     senderErrMsg: '',
-    receiver: '2N8fUxnFttG5UgPUQDDKXmyRJbr5ZkV4kx3',
+    receiver: '',
     receiverErrMsg: '',
-    balance: '0.0015',
+    balance: '',
     balanceErrMsg: '',
     balanceMinValue: '',
-    feeRate: '0.0001',
+    feeRate: '',
     feeRateErrMsg: '',
     tx: '',
     errMsg: '',
   };
 
   componentDidMount() {
-    this.constructSpecialTrade();
     this.startInit();
   }
 
@@ -112,7 +111,7 @@ class ConstructSpecialTradeModal extends Component {
         .then(res => {
           this.setState({
             errMsg: '',
-            tx: res,
+            tx: `0x${res}`,
           });
         })
         .catch(err => {

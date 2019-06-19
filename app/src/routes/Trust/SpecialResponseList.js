@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip } from '../components';
-import { classNames } from '../../utils';
+import { classNames, observer } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
 
-class SpecialResponseList extends Component {
+@observer
+class NormalResponseList extends Component {
   render() {
     const {
       accountStore: {
@@ -18,18 +19,27 @@ class SpecialResponseList extends Component {
         setPrecision,
         dispatch,
         tx,
+        txSpecial,
         redeemScript,
         txOutputList = [],
         txInputList = [],
+        txSpecialOutputList = [],
+        txSpecialInputList = [],
         signTrusteeList = [],
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
+        totalSignCount,
         signHash,
         BitCoinFeeShow,
         isTestBitCoinNetWork,
       },
+      isSpecialModel,
     } = this.props;
+    const inputList = isSpecialModel ? txSpecialInputList : txInputList;
+    const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
+    const txMatchOne = isSpecialModel ? txSpecial : tx;
+
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
 
@@ -37,17 +47,24 @@ class SpecialResponseList extends Component {
       (item = {}) => (item.trusteeSign === true || item.trusteeSign === false) && item.isSelf
     )[0];
 
-    const isShowResponseWithdraw =
-      isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
+    const isShowResponseWithdraw = isSpecialModel
+      ? true
+      : isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
 
-    const haveSignList = signTrusteeList.filter((item = {}) => item.trusteeSign);
-    const haveRefuseList = signTrusteeList.filter((item = {}) => item.trusteeSign === false);
-    const notResponseList = signTrusteeList.filter(
-      (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
-    );
+    const haveSignList = isSpecialModel ? [] : signTrusteeList.filter((item = {}) => item.trusteeSign);
+    const haveRefuseList = isSpecialModel ? [] : signTrusteeList.filter((item = {}) => item.trusteeSign === false);
+    const notResponseList = isSpecialModel
+      ? []
+      : signTrusteeList.filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true);
+    const haveBroadcast = isSpecialModel
+      ? false
+      : signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount;
 
-    const totalInputValue = txInputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
-    const totalOutputValue = txOutputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
+    const totalInputValue = inputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
+    const totalOutputValue = outputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
+
+    const showSpecialModel = txSpecial;
+    const showNormalModel = isTrustee && signTrusteeList.length > 0 && txMatchOne;
 
     const renderSignLi = (one, index) => {
       return (
@@ -68,11 +85,11 @@ class SpecialResponseList extends Component {
         <div className={styles.input}>
           <div className={styles.title}>Input</div>
           <ul>
-            {txInputList.map((item, index) => (
+            {inputList.map((item, index) => (
               <li key={index}>
                 <div className={styles.from}>
                   <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
-                    <span className={styles.hash}>{item.hash}</span>
+                    <span className={styles.hash}>{`0x${item.hash}`}</span>
                   </RouterGo>
                   <span>({item.value})</span>
                 </div>
@@ -83,7 +100,7 @@ class SpecialResponseList extends Component {
         <div className={styles.output}>
           <div className={styles.title}>Output</div>
           <ul>
-            {txOutputList.map((item, index) => (
+            {outputList.map((item, index) => (
               <li key={index}>
                 <div className={styles.left}>
                   <div className={styles.from}>
@@ -100,12 +117,29 @@ class SpecialResponseList extends Component {
       </div>
     );
 
-    return isTrustee && signTrusteeList.length > 0 && tx ? (
+    const content = (
       <div>
-        <div className={styles.responsetitle}>特殊交易</div>
+        <div className={styles.responsetitle}>{isSpecialModel ? '特殊交易' : '多签提现'}</div>
         <div className={styles.signStatus}>
           <div className={styles.reslist}>
             <ul className={styles.statusList}>
+              <li className={styles.notdealwith}>
+                <Icon name="weixiangying" className={'yellow'} />
+                <span>
+                  <FormattedMessage id={'NoResponseSign'} />
+                </span>
+                <span className={styles.count}>
+                  <HoverTip
+                    className={styles.hoverTrusteeList}
+                    tip={
+                      <ul className={styles.account}>
+                        {notResponseList.map((one, index) => renderSignLi(one, index))}
+                      </ul>
+                    }>
+                    {notResponseList.length}/{totalSignCount}
+                  </HoverTip>
+                </span>
+              </li>
               <li>
                 <Icon name="icon-wancheng" className={'green'} />
                 <span>
@@ -114,22 +148,9 @@ class SpecialResponseList extends Component {
                 <span className={styles.count}>
                   <HoverTip
                     className={styles.hoverTrusteeList}
-                    tip={<ul>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>}>{`${
-                    haveSignList.length
-                  }/${maxSignCount}`}</HoverTip>
-                </span>
-              </li>
-              <li>
-                <Icon name="weixiangying" className={'yellow'} />
-                <span>
-                  <FormattedMessage id={'NoResponseSign'} />
-                </span>
-                <span className={styles.count}>
-                  <HoverTip
-                    className={styles.hoverTrusteeList}
-                    tip={<ul>{notResponseList.map((one, index) => renderSignLi(one, index))}</ul>}>
-                    {notResponseList.length}
-                  </HoverTip>
+                    tip={
+                      <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
+                    }>{`${haveSignList.length}/${maxSignCount}`}</HoverTip>
                 </span>
               </li>
               <li>
@@ -140,24 +161,26 @@ class SpecialResponseList extends Component {
                 <span className={styles.count}>
                   <HoverTip
                     className={styles.hoverTrusteeList}
-                    tip={<ul>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>}>
-                    {haveRefuseList.length}
+                    tip={
+                      <ul className={styles.account}>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>
+                    }>
+                    {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
                   </HoverTip>
                 </span>
               </li>
             </ul>
-            {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount ? (
+            {haveBroadcast ? (
               <div className={styles.completeSign}>
                 <div className={styles.resok}>
                   <FormattedMessage id={'ResponseOkThenDealing'} />
                 </div>
                 <div className={styles.hash}>
-                  <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
-                    {signHash}
+                  <RouterGo
+                    isOutSide
+                    go={{ pathname: blockChain.tx(signHash, isTestBitCoinNetWork()) }}
+                    className={styles.hashvalue}>
+                    {`0x${signHash}`}
                   </RouterGo>
-                  <div>
-                    <FormattedMessage id={'TransactionHash'} />
-                  </div>
                 </div>
               </div>
             ) : (
@@ -196,7 +219,7 @@ class SpecialResponseList extends Component {
                       },
                     });
                   }}>
-                  取消
+                  否决
                 </Button>
               </ButtonGroup>
             )}
@@ -205,15 +228,15 @@ class SpecialResponseList extends Component {
           <div className={styles.copytx}>
             <div className={styles.tx}>
               <span className={styles.txlabel}>待签原文:</span>
-              <Clipboard width={400}>{tx}</Clipboard>
+              <Clipboard width={400}>{txMatchOne}</Clipboard>
             </div>
             <div className={styles.fees}>
-              <div>收取手续费： {BitCoinFeeShow} BTC</div>
+              {!isSpecialModel && <div>收取手续费： {BitCoinFeeShow} BTC</div>}
               <div>实付手续费：{setPrecision(totalInputValue - totalOutputValue, 'BTC')} BTC</div>
             </div>
           </div>
           <div className={styles.inputoutputContainer}>
-            {txInputList.length > 4 || txOutputList.length > 4 ? (
+            {inputList.length > 4 || outputList.length > 4 ? (
               <Scroller scroll={{ y: 330 }}>InputOutputList</Scroller>
             ) : (
               InputOutputList
@@ -221,8 +244,10 @@ class SpecialResponseList extends Component {
           </div>
         </div>
       </div>
-    ) : null;
+    );
+
+    return (isSpecialModel ? showSpecialModel : showNormalModel) ? content : null;
   }
 }
 
-export default SpecialResponseList;
+export default NormalResponseList;

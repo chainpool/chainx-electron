@@ -28,7 +28,7 @@ class Trust extends Mixin {
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
     // this.props.model.openModal({
-    //   name: 'ViewHardwarePubKey',
+    //   name: 'AnalyzeSpecialTradeModal',
     // });
   };
 
@@ -82,7 +82,7 @@ class Trust extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { trusts = [], normalizedOnChainAllWithdrawList = [] },
+      model: { trusts = [], tx },
     } = this.props;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -91,12 +91,7 @@ class Trust extends Mixin {
       currentTrustNode,
     };
 
-    const isShowConstructureWithdraw =
-      isTrustee &&
-      normalizedOnChainAllWithdrawList.filter((item = {}) => {
-        return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
-      }).length === 0 &&
-      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
+    const isShowConstructureWithdraw = isTrustee && !tx;
 
     return (
       <div className={styles.trust}>
@@ -163,8 +158,8 @@ class Trust extends Mixin {
           </div>
         )}
 
-        {null && <SpecialResponseList {...this.props} />}
-        <NormalResponseList {...this.props} />
+        <SpecialResponseList {...this.props} isSpecialModel />
+        <SpecialResponseList {...this.props} isNormalModel />
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>

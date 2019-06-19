@@ -57,6 +57,7 @@ export default class Trust extends ModelExtend {
 
   @observable _trusts = localSave.get('trusts') || [];
   @observable tx = '';
+  @observable txSpecial = '';
   @observable signStatus = '';
   @observable redeemScript = '';
   @observable trusteeList = []; //已签名的节点列表
@@ -67,6 +68,8 @@ export default class Trust extends ModelExtend {
   @observable BitCoinFee = '';
   @observable txInputList = [];
   @observable txOutputList = [];
+  @observable txSpecialInputList = [];
+  @observable txSpecialOutputList = [];
 
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
@@ -409,7 +412,10 @@ export default class Trust extends ModelExtend {
         totalSignCount,
         maxSignCount,
       });
-      this.getInputsAndOutputsFromTx(tx);
+      this.getInputsAndOutputsFromTx({
+        tx,
+        isSpecialMode: false,
+      });
     } else {
       this.changeModel({
         tx: '',
@@ -422,8 +428,13 @@ export default class Trust extends ModelExtend {
     }
   };
 
-  getInputsAndOutputsFromTx = async tx => {
+  getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
+    const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
+    const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
+    if (isSpecialModel) {
+      this.changeModel('txSpecial', tx);
+    }
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
     const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
@@ -435,17 +446,16 @@ export default class Trust extends ModelExtend {
         satoshi: item.value,
       };
     });
-    this.changeModel('txOutputList', resultOutputs);
+    this.changeModel(txOutputList, resultOutputs);
     const ins = txbRAW.__tx.ins.map(item => {
       return {
         ...item,
         hash: item.hash.reverse().toString('hex'),
       };
     });
+    this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
-
     const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
-
     if (result && result.length) {
       const insTXs = result.map(item => {
         const transaction = bitcoin.Transaction.fromHex(item.raw);
@@ -462,7 +472,7 @@ export default class Trust extends ModelExtend {
           satoshi: findOne.value,
         };
       });
-      this.changeModel('txInputList', insTXs);
+      this.changeModel(txInputList, insTXs);
     }
   };
 
