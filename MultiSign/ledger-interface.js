@@ -7,10 +7,7 @@ const bitcore = require("bitcore-lib");
 const mainnetPath = "m/45'/0'/0'/0/0";
 const testnetPath = "m/45'/1'/0'/0/0";
 
-async function getPublicKey(network = "mainnet") {
-  const transport = await TransportNodeHid.open("");
-  const btc = new AppBtc(transport);
-
+async function getPubKeyFromLedger(btc, network = "mainnet") {
   const path = network === "mainnet" ? mainnetPath : testnetPath;
 
   const result = await btc.getWalletPublicKey(path);
@@ -19,6 +16,14 @@ async function getPublicKey(network = "mainnet") {
   );
 
   return compressed.toString("hex");
+}
+
+async function getPublicKey(network = "mainnet") {
+  const transport = await TransportNodeHid.open("");
+  const btc = new AppBtc(transport);
+
+  const key = await getPubKeyFromLedger(btc, network);
+  return key;
 }
 
 function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
@@ -98,9 +103,10 @@ function applyAlreadyExistedSig(txObj, raw, network) {
   });
 }
 
-async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
+async function sign(raw, inputsObj, redeemScript, network = "mainnet") {
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
+  const pubkey = getPubKeyFromLedger(btc, network);
 
   const toSignInputs = inputsObj.map(({ raw, index }) => {
     const tx = btc.splitTransaction(raw);
