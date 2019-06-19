@@ -300,7 +300,10 @@ export default class Trust extends ModelExtend {
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
         if (targetUtxos.length <= 0) {
-          throw new Error('构造失败，账户余额不足');
+          throw new Error({
+            info: '构造失败，账户余额不足',
+            toString: () => 'ConstructionFailedBalanceInnsufficient',
+          });
         }
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
@@ -318,7 +321,8 @@ export default class Trust extends ModelExtend {
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
-        const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
+
+        //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - userInputbitFee;
 
