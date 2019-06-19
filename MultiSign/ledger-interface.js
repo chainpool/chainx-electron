@@ -110,7 +110,7 @@ async function sign(raw, inputsObj, redeemScript, network = "mainnet") {
   const pubkey = getPubKeyFromLedger(btc, network);
 
   if (!redeemScript) {
-    redeemScript = getRedeemScriptFromRaw(raw);
+    redeemScript = getRedeemScriptFromRaw(raw, network);
   }
 
   if (!redeemScript) {
