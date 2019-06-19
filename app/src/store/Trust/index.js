@@ -182,6 +182,14 @@ export default class Trust extends ModelExtend {
     });
   }
 
+  @computed get txSpecialSignTrusteeList() {
+    if (!this.txSpecial) return [];
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    // console.log(this.txSpecial, txb, txb.__inputs);
+  }
+
   @computed get signHash() {
     if (this.tx && this.signTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCount) {
       const tx = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
@@ -498,33 +506,40 @@ export default class Trust extends ModelExtend {
     }
   };
 
-  signWithHardware = async () => {
-    const filterTrust = this.trusts.filter(item => item.chain === 'Bitcoin')[0];
+  signWithHardware = async ({ isSpecialModel, redeemScript }) => {
+    console.log(isSpecialModel, redeemScript, '----isSpecialModel, redeemScript');
     const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
-    console.log(
-      this.tx,
-      this.txInputList,
-      this.redeemScript,
-      filterTrust.hotPubKey,
-      this.maxSignCount,
-      network,
-      '--------签名输入所有参数'
-    );
-    const res = await window.LedgerInterface.sign(
-      this.tx.replace(/^0x/, ''),
-      this.txInputList,
-      this.redeemScript.replace(/^0x/, ''),
-      network
-    ).catch(err => Promise.reject(err));
+    let res;
+    if (isSpecialModel && redeemScript) {
+      console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
+      res = await window.LedgerInterface.sign(
+        this.txSpecial.replace(/^0x/, ''),
+        this.txSpecialInputList,
+        redeemScript.replace(/^0x/, ''),
+        network
+      ).catch(err => Promise.reject(err));
+    } else {
+      console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
+      res = await window.LedgerInterface.sign(
+        this.tx.replace(/^0x/, ''),
+        this.txInputList,
+        this.redeemScript.replace(/^0x/, ''),
+        network
+      ).catch(err => Promise.reject(err));
+    }
     return res;
   };
 
-  signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
+  signWithdrawTx = async ({ tx, isSpecialModel, redeemScript, privateKey }) => {
     let tx_trans = null;
     if (tx) {
       tx = tx.replace(/^0x/, '');
       //redeemScript = redeemScript.replace(/^0x/, '');
       tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey });
+    }
+    if (isSpecialModel) {
+      this.changeModel('txSpecial', tx);
+      return;
     }
 
     const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);

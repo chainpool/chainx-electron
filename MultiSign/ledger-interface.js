@@ -107,7 +107,7 @@ function applyAlreadyExistedSig(txObj, raw, network) {
 async function sign(raw, inputsObj, redeemScript, network = "mainnet") {
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
-  const pubkey = getPubKeyFromLedger(btc, network);
+  const pubkey = await getPubKeyFromLedger(btc, network);
 
   if (!redeemScript) {
     redeemScript = getRedeemScriptFromRaw(raw, network);

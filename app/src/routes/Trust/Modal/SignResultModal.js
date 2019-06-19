@@ -10,7 +10,7 @@ class SignResultModal extends Component {
     const { otherSignResult } = this.state;
     const {
       model: { dispatch, openModal },
-      globalStore: { modal: { data: { desc, signResult } = {} } = {} },
+      globalStore: { modal: { data: { desc, signResult, isSpecialModel } = {} } = {} },
     } = this.props;
 
     return (
@@ -38,6 +38,7 @@ class SignResultModal extends Component {
                         type: 'signWithdrawTx',
                         payload: {
                           tx: signResult,
+                          isSpecialModel,
                         },
                       });
                     },
@@ -53,6 +54,7 @@ class SignResultModal extends Component {
                         type: 'signWithdrawTx',
                         payload: {
                           tx: otherSignResult,
+                          isSpecialModel,
                         },
                       });
                     },

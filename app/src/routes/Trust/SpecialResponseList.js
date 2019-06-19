@@ -26,6 +26,7 @@ class NormalResponseList extends Component {
         txSpecialOutputList = [],
         txSpecialInputList = [],
         signTrusteeList = [],
+        txSpecialSignTrusteeList,
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
@@ -190,6 +191,9 @@ class NormalResponseList extends Component {
                   onClick={() => {
                     openModal({
                       name: 'SignChannelSelectModal',
+                      data: {
+                        isSpecialModel,
+                      },
                     });
                   }}>
                   签名

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, FormattedMessage } from '../../../components';
+import { Modal, Button, FormattedMessage, Input } from '../../../components';
 import * as styles from './AfterSelectChannelModal.less';
 
 class AfterSelectChannelModal extends Component {
@@ -9,6 +9,7 @@ class AfterSelectChannelModal extends Component {
     signErrMsg: '',
     signWarning: '',
     signResult: '',
+    redeemScript: '',
   };
 
   signWithHardware = async () => {
@@ -16,10 +17,11 @@ class AfterSelectChannelModal extends Component {
       model: { dispatch },
       globalStore: {
         modal: {
-          data: { desc },
+          data: { desc, isSpecialModel },
         },
       },
     } = this.props;
+    const { redeemScript } = this.state;
     this.setState({
       loading: true,
       signErrMsg: '',
@@ -27,9 +29,12 @@ class AfterSelectChannelModal extends Component {
     });
     const res = await dispatch({
       type: 'signWithHardware',
+      payload: {
+        isSpecialModel,
+        redeemScript: isSpecialModel ? redeemScript : null,
+      },
     }).catch(err => {
       console.error(err);
-
       this.setState({
         signErrMsg: err.message,
         loading: false,
@@ -50,11 +55,11 @@ class AfterSelectChannelModal extends Component {
   };
 
   render() {
-    const { linkStatus, signErrMsg, loading, signWarning } = this.state;
+    const { linkStatus, signErrMsg, loading, signWarning, redeemScript } = this.state;
     const {
       globalStore: {
         modal: {
-          data: { desc, tx },
+          data: { desc, tx, isSpecialModel },
         },
       },
       model: { openModal },
@@ -79,6 +84,7 @@ class AfterSelectChannelModal extends Component {
                       data: {
                         desc,
                         signResult: res,
+                        isSpecialModel,
                       },
                     });
                   }
@@ -89,12 +95,28 @@ class AfterSelectChannelModal extends Component {
           </>
         }>
         <div className={styles.AfterSelectChannelModal}>
-          <ul>
-            <li>
-              <span>状态：</span>
-              <span>{linkStatus ? '已连接' : '未连接'}</span>
-            </li>
-          </ul>
+          {/*<ul>*/}
+          {/*<li>*/}
+          {/*<span>状态：</span>*/}
+          {/*<span>{linkStatus ? '已连接' : '未连接'}</span>*/}
+          {/*</li>*/}
+          {/*</ul>*/}
+          {isSpecialModel && (
+            <div className={styles.redeemScript}>
+              <Input.Text
+                isTextArea
+                rows={5}
+                label="赎回脚本"
+                value={redeemScript}
+                onChange={value => {
+                  this.setState({
+                    redeemScript: value,
+                  });
+                }}
+              />
+            </div>
+          )}
+
           <div className={styles.secret}>
             <div className={styles.label}>待签原文：</div>
             <div className={styles.result}>{tx}</div>
