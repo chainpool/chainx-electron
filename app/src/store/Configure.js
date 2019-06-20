@@ -213,13 +213,13 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'hashquark',
+              name: 'HashQuark',
               isSystem: true,
               address: 'wss://chainx.hashquark.io',
             },
             {
               type: 'SystemDefault',
-              name: 'buildlinks',
+              name: 'BuildLinks',
               isSystem: true,
               address: 'wss://chainx.buildlinks.org',
             },
@@ -228,12 +228,6 @@ export default class Configure extends ModelExtend {
               name: 'w1.cn',
               isSystem: true,
               address: 'wss://w1.chainx.org.cn/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'exinpool',
-              isSystem: true,
-              address: 'wss://exinpool-chainx.872369.com',
             },
           ],
           (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)
