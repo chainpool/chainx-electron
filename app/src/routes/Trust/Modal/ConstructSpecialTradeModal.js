@@ -219,13 +219,9 @@ class ConstructSpecialTradeModal extends Component {
                 isOutSide
                 errMsg={feeRateErrMsg}
                 isDecimal="decimal"
-                label={
-                  <span>
-                    手续费 <span className={styles.unit}>(BTC)</span>
-                  </span>
-                }
+                label="手续费"
                 value={feeRate}
-                //suffix="Satoshis/KB"
+                suffix="BTC"
                 onChange={value => {
                   this.setState(
                     {
