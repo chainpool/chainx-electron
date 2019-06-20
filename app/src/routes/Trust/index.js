@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, FormattedMessage } from '../../components';
 import { TableTitle } from '../components';
-import { Inject } from '../../utils';
+import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -121,36 +121,40 @@ class Trust extends Mixin {
                   </span>
                 </Button>
                 <div className={styles.utils}>
-                  <Icon name="xintuogongju" />
-                  信托工具
-                  <div className={styles.utilsContainer}>
-                    <ul>
-                      <li
-                        type="blank"
-                        onClick={() => {
-                          openModal({ name: 'ExportHardwarePubKey' });
-                        }}>
-                        <Icon name="daochugongyue" />
-                        <span>导出硬件公钥</span>
-                      </li>
-                      <li
-                        type="blank"
-                        onClick={() => {
-                          openModal({ name: 'ConstructSpecialTradeModal' });
-                        }}>
-                        <Icon name="gouzaoteshujiaoyi" />
-                        <span>构造特殊交易</span>
-                      </li>
-                      <li
-                        type="blank"
-                        onClick={() => {
-                          openModal({ name: 'AnalyzeSpecialTradeModal' });
-                        }}>
-                        <Icon name="jiexi" />
-                        <span>解析特殊交易</span>
-                      </li>
-                    </ul>
-                  </div>
+                  <span className={classNames(styles.trustutils, isTrustee ? null : styles.disabeld)}>
+                    <Icon name="xintuogongju" />
+                    信托工具
+                  </span>
+                  {isTrustee ? (
+                    <div className={styles.utilsContainer}>
+                      <ul>
+                        <li
+                          type="blank"
+                          onClick={() => {
+                            openModal({ name: 'ExportHardwarePubKey' });
+                          }}>
+                          <Icon name="daochugongyue" />
+                          <span>导出硬件公钥</span>
+                        </li>
+                        <li
+                          type="blank"
+                          onClick={() => {
+                            openModal({ name: 'ConstructSpecialTradeModal' });
+                          }}>
+                          <Icon name="gouzaoteshujiaoyi" />
+                          <span>构造特殊交易</span>
+                        </li>
+                        <li
+                          type="blank"
+                          onClick={() => {
+                            openModal({ name: 'AnalyzeSpecialTradeModal' });
+                          }}>
+                          <Icon name="jiexi" />
+                          <span>解析特殊交易</span>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </TableTitle>

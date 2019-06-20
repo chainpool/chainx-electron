@@ -63,7 +63,7 @@ class NormalResponseList extends Component {
     const totalInputValue = inputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
     const totalOutputValue = outputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
 
-    const showSpecialModel = txSpecial;
+    const showSpecialModel = isTrustee && txSpecial;
     const showNormalModel = isTrustee && signTrusteeListMatch.length > 0 && txMatchOne;
 
     const renderSignLi = (one, index) => {
