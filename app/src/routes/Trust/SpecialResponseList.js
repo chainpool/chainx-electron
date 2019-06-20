@@ -130,6 +130,7 @@ class NormalResponseList extends Component {
                 </span>
                 <span className={styles.count}>
                   <HoverTip
+                    width={550}
                     className={styles.hoverTrusteeList}
                     tip={
                       <ul className={styles.account}>

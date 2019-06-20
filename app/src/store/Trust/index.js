@@ -452,10 +452,12 @@ export default class Trust extends ModelExtend {
         maxSignCount,
         chainConfigTrusteeList,
       });
-      this.getInputsAndOutputsFromTx({
-        tx,
-        isSpecialMode: false,
-      });
+      if (!(this.txOutputList.length && this.txInputList.length)) {
+        this.getInputsAndOutputsFromTx({
+          tx,
+          isSpecialMode: false,
+        });
+      }
     } else {
       this.changeModel({
         tx: '',

@@ -113,7 +113,7 @@ class SignResultModal extends Component {
             onChange={value => {
               if (desc === 'other') {
                 this.setState({
-                  otherSignResult: value.trim(),
+                  otherSignResult: value,
                 });
               } else {
                 this.setState({

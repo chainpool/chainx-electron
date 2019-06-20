@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, FormattedMessage, Modal, Clipboard } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { formatNumber, Inject, Patterns } from '../../../utils';
+import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
 import * as styles from './ConstructSpecialTradeModal.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -94,6 +94,7 @@ class ConstructSpecialTradeModal extends Component {
       } = this.props;
       this.setState({
         errMsg: '',
+        tx: '',
       });
       dispatch({
         type: 'sign',
@@ -160,11 +161,14 @@ class ConstructSpecialTradeModal extends Component {
             value={sender}
             options={[{ label: '1', value: 1 }]}
             onChange={value => {
-              this.setState({
-                sender: value,
-              });
+              this.setState(
+                {
+                  sender: value,
+                },
+                constructSpecialTrade
+              );
             }}
-            onBlur={constructSpecialTrade}
+            //onBlur={constructSpecialTrade}
           />
           <Input.Text
             isOutSide
@@ -174,11 +178,13 @@ class ConstructSpecialTradeModal extends Component {
             value={receiver}
             options={[{ label: '1', value: 1 }]}
             onChange={value => {
-              this.setState({
-                receiver: value,
-              });
+              this.setState(
+                {
+                  receiver: value,
+                },
+                constructSpecialTrade
+              );
             }}
-            onBlur={constructSpecialTrade}
           />
           <InputHorizotalList
             left={
@@ -190,18 +196,22 @@ class ConstructSpecialTradeModal extends Component {
                   <span>
                     金额
                     {balanceMinValueShow && (
-                      <span className={styles.minValue}>(最小提现金额 {balanceMinValueShow})</span>
+                      <span className={styles.minValue}>
+                        (最小提现金额 {setBlankSpace(balanceMinValueShow, 'BTC')})
+                      </span>
                     )}
                   </span>
                 }
                 value={balance}
                 suffix="BTC"
                 onChange={value => {
-                  this.setState({
-                    balance: value,
-                  });
+                  this.setState(
+                    {
+                      balance: value,
+                    },
+                    constructSpecialTrade
+                  );
                 }}
-                onBlur={constructSpecialTrade}
               />
             }
             right={
@@ -209,15 +219,21 @@ class ConstructSpecialTradeModal extends Component {
                 isOutSide
                 errMsg={feeRateErrMsg}
                 isDecimal="decimal"
-                label="手续费"
+                label={
+                  <span>
+                    手续费 <span className={styles.unit}>(BTC)</span>
+                  </span>
+                }
                 value={feeRate}
                 //suffix="Satoshis/KB"
                 onChange={value => {
-                  this.setState({
-                    feeRate: value,
-                  });
+                  this.setState(
+                    {
+                      feeRate: value,
+                    },
+                    constructSpecialTrade
+                  );
                 }}
-                onBlur={constructSpecialTrade}
               />
             }
           />
@@ -225,7 +241,7 @@ class ConstructSpecialTradeModal extends Component {
             label={
               <span className={styles.tosign}>
                 待签原文
-                <Clipboard id="copy">
+                <Clipboard id="copy" className={tx ? styles.active : styles.disabeld}>
                   <div style={{ width: 1, height: 0, opacity: 0 }}>{tx}</div>
                 </Clipboard>
                 {errMsg && (
