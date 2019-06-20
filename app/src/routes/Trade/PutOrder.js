@@ -172,6 +172,7 @@ class PutOrder extends SwitchPair {
     const {
       model: { isLogin, openModal, dispatch, currentPair, setPrecision, loading },
       accountStore: { currentAccount },
+      globalStore: { nativeAssetName },
     } = this.props;
     const { priceErrMsg, amountErrMsg, tradeErrMsg } = this.state[action];
     const [currentCurrencyAssetFree, currentAssetsAssetFree] = this.getCurrentAssetFree();
@@ -202,6 +203,7 @@ class PutOrder extends SwitchPair {
 
     const loadingAction = action === 'buy' ? 'putOrderBuy' : 'putOrderSell';
     const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
+
     return (
       <div className={styles.user}>
         <div className={styles.freebalance}>
@@ -305,7 +307,7 @@ class PutOrder extends SwitchPair {
                           toastShow: false,
                         },
                       ],
-                      ...(action === 'sell'
+                      ...(action === 'sell' && currentPair.assets === nativeAssetName
                         ? {
                             checkNativeAsset: (accountNativeAssetFreeBalance, fee, minValue) => {
                               if (minValue === 0) {
