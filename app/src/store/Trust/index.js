@@ -57,9 +57,11 @@ export default class Trust extends ModelExtend {
 
   @observable _trusts = localSave.get('trusts') || [];
   @observable tx = '';
+  @observable txSpecial = '';
   @observable signStatus = '';
   @observable redeemScript = '';
-  @observable trusteeList = []; //已签名的节点列表
+  @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
+  @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
   @observable commentFee = ''; // 推荐手续费
   @observable totalSignCount = '';
   @observable maxSignCount = '';
@@ -67,6 +69,8 @@ export default class Trust extends ModelExtend {
   @observable BitCoinFee = '';
   @observable txInputList = [];
   @observable txOutputList = [];
+  @observable txSpecialInputList = [];
+  @observable txSpecialOutputList = [];
 
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
@@ -173,6 +177,44 @@ export default class Trust extends ModelExtend {
         return {
           ...newItem,
           trusteeSign: findOne[1],
+        };
+      }
+      return newItem;
+    });
+  }
+
+  @computed get txSpecialSignTrusteeList() {
+    if (!this.txSpecial) return [];
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const inputs = txb.__inputs[0];
+    if (!inputs.signatures) return [];
+    const signList = inputs.signatures.map((item, index) => {
+      const pubKey = inputs.pubkeys[index].toString('hex');
+      const filterOne =
+        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] || {};
+      return {
+        trusteeSign: _.isUndefined(item) ? item : !!item,
+        pubKey,
+        accountId: filterOne.accountId,
+      };
+    });
+    const currentAccount = this.getCurrentAccount();
+    return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
+      const newItem = {
+        ...item,
+        isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
+      };
+      const findOne = signList.filter((one = {}) => {
+        if (one) {
+          return `0x${this.decodeAddressAccountId(one.accountId)}` === item.account;
+        }
+      })[0];
+      if (findOne) {
+        return {
+          ...newItem,
+          trusteeSign: findOne.trusteeSign,
         };
       }
       return newItem;
@@ -300,7 +342,10 @@ export default class Trust extends ModelExtend {
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
         if (targetUtxos.length <= 0) {
-          throw new Error('构造失败，账户余额不足');
+          throw new Error({
+            info: '构造失败，账户余额不足',
+            toString: () => 'ConstructionFailedBalanceInnsufficient',
+          });
         }
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
@@ -318,7 +363,8 @@ export default class Trust extends ModelExtend {
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
-        const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
+
+        //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - userInputbitFee;
 
@@ -396,7 +442,7 @@ export default class Trust extends ModelExtend {
         this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount, maxSignCount } = resRede || {};
+      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
@@ -404,8 +450,14 @@ export default class Trust extends ModelExtend {
         trusteeList,
         totalSignCount,
         maxSignCount,
+        chainConfigTrusteeList,
       });
-      this.getInputsAndOutputsFromTx(tx);
+      if (!(this.txOutputList.length && this.txInputList.length)) {
+        this.getInputsAndOutputsFromTx({
+          tx,
+          isSpecialMode: false,
+        });
+      }
     } else {
       this.changeModel({
         tx: '',
@@ -418,8 +470,13 @@ export default class Trust extends ModelExtend {
     }
   };
 
-  getInputsAndOutputsFromTx = async tx => {
+  getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
+    const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
+    const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
+    if (isSpecialModel) {
+      this.changeModel('txSpecial', tx);
+    }
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
     const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
@@ -431,17 +488,16 @@ export default class Trust extends ModelExtend {
         satoshi: item.value,
       };
     });
-    this.changeModel('txOutputList', resultOutputs);
+    this.changeModel(txOutputList, resultOutputs);
     const ins = txbRAW.__tx.ins.map(item => {
       return {
         ...item,
         hash: item.hash.reverse().toString('hex'),
       };
     });
+    this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
-
     const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
-
     if (result && result.length) {
       const insTXs = result.map(item => {
         const transaction = bitcoin.Transaction.fromHex(item.raw);
@@ -458,51 +514,45 @@ export default class Trust extends ModelExtend {
           satoshi: findOne.value,
         };
       });
-      this.changeModel('txInputList', insTXs);
+      this.changeModel(txInputList, insTXs);
     }
   };
 
   getTrusteeSessionInfo = async chain => {
-    if (this.redeemScript) {
-      return {
-        redeemScript: this.redeemScript,
-        maxSignCount: this.maxSignCount,
-        totalSignCount: this.totalSignCount,
-      };
-    } else {
-      const res = await getTrusteeSessionInfo(chain);
-      const {
-        hotEntity: { redeemScript } = {},
-        trusteeList = [], //暂时没用
-        counts: { total, required },
-      } = res || {};
-      return {
-        redeemScript,
-        totalSignCount: total,
-        maxSignCount: required,
-      };
-    }
+    const res = await getTrusteeSessionInfo(chain);
+    const {
+      hotEntity: { redeemScript } = {},
+      trusteeList: chainConfigTrusteeList = [],
+      counts: { total, required },
+    } = res || {};
+    return {
+      redeemScript,
+      totalSignCount: total,
+      maxSignCount: required,
+      chainConfigTrusteeList,
+    };
   };
 
-  signWithHardware = async () => {
-    const filterTrust = this.trusts.filter(item => item.chain === 'Bitcoin')[0];
+  signWithHardware = async ({ isSpecialModel, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
-    console.log(
-      this.tx,
-      this.txInputList,
-      this.redeemScript,
-      filterTrust.hotPubKey,
-      this.maxSignCount,
-      network,
-      '--------签名输入所有参数'
-    );
-    const res = await window.LedgerInterface.sign(
-      this.tx.replace(/^0x/, ''),
-      this.txInputList,
-      this.redeemScript.replace(/^0x/, ''),
-      filterTrust.hotPubKey.replace(/^0x/, ''),
-      network
-    ).catch(err => Promise.reject(err));
+    let res;
+    if (isSpecialModel) {
+      //console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
+      res = await window.LedgerInterface.sign(
+        this.txSpecial.replace(/^0x/, ''),
+        this.txSpecialInputList,
+        redeemScript ? redeemScript.replace(/^0x/, '') : null,
+        network
+      ).catch(err => Promise.reject(err));
+    } else {
+      //console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
+      res = await window.LedgerInterface.sign(
+        this.tx.replace(/^0x/, ''),
+        this.txInputList,
+        this.redeemScript.replace(/^0x/, ''),
+        network
+      ).catch(err => Promise.reject(err));
+    }
     return res;
   };
 
@@ -513,7 +563,6 @@ export default class Trust extends ModelExtend {
       //redeemScript = redeemScript.replace(/^0x/, '');
       tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey });
     }
-
     const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
     return {
       extrinsic,
@@ -705,5 +754,9 @@ export default class Trust extends ModelExtend {
     if (res && res.fee) {
       this.changeModel('BitCoinFee', res.fee);
     }
+  };
+
+  updateTxSpecial = ({ txSpecial }) => {
+    this.changeModel('txSpecial', txSpecial);
   };
 }

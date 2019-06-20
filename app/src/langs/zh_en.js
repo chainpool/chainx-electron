@@ -263,6 +263,10 @@ const zh_en = {
   BitCoinFee: ['BitCoin 手续费', 'BitCoin Fee'],
   UTXONotEnoughFee: ['utxo总额不够支付手续费', 'The utxos is Insufficient payment for fee'],
   WithDrawTotalMustBiggerZero: ['提现总额应大于0', 'total balance must greater than 0'],
+  ConstructionFailedBalanceInnsufficient: [
+    '构造失败，账户余额不足',
+    'Construction failed, account balance insufficient',
+  ],
   NodeHasNoUTXO: ['当前节点无任何utxo', 'This node has no utxo'],
   NotSetNode: ['未设置节点', 'Not Setup Node'],
   NodeNotLink: ['节点未连接', 'This node not linking'],

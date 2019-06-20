@@ -10,17 +10,19 @@ class SignChannelSelectModal extends Component {
   render() {
     const { selectOne } = this.state;
     const {
-      model: { openModal, tx },
+      model: { openModal, tx, txSpecial },
+      globalStore: {
+        modal: {
+          data: { isSpecialModel, haveSigned },
+        },
+      },
     } = this.props;
+
+    const txMatch = isSpecialModel ? txSpecial : tx;
 
     return (
       <Modal
-        title={
-          <div>
-            签名
-            {/*<span className={styles.supportdesc}>(暂时只支持ledger)</span>*/}
-          </div>
-        }
+        title={<div>签名</div>}
         button={
           <Button
             size="full"
@@ -31,7 +33,9 @@ class SignChannelSelectModal extends Component {
                   name: 'AfterSelectChannelModal',
                   data: {
                     desc: selectOne,
-                    tx,
+                    tx: txMatch,
+                    isSpecialModel,
+                    haveSigned,
                   },
                 });
               } else if (selectOne === 'other') {
@@ -40,6 +44,7 @@ class SignChannelSelectModal extends Component {
                   data: {
                     desc: selectOne,
                     signResult: '',
+                    isSpecialModel,
                   },
                 });
               }

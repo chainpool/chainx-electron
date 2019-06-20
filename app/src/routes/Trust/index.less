@@ -32,6 +32,11 @@
 
 
         .utils{
+          .trustutils{
+            &.disabeld{
+              color:#C2C2C2 !important
+            }
+          }
           cursor: pointer;
           margin-left: 32px;
           font-weight: bold;
@@ -195,6 +200,10 @@
         color:unset;
         pointer-events: none;
       }
+      &.gray{
+        color: #3F3F3F;
+        background: #DEDEDE !important;
+      }
     }
     .signButton{
       background: @green;
@@ -245,6 +254,7 @@
       padding:0 20px;
       .tx{
         .txlabel{
+          font-size: 12px;
           font-weight: bold;
           margin-right: 5px;
         }
