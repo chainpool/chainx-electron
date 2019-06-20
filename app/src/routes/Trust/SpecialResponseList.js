@@ -207,7 +207,11 @@ class NormalResponseList extends Component {
                 </Button>
                 {isSpecialModel ? (
                   <Button
-                    className={classNames(styles.refuseButton, isShowResponseWithdraw ? null : styles.disabeld)}
+                    className={classNames(
+                      styles.refuseButton,
+                      isShowResponseWithdraw ? null : styles.disabeld,
+                      styles.gray
+                    )}
                     onClick={() => {
                       dispatch({
                         type: 'updateTxSpecial',
