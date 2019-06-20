@@ -26,7 +26,7 @@ class NormalResponseList extends Component {
         txSpecialOutputList = [],
         txSpecialInputList = [],
         signTrusteeList = [],
-        txSpecialSignTrusteeList,
+        txSpecialSignTrusteeList = [],
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
@@ -40,11 +40,12 @@ class NormalResponseList extends Component {
     const inputList = isSpecialModel ? txSpecialInputList : txInputList;
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
+    const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
 
-    const isSelfSign = signTrusteeList.filter(
+    const isSelfSign = signTrusteeListMatch.filter(
       (item = {}) => (item.trusteeSign === true || item.trusteeSign === false) && item.isSelf
     )[0];
 
@@ -52,20 +53,18 @@ class NormalResponseList extends Component {
       ? true
       : isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
 
-    const haveSignList = isSpecialModel ? [] : signTrusteeList.filter((item = {}) => item.trusteeSign);
-    const haveRefuseList = isSpecialModel ? [] : signTrusteeList.filter((item = {}) => item.trusteeSign === false);
-    const notResponseList = isSpecialModel
-      ? []
-      : signTrusteeList.filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true);
-    const haveBroadcast = isSpecialModel
-      ? false
-      : signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount;
+    const haveSignList = signTrusteeListMatch.filter((item = {}) => item.trusteeSign);
+    const haveRefuseList = signTrusteeListMatch.filter((item = {}) => item.trusteeSign === false);
+    const notResponseList = signTrusteeListMatch.filter(
+      (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
+    );
+    const haveBroadcast = signTrusteeListMatch.filter((item = {}) => item.trusteeSign).length >= maxSignCount;
 
     const totalInputValue = inputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
     const totalOutputValue = outputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
 
     const showSpecialModel = txSpecial;
-    const showNormalModel = isTrustee && signTrusteeList.length > 0 && txMatchOne;
+    const showNormalModel = isTrustee && signTrusteeListMatch.length > 0 && txMatchOne;
 
     const renderSignLi = (one, index) => {
       return (
@@ -151,24 +150,30 @@ class NormalResponseList extends Component {
                     className={styles.hoverTrusteeList}
                     tip={
                       <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
-                    }>{`${haveSignList.length}/${maxSignCount}`}</HoverTip>
-                </span>
-              </li>
-              <li>
-                <Icon name="icon-cuowu" className={'red'} />
-                <span>
-                  <FormattedMessage id={'HaveVetoedSign'} />
-                </span>
-                <span className={styles.count}>
-                  <HoverTip
-                    className={styles.hoverTrusteeList}
-                    tip={
-                      <ul className={styles.account}>{haveRefuseList.map((one, index) => renderSignLi(one, index))}</ul>
                     }>
-                    {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
+                    {isSpecialModel ? haveSignList.length : `${haveSignList.length}/${maxSignCount}`}
                   </HoverTip>
                 </span>
               </li>
+              {!isSpecialModel && (
+                <li>
+                  <Icon name="icon-cuowu" className={'red'} />
+                  <span>
+                    <FormattedMessage id={'HaveVetoedSign'} />
+                  </span>
+                  <span className={styles.count}>
+                    <HoverTip
+                      className={styles.hoverTrusteeList}
+                      tip={
+                        <ul className={styles.account}>
+                          {haveRefuseList.map((one, index) => renderSignLi(one, index))}
+                        </ul>
+                      }>
+                      {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
+                    </HoverTip>
+                  </span>
+                </li>
+              )}
             </ul>
             {haveBroadcast ? (
               <div className={styles.completeSign}>
@@ -193,38 +198,54 @@ class NormalResponseList extends Component {
                       name: 'SignChannelSelectModal',
                       data: {
                         isSpecialModel,
+                        haveSigned: haveSignList.length > 0,
                       },
                     });
                   }}>
                   签名
                 </Button>
-                <Button
-                  className={classNames(styles.refuseButton, isShowResponseWithdraw ? null : styles.disabeld)}
-                  onClick={() => {
-                    openModal({
-                      name: 'SignModal',
-                      data: {
-                        description: [
-                          { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
-                          {
-                            name: () => <FormattedMessage id={'WhetherSignature'} />,
-                            value: () => <FormattedMessage id={'FalseSign'} />,
-                          },
-                        ],
-                        callback: () => {
-                          return dispatch({
-                            type: 'signWithdrawTx',
-                            payload: {
-                              tx: null,
-                              redeemScript,
-                            },
-                          });
+                {isSpecialModel ? (
+                  <Button
+                    className={classNames(styles.refuseButton, isShowResponseWithdraw ? null : styles.disabeld)}
+                    onClick={() => {
+                      dispatch({
+                        type: 'updateTxSpecial',
+                        payload: {
+                          txSpecial: null,
                         },
-                      },
-                    });
-                  }}>
-                  否决
-                </Button>
+                      });
+                    }}>
+                    取消
+                  </Button>
+                ) : (
+                  <Button
+                    className={classNames(styles.refuseButton, isShowResponseWithdraw ? null : styles.disabeld)}
+                    onClick={() => {
+                      openModal({
+                        name: 'SignModal',
+                        data: {
+                          description: [
+                            { name: 'operation', value: () => <FormattedMessage id={'RespondMultiSigWithdrawal'} /> },
+                            {
+                              name: () => <FormattedMessage id={'WhetherSignature'} />,
+                              value: () => <FormattedMessage id={'FalseSign'} />,
+                            },
+                          ],
+                          callback: () => {
+                            return dispatch({
+                              type: 'signWithdrawTx',
+                              payload: {
+                                tx: null,
+                                redeemScript,
+                              },
+                            });
+                          },
+                        },
+                      });
+                    }}>
+                    否决
+                  </Button>
+                )}
               </ButtonGroup>
             )}
           </div>

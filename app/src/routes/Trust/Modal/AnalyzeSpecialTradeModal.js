@@ -5,8 +5,7 @@ import { Patterns } from '../../../utils';
 
 class AnalyzeSpecialTradeModal extends Component {
   state = {
-    tx:
-      '0x0100000001520c5b718bfe24c3ac37557b656192f4428c8273104c07cc9c97eaa3a2ac17a90000000000ffffffff0250c300000000000017a914a9205e9cc33872244b037111238fffe2e2eb95508760e569000000000017a914787847d19f4736f3b7a411d80083a228fc0d77798700000000',
+    tx: '',
     txErrMsg: '',
   };
 
@@ -33,7 +32,7 @@ class AnalyzeSpecialTradeModal extends Component {
 
     return (
       <Modal
-        title={'构造特殊交易'}
+        title={'解析特殊交易'}
         button={
           <Button
             size="full"

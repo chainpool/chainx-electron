@@ -13,7 +13,7 @@ class SignChannelSelectModal extends Component {
       model: { openModal, tx, txSpecial },
       globalStore: {
         modal: {
-          data: { isSpecialModel },
+          data: { isSpecialModel, haveSigned },
         },
       },
     } = this.props;
@@ -35,6 +35,7 @@ class SignChannelSelectModal extends Component {
                     desc: selectOne,
                     tx: txMatch,
                     isSpecialModel,
+                    haveSigned,
                   },
                 });
               } else if (selectOne === 'other') {

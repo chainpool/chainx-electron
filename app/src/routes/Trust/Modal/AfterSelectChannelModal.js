@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, FormattedMessage, Input } from '../../../components';
 import * as styles from './AfterSelectChannelModal.less';
+import { Patterns } from '../../../utils';
 
 class AfterSelectChannelModal extends Component {
   state = {
@@ -10,6 +11,22 @@ class AfterSelectChannelModal extends Component {
     signWarning: '',
     signResult: '',
     redeemScript: '',
+    redeemScriptErrMsg: '',
+  };
+
+  checkAll = {
+    checkRedeemScript: () => {
+      const {
+        globalStore: { modal: { data: { isSpecialModel, haveSigned } = {} } = {} },
+      } = this.props;
+      const { redeemScript } = this.state;
+      const errMsg = isSpecialModel && !haveSigned ? Patterns.check('required')(redeemScript) : '';
+      this.setState({ redeemScriptErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkRedeemScript'].every(item => !this.checkAll[item]());
+    },
   };
 
   signWithHardware = async () => {
@@ -17,7 +34,7 @@ class AfterSelectChannelModal extends Component {
       model: { dispatch },
       globalStore: {
         modal: {
-          data: { desc, isSpecialModel },
+          data: { desc, isSpecialModel, haveSigned },
         },
       },
     } = this.props;
@@ -31,7 +48,7 @@ class AfterSelectChannelModal extends Component {
       type: 'signWithHardware',
       payload: {
         isSpecialModel,
-        redeemScript: isSpecialModel ? redeemScript : null,
+        redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
       },
     }).catch(err => {
       console.error(err);
@@ -55,11 +72,11 @@ class AfterSelectChannelModal extends Component {
   };
 
   render() {
-    const { linkStatus, signErrMsg, loading, signWarning, redeemScript } = this.state;
+    const { signErrMsg, loading, signWarning, redeemScript, redeemScriptErrMsg } = this.state;
     const {
       globalStore: {
         modal: {
-          data: { desc, tx, isSpecialModel },
+          data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
       model: { openModal },
@@ -77,18 +94,20 @@ class AfterSelectChannelModal extends Component {
               size="full"
               type="confirm"
               onClick={() => {
-                this.signWithHardware().then(res => {
-                  if (res) {
-                    openModal({
-                      name: 'SignResultModal',
-                      data: {
-                        desc,
-                        signResult: res,
-                        isSpecialModel,
-                      },
-                    });
-                  }
-                });
+                if (this.checkAll.confirm()) {
+                  this.signWithHardware().then(res => {
+                    if (res) {
+                      openModal({
+                        name: 'SignResultModal',
+                        data: {
+                          desc,
+                          signResult: res,
+                          isSpecialModel,
+                        },
+                      });
+                    }
+                  });
+                }
               }}>
               <FormattedMessage id={'Confirm'} />
             </Button>
@@ -101,9 +120,10 @@ class AfterSelectChannelModal extends Component {
           {/*<span>{linkStatus ? '已连接' : '未连接'}</span>*/}
           {/*</li>*/}
           {/*</ul>*/}
-          {isSpecialModel && (
+          {isSpecialModel && !haveSigned && (
             <div className={styles.redeemScript}>
               <Input.Text
+                errMsg={redeemScriptErrMsg}
                 isTextArea
                 rows={5}
                 label="赎回脚本"
@@ -113,6 +133,7 @@ class AfterSelectChannelModal extends Component {
                     redeemScript: value,
                   });
                 }}
+                onBlur={this.checkAll.checkRedeemScript}
               />
             </div>
           )}
