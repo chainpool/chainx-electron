@@ -182,7 +182,7 @@ class VoteModal extends Mixin {
                   },
                   { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
                 ]
-                  .filter(item => item)
+                  .filter(item => item.disabeld !== true)
                   .map((item, index) => (
                     <li
                       key={index}
