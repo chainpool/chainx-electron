@@ -114,12 +114,6 @@ class AfterSelectChannelModal extends Component {
           </>
         }>
         <div className={styles.AfterSelectChannelModal}>
-          {/*<ul>*/}
-          {/*<li>*/}
-          {/*<span>状态：</span>*/}
-          {/*<span>{linkStatus ? '已连接' : '未连接'}</span>*/}
-          {/*</li>*/}
-          {/*</ul>*/}
           {isSpecialModel && !haveSigned && (
             <div className={styles.redeemScript}>
               <Input.Text

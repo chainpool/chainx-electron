@@ -16,8 +16,10 @@ import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
 import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
 import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
+import TrezorPasswordModal from './Modal/TrezorPasswordModal';
 import NormalResponseList from './NormalResponseList';
 import SpecialResponseList from './SpecialResponseList';
+
 import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
@@ -28,7 +30,7 @@ class Trust extends Mixin {
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
     // this.props.model.openModal({
-    //   name: 'AnalyzeSpecialTradeModal',
+    //   name: 'TrezorPasswordModal',
     // });
   };
 
@@ -194,6 +196,7 @@ class Trust extends Mixin {
         {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
         {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
         {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
+        {name === 'TrezorPasswordModal' ? <TrezorPasswordModal {...props} /> : null}
       </div>
     );
   }

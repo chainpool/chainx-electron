@@ -22,6 +22,7 @@ class SignChannelSelectModal extends Component {
 
     return (
       <Modal
+        style={{ width: 360 }}
         title={<div>签名</div>}
         button={
           <Button
@@ -47,6 +48,16 @@ class SignChannelSelectModal extends Component {
                     isSpecialModel,
                   },
                 });
+              } else if (selectOne === 'Trezor') {
+                openModal({
+                  name: 'TrezorPasswordModal',
+                  data: {
+                    desc: selectOne,
+                    tx: txMatch,
+                    isSpecialModel,
+                    haveSigned,
+                  },
+                });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -56,7 +67,7 @@ class SignChannelSelectModal extends Component {
           <ul>
             {[
               { name: 'Ledger', icon: 'ledger' },
-              { name: 'Trezor', icon: 'trezor', disabeld: true },
+              { name: 'Trezor', icon: 'trezor' },
               { name: '手机冷钱包', icon: 'phone', disabeld: true },
               { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他' },
             ].map((item, index) => (
