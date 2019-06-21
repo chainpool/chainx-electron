@@ -30,37 +30,45 @@ class NodeTable extends Component {
     const tableProps = {
       className: styles.tableContainer,
       columns: [
-        {
-          title: <FormattedMessage id={'Rank'} />,
-          width: 110,
-          ellipse: 8,
-          dataIndex: 'name',
-          render: (value, item, index) => {
-            return (
-              <div className={styles.trustee}>
-                <span className={styles.rank}>{index + 1}</span>
-                {item.isTrustee && item.isTrustee.length ? (
-                  <FormattedMessage id={'ManageUserOutsidechainAssets'}>
-                    {msg => (
-                      <HoverTip tip={msg}>
-                        <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />
-                      </HoverTip>
+        activeIndex === 2
+          ? null
+          : {
+              title: <FormattedMessage id={'Rank'} />,
+              width: 110,
+              ellipse: 8,
+              dataIndex: 'name',
+              render: (value, item, index) => {
+                return (
+                  <div className={styles.trustee}>
+                    <span className={styles.rank}>{index + 1}</span>
+                    {item.isTrustee && item.isTrustee.length ? (
+                      <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                        {msg => (
+                          <HoverTip tip={msg}>
+                            <LanguageContent
+                              zh={<img src={trustee_zh} alt="" />}
+                              en={<img src={trustee_en} alt="" />}
+                            />
+                          </HoverTip>
+                        )}
+                      </FormattedMessage>
+                    ) : null}
+                    {!item.isActive && (
+                      <FormattedMessage id={'ElectionValidatorUnableParticipate'}>
+                        {msg => (
+                          <HoverTip tip={msg}>
+                            <LanguageContent
+                              zh={<img src={inactive_zh} alt="" />}
+                              en={<img src={inactive_en} alt="" />}
+                            />
+                          </HoverTip>
+                        )}
+                      </FormattedMessage>
                     )}
-                  </FormattedMessage>
-                ) : null}
-                {!item.isActive && (
-                  <FormattedMessage id={'ElectionValidatorUnableParticipate'}>
-                    {msg => (
-                      <HoverTip tip={msg}>
-                        <LanguageContent zh={<img src={inactive_zh} alt="" />} en={<img src={inactive_en} alt="" />} />
-                      </HoverTip>
-                    )}
-                  </FormattedMessage>
-                )}
-              </div>
-            );
-          },
-        },
+                  </div>
+                );
+              },
+            },
         {
           title: <FormattedMessage id={'Name'} />,
           ellipse: 10,
@@ -208,7 +216,7 @@ class NodeTable extends Component {
             </ButtonGroup>
           ),
         },
-      ],
+      ].filter(item => item),
       dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => {
         const aLength = _.get(a, 'isTrustee.length');
         const bLength = _.get(b, 'isTrustee.length');

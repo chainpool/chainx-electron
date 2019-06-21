@@ -58,7 +58,12 @@ class TransferModal extends Component {
 
     return (
       <Modal
-        title={<FormattedMessage id={'InnerChainTransfer'} />}
+        title={
+          <>
+            <FormattedMessage id={'InnerChainTransfer'} />
+            <span>({token})</span>
+          </>
+        }
         button={
           <Button
             size="full"
