@@ -1,3 +1,4 @@
+const reverse = require("buffer-reverse");
 const EventEmitter = require("events");
 const trezor = require("trezor.js");
 const bitcoin = require("bitcoinjs-lib-zcash");

@@ -29,7 +29,7 @@ class SignChannelSelectModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              if (selectOne === 'Ledger') {
+              if (selectOne === 'Ledger' || selectOne === 'Trezor') {
                 openModal({
                   name: 'AfterSelectChannelModal',
                   data: {
@@ -46,16 +46,6 @@ class SignChannelSelectModal extends Component {
                     desc: selectOne,
                     signResult: '',
                     isSpecialModel,
-                  },
-                });
-              } else if (selectOne === 'Trezor') {
-                openModal({
-                  name: 'TrezorPasswordModal',
-                  data: {
-                    desc: selectOne,
-                    tx: txMatch,
-                    isSpecialModel,
-                    haveSigned,
                   },
                 });
               }

@@ -533,26 +533,36 @@ export default class Trust extends ModelExtend {
     };
   };
 
-  signWithHardware = async ({ isSpecialModel, redeemScript }) => {
+  signWithHardware = async ({ desc, isSpecialModel, redeemScript, signCallback }) => {
     const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
     let res;
-    if (isSpecialModel) {
-      //console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
-      res = await window.LedgerInterface.sign(
-        this.txSpecial.replace(/^0x/, ''),
-        this.txSpecialInputList,
-        redeemScript ? redeemScript.replace(/^0x/, '') : null,
-        network
-      ).catch(err => Promise.reject(err));
-    } else {
-      //console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
-      res = await window.LedgerInterface.sign(
+    if (desc === 'Ledger') {
+      if (isSpecialModel) {
+        //console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
+        res = await window.LedgerInterface.sign(
+          this.txSpecial.replace(/^0x/, ''),
+          this.txSpecialInputList,
+          redeemScript ? redeemScript.replace(/^0x/, '') : null,
+          network
+        ).catch(err => Promise.reject(err));
+      } else {
+        //console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
+        res = await window.LedgerInterface.sign(
+          this.tx.replace(/^0x/, ''),
+          this.txInputList,
+          this.redeemScript.replace(/^0x/, ''),
+          network
+        ).catch(err => Promise.reject(err));
+      }
+    } else if (desc === 'Trezor') {
+      res = await signCallback(
         this.tx.replace(/^0x/, ''),
         this.txInputList,
         this.redeemScript.replace(/^0x/, ''),
         network
       ).catch(err => Promise.reject(err));
     }
+
     return res;
   };
 

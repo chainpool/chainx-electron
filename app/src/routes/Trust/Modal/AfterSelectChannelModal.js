@@ -29,7 +29,7 @@ class AfterSelectChannelModal extends Component {
     },
   };
 
-  signWithHardware = async () => {
+  signWithHardware = async ({ signCallback }) => {
     const {
       model: { dispatch },
       globalStore: {
@@ -47,11 +47,13 @@ class AfterSelectChannelModal extends Component {
     const res = await dispatch({
       type: 'signWithHardware',
       payload: {
+        desc,
         isSpecialModel,
         redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
+        signCallback,
       },
     }).catch(err => {
-      console.error(err);
+      console.error(err, '-------------err');
       this.setState({
         signErrMsg: err.message,
         loading: false,
@@ -79,7 +81,7 @@ class AfterSelectChannelModal extends Component {
           data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
-      model: { openModal },
+      model: { openModal, closeModal },
     } = this.props;
 
     return (
@@ -95,18 +97,52 @@ class AfterSelectChannelModal extends Component {
               type="confirm"
               onClick={() => {
                 if (this.checkAll.confirm()) {
-                  this.signWithHardware().then(res => {
-                    if (res) {
-                      openModal({
-                        name: 'SignResultModal',
-                        data: {
-                          desc,
-                          signResult: res,
-                          isSpecialModel,
+                  if (desc === 'Ledger') {
+                    this.signWithHardware().then(res => {
+                      if (res) {
+                        openModal({
+                          name: 'SignResultModal',
+                          data: {
+                            desc,
+                            signResult: res,
+                            isSpecialModel,
+                          },
+                        });
+                      }
+                    });
+                  } else if (desc === 'Trezor') {
+                    const trezor = new window.TrezorConnector(
+                      (messageType, passwordCheck) => {
+                        openModal({
+                          name: 'TrezorPasswordModal',
+                          data: {
+                            callback: async password => {
+                              console.log(passwordCheck, password, '----password');
+                              try {
+                                await passwordCheck(null, password);
+                                closeModal();
+                              } catch (err) {
+                                console.log('密码错误', err);
+                              }
+                            },
+                          },
+                        });
+                      },
+                      (...payload) => {
+                        console.log(payload, '2');
+                      }
+                    );
+                    trezor.on('connect', () => {
+                      this.signWithHardware({
+                        signCallback: (...payload) => {
+                          console.log(...payload, '====...payload');
+                          return trezor.sign(...payload);
                         },
+                      }).then(res => {
+                        console.log(res, '---------connect signCallback');
                       });
-                    }
-                  });
+                    });
+                  }
                 }
               }}>
               <FormattedMessage id={'Confirm'} />

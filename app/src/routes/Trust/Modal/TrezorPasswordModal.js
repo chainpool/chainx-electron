@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Modal, Input } from '../../../components';
 import * as styles from './TrezorPasswordModal.less';
-import { Patterns } from '../../../utils';
+import { Patterns, _ } from '../../../utils';
 
 class TrezorPasswordModal extends Component {
   state = {
@@ -21,12 +21,24 @@ class TrezorPasswordModal extends Component {
   };
   render() {
     const { userInput, userInputErrMsg } = this.state;
+    const {
+      globalStore: {
+        modal: {
+          data: { callback },
+        },
+      },
+    } = this.props;
     return (
       <Modal
         style={{ width: 360 }}
         title={<div>签名</div>}
         button={
-          <Button size="full" type="confirm" onClick={() => {}}>
+          <Button
+            size="full"
+            type="confirm"
+            onClick={() => {
+              _.isFunction && callback(userInput);
+            }}>
             <FormattedMessage id={'Confirm'} />
           </Button>
         }>
@@ -46,7 +58,7 @@ class TrezorPasswordModal extends Component {
             onBlur={this.checkAll.checkUserInput}
           />
           <ul>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => (
+            {[7, 8, 9, 4, 5, 6, 1, 2, 3].map(item => (
               <li key={item}>{item}</li>
             ))}
           </ul>

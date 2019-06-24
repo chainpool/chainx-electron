@@ -36,6 +36,10 @@ class ExportHardwarePubKey extends Component {
                     },
                   },
                 });
+              } else if (selectOne === 'Trezor') {
+                openModal({
+                  name: 'TrezorPasswordModal',
+                });
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -43,24 +47,22 @@ class ExportHardwarePubKey extends Component {
         }>
         <div className={styles.ExportHardwarePubKey}>
           <ul>
-            {[{ name: 'Ledger', icon: 'ledger' }, { name: 'Trezor', icon: 'trezor', disabeld: true }].map(
-              (item, index) => (
-                <li
-                  className={classNames(
-                    selectOne === item.name || selectOne === item.desc ? styles.active : null,
-                    item.disabeld ? styles.disabeld : null
-                  )}
-                  key={index}
-                  onClick={() => {
-                    this.setState({
-                      selectOne: item.name,
-                    });
-                  }}>
-                  <Icon name={item.icon} />
-                  <span>{item.desc || item.name}</span>
-                </li>
-              )
-            )}
+            {[{ name: 'Ledger', icon: 'ledger' }, { name: 'Trezor', icon: 'trezor' }].map((item, index) => (
+              <li
+                className={classNames(
+                  selectOne === item.name || selectOne === item.desc ? styles.active : null,
+                  item.disabeld ? styles.disabeld : null
+                )}
+                key={index}
+                onClick={() => {
+                  this.setState({
+                    selectOne: item.name,
+                  });
+                }}>
+                <Icon name={item.icon} />
+                <span>{item.desc || item.name}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </Modal>
