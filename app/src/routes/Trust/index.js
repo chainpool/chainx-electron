@@ -17,8 +17,7 @@ import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
 import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
 import TrezorPasswordModal from './Modal/TrezorPasswordModal';
-import NormalResponseList from './NormalResponseList';
-import SpecialResponseList from './SpecialResponseList';
+import ResponseList from './ResponseList';
 
 import * as styles from './index.less';
 
@@ -164,8 +163,8 @@ class Trust extends Mixin {
           </div>
         )}
 
-        <SpecialResponseList {...this.props} isSpecialModel />
-        <SpecialResponseList {...this.props} isNormalModel />
+        <ResponseList {...this.props} isSpecialModel />
+        <ResponseList {...this.props} isNormalModel />
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>

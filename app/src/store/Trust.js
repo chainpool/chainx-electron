@@ -10,8 +10,8 @@ import {
   hexPrefix,
   toJS,
   convertAddressChecksumAll,
-} from '../../utils';
-import ModelExtend from '../ModelExtend';
+} from '../utils';
+import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
   createWithdrawTx,
@@ -23,7 +23,7 @@ import {
   getTrusteeSessionInfo,
   getUnspent,
   getTxsFromTxidList,
-} from '../../services';
+} from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
