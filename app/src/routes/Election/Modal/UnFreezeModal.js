@@ -16,6 +16,7 @@ class UnFreezeModal extends Component {
     } = this.props;
     const normalizedRevocations = myRevocations.map(revocation => {
       return {
+        revocationHeight: revocation.revocationHeight,
         canUnFreeze: revocation.revocationHeight <= blockNumber,
         amount: formatNumber.toPrecision(revocation.amount, nativeAssetPrecision),
         time: blockTime.getTime() + (revocation.revocationHeight - blockNumber) * blockDuration,
@@ -26,6 +27,7 @@ class UnFreezeModal extends Component {
       className: styles.tableContainer,
       columns: [
         {
+          width: 150,
           title: <FormattedMessage id={'FreezeBalance'} />,
           dataIndex: 'amount',
         },
@@ -39,19 +41,26 @@ class UnFreezeModal extends Component {
             </span>
           ),
           dataIndex: 'time',
-          render: v => {
-            return moment_helper.formatHMS(v);
+          render: (v, item) => {
+            return (
+              <span>
+                {item.canUnFreeze ? '已到期' : moment_helper.formatHMS(v)}{' '}
+                <span className={styles.blockHeight}>
+                  (块高<span style={{ marginLeft: 5 }}>{item.revocationHeight}</span>)
+                </span>
+              </span>
+            );
           },
         },
 
         {
           title: '',
+          width: 100,
           dataIndex: '_action',
           render: (value, item, index) => (
             <ButtonGroup>
-              {/*TODO: 调整button样式*/}
               <Button
-                type={item.canUnFreeze ? 'primary' : 'disabled'}
+                type={item.canUnFreeze ? 'confirm' : 'disabled'}
                 onClick={() => {
                   openModal({
                     name: 'SignModal',

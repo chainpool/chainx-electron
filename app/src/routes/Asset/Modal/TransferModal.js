@@ -79,7 +79,7 @@ class TransferModal extends Component {
                       token: target.name,
                       chain: target.chain,
                       address: address,
-                      label: address.slice(-5),
+                      label: `${address.slice(0, 5)}...${address.slice(-5)}`,
                     },
                   });
                 }
