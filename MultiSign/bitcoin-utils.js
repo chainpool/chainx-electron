@@ -1,4 +1,5 @@
 const bitcoin = require("bitcoinjs-lib");
+const bitcore = require("bitcore-lib");
 
 module.exports.getRedeemScriptFromRaw = (raw, network = "mainnet") => {
   const tx = bitcoin.Transaction.fromHex(raw);
@@ -12,4 +13,14 @@ module.exports.getRedeemScriptFromRaw = (raw, network = "mainnet") => {
   }
 
   return null;
+};
+
+module.exports.getPubKeysFromRedeemScript = redeemScript => {
+  const script = bitcore.Script.fromString(redeemScript);
+  const m = script.chunks[0].opcodenum - 80;
+  const pubs = script.chunks
+    .slice(1, script.chunks.length - 2)
+    .map(chunk => chunk.buf.toString("hex"));
+
+  return [m, pubs];
 };
