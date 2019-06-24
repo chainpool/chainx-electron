@@ -156,6 +156,7 @@ class TrezorConnector extends EventEmitter {
     this.list.on("connect", device => {
       // FIXME: 这里没有考虑多个设备的情况
       this.device = device;
+      this.emit("connect", device);
 
       device.on("disconnect", () => {
         this.device = null;
