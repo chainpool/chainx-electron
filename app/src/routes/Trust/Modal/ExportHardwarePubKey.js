@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Icon, Modal } from '../../../components';
 import * as styles from './ExportHardwarePubKey.less';
-import { classNames } from '../../../utils';
+import { _, classNames } from '../../../utils';
 
 class ExportHardwarePubKey extends Component {
   state = {
@@ -28,17 +28,46 @@ class ExportHardwarePubKey extends Component {
                     desc: selectOne,
                     Path: isTestBitCoinNetWork() ? "m/45'/1'/0'/0/0" : "m/45'/0'/0'/0/0",
                     callback: () => {
-                      if (selectOne === 'Ledger') {
-                        return window.LedgerInterface.getPublicKey(isTestBitCoinNetWork() ? 'testnet' : 'mainnet');
-                      } else {
-                        return Promise.reject('qita');
-                      }
+                      return window.LedgerInterface.getPublicKey(isTestBitCoinNetWork() ? 'testnet' : 'mainnet');
                     },
                   },
                 });
               } else if (selectOne === 'Trezor') {
-                openModal({
-                  name: 'TrezorPasswordModal',
+                const trezor = new window.TrezorConnector(
+                  (messageType, passwordCheck) => {
+                    openModal({
+                      name: 'TrezorPasswordModal',
+                      data: {
+                        callback: async password => {
+                          try {
+                            await passwordCheck(null, password);
+                          } catch (err) {
+                            console.log('密码错误', err);
+                          }
+                        },
+                      },
+                    });
+                  },
+                  () => {
+                    console.log('导出pubKey确认');
+                  }
+                );
+                trezor.on('connect', async () => {
+                  const res = await trezor.getPublicKey(isTestBitCoinNetWork() ? 'testnet' : 'mainnet').catch(err => {
+                    console.log(err, '导出pubKey确认错误');
+                  });
+                  if (res) {
+                    openModal({
+                      name: 'ViewHardwarePubKey',
+                      data: {
+                        desc: selectOne,
+                        Path: isTestBitCoinNetWork() ? "m/45'/1'/0'/0/0" : "m/45'/0'/0'/0/0",
+                        callback: () => {
+                          return Promise.resolve(res);
+                        },
+                      },
+                    });
+                  }
                 });
               }
             }}>
