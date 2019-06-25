@@ -192,6 +192,11 @@ class TrezorConnector extends EventEmitter {
     return [result.message.node.public_key, result.message.xpub];
   }
 
+  async getPublicKey(network = "mainnet") {
+    const [pubKey] = await this.getDeviceXpub(network);
+    return pubKey;
+  }
+
   async getMultisigObj(txb, redeemScript, network = "mainnet") {
     const [devicePubKey, deviceXpub] = await this.getDeviceXpub(network);
     const [m, pubs] = getPubKeysFromRedeemScript(redeemScript);
@@ -235,7 +240,7 @@ class TrezorConnector extends EventEmitter {
       );
     });
 
-    return signResult;
+    return signResult.message.serialized.serialized_tx;
   }
 }
 
