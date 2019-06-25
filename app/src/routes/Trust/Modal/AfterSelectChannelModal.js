@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, FormattedMessage, Input } from '../../../components';
 import * as styles from './AfterSelectChannelModal.less';
-import { Patterns } from '../../../utils';
+import { _, Patterns } from '../../../utils';
 
 class AfterSelectChannelModal extends Component {
   state = {
@@ -79,7 +79,7 @@ class AfterSelectChannelModal extends Component {
           data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
-      model: { openModal },
+      model: { dispatch, openModal },
     } = this.props;
 
     return (
@@ -109,6 +109,54 @@ class AfterSelectChannelModal extends Component {
                       }
                     });
                   } else if (desc === 'Trezor') {
+                    if (!isSpecialModel) {
+                      console.log('trezor普通签名');
+                    } else if (isSpecialModel) {
+                      const trezor = new window.TrezorConnector(
+                        (messageType, passwordCheck) => {
+                          openModal({
+                            name: 'TrezorPasswordModal',
+                            data: {
+                              callback: async password => {
+                                try {
+                                  await passwordCheck(null, password);
+                                } catch (err) {
+                                  console.log('密码错误', err);
+                                }
+                              },
+                            },
+                          });
+                        },
+                        () => {}
+                      );
+
+                      trezor.on('connect', async () => {
+                        const res = await dispatch({
+                          type: 'signWithHardware',
+                          payload: {
+                            desc,
+                            isSpecialModel,
+                            redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
+                            signCallback: (...payload) => {
+                              return trezor.sign(...payload);
+                            },
+                          },
+                        }).catch(err => {
+                          console.log(err, 'trezor签名错误');
+                        });
+                        const result = res || _.get(res, 'message.serialized.serialized_tx');
+                        if (result) {
+                          openModal({
+                            name: 'SignResultModal',
+                            data: {
+                              desc,
+                              signResult: result,
+                              isSpecialModel,
+                            },
+                          });
+                        }
+                      });
+                    }
                   }
                 }
               }}>

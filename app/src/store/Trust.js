@@ -555,12 +555,21 @@ export default class Trust extends ModelExtend {
         ).catch(err => Promise.reject(err));
       }
     } else if (desc === 'Trezor') {
-      res = await signCallback(
-        this.tx.replace(/^0x/, ''),
-        this.txInputList,
-        this.redeemScript.replace(/^0x/, ''),
-        network
-      ).catch(err => Promise.reject(err));
+      if (isSpecialModel) {
+        res = await signCallback(
+          this.txSpecial.replace(/^0x/, ''),
+          this.txSpecialInputList,
+          redeemScript ? redeemScript.replace(/^0x/, '') : null,
+          network
+        ).catch(err => Promise.reject(err));
+      } else {
+        res = await signCallback(
+          this.tx.replace(/^0x/, ''),
+          this.txInputList,
+          this.redeemScript.replace(/^0x/, ''),
+          network
+        ).catch(err => Promise.reject(err));
+      }
     }
 
     return res;
@@ -571,7 +580,7 @@ export default class Trust extends ModelExtend {
     if (tx) {
       tx = tx.replace(/^0x/, '');
       //redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey });
+      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey })
     }
     const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
     return {

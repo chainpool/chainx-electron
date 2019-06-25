@@ -48,7 +48,7 @@ class SignChannelSelectModal extends Component {
                     isSpecialModel,
                   },
                 });
-              } else if (selectOne === 'Trezor') {
+              } else if (selectOne === 'Trezor' && !isSpecialModel) {
                 const trezor = new window.TrezorConnector(
                   (messageType, passwordCheck) => {
                     openModal({
@@ -102,6 +102,16 @@ class SignChannelSelectModal extends Component {
                       },
                     });
                   }
+                });
+              } else if (selectOne === 'Trezor' && isSpecialModel) {
+                openModal({
+                  name: 'AfterSelectChannelModal',
+                  data: {
+                    desc: selectOne,
+                    tx: txMatch,
+                    isSpecialModel,
+                    haveSigned,
+                  },
                 });
               }
             }}>
