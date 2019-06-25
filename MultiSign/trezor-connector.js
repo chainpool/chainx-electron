@@ -149,38 +149,33 @@ function constructPreTxs(inputsArr) {
 }
 
 class TrezorConnector extends EventEmitter {
-  constructor(pinCallback, buttonCallback) {
+  constructor() {
     super();
 
     this.list = new trezor.DeviceList({ debug: false });
-    this.pinCallback = pinCallback;
-    this.buttonCallback = buttonCallback;
     this.list.on("connect", device => {
       // FIXME: 这里没有考虑多个设备的情况
       this.device = device;
       this.emit("connect", device);
 
       device.on("disconnect", () => {
+        this.device.removeAllListeners();
         this.device = null;
         this.emit("disconnect");
       });
 
       device.on("button", code => {
-        if (this.buttonCallback) {
-          this.buttonCallback(device.features.label, code);
-        }
-
         this.emit("button", code);
       });
 
       device.on("pin", (type, callback) => {
-        if (this.pinCallback) {
-          this.pinCallback(type, callback);
-        }
-
         this.emit("pin", type, callback);
       });
     });
+  }
+
+  isConnected() {
+    return !!this.device;
   }
 
   async getDeviceXpub(network = "mainnet") {
@@ -253,4 +248,6 @@ class TrezorConnector extends EventEmitter {
   }
 }
 
-module.exports = TrezorConnector;
+const connector = new TrezorConnector();
+
+module.exports = connector;

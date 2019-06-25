@@ -1,7 +1,7 @@
 const electronStore = require("electron-store");
 const { shell, remote } = require("electron");
 const LedgerInterface = require("./MultiSign/ledger-interface");
-const TrezorConnector = require("./MultiSign/trezor-connector");
+const trezorConnector = require("./MultiSign/trezor-connector");
 
 window.electronStore = function(...args) {
   return new electronStore(...args);
@@ -14,4 +14,4 @@ window.fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
 };
 
 window.LedgerInterface = LedgerInterface;
-window.TrezorConnector = TrezorConnector;
+window.trezorConnector = trezorConnector;
