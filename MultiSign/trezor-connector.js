@@ -5,6 +5,7 @@ const bitcoin = require("bitcoinjs-lib-zcash");
 const bs58check = require("bs58check");
 const { getPubKeysFromRedeemScript } = require("./bitcoin-utils");
 const bitcore = require("bitcore-lib");
+const { getRedeemScriptFromRaw } = require("./bitcoin-utils");
 
 const hardeningConstant = 0x80000000;
 const mainnetPath = [
@@ -214,6 +215,14 @@ class TrezorConnector extends EventEmitter {
   async sign(raw, inputsArr, redeemScript, network = "mainnet") {
     if (!this.device) {
       throw new Error("No device");
+    }
+
+    if (!redeemScript) {
+      redeemScript = getRedeemScriptFromRaw(raw, network);
+    }
+
+    if (!redeemScript) {
+      throw new Error("redeem script not provided");
     }
 
     const transaction = bitcoin.Transaction.fromHex(raw);
