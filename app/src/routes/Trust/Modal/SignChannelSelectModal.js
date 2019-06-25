@@ -6,9 +6,13 @@ import { classNames, _ } from '../../../utils';
 class SignChannelSelectModal extends Component {
   state = {
     selectOne: 'Ledger',
+    trezorConnectErrMsg: '',
   };
+  componentWillMount() {
+    window.trezorConnector && window.trezorConnector.removeAllListeners();
+  }
   render() {
-    const { selectOne } = this.state;
+    const { selectOne, trezorConnectErrMsg } = this.state;
     const {
       model: { dispatch, openModal, closeModal, tx, txSpecial },
       globalStore: {
@@ -100,6 +104,10 @@ class SignChannelSelectModal extends Component {
                         },
                       });
                     }
+                  } else {
+                    this.setState({
+                      trezorConnectErrMsg: '设备连接失败，请拔掉设备后重新接入尝试',
+                    });
                   }
                 } else if (isSpecialModel) {
                   openModal({
@@ -134,6 +142,7 @@ class SignChannelSelectModal extends Component {
                 onClick={() => {
                   this.setState({
                     selectOne: item.name,
+                    trezorConnectErrMsg: '',
                   });
                 }}>
                 <Icon name={item.icon} />
@@ -141,6 +150,9 @@ class SignChannelSelectModal extends Component {
               </li>
             ))}
           </ul>
+          {selectOne === 'Trezor' && trezorConnectErrMsg && (
+            <div className={styles.trezorConnectErrMsg}>{trezorConnectErrMsg}</div>
+          )}
         </div>
       </Modal>
     );

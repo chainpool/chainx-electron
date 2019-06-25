@@ -59,6 +59,7 @@ class TrezorPasswordModal extends Component {
                 onClick={() => {
                   this.setState({
                     userInput: userInput.slice(0, userInput.length - 1),
+                    userInputErrMsg: '',
                   });
                 }}
               />
@@ -67,6 +68,7 @@ class TrezorPasswordModal extends Component {
             onChange={value => {
               this.setState({
                 userInput: value,
+                userInputErrMsg: '',
               });
             }}
             onBlur={this.checkAll.checkUserInput}

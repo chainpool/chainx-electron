@@ -14,6 +14,10 @@ class AfterSelectChannelModal extends Component {
     redeemScriptErrMsg: '',
   };
 
+  componentWillMount() {
+    window.trezorConnector && window.trezorConnector.removeAllListeners();
+  }
+
   checkAll = {
     checkRedeemScript: () => {
       const {
@@ -89,76 +93,80 @@ class AfterSelectChannelModal extends Component {
           <>
             {signErrMsg && <div className={styles.errmsg}>{signErrMsg}</div>}
             {signWarning && <div className={styles.warning}>{signWarning}</div>}
-            <Button
-              loading={loading}
-              size="full"
-              type="confirm"
-              onClick={async () => {
-                if (this.checkAll.confirm()) {
-                  if (desc === 'Ledger') {
-                    this.signWithHardware().then(res => {
-                      if (res) {
-                        openModal({
-                          name: 'SignResultModal',
-                          data: {
-                            desc,
-                            signResult: res,
-                            isSpecialModel,
-                          },
-                        });
-                      }
-                    });
-                  } else if (desc === 'Trezor') {
-                    if (!isSpecialModel) {
-                      console.log('trezor普通签名');
-                    } else if (isSpecialModel) {
-                      const trezor = window.trezorConnector;
-                      if (trezor.device) {
-                        await trezor.device.steal();
-                      }
-                      trezor.on('pin', (messageType, passwordCheck) => {
-                        openModal({
-                          name: 'TrezorPasswordModal',
-                          data: {
-                            callback: async password => passwordCheck(null, password),
-                          },
-                        });
-                      });
-                      trezor.on('button', () => {});
-
-                      if (trezor.isConnected()) {
-                        const res = await dispatch({
-                          type: 'signWithHardware',
-                          payload: {
-                            desc,
-                            isSpecialModel,
-                            redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
-                            signCallback: (...payload) => {
-                              return trezor.sign(...payload);
-                            },
-                          },
-                        }).catch(err => {
-                          Toast.warn('签名错误', _.get(err, 'message'));
-                          closeModal();
-                        });
-                        const result = res || _.get(res, 'message.serialized.serialized_tx');
-                        if (result) {
+            {desc === 'Trezor' && !isSpecialModel ? (
+              <div className={styles.warning}>{`请查看${desc}硬件确认`}</div>
+            ) : (
+              <Button
+                loading={loading}
+                size="full"
+                type="confirm"
+                onClick={async () => {
+                  if (this.checkAll.confirm()) {
+                    if (desc === 'Ledger') {
+                      this.signWithHardware().then(res => {
+                        if (res) {
                           openModal({
                             name: 'SignResultModal',
                             data: {
                               desc,
-                              signResult: result,
+                              signResult: res,
                               isSpecialModel,
                             },
                           });
                         }
+                      });
+                    } else if (desc === 'Trezor') {
+                      if (!isSpecialModel) {
+                        console.log('trezor普通签名');
+                      } else if (isSpecialModel) {
+                        const trezor = window.trezorConnector;
+                        if (trezor.device) {
+                          await trezor.device.steal();
+                        }
+                        trezor.on('pin', (messageType, passwordCheck) => {
+                          openModal({
+                            name: 'TrezorPasswordModal',
+                            data: {
+                              callback: async password => passwordCheck(null, password),
+                            },
+                          });
+                        });
+                        trezor.on('button', () => {});
+
+                        if (trezor.isConnected()) {
+                          const res = await dispatch({
+                            type: 'signWithHardware',
+                            payload: {
+                              desc,
+                              isSpecialModel,
+                              redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
+                              signCallback: (...payload) => {
+                                return trezor.sign(...payload);
+                              },
+                            },
+                          }).catch(err => {
+                            Toast.warn('签名错误', _.get(err, 'message'));
+                            closeModal();
+                          });
+                          const result = res || _.get(res, 'message.serialized.serialized_tx');
+                          if (result) {
+                            openModal({
+                              name: 'SignResultModal',
+                              data: {
+                                desc,
+                                signResult: result,
+                                isSpecialModel,
+                              },
+                            });
+                          }
+                        }
                       }
                     }
                   }
-                }
-              }}>
-              <FormattedMessage id={'Confirm'} />
-            </Button>
+                }}>
+                <FormattedMessage id={'Confirm'} />
+              </Button>
+            )}
           </>
         }>
         <div className={styles.AfterSelectChannelModal}>
