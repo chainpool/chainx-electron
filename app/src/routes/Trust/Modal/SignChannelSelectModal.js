@@ -91,12 +91,13 @@ class SignChannelSelectModal extends Component {
                   }).catch(err => {
                     console.log(err, 'trezor签名错误');
                   });
-                  if (_.get(res, 'message.serialized.serialized_tx')) {
+                  const result = res || _.get(res, 'message.serialized.serialized_tx');
+                  if (result) {
                     openModal({
                       name: 'SignResultModal',
                       data: {
                         desc: selectOne,
-                        signResult: _.get(res, 'message.serialized.serialized_tx'),
+                        signResult: result,
                         isSpecialModel,
                       },
                     });
