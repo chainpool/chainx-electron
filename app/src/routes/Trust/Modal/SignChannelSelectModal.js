@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormattedMessage, Icon, Modal } from '../../../components';
+import { Button, FormattedMessage, Icon, Modal, Toast } from '../../../components';
 import * as styles from './SignChannelSelectModal.less';
 import { classNames, _ } from '../../../utils';
 
@@ -10,7 +10,7 @@ class SignChannelSelectModal extends Component {
   render() {
     const { selectOne } = this.state;
     const {
-      model: { dispatch, openModal, tx, txSpecial },
+      model: { dispatch, openModal, closeModal, tx, txSpecial },
       globalStore: {
         modal: {
           data: { isSpecialModel, haveSigned },
@@ -48,71 +48,68 @@ class SignChannelSelectModal extends Component {
                     isSpecialModel,
                   },
                 });
-              } else if (selectOne === 'Trezor' && !isSpecialModel) {
-                const trezor = new window.TrezorConnector(
-                  (messageType, passwordCheck) => {
-                    openModal({
-                      name: 'TrezorPasswordModal',
-                      data: {
-                        callback: async password => {
-                          try {
-                            await passwordCheck(null, password);
-                          } catch (err) {
-                            console.log('密码错误', err);
-                          }
+              } else if (selectOne === 'Trezor') {
+                if (!isSpecialModel) {
+                  const trezor = new window.TrezorConnector(
+                    (messageType, passwordCheck) => {
+                      openModal({
+                        name: 'TrezorPasswordModal',
+                        data: {
+                          callback: password => passwordCheck(null, password),
+                        },
+                      });
+                    },
+                    () => {
+                      openModal({
+                        name: 'AfterSelectChannelModal',
+                        data: {
+                          desc: selectOne,
+                          tx: txMatch,
+                          isSpecialModel,
+                          haveSigned,
+                        },
+                      });
+                    }
+                  );
+
+                  trezor.on('connect', async () => {
+                    const res = await dispatch({
+                      type: 'signWithHardware',
+                      payload: {
+                        desc: selectOne,
+                        isSpecialModel,
+                        redeemScript: null,
+                        signCallback: (...payload) => {
+                          return trezor.sign(...payload);
                         },
                       },
+                    }).catch(err => {
+                      Toast.warn('签名错误', _.get(err, 'message'));
+                      closeModal();
                     });
-                  },
-                  () => {
-                    openModal({
-                      name: 'AfterSelectChannelModal',
-                      data: {
-                        desc: selectOne,
-                        tx: txMatch,
-                        isSpecialModel,
-                        haveSigned,
-                      },
-                    });
-                  }
-                );
-
-                trezor.on('connect', async () => {
-                  const res = await dispatch({
-                    type: 'signWithHardware',
-                    payload: {
-                      desc: selectOne,
-                      isSpecialModel,
-                      redeemScript: null,
-                      signCallback: (...payload) => {
-                        return trezor.sign(...payload);
-                      },
-                    },
-                  }).catch(err => {
-                    console.log(err, 'trezor签名错误');
+                    const result = res || _.get(res, 'message.serialized.serialized_tx');
+                    if (result) {
+                      openModal({
+                        name: 'SignResultModal',
+                        data: {
+                          desc: selectOne,
+                          signResult: result,
+                          isSpecialModel,
+                        },
+                      });
+                    }
                   });
-                  const result = res || _.get(res, 'message.serialized.serialized_tx');
-                  if (result) {
-                    openModal({
-                      name: 'SignResultModal',
-                      data: {
-                        desc: selectOne,
-                        signResult: result,
-                        isSpecialModel,
-                      },
-                    });
-                  }
-                });
-              } else if (selectOne === 'Trezor' && isSpecialModel) {
-                openModal({
-                  name: 'AfterSelectChannelModal',
-                  data: {
-                    desc: selectOne,
-                    tx: txMatch,
-                    isSpecialModel,
-                    haveSigned,
-                  },
-                });
+                } else if (isSpecialModel) {
+                  openModal({
+                    name: 'AfterSelectChannelModal',
+                    data: {
+                      desc: selectOne,
+                      tx: txMatch,
+                      isSpecialModel,
+                      haveSigned,
+                    },
+                  });
+                }
               }
             }}>
             <FormattedMessage id={'Confirm'} />

@@ -37,7 +37,9 @@ class TrezorPasswordModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              _.isFunction && callback(userInput);
+              if (this.checkAll.confirm()) {
+                _.isFunction && callback(userInput);
+              }
             }}>
             <FormattedMessage id={'Confirm'} />
           </Button>

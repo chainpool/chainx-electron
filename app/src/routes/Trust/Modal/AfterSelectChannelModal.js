@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, FormattedMessage, Input } from '../../../components';
+import { Modal, Button, FormattedMessage, Input, Toast } from '../../../components';
 import * as styles from './AfterSelectChannelModal.less';
 import { _, Patterns } from '../../../utils';
 
@@ -79,7 +79,7 @@ class AfterSelectChannelModal extends Component {
           data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
-      model: { dispatch, openModal },
+      model: { dispatch, openModal, closeModal },
     } = this.props;
 
     return (
@@ -117,13 +117,7 @@ class AfterSelectChannelModal extends Component {
                           openModal({
                             name: 'TrezorPasswordModal',
                             data: {
-                              callback: async password => {
-                                try {
-                                  await passwordCheck(null, password);
-                                } catch (err) {
-                                  console.log('密码错误', err);
-                                }
-                              },
+                              callback: async password => passwordCheck(null, password),
                             },
                           });
                         },
@@ -142,7 +136,8 @@ class AfterSelectChannelModal extends Component {
                             },
                           },
                         }).catch(err => {
-                          console.log(err, 'trezor签名错误');
+                          Toast.warn('签名错误', _.get(err, 'message'));
+                          closeModal();
                         });
                         const result = res || _.get(res, 'message.serialized.serialized_tx');
                         if (result) {
