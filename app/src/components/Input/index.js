@@ -313,11 +313,11 @@ class InputText extends Mixin {
                     passwordType: !passwordType,
                   });
                 }}>
-                {isPassword && suffix !== null ? (
-                  <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
-                ) : (
-                  icon || isPassword
-                )}
+                {isPassword
+                  ? icon || (
+                      <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
+                    )
+                  : icon || isPassword}
               </div>
             ) : null}
           </div>

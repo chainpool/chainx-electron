@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormattedMessage, Modal, Input } from '../../../components';
 import * as styles from './TrezorPasswordModal.less';
 import { Patterns, _ } from '../../../utils';
+import cancel from '../../../resource/cancel.png';
 
 class TrezorPasswordModal extends Component {
   state = {
@@ -50,7 +51,18 @@ class TrezorPasswordModal extends Component {
             errMsg={userInputErrMsg}
             value={userInput}
             isPassword
-            suffix={null}
+            icon={
+              <img
+                src={cancel}
+                width={34}
+                height={18}
+                onClick={() => {
+                  this.setState({
+                    userInput: userInput.slice(0, userInput.length - 1),
+                  });
+                }}
+              />
+            }
             type={'password'}
             onChange={value => {
               this.setState({
@@ -61,7 +73,15 @@ class TrezorPasswordModal extends Component {
           />
           <ul>
             {[7, 8, 9, 4, 5, 6, 1, 2, 3].map(item => (
-              <li key={item}>{item}</li>
+              <li
+                key={item}
+                onClick={() => {
+                  this.setState({
+                    userInput: userInput + item,
+                  });
+                }}>
+                <div />
+              </li>
             ))}
           </ul>
         </div>

@@ -93,7 +93,7 @@ class AfterSelectChannelModal extends Component {
               loading={loading}
               size="full"
               type="confirm"
-              onClick={() => {
+              onClick={async () => {
                 if (this.checkAll.confirm()) {
                   if (desc === 'Ledger') {
                     this.signWithHardware().then(res => {
@@ -112,19 +112,21 @@ class AfterSelectChannelModal extends Component {
                     if (!isSpecialModel) {
                       console.log('trezor普通签名');
                     } else if (isSpecialModel) {
-                      const trezor = new window.TrezorConnector(
-                        (messageType, passwordCheck) => {
-                          openModal({
-                            name: 'TrezorPasswordModal',
-                            data: {
-                              callback: async password => passwordCheck(null, password),
-                            },
-                          });
-                        },
-                        () => {}
-                      );
+                      const trezor = window.trezorConnector;
+                      if (trezor.device) {
+                        await trezor.device.steal();
+                      }
+                      trezor.on('pin', (messageType, passwordCheck) => {
+                        openModal({
+                          name: 'TrezorPasswordModal',
+                          data: {
+                            callback: async password => passwordCheck(null, password),
+                          },
+                        });
+                      });
+                      trezor.on('button', () => {});
 
-                      trezor.on('connect', async () => {
+                      if (trezor.isConnected()) {
                         const res = await dispatch({
                           type: 'signWithHardware',
                           payload: {
@@ -150,7 +152,7 @@ class AfterSelectChannelModal extends Component {
                             },
                           });
                         }
-                      });
+                      }
                     }
                   }
                 }

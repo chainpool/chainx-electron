@@ -20,7 +20,7 @@ class ExportHardwarePubKey extends Component {
           <Button
             size="full"
             type="confirm"
-            onClick={() => {
+            onClick={async () => {
               if (selectOne === 'Ledger') {
                 openModal({
                   name: 'ViewHardwarePubKey',
@@ -33,26 +33,25 @@ class ExportHardwarePubKey extends Component {
                   },
                 });
               } else if (selectOne === 'Trezor') {
-                const trezor = new window.TrezorConnector(
-                  (messageType, passwordCheck) => {
-                    openModal({
-                      name: 'TrezorPasswordModal',
-                      data: {
-                        callback: async password => {
-                          try {
-                            await passwordCheck(null, password);
-                          } catch (err) {
-                            console.log('密码错误', err);
-                          }
-                        },
+                const trezor = window.trezorConnector;
+                if (trezor.device) {
+                  await trezor.device.steal();
+                }
+                trezor.on('pin', (messageType, passwordCheck) => {
+                  openModal({
+                    name: 'TrezorPasswordModal',
+                    data: {
+                      callback: async password => {
+                        try {
+                          await passwordCheck(null, password);
+                        } catch (err) {
+                          console.log('密码错误', err);
+                        }
                       },
-                    });
-                  },
-                  () => {
-                    console.log('导出pubKey确认');
-                  }
-                );
-                trezor.on('connect', async () => {
+                    },
+                  });
+                });
+                if (trezor.isConnected()) {
                   const res = await trezor.getPublicKey(isTestBitCoinNetWork() ? 'testnet' : 'mainnet').catch(err => {
                     console.log(err, '导出pubKey确认错误');
                   });
@@ -68,7 +67,7 @@ class ExportHardwarePubKey extends Component {
                       },
                     });
                   }
-                });
+                }
               }
             }}>
             <FormattedMessage id={'Confirm'} />

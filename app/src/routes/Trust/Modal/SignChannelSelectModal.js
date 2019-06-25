@@ -28,7 +28,7 @@ class SignChannelSelectModal extends Component {
           <Button
             size="full"
             type="confirm"
-            onClick={() => {
+            onClick={async () => {
               if (selectOne === 'Ledger') {
                 openModal({
                   name: 'AfterSelectChannelModal',
@@ -50,29 +50,31 @@ class SignChannelSelectModal extends Component {
                 });
               } else if (selectOne === 'Trezor') {
                 if (!isSpecialModel) {
-                  const trezor = new window.TrezorConnector(
-                    (messageType, passwordCheck) => {
-                      openModal({
-                        name: 'TrezorPasswordModal',
-                        data: {
-                          callback: password => passwordCheck(null, password),
-                        },
-                      });
-                    },
-                    () => {
-                      openModal({
-                        name: 'AfterSelectChannelModal',
-                        data: {
-                          desc: selectOne,
-                          tx: txMatch,
-                          isSpecialModel,
-                          haveSigned,
-                        },
-                      });
-                    }
-                  );
+                  const trezor = window.trezorConnector;
+                  if (trezor.device) {
+                    await trezor.device.steal();
+                  }
+                  trezor.on('pin', (messageType, passwordCheck) => {
+                    openModal({
+                      name: 'TrezorPasswordModal',
+                      data: {
+                        callback: password => passwordCheck(null, password),
+                      },
+                    });
+                  });
+                  trezor.on('button', () => {
+                    openModal({
+                      name: 'AfterSelectChannelModal',
+                      data: {
+                        desc: selectOne,
+                        tx: txMatch,
+                        isSpecialModel,
+                        haveSigned,
+                      },
+                    });
+                  });
 
-                  trezor.on('connect', async () => {
+                  if (trezor.isConnected()) {
                     const res = await dispatch({
                       type: 'signWithHardware',
                       payload: {
@@ -98,7 +100,7 @@ class SignChannelSelectModal extends Component {
                         },
                       });
                     }
-                  });
+                  }
                 } else if (isSpecialModel) {
                   openModal({
                     name: 'AfterSelectChannelModal',
