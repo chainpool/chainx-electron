@@ -29,7 +29,7 @@ class AfterSelectChannelModal extends Component {
     },
   };
 
-  signWithHardware = async ({ signCallback }) => {
+  signWithHardware = async () => {
     const {
       model: { dispatch },
       globalStore: {
@@ -50,10 +50,8 @@ class AfterSelectChannelModal extends Component {
         desc,
         isSpecialModel,
         redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
-        signCallback,
       },
     }).catch(err => {
-      console.error(err, '-------------err');
       this.setState({
         signErrMsg: err.message,
         loading: false,
@@ -81,7 +79,7 @@ class AfterSelectChannelModal extends Component {
           data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
-      model: { openModal, closeModal },
+      model: { openModal },
     } = this.props;
 
     return (
@@ -111,37 +109,6 @@ class AfterSelectChannelModal extends Component {
                       }
                     });
                   } else if (desc === 'Trezor') {
-                    const trezor = new window.TrezorConnector(
-                      (messageType, passwordCheck) => {
-                        openModal({
-                          name: 'TrezorPasswordModal',
-                          data: {
-                            callback: async password => {
-                              console.log(passwordCheck, password, '----password');
-                              try {
-                                await passwordCheck(null, password);
-                                closeModal();
-                              } catch (err) {
-                                console.log('密码错误', err);
-                              }
-                            },
-                          },
-                        });
-                      },
-                      (...payload) => {
-                        console.log(payload, '2');
-                      }
-                    );
-                    trezor.on('connect', () => {
-                      this.signWithHardware({
-                        signCallback: (...payload) => {
-                          console.log(...payload, '====...payload');
-                          return trezor.sign(...payload);
-                        },
-                      }).then(res => {
-                        console.log(res, '---------connect signCallback');
-                      });
-                    });
                   }
                 }
               }}>

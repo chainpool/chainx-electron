@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Icon, Modal } from '../../../components';
 import * as styles from './SignChannelSelectModal.less';
-import { classNames } from '../../../utils';
+import { classNames, _ } from '../../../utils';
 
 class SignChannelSelectModal extends Component {
   state = {
@@ -10,7 +10,7 @@ class SignChannelSelectModal extends Component {
   render() {
     const { selectOne } = this.state;
     const {
-      model: { openModal, tx, txSpecial },
+      model: { dispatch, openModal, tx, txSpecial },
       globalStore: {
         modal: {
           data: { isSpecialModel, haveSigned },
@@ -29,7 +29,7 @@ class SignChannelSelectModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              if (selectOne === 'Ledger' || selectOne === 'Trezor') {
+              if (selectOne === 'Ledger') {
                 openModal({
                   name: 'AfterSelectChannelModal',
                   data: {
@@ -47,6 +47,60 @@ class SignChannelSelectModal extends Component {
                     signResult: '',
                     isSpecialModel,
                   },
+                });
+              } else if (selectOne === 'Trezor') {
+                const trezor = new window.TrezorConnector(
+                  (messageType, passwordCheck) => {
+                    openModal({
+                      name: 'TrezorPasswordModal',
+                      data: {
+                        callback: async password => {
+                          try {
+                            await passwordCheck(null, password);
+                          } catch (err) {
+                            console.log('密码错误', err);
+                          }
+                        },
+                      },
+                    });
+                  },
+                  () => {
+                    openModal({
+                      name: 'AfterSelectChannelModal',
+                      data: {
+                        desc: selectOne,
+                        tx: txMatch,
+                        isSpecialModel,
+                        haveSigned,
+                      },
+                    });
+                  }
+                );
+
+                trezor.on('connect', async () => {
+                  const res = await dispatch({
+                    type: 'signWithHardware',
+                    payload: {
+                      desc: selectOne,
+                      isSpecialModel,
+                      redeemScript: null,
+                      signCallback: (...payload) => {
+                        return trezor.sign(...payload);
+                      },
+                    },
+                  }).catch(err => {
+                    console.log(err, 'trezor签名错误');
+                  });
+                  if (_.get(res, 'message.serialized.serialized_tx')) {
+                    openModal({
+                      name: 'SignResultModal',
+                      data: {
+                        desc: selectOne,
+                        signResult: _.get(res, 'message.serialized.serialized_tx'),
+                        isSpecialModel,
+                      },
+                    });
+                  }
                 });
               }
             }}>
