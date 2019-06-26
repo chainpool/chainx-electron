@@ -6,12 +6,13 @@ import { _, classNames } from '../../../utils';
 class ExportHardwarePubKey extends Component {
   state = {
     selectOne: 'Ledger',
+    trezorConnectErrMsg: '',
   };
   componentWillMount() {
     window.trezorConnector && window.trezorConnector.removeAllListeners();
   }
   render() {
-    const { selectOne } = this.state;
+    const { selectOne, trezorConnectErrMsg } = this.state;
     const {
       model: { openModal, isTestBitCoinNetWork },
     } = this.props;
@@ -70,6 +71,10 @@ class ExportHardwarePubKey extends Component {
                       },
                     });
                   }
+                } else {
+                  this.setState({
+                    trezorConnectErrMsg: '设备连接失败，请拔掉设备后重新接入尝试',
+                  });
                 }
               }
             }}>
@@ -88,6 +93,7 @@ class ExportHardwarePubKey extends Component {
                 onClick={() => {
                   this.setState({
                     selectOne: item.name,
+                    trezorConnectErrMsg: '',
                   });
                 }}>
                 <Icon name={item.icon} />
@@ -95,6 +101,9 @@ class ExportHardwarePubKey extends Component {
               </li>
             ))}
           </ul>
+          {selectOne === 'Trezor' && trezorConnectErrMsg && (
+            <div className={styles.trezorConnectErrMsg}>{trezorConnectErrMsg}</div>
+          )}
         </div>
       </Modal>
     );
