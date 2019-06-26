@@ -7,6 +7,9 @@ class ExportHardwarePubKey extends Component {
   state = {
     selectOne: 'Ledger',
   };
+  componentWillMount() {
+    window.trezorConnector && window.trezorConnector.removeAllListeners();
+  }
   render() {
     const { selectOne } = this.state;
     const {
