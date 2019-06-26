@@ -3,6 +3,7 @@ const path = require("path");
 const semver = require("semver");
 const https = require("https");
 const utils = require("./utils");
+const { session } = require("electron");
 
 function requestUpdateInfo() {
   const currentVersion = app.getVersion();
@@ -101,6 +102,8 @@ app.on("activate", () => {
 });
 
 app.on("ready", async () => {
+  setSession();
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1320,
@@ -134,3 +137,19 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 });
+
+function setSession() {
+  // Modify the user agent for all requests to the following urls.
+  const filter = {
+    urls: ["http://127.0.0.1:21325/*"]
+  };
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      details.requestHeaders["Origin"] = "http://localhost:8000";
+      details.requestHeaders["Referer"] = "http://localhost:8000/";
+      callback({ requestHeaders: details.requestHeaders });
+    }
+  );
+}

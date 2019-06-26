@@ -206,6 +206,7 @@ export default class Trust extends ModelExtend {
         ...item,
         isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
       };
+
       const findOne = signList.filter((one = {}) => {
         if (one) {
           return `0x${this.decodeAddressAccountId(one.accountId)}` === item.account;

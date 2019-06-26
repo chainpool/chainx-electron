@@ -70,15 +70,15 @@ function constructMultisig(
     return bs58check.encode(buffer);
   }
 
-  const nonDevicePubs = pubKeys.filter(pub => pub !== devicePubKey);
-  const pubkeys = nonDevicePubs.map(pub => {
+  const pubkeys = pubKeys.map(pub => {
     return {
-      node: getNode(getDefaultXpub(pub)),
+      node:
+        pub !== devicePubKey
+          ? getNode(getDefaultXpub(pub))
+          : getNode(deviceXpub),
       address_n: []
     };
   });
-
-  pubkeys.push({ node: getNode(deviceXpub), address_n: [] });
 
   return {
     pubkeys,

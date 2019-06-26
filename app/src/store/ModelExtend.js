@@ -99,7 +99,7 @@ export default class ModelExtend {
   };
 
   decodeAddressAccountId = account => {
-    if (account.address) {
+    if (account && account.address) {
       return ChainX.account.decodeAddress(account.address).replace(/^0x/, '');
     } else if (typeof account === 'string') {
       return ChainX.account.decodeAddress(account).replace(/^0x/, '');
