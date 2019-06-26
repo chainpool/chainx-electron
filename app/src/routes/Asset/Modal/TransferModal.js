@@ -58,7 +58,12 @@ class TransferModal extends Component {
 
     return (
       <Modal
-        title={<FormattedMessage id={'InnerChainTransfer'} />}
+        title={
+          <>
+            <FormattedMessage id={'InnerChainTransfer'} />
+            <span>({token})</span>
+          </>
+        }
         button={
           <Button
             size="full"
@@ -74,7 +79,7 @@ class TransferModal extends Component {
                       token: target.name,
                       chain: target.chain,
                       address: address,
-                      label: address.slice(-5),
+                      label: `${address.slice(0, 5)}...${address.slice(-5)}`,
                     },
                   });
                 }

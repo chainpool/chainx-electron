@@ -8,7 +8,18 @@ class ViewHardwarePubKey extends Mixin {
     linkStatus: false,
   };
   startInit = () => {
-    this.fetchPollIfFail(this.getPubkey, 2000);
+    const {
+      globalStore: {
+        modal: {
+          data: { desc },
+        },
+      },
+    } = this.props;
+    if (desc === 'Ledger') {
+      this.fetchPollIfFail(this.getPubkey, 2000);
+    } else if (desc === 'Trezor') {
+      this.getPubkey();
+    }
   };
 
   getPubkey = async () => {

@@ -16,8 +16,9 @@ import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
 import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
 import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
-import NormalResponseList from './NormalResponseList';
-import SpecialResponseList from './SpecialResponseList';
+import TrezorPasswordModal from './Modal/TrezorPasswordModal';
+import ResponseList from './ResponseList';
+
 import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
@@ -28,7 +29,7 @@ class Trust extends Mixin {
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
     // this.props.model.openModal({
-    //   name: 'AnalyzeSpecialTradeModal',
+    //   name: 'TrezorPasswordModal',
     // });
   };
 
@@ -121,11 +122,11 @@ class Trust extends Mixin {
                   </span>
                 </Button>
                 <div className={styles.utils}>
-                  <span className={classNames(styles.trustutils, isTrustee ? null : styles.disabeld)}>
+                  <span className={classNames(styles.trustutils)}>
                     <Icon name="xintuogongju" />
                     信托工具
                   </span>
-                  {isTrustee ? (
+                  {
                     <div className={styles.utilsContainer}>
                       <ul>
                         <li
@@ -136,25 +137,29 @@ class Trust extends Mixin {
                           <Icon name="daochugongyue" />
                           <span>导出硬件公钥</span>
                         </li>
-                        <li
-                          type="blank"
-                          onClick={() => {
-                            openModal({ name: 'ConstructSpecialTradeModal' });
-                          }}>
-                          <Icon name="gouzaoteshujiaoyi" />
-                          <span>构造特殊交易</span>
-                        </li>
-                        <li
-                          type="blank"
-                          onClick={() => {
-                            openModal({ name: 'AnalyzeSpecialTradeModal' });
-                          }}>
-                          <Icon name="jiexi" />
-                          <span>解析特殊交易</span>
-                        </li>
+                        {isTrustee ? (
+                          <>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({ name: 'ConstructSpecialTradeModal' });
+                              }}>
+                              <Icon name="gouzaoteshujiaoyi" />
+                              <span>构造特殊交易</span>
+                            </li>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({ name: 'AnalyzeSpecialTradeModal' });
+                              }}>
+                              <Icon name="jiexi" />
+                              <span>解析特殊交易</span>
+                            </li>
+                          </>
+                        ) : null}
                       </ul>
                     </div>
-                  ) : null}
+                  }
                 </div>
               </div>
             </TableTitle>
@@ -162,8 +167,8 @@ class Trust extends Mixin {
           </div>
         )}
 
-        <SpecialResponseList {...this.props} isSpecialModel />
-        <SpecialResponseList {...this.props} isNormalModel />
+        <ResponseList {...this.props} isSpecialModel />
+        <ResponseList {...this.props} isNormalModel />
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
@@ -194,6 +199,7 @@ class Trust extends Mixin {
         {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
         {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
         {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
+        {name === 'TrezorPasswordModal' ? <TrezorPasswordModal {...props} /> : null}
       </div>
     );
   }

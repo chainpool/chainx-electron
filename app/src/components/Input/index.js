@@ -309,15 +309,17 @@ class InputText extends Mixin {
               <div
                 className={styles.icon}
                 onClick={() => {
-                  this.setState({
-                    passwordType: !passwordType,
-                  });
+                  if (!icon) {
+                    this.setState({
+                      passwordType: !passwordType,
+                    });
+                  }
                 }}>
-                {isPassword ? (
-                  <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
-                ) : (
-                  icon || isPassword
-                )}
+                {isPassword
+                  ? icon || (
+                      <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
+                    )
+                  : icon || isPassword}
               </div>
             ) : null}
           </div>
