@@ -148,6 +148,7 @@ export default class Trust extends ModelExtend {
         memo: withdraw.memo, // 提现备注
         state, // 状态
         status: withdraw.status,
+        txid: withdraw.txid, //交易hash
       };
     });
   }

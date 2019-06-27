@@ -59,7 +59,7 @@ export const ConfigureVersion = 36;
 
 export const blockChain = {
   // tx: v => `https://www.blockchain.com/btc/tx/${v}`,
-  tx: v => `https://live.blockcypher.com/btc/tx/${v}`,
+  tx: v => `https://live.blockcypher.com/btc/tx/${v}`, //hash
   accountId: v => `https://scan.chainx.org/accounts/${v}`,
   address: v => `https://live.blockcypher.com/btc/address/${v}`,
 };

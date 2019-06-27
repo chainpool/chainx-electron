@@ -159,6 +159,7 @@ const zh_en = {
   InnerChainTransfer: ['链内转账', 'Transfer'],
   OriginalChain: ['原链', 'Original Chain'],
   OriginalChainAddr: ['原链地址', 'Original Chain Addr'],
+  BitcoinTxHash: ['Bitcoin交易哈希', 'txhash'],
   WithdrawalReserved: ['提现冻结', 'Withdrawal Reserved'],
   Deposit: ['充值', 'Deposit'],
   CrossChainDeposit: ['跨链充值', 'Deposit'],
@@ -442,7 +443,6 @@ const zh_en = {
     '此操作将导致您的PCX余额过低，后续可能无法支付链上操作的手续费',
     'This operation will result in your PCX balance too low and you may not be able to pay the transaction fee for any operation in the future.',
   ],
-
   PasswordUpperAndLower: ['必须包含大小写字母', 'Must contain upper and lower case letters'],
   ActualWithDrawAmount: ['实际到账数量', 'Actual Amount'],
   WithdrawAmountMustOverFee: ['提现数量必须大于等于最小提现额', 'Amount must greater or equal than min value'],
