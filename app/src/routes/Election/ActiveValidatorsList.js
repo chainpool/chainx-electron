@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, FormattedMessage, LanguageContent, Icon } from '../../components';
+import { Button, ButtonGroup, RouterGo, Dropdown, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { _, observer, groupArrayByCount, classNames } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
@@ -65,8 +65,9 @@ class ActiveValidatorsList extends Component {
                               )}
                             </FormattedMessage>
                           ) : null}
-
-                          <Icon name="icon-jieshishuoming" className={styles.helpicon} />
+                          <Dropdown drop={'jjjjjj'} place="middle">
+                            <div style={{ width: 200, background: 'red' }}>hhhhh</div>
+                          </Dropdown>
                         </div>
                         <div>
                           {currentAddress ? (

@@ -1,0 +1,30 @@
+.dropdown {
+  &.hover {
+    display: inline-block;
+    position: relative;
+    &:hover {
+      .downAreaContainer {
+        display: block;
+      }
+    }
+    .downAreaContainer {
+      display: none;
+      position: absolute;
+      .downArea {
+      }
+    }
+    .dropArea {
+    }
+  }
+  &.click {
+    position: relative;
+    .downAreaContainer {
+      position: absolute;
+      .downArea {
+      }
+    }
+    .dropArea {
+      cursor: pointer;
+    }
+  }
+}
