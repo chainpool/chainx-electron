@@ -26,7 +26,7 @@ const testnetPath = [
 function getSignatures(txb, pubs) {
   if (txb.inputs[0].signatures) {
     return txb.inputs[0].signatures.map(sig => {
-      return sig ? sig.toString("hex") : "";
+      return sig ? bitcore.crypto.Signature.fromBuffer(sig, false).toString() : "";
     });
   }
   return pubs.map(() => "");
