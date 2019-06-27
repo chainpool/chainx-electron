@@ -8,7 +8,7 @@ import { blockChain } from '../../constants';
 class WithdrawTable extends Component {
   render() {
     const {
-      model: { normalizedOnChainAllWithdrawList = [] },
+      model: { normalizedOnChainAllWithdrawList = [], isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -43,7 +43,7 @@ class WithdrawTable extends Component {
           ellipse: true,
           dataIndex: 'addr',
           render: value => (
-            <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
+            <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
               {value}
             </RouterGo>
           ),
@@ -54,7 +54,7 @@ class WithdrawTable extends Component {
           dataIndex: 'txid',
           render: value =>
             value && (
-              <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+              <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
                 {value}
               </RouterGo>
             ),
