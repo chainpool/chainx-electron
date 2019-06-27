@@ -454,12 +454,10 @@ export default class Trust extends ModelExtend {
         maxSignCount,
         chainConfigTrusteeList,
       });
-      if (!(this.txOutputList.length && this.txInputList.length)) {
-        this.getInputsAndOutputsFromTx({
-          tx,
-          isSpecialMode: false,
-        });
-      }
+      this.getInputsAndOutputsFromTx({
+        tx,
+        isSpecialMode: false,
+      });
     } else {
       this.changeModel({
         tx: '',
@@ -497,7 +495,7 @@ export default class Trust extends ModelExtend {
         hash: item.hash.reverse().toString('hex'),
       };
     });
-    this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
+    // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
     const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
