@@ -60,6 +60,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecial = '';
   @observable signStatus = '';
   @observable redeemScript = '';
+  @observable redeemScriptSpecial = '';
   @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
   @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
   @observable commentFee = ''; // 推荐手续费
@@ -778,5 +779,9 @@ export default class Trust extends ModelExtend {
 
   updateTxSpecial = ({ txSpecial }) => {
     this.changeModel('txSpecial', txSpecial);
+  };
+
+  updateRedeemScriptSpecial = ({ redeemScriptSpecial }) => {
+    this.changeModel('redeemScriptSpecial', redeemScriptSpecial);
   };
 }

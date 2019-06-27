@@ -5,11 +5,25 @@ import { Patterns } from '../../../utils';
 
 class AnalyzeSpecialTradeModal extends Component {
   state = {
+    redeemScriptSpecial: '',
+    redeemScriptSpecialErrMsg: '',
     tx: '',
     txErrMsg: '',
   };
-
   checkAll = {
+    checkRedeemScriptSpecial: () => {
+      const { tx, redeemScriptSpecial } = this.state;
+      const {
+        model: { isTestBitCoinNetWork },
+      } = this.props;
+      let errMsg = Patterns.check('isTransactionTxSigned')(tx, isTestBitCoinNetWork(), '请输入赎回脚本');
+      if (errMsg && redeemScriptSpecial) {
+        errMsg =
+          Patterns.check('required')(redeemScriptSpecial) || Patterns.check('isRedeemScript')(redeemScriptSpecial);
+      }
+      this.setState({ redeemScriptSpecialErrMsg: errMsg });
+      return errMsg;
+    },
     checkTx: () => {
       const { tx } = this.state;
       const {
@@ -20,12 +34,12 @@ class AnalyzeSpecialTradeModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      return ['checkTx'].every(item => !this.checkAll[item]());
+      return ['checkTx', 'checkRedeemScriptSpecial'].every(item => !this.checkAll[item]());
     },
   };
 
   render() {
-    const { tx, txErrMsg } = this.state;
+    const { tx, txErrMsg, redeemScriptSpecial, redeemScriptSpecialErrMsg } = this.state;
     const {
       model: { dispatch, closeModal },
     } = this.props;
@@ -46,6 +60,12 @@ class AnalyzeSpecialTradeModal extends Component {
                     isSpecialModel: true,
                   },
                 });
+                dispatch({
+                  type: 'updateRedeemScriptSpecial',
+                  payload: {
+                    redeemScriptSpecial,
+                  },
+                });
                 closeModal();
               }
             }}>
@@ -54,6 +74,7 @@ class AnalyzeSpecialTradeModal extends Component {
         }>
         <div className={styles.AnalyzeSpecialTradeModal}>
           <Input.Text
+            errMsgIsOutside
             errMsg={txErrMsg}
             label="待签原文"
             isTextArea
@@ -66,6 +87,22 @@ class AnalyzeSpecialTradeModal extends Component {
             }
             onBlur={this.checkAll.checkTx}
           />
+          {redeemScriptSpecialErrMsg || redeemScriptSpecial ? (
+            <Input.Text
+              errMsgIsOutside
+              errMsg={redeemScriptSpecialErrMsg}
+              label="赎回脚本"
+              isTextArea
+              rows={5}
+              value={redeemScriptSpecial}
+              onChange={value =>
+                this.setState({
+                  redeemScriptSpecial: value,
+                })
+              }
+              onBlur={this.checkAll.checkRedeemScriptSpecial}
+            />
+          ) : null}
         </div>
       </Modal>
     );
