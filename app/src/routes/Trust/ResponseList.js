@@ -41,6 +41,7 @@ class ResponseList extends Component {
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
     const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
+    const totalSignCountMath = isSpecialModel ? txSpecialSignTrusteeList.length : totalSignCount;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -137,7 +138,7 @@ class ResponseList extends Component {
                         {notResponseList.map((one, index) => renderSignLi(one, index))}
                       </ul>
                     }>
-                    {notResponseList.length}/{totalSignCount}
+                    {notResponseList.length}/{totalSignCountMath}
                   </HoverTip>
                 </span>
               </li>
@@ -170,7 +171,7 @@ class ResponseList extends Component {
                           {haveRefuseList.map((one, index) => renderSignLi(one, index))}
                         </ul>
                       }>
-                      {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
+                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCount + 1}`}
                     </HoverTip>
                   </span>
                 </li>

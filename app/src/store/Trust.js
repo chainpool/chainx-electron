@@ -202,25 +202,26 @@ export default class Trust extends ModelExtend {
       };
     });
     const currentAccount = this.getCurrentAccount();
-    return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
-      const newItem = {
-        ...item,
-        isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
-      };
-
-      const findOne = signList.filter((one = {}) => {
-        if (one) {
-          return `0x${this.decodeAddressAccountId(one.accountId)}` === item.account;
+    const mergeSignList = signList.map(item => {
+      if (item.accountId) {
+        const findOne = this.rootStore.electionStore.trustIntentions.filter(
+          one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
+        )[0];
+        if (findOne) {
+          return {
+            ...findOne,
+            ...item,
+            isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
+          };
         }
-      })[0];
-      if (findOne) {
+      } else {
         return {
-          ...newItem,
-          trusteeSign: findOne.trusteeSign,
+          ...item,
+          name: item.pubKey.slice(0, 6),
         };
       }
-      return newItem;
     });
+    return mergeSignList;
   }
 
   @computed get signHash() {
