@@ -59,9 +59,15 @@ export const ConfigureVersion = 36;
 
 export const blockChain = {
   // tx: v => `https://www.blockchain.com/btc/tx/${v}`,
-  tx: v => `https://live.blockcypher.com/btc/tx/${v}`, //hash
+  tx: (v, isTest = false) => {
+    return isTest ? `https://live.blockcypher.com/btc-testnet/tx/${v}` : `https://live.blockcypher.com/btc/tx/${v}`;
+  },
   accountId: v => `https://scan.chainx.org/accounts/${v}`,
-  address: v => `https://live.blockcypher.com/btc/address/${v}`,
+  address: (v, isTest = false) => {
+    return isTest
+      ? `https://live.blockcypher.com/btc-testnet/address/${v}`
+      : `https://live.blockcypher.com/btc/address/${v}`;
+  },
 };
 
 export const OrderStatus = {
