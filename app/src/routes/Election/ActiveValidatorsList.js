@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
+import { Button, ButtonGroup, RouterGo, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { _, observer } from '../../utils';
+import { _, observer, groupArrayByCount } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
 import inactive_en from '../../resource/inactive_en.png';
 
 @observer
-class NodeTable extends Component {
+class ActiveValidatorsList extends Component {
   render() {
     const {
       activeIndex,
@@ -19,13 +19,17 @@ class NodeTable extends Component {
         validators = [],
         backupValidators = [],
         validatorsWithMyNomination = [],
+        allActiveValidator = [],
+        allInActiveValidator = [],
         setDefaultPrecision,
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName },
     } = this.props;
 
-    const dataSources = [validators, backupValidators, validatorsWithMyNomination];
+    const dataSources = [[], [], [], allActiveValidator, allInActiveValidator][activeIndex];
+
+    const groupDataSources = groupArrayByCount(dataSources, 5);
 
     const tableProps = {
       className: styles.tableContainer,
@@ -217,7 +221,7 @@ class NodeTable extends Component {
           ),
         },
       ].filter(item => item),
-      dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => {
+      dataSource: dataSources.sort((a = {}, b = {}) => {
         const aLength = _.get(a, 'isTrustee.length');
         const bLength = _.get(b, 'isTrustee.length');
         if (aLength || bLength) {
@@ -230,8 +234,52 @@ class NodeTable extends Component {
         return b.totalNomination - a.totalNomination;
       }),
     };
-    return <Table {...tableProps} />;
+    return (
+      <div className={styles.ActiveValidatorsList}>
+        <table style={{ borderCollapse: 'collapse' }}>
+          <tbody>
+            {groupDataSources.map((one, ins) => (
+              <tr key={ins} className={styles.trs}>
+                {one.map((item, index) => (
+                  <td key={index}>
+                    <div>{index}</div>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   }
 }
 
-export default NodeTable;
+{
+  /*<ul key={ins} className={styles.trs}>*/
+}
+{
+  /*<li>*/
+}
+{
+  /*<ul className={styles.trList}>*/
+}
+{
+  /*{one.map((item, index) => (*/
+}
+{
+  /*<li key={index}>{index}</li>*/
+}
+{
+  /*))}*/
+}
+{
+  /*</ul>*/
+}
+{
+  /*</li>*/
+}
+{
+  /*</ul>*/
+}
+
+export default ActiveValidatorsList;

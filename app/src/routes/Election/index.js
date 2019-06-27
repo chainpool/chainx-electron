@@ -7,6 +7,7 @@ import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
 import RegisterNodeModal from './Modal/RegisterNodeModal';
 import InactiveVoteConfirmModal from './Modal/InactiveVoteConfirmModal';
+import ActiveValidatorsList from './ActiveValidatorsList';
 import { Inject } from '../../utils';
 import { HoverTip } from '../components';
 
@@ -48,6 +49,8 @@ class Election extends Mixin {
             )}
           </FormattedMessage>,
           <FormattedMessage id={'MyNominations'} />,
+          '参选节点',
+          '退选节点',
         ]
       : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
 
@@ -94,13 +97,19 @@ class Election extends Mixin {
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
-          <Tabs tabs={tabs}>
+          <Tabs tabs={tabs} defaultActiveIndex={3}>
             {activeIndex => (
               <>
                 {currentAddress ? operations : null}
-                <div className={styles.nodetable}>
-                  <NodeTable activeIndex={activeIndex} {...this.props} />
-                </div>
+                {activeIndex === 3 || activeIndex === 4 ? (
+                  <div className={styles.ActiveValidatorsList}>
+                    <ActiveValidatorsList activeIndex={activeIndex} {...this.props} />
+                  </div>
+                ) : (
+                  <div className={styles.nodetable}>
+                    <NodeTable activeIndex={activeIndex} {...this.props} />
+                  </div>
+                )}
               </>
             )}
           </Tabs>
