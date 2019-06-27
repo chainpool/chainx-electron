@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip } from '../components';
-import { classNames, observer } from '../../utils';
+import { classNames, observer, getAllPubsFromRedeemScript } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
@@ -21,6 +21,7 @@ class ResponseList extends Component {
         tx,
         txSpecial,
         redeemScript,
+        redeemScriptSpecial,
         txOutputList = [],
         txInputList = [],
         txSpecialOutputList = [],
@@ -41,6 +42,10 @@ class ResponseList extends Component {
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
     const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
+    const totalSignCountMath = isSpecialModel
+      ? txSpecialSignTrusteeList.length ||
+        (redeemScriptSpecial && getAllPubsFromRedeemScript(redeemScriptSpecial).length)
+      : totalSignCount;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -137,7 +142,7 @@ class ResponseList extends Component {
                         {notResponseList.map((one, index) => renderSignLi(one, index))}
                       </ul>
                     }>
-                    {notResponseList.length}/{totalSignCount}
+                    {notResponseList.length}/{totalSignCountMath}
                   </HoverTip>
                 </span>
               </li>
@@ -170,7 +175,7 @@ class ResponseList extends Component {
                           {haveRefuseList.map((one, index) => renderSignLi(one, index))}
                         </ul>
                       }>
-                      {`${haveRefuseList.length}/${totalSignCount - maxSignCount + 1}`}
+                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCount + 1}`}
                     </HoverTip>
                   </span>
                 </li>

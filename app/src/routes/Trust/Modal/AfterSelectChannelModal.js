@@ -4,15 +4,21 @@ import * as styles from './AfterSelectChannelModal.less';
 import { _, Patterns } from '../../../utils';
 
 class AfterSelectChannelModal extends Component {
-  state = {
-    loading: false,
-    linkStatus: false,
-    signErrMsg: '',
-    signWarning: '',
-    signResult: '',
-    redeemScript: '',
-    redeemScriptErrMsg: '',
-  };
+  constructor(props) {
+    super(props);
+    const {
+      model: { redeemScriptSpecial },
+    } = props;
+    this.state = {
+      loading: false,
+      linkStatus: false,
+      signErrMsg: '',
+      signWarning: '',
+      signResult: '',
+      redeemScript: redeemScriptSpecial,
+      redeemScriptErrMsg: '',
+    };
+  }
 
   componentWillMount() {
     window.trezorConnector && window.trezorConnector.removeAllListeners();
@@ -83,7 +89,7 @@ class AfterSelectChannelModal extends Component {
           data: { desc, tx, isSpecialModel, haveSigned },
         },
       },
-      model: { dispatch, openModal, closeModal },
+      model: { dispatch, redeemScriptSpecial, openModal, closeModal },
     } = this.props;
 
     return (
@@ -170,7 +176,7 @@ class AfterSelectChannelModal extends Component {
           </>
         }>
         <div className={styles.AfterSelectChannelModal}>
-          {isSpecialModel && !haveSigned && (
+          {isSpecialModel && !haveSigned && !redeemScriptSpecial && (
             <div className={styles.redeemScript}>
               <Input.Text
                 errMsg={redeemScriptErrMsg}

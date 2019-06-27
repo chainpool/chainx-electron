@@ -60,6 +60,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecial = '';
   @observable signStatus = '';
   @observable redeemScript = '';
+  @observable redeemScriptSpecial = '';
   @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
   @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
   @observable commentFee = ''; // 推荐手续费
@@ -202,25 +203,26 @@ export default class Trust extends ModelExtend {
       };
     });
     const currentAccount = this.getCurrentAccount();
-    return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
-      const newItem = {
-        ...item,
-        isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
-      };
-
-      const findOne = signList.filter((one = {}) => {
-        if (one) {
-          return `0x${this.decodeAddressAccountId(one.accountId)}` === item.account;
+    const mergeSignList = signList.map(item => {
+      if (item.accountId) {
+        const findOne = this.rootStore.electionStore.trustIntentions.filter(
+          one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
+        )[0];
+        if (findOne) {
+          return {
+            ...findOne,
+            ...item,
+            isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
+          };
         }
-      })[0];
-      if (findOne) {
+      } else {
         return {
-          ...newItem,
-          trusteeSign: findOne.trusteeSign,
+          ...item,
+          name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
         };
       }
-      return newItem;
     });
+    return mergeSignList;
   }
 
   @computed get signHash() {
@@ -454,12 +456,10 @@ export default class Trust extends ModelExtend {
         maxSignCount,
         chainConfigTrusteeList,
       });
-      if (!(this.txOutputList.length && this.txInputList.length)) {
-        this.getInputsAndOutputsFromTx({
-          tx,
-          isSpecialMode: false,
-        });
-      }
+      this.getInputsAndOutputsFromTx({
+        tx,
+        isSpecialMode: false,
+      });
     } else {
       this.changeModel({
         tx: '',
@@ -497,7 +497,7 @@ export default class Trust extends ModelExtend {
         hash: item.hash.reverse().toString('hex'),
       };
     });
-    this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
+    // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
     const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
@@ -779,5 +779,9 @@ export default class Trust extends ModelExtend {
 
   updateTxSpecial = ({ txSpecial }) => {
     this.changeModel('txSpecial', txSpecial);
+  };
+
+  updateRedeemScriptSpecial = ({ redeemScriptSpecial }) => {
+    this.changeModel('redeemScriptSpecial', redeemScriptSpecial);
   };
 }

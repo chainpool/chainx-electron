@@ -105,6 +105,13 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
+export const getAllPubsFromRedeemScript = redeemScript => {
+  const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
+  const pubBufs = chunks.slice(1, chunks.length - 2);
+
+  return pubBufs.map(chunk => chunk.toString('hex'));
+};
+
 export const Patterns = {
   decode: (encoded, password, errMsg = 'PasswordError') => {
     try {
@@ -252,7 +259,21 @@ export const Patterns = {
       return errMsg;
     }
   },
-
+  isTransactionTxSigned: (tx, isTest, errMsg = '未签名') => {
+    const network = isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const inputs = txb.__inputs[0];
+    return _.get(inputs, 'signatures.length') ? '' : errMsg;
+  },
+  isRedeemScript: (redeemScript, errMsg = '赎回脚本格式错误') => {
+    try {
+      const res = getAllPubsFromRedeemScript(redeemScript);
+      return res.length ? '' : errMsg;
+    } catch {
+      return errMsg;
+    }
+  },
   check: value => {
     return (...params) => {
       if (!Patterns[value]) {
