@@ -52,16 +52,27 @@ class ActiveValidatorsList extends Component {
                                 : styles.backupValidators
                             )}
                           />
-                          <div>
-                            <span>{item.name}</span>
-                            <span>
-                              <Icon name="icon-jieshishuoming" className={styles.helpicon} />
-                            </span>
-                          </div>
+                          <span>{item.name}</span>
+                          {item.isTrustee && item.isTrustee.length ? (
+                            <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                              {msg => (
+                                <HoverTip tip={msg}>
+                                  <LanguageContent
+                                    zh={<img src={trustee_zh} alt="" />}
+                                    en={<img src={trustee_en} alt="" />}
+                                  />
+                                </HoverTip>
+                              )}
+                            </FormattedMessage>
+                          ) : null}
+
+                          <Icon name="icon-jieshishuoming" className={styles.helpicon} />
                         </div>
                         <div>
                           {currentAddress ? (
-                            <button
+                            <Button
+                              type="confirm"
+                              className={styles.votebutton}
                               onClick={() => {
                                 const vote = () =>
                                   openModal({
@@ -76,21 +87,9 @@ class ActiveValidatorsList extends Component {
                                 vote();
                               }}>
                               <FormattedMessage id={'Nominate'} />
-                            </button>
+                            </Button>
                           ) : null}
                         </div>
-                        {item.isTrustee && item.isTrustee.length ? (
-                          <FormattedMessage id={'ManageUserOutsidechainAssets'}>
-                            {msg => (
-                              <HoverTip tip={msg}>
-                                <LanguageContent
-                                  zh={<img src={trustee_zh} alt="" />}
-                                  en={<img src={trustee_en} alt="" />}
-                                />
-                              </HoverTip>
-                            )}
-                          </FormattedMessage>
-                        ) : null}
                       </div>
                       <div className={styles.down}>
                         <div>
