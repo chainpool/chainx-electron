@@ -217,7 +217,7 @@ export default class Trust extends ModelExtend {
       } else {
         return {
           ...item,
-          name: item.pubKey.slice(0, 6),
+          name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
         };
       }
     });
