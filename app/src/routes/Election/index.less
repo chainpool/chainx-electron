@@ -79,8 +79,48 @@
       padding:unset;
       border: 1px solid #DCE0E2;
       >div{
-        //background: red;
+        &:hover{
+          background: #F5F5F5;
+        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding:0 14px;
         height:100%;
+        .top{
+          font-weight: bold;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .nameContainer{
+            display: flex;
+          }
+          .nodeType{
+            width:8px;
+            height:8px;
+            border-radius: 8px;
+            margin-right: 4px;
+            &.trustee{
+              background: @yellow;
+            }
+            &.validator{
+              background: #34C69A;
+            }
+            &.backupValidators{
+              background: @blue;
+            }
+          }
+          img{
+            margin-left: 4px;
+            width:28px;
+          }
+        }
+        .down{
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+          font-size: 12px;
+        }
        }
     }
   }
