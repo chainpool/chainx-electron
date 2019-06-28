@@ -70,7 +70,11 @@ class ActiveValidatorsList extends Component {
                                 : styles.backupValidators
                             )}
                           />
-                          <span>{item.name}</span>
+                          <span>
+                            <HoverTip tip={item.about}>
+                              <div className={styles.overHidden}>{item.name}</div>
+                            </HoverTip>
+                          </span>
                           {item.isTrustee && item.isTrustee.length ? (
                             <FormattedMessage id={'ManageUserOutsidechainAssets'}>
                               {msg => (
@@ -125,13 +129,9 @@ class ActiveValidatorsList extends Component {
                                     <td>节点网址</td>
                                     <td>
                                       <div className={styles.longaddress}>
-                                        <HoverTip tip={item.about}>
-                                          <div className={styles.overHidden}>
-                                            <RouterGo isOutSide go={{ pathname: item.url }}>
-                                              {item.url}
-                                            </RouterGo>
-                                          </div>
-                                        </HoverTip>
+                                        <RouterGo isOutSide go={{ pathname: item.url }}>
+                                          {item.url}
+                                        </RouterGo>
                                       </div>
                                     </td>
                                   </tr>
