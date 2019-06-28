@@ -255,6 +255,18 @@ export default class Trust extends ModelExtend {
     return '';
   }
 
+  @computed get signHashSpecial() {
+    if (
+      this.txSpecial &&
+      this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCount
+    ) {
+      const tx = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
+      const hash = tx.getHash();
+      return reverse(hash).toString('hex');
+    }
+    return '';
+  }
+
   reload = () => {
     this.getAllWithdrawalList();
     this.getWithdrawTx();
