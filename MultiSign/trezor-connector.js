@@ -23,9 +23,9 @@ const testnetPath = [
   0
 ];
 
-function getSignatures(txb, pubs) {
-  if (txb.inputs[0].signatures) {
-    return txb.inputs[0].signatures.map(sig => {
+function getSignatures(input, pubs) {
+  if (input.signatures) {
+    return input.signatures.map(sig => {
       return sig ? bitcore.crypto.Signature.fromBuffer(sig, false).toString() : "";
     });
   }
@@ -42,6 +42,7 @@ function constructMultisig(
 ) {
   const net =
     network === "mainnet" ? bitcoin.networks.bitcoin : bitcoin.networks.testnet;
+
   function getNode(xpub) {
     const hd = bitcoin.HDNode.fromBase58(xpub, net);
     return {
@@ -87,14 +88,38 @@ function constructMultisig(
   };
 }
 
-function constructInputs(tx, multisig, network = "mainnet") {
-  return tx.ins.map(input => {
+function getMultisigObj(input, redeemScript, devicePubKey, deviceXpub, network = "mainnet") {
+  const [m, pubs] = getPubKeysFromRedeemScript(redeemScript);
+  const signatures = getSignatures(input, pubs);
+  return constructMultisig(
+    pubs,
+    devicePubKey,
+    deviceXpub,
+    signatures,
+    m,
+    network
+  );
+}
+
+function constructInputs(tx, redeemScript, devicePubKey, deviceXpub, network = "mainnet") {
+  const txb = bitcoin.TransactionBuilder.fromTransaction(
+    tx,
+    network === "mainnet"
+      ? bitcoin.networks.bitcoin
+      : bitcoin.networks.testnet
+  );
+
+  const multisigArr = txb.inputs.map(input => {
+    return getMultisigObj(input, redeemScript, devicePubKey, deviceXpub, network);
+  })
+
+  return tx.ins.map((input, index) => {
     return {
       address_n: network === "mainnet" ? mainnetPath : testnetPath,
       script_type: "SPENDMULTISIG",
       prev_index: input.index,
       prev_hash: reverse(input.hash).toString("hex"),
-      multisig
+      multisig: multisigArr[index]
     };
   });
 }
@@ -121,7 +146,7 @@ function bjsTx2refTx(tx) {
       ? tx.version | (tx.dashType << 16)
       : tx.version,
     hash: tx.getId(),
-    inputs: tx.ins.map(function(input) {
+    inputs: tx.ins.map(function (input) {
       return {
         prev_index: input.index,
         sequence: input.sequence,
@@ -129,7 +154,7 @@ function bjsTx2refTx(tx) {
         script_sig: input.script.toString("hex")
       };
     }),
-    bin_outputs: tx.outs.map(function(output) {
+    bin_outputs: tx.outs.map(function (output) {
       return {
         amount: output.value,
         script_pubkey: output.script.toString("hex")
@@ -181,7 +206,7 @@ class TrezorConnector extends EventEmitter {
   async getDeviceXpub(network = "mainnet") {
     const coin = network === "mainnet" ? "bitcoin" : "testnet";
     const path = network === "mainnet" ? mainnetPath : testnetPath;
-    const result = await this.device.waitForSessionAndRun(function(session) {
+    const result = await this.device.waitForSessionAndRun(function (session) {
       return session.getPublicKey(path, coin);
     });
 
@@ -191,20 +216,6 @@ class TrezorConnector extends EventEmitter {
   async getPublicKey(network = "mainnet") {
     const [pubKey] = await this.getDeviceXpub(network);
     return pubKey;
-  }
-
-  async getMultisigObj(txb, redeemScript, network = "mainnet") {
-    const [devicePubKey, deviceXpub] = await this.getDeviceXpub(network);
-    const [m, pubs] = getPubKeysFromRedeemScript(redeemScript);
-    const signatures = getSignatures(txb, pubs);
-    return constructMultisig(
-      pubs,
-      devicePubKey,
-      deviceXpub,
-      signatures,
-      m,
-      network
-    );
   }
 
   async sign(raw, inputsArr, redeemScript, network = "mainnet") {
@@ -221,19 +232,13 @@ class TrezorConnector extends EventEmitter {
     }
 
     const transaction = bitcoin.Transaction.fromHex(raw);
-    const txb = bitcoin.TransactionBuilder.fromTransaction(
-      transaction,
-      network === "mainnet"
-        ? bitcoin.networks.bitcoin
-        : bitcoin.networks.testnet
-    );
 
-    const multisig = await this.getMultisigObj(txb, redeemScript, network);
-    const inputs = constructInputs(transaction, multisig, network);
+    const [devicePubKey, deviceXpub] = await this.getDeviceXpub(network);
+    const inputs = constructInputs(transaction, redeemScript, devicePubKey, deviceXpub, network);
     const outputs = constructOutputs(raw, network);
     const txs = constructPreTxs(inputsArr);
 
-    const signResult = await this.device.waitForSessionAndRun(function(
+    const signResult = await this.device.waitForSessionAndRun(function (
       session
     ) {
       return session.signTx(
