@@ -33,6 +33,7 @@ class ResponseList extends Component {
         maxSignCount,
         totalSignCount,
         signHash,
+        signHashSpecial,
         BitCoinFeeShow,
         isTestBitCoinNetWork,
       },
@@ -46,6 +47,8 @@ class ResponseList extends Component {
       ? txSpecialSignTrusteeList.length ||
         (redeemScriptSpecial && getAllPubsFromRedeemScript(redeemScriptSpecial).length)
       : totalSignCount;
+
+    const signHashMatch = isSpecialModel ? signHashSpecial : signHash;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -63,7 +66,6 @@ class ResponseList extends Component {
     const notResponseList = signTrusteeListMatch.filter(
       (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
     );
-    const haveBroadcast = signTrusteeListMatch.filter((item = {}) => item.trusteeSign).length >= maxSignCount;
 
     const totalInputValue = inputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
     const totalOutputValue = outputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
@@ -182,7 +184,7 @@ class ResponseList extends Component {
                 </li>
               )}
             </ul>
-            {haveBroadcast ? (
+            {signHashMatch ? (
               <div className={styles.completeSign}>
                 <div className={styles.resok}>
                   <FormattedMessage id={'ResponseOkThenDealing'} />
@@ -190,11 +192,27 @@ class ResponseList extends Component {
                 <div className={styles.hash}>
                   <RouterGo
                     isOutSide
-                    go={{ pathname: blockChain.tx(signHash, isTestBitCoinNetWork()) }}
+                    go={{ pathname: blockChain.tx(signHashMatch, isTestBitCoinNetWork()) }}
                     className={styles.hashvalue}>
-                    {`0x${signHash}`}
+                    {`0x${signHashMatch}`}
                   </RouterGo>
                 </div>
+                <Button
+                  className={classNames(
+                    styles.refuseButton,
+                    isShowResponseWithdraw ? null : styles.disabeld,
+                    styles.gray
+                  )}
+                  onClick={() => {
+                    dispatch({
+                      type: 'updateTxSpecial',
+                      payload: {
+                        txSpecial: null,
+                      },
+                    });
+                  }}>
+                  取消
+                </Button>
               </div>
             ) : (
               <ButtonGroup>

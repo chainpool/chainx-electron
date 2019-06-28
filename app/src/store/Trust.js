@@ -10,6 +10,7 @@ import {
   hexPrefix,
   toJS,
   convertAddressChecksumAll,
+  getMNFromRedeemScript,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -256,15 +257,21 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signHashSpecial() {
-    if (
-      this.txSpecial &&
-      this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCount
-    ) {
-      const tx = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
-      const hash = tx.getHash();
-      return reverse(hash).toString('hex');
+    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    if (!this.txSpecial) return '';
+    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const inputs = txb.__inputs[0];
+    if (inputs && inputs.redeemScript) {
+      const redeemScript = inputs.redeemScript.toString('hex');
+      const { m } = getMNFromRedeemScript(redeemScript);
+      if (this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= m) {
+        const tx = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+        const hash = tx.getHash();
+        return reverse(hash).toString('hex');
+      }
+      return '';
     }
-    return '';
   }
 
   reload = () => {

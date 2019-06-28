@@ -108,8 +108,17 @@ export const setColumnsWidth = (table = [], widths = []) => {
 export const getAllPubsFromRedeemScript = redeemScript => {
   const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
   const pubBufs = chunks.slice(1, chunks.length - 2);
-
   return pubBufs.map(chunk => chunk.toString('hex'));
+};
+
+export const getMNFromRedeemScript = redeemScript => {
+  const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
+  const m = chunks[0] - 80;
+  const n = chunks[chunks.length - 2] - 80;
+  return {
+    m,
+    n,
+  };
 };
 
 export const Patterns = {
