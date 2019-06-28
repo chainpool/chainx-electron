@@ -3,9 +3,13 @@ import { _, classNames } from '../../utils';
 import * as styles from './index.less';
 
 export default class Tabs extends Component {
-  state = {
-    activeIndex: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeIndex: props.defaultActiveIndex || 0,
+    };
+  }
+
   render() {
     const { activeIndex } = this.state;
     const { tabs = [], onClick, className } = this.props;

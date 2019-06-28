@@ -49,7 +49,7 @@ class Main extends Component {
     const {
       globalStore: { openModal },
     } = this.props;
-    if (!isElectron()) {
+    if (!isElectron() && !/mywallet.com/.test(window.location.href)) {
       openModal({
         name: 'DownloadWalletWarnModal',
       });

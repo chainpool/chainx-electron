@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { Inject, _ } from '../../utils';
+import { _, observer } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
 import inactive_en from '../../resource/inactive_en.png';
 
-@Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
+@observer
 class NodeTable extends Component {
   render() {
     const {
