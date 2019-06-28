@@ -20,6 +20,7 @@ import { moment, formatNumber, _, observable } from '../utils/index';
 import { Chain } from '../constants';
 import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
+import { Toast } from '../components';
 
 function getAssetWithZeroBalance(info) {
   return {
@@ -45,6 +46,9 @@ export default class Asset extends ModelExtend {
   @observable depositRecords = []; // 充值记录
   @observable accountAssets = []; // 现账户资产
   @observable btcTrusteeAddress; // BTC公共多签地址
+  @observable loading = {
+    bindTxHashLoading: false,
+  };
 
   @computed
   get normalizedAccountAssets() {
@@ -361,10 +365,17 @@ export default class Asset extends ModelExtend {
   };
 
   bindTxHash = async ({ params }) => {
-    const res = await bindTxHash({ params });
-    if (res && !_.get(res, 'error.message')) {
+    this.changeModel('loading.bindTxHashLoading', true);
+    const res = await bindTxHash({ params, timeOut: 11000 }).catch(err => {
+      Toast.warn('交易ID绑定失败', err.message);
+    });
+    if (_.get(res, 'error.message')) {
+      Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
+    } else if (_.get(res, 'result')) {
+      Toast.success('交易ID绑定已完成', `Extrinsic Hash: ${_.get(res, 'result')}`);
       this.reload();
+      return res;
     }
-    return res;
+    this.changeModel('loading.bindTxHashLoading', false);
   };
 }

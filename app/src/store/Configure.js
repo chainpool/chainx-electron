@@ -213,13 +213,13 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'hashquark',
+              name: 'HashQuark',
               isSystem: true,
               address: 'wss://chainx.hashquark.io',
             },
             {
               type: 'SystemDefault',
-              name: 'buildlinks',
+              name: 'BuildLinks',
               isSystem: true,
               address: 'wss://chainx.buildlinks.org',
             },
@@ -351,6 +351,7 @@ export default class Configure extends ModelExtend {
           url: httpUrl,
           method: 'POST',
           methodAlias: 'chain_getBlock',
+          timeOut: 7000,
         });
       };
 
@@ -358,6 +359,7 @@ export default class Configure extends ModelExtend {
         return fetchFromWs({
           url,
           method: 'chain_getBlock',
+          timeOut: 7000,
         });
       };
 
@@ -384,7 +386,7 @@ export default class Configure extends ModelExtend {
         if (refresh) {
           window.location.search = search;
         }
-      }, 60 * 1000);
+      }, 0);
     };
 
     const caculatePercent = currentIndex => {

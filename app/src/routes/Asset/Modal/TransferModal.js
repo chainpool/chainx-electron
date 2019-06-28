@@ -43,29 +43,27 @@ class TransferModal extends Component {
     const { address, addressErrMsg, amount, amountErrMsg, remark } = this.state;
     const {
       model: { dispatch, openModal, getPrecision },
-      globalStore: { modal: { data: { token, freeShow } = {} } = {}, nativeAssetName },
+      globalStore: { modal: { data: { token, freeShow } = {} } = {}, nativeAssetName, assets = [] },
       accountStore: { accountsList = [] },
-      addressManageStore: { addresses, transferAddress = [], dispatch: dispatchAddressManage },
+      addressManageStore: { addresses, dispatch: dispatchAddressManage },
     } = this.props;
 
-    const allAccounts = transferAddress
-      .map((item = {}) => ({
-        label: item.address.slice(0, 5),
-        value: item.address,
+    const allAccounts = addresses
+      .filter(address => address.token === nativeAssetName)
+      .map(address => ({
+        label: address.label,
+        value: address.address,
       }))
-      .concat(
-        addresses
-          .filter(address => address.token === nativeAssetName)
-          .map(address => ({
-            label: address.label,
-            value: address.address,
-          }))
-          .concat(accountsList)
-      );
+      .concat(accountsList);
 
     return (
       <Modal
-        title={<FormattedMessage id={'InnerChainTransfer'} />}
+        title={
+          <>
+            <FormattedMessage id={'InnerChainTransfer'} />
+            <span>({token})</span>
+          </>
+        }
         button={
           <Button
             size="full"
@@ -73,11 +71,15 @@ class TransferModal extends Component {
             onClick={() => {
               if (checkAll.confirm()) {
                 const filterOne = allAccounts.filter((item = {}) => item.value === address)[0];
+                const target = assets.find(asset => asset.name === nativeAssetName);
                 if (!filterOne) {
                   dispatchAddressManage({
-                    type: 'addTransferAddress',
+                    type: 'addAddress',
                     payload: {
+                      token: target.name,
+                      chain: target.chain,
                       address: address,
+                      label: `${address.slice(0, 5)}...${address.slice(-5)}`,
                     },
                   });
                 }

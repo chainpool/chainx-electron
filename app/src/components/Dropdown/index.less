@@ -1,0 +1,33 @@
+.dropdown {
+  display: flex;
+  align-items: center;
+  &.hover {
+    display: inline-block;
+    position: relative;
+    &:hover {
+      .downAreaContainer {
+        display: block;
+      }
+    }
+    .downAreaContainer {
+      z-index: 100000000;
+      display: none;
+      position: absolute;
+      .downArea {
+      }
+    }
+    .dropArea {
+    }
+  }
+  &.click {
+    position: relative;
+    .downAreaContainer {
+      position: absolute;
+      .downArea {
+      }
+    }
+    .dropArea {
+      cursor: pointer;
+    }
+  }
+}

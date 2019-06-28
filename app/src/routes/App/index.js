@@ -8,11 +8,11 @@ import en from 'react-intl/locale-data/en';
 import { zh_CN, en_US } from '../../langs/zh_en.js';
 
 import CommonLayOut from './CommonLayOut';
-import { SignModal, LowerPCXWarn } from '../components';
+import { SignModal, LowerPCXWarn, DownloadWalletWarnModal } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
-import { Inject, toJS } from '../../utils';
+import { Inject, toJS, isElectron } from '../../utils';
 import * as styles from './index.less';
 
 addLocaleData([...zh, ...en]);
@@ -45,6 +45,16 @@ console.log = (...payload) => {
   })
 )
 class Main extends Component {
+  componentDidMount = () => {
+    const {
+      globalStore: { openModal },
+    } = this.props;
+    if (!isElectron() && !/mywallet.com/.test(window.location.href)) {
+      openModal({
+        name: 'DownloadWalletWarnModal',
+      });
+    }
+  };
   render() {
     const {
       globalStore: {
@@ -90,6 +100,7 @@ class Main extends Component {
           </Suspense>
           {name === 'SignModal' ? <SignModal {...this.props} /> : null}
           {name === 'LowerPCXWarn' ? <LowerPCXWarn {...this.props} /> : null}
+          {name === 'DownloadWalletWarnModal' ? <DownloadWalletWarnModal {...this.props} /> : null}
           <ToastContainer />
         </CommonLayOut>
       </IntlProvider>

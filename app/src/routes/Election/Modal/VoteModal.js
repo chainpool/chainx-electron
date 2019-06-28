@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Input, Mixin, Modal, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
-import { Inject, Patterns, setBlankSpace } from '../../../utils';
+import { Inject, Patterns, setBlankSpace, classNames } from '../../../utils';
 import * as styles from './VoteModal.less';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
@@ -83,6 +83,7 @@ class VoteModal extends Mixin {
       chainStore: { blockDuration },
       electionStore: { bondingDuration, intentionBondingDuration },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
+      accountStore: { isValidator },
     } = this.props;
 
     const bondingSeconds =
@@ -174,14 +175,21 @@ class VoteModal extends Mixin {
               <ul className={styles.changeVote}>
                 {[
                   { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
-                  { label: <FormattedMessage id={'SwitchNomination'} />, value: 'switch' },
+                  {
+                    label: <FormattedMessage id={'SwitchNomination'} />,
+                    value: 'switch',
+                    disabeld: isValidator && isCurrentAccount,
+                  },
                   { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
                 ]
-                  .filter(item => item)
+                  .filter(item => item.disabeld !== true)
                   .map((item, index) => (
                     <li
                       key={index}
-                      className={action === item.value ? styles.active : null}
+                      className={classNames(
+                        action === item.value ? styles.active : null,
+                        item.disabeld ? styles.disabeld : null
+                      )}
                       onClick={() => {
                         this.setState({ action: item.value, amount: '', amountErrMsg: '' });
                       }}>

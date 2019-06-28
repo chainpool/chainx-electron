@@ -93,7 +93,7 @@ class CrossChainBindModal extends Mixin {
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress, closeModal },
-      assetStore: { btcAddresses = [], btcTrusteeAddress, dispatch },
+      assetStore: { btcAddresses = [], btcTrusteeAddress, dispatch, loading },
 
       electionStore: { originIntentions = [] },
       globalStore: {
@@ -360,7 +360,9 @@ class CrossChainBindModal extends Mixin {
               recommendChannelSelect: '',
             });
           }}>
-          <span className={!isAddChanel ? styles.addChanneldesc : null}>添加渠道（非必选）</span>
+          <span className={!isAddChanel ? styles.addChanneldesc : null}>
+            <FormattedMessage id={'AddOptionalChannel'} />
+          </span>
         </Input.Checkbox>
         {isAddChanel && (
           <FormattedMessage id={'NodeName'}>
@@ -557,6 +559,7 @@ class CrossChainBindModal extends Mixin {
           <Button
             size="full"
             type="confirm"
+            loading={loading.bindTxHashLoading}
             onClick={() => {
               if (checkAll.confirm()) {
                 const params = this.getTradeId();
@@ -565,18 +568,9 @@ class CrossChainBindModal extends Mixin {
                   payload: {
                     params,
                   },
-                })
-                  .then(res => {
-                    if (_.get(res, 'error.message')) {
-                      Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
-                    } else {
-                      Toast.success('交易ID绑定已完成');
-                      closeModal();
-                    }
-                  })
-                  .catch(err => {
-                    Toast.warn('交易ID绑定失败', err.message);
-                  });
+                }).then(res => {
+                  if (res) closeModal();
+                });
               }
             }}>
             <FormattedMessage id={'Confirm'} />

@@ -10,8 +10,12 @@
     display: flex;
     flex-wrap:wrap;
     justify-content: space-between;
-    .nodetable{
+
+    .nodetable,.ActiveValidatorsListContainer{
       width:100%;
+    }
+    .ActiveValidatorsListContainer{
+      display: flex;
     }
   }
   .titledesc {
@@ -50,6 +54,56 @@
   }
 }
 
+.operation{
+  position:relative;
+  display: flex;
+  align-items: center;
+  top:-14px;
+  .filterandsort{
+    display: flex;
+    margin-right: 24px;
+    .triangle{
+      margin-left: 4px;
+    }
+  }
+
+  input{
+    margin-right: 24px;
+    padding:0 14px;
+    width:160px;
+    height:28px;
+    background: #FFFFFF;
+    border: 1px solid #DCE0E2;
+    border-radius: 16px;
+  }
+  .sortdropdowm{
+
+  }
+  .sortList{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:90px;
+    background: #FFFFFF;
+    border: 1px solid #DCE0E2;
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+    border-radius: 4px;
+    padding:12px 0;
+    li{
+      width:100%;
+      &:hover{
+        background: #F8F8F8;
+      }
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height:38px;
+    }
+  }
+}
+
 .name {
   & > span {
     display: flex;
@@ -59,11 +113,150 @@
 }
 
 .overHidden{
-  .mixin_ellipse()
-
+  //.mixin_ellipse()
 }
 
 .warnIcon{
   color:@red;
   margin-left: 5px;
+}
+
+.ActiveValidatorsList{
+  table.alltable{
+    width:100%;
+    td{
+      width: 246px;
+      height:64px;
+      padding:unset;
+      border: 1px solid #DCE0E2;
+      >div{
+        &:hover{
+          background: #F5F5F5;
+          .top{
+             .votebutton{
+              display: block;
+            }
+            .nameContainer{
+              .helpicon{
+                display: block;
+              }
+            }
+          }
+        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding:0 14px;
+        height:100%;
+        .top{
+          height:20px;
+          font-weight: bold;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .nameContainer{
+            display: flex;
+            align-items: center;
+            .helpicon{
+              display: none;
+              margin-left:4px;
+              color:#7B7F82;
+            }
+            .Nodedetail{
+              display: flex;
+              align-items: center;
+              box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+              background: #FFFFFF;
+              padding:16px;
+              width:193px;
+              table{
+                tr{
+                  background:transparent;
+                  height:22px;
+                  td{
+                    >div{
+                      &:hover{
+                        background: unset;
+                      }
+                    }
+                    .mixin_ellipse();
+                    font-size: 12px;
+                    border:unset;
+                    height:unset;
+                    .nodetype{
+
+                      padding-left:17px;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: flex-start;
+                      align-items: center;
+                    }
+                    .longaddress{
+                      padding-left:17px;
+                      display: block;
+                      width: 120px;
+                      .mixin_ellipse();
+                    }
+                  }
+                }
+              }
+            }
+          }
+          .votebutton{
+            margin:unset !important;
+            display: none;
+            padding:4px 8px;
+            height:20px !important;
+            font-size: 12px;
+            color: #3F3F3F;
+          }
+          img{
+            margin-left: 4px;
+            width:28px;
+          }
+        }
+        .down{
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+          font-size: 12px;
+        }
+       }
+    }
+  }
+  .trs+.trs{
+    position:relative;
+    top:-1px;
+  }
+  .trs{
+    >li{
+      .trList{
+        display: flex;
+        li+li{
+          position:relative;
+        }
+        li{
+          border:1px solid #DCE0E2;
+          height:64px;
+          width:20%;
+        }
+      }
+    }
+  }
+}
+
+.nodeType{
+  width:8px;
+  height:8px;
+  border-radius: 8px;
+  margin-right: 4px;
+  &.trustee{
+    background: @yellow;
+  }
+  &.validator{
+    background: #34C69A;
+  }
+  &.backupValidators{
+    background: @blue;
+  }
 }

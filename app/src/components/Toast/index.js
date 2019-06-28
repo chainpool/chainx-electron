@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { _, classNames } from '../../utils';
+import { classNames } from '../../utils';
 import * as styles from './index.less';
 
 class Toast {
@@ -75,6 +75,7 @@ class Toast {
         closeButton: false,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
+        position: 'top-left',
         ...rest,
       }
     );

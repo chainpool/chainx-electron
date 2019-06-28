@@ -5,8 +5,7 @@ import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './WithdrawModal.less';
 
-const withdrawWarnMessage =
-  'ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)';
+const withdrawWarnMessage = <FormattedMessage id={'RecommendedUseBindedAddress'} />;
 
 @Inject(({ addressManageStore, assetStore }) => ({ addressManageStore, assetStore }))
 class WithdrawModal extends Mixin {

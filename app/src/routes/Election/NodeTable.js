@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { Inject, _ } from '../../utils';
+import { _, observer } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
 import inactive_en from '../../resource/inactive_en.png';
 
-@Inject(({ accountStore, globalStore }) => ({ accountStore, globalStore }))
+@observer
 class NodeTable extends Component {
   render() {
     const {
@@ -30,29 +30,45 @@ class NodeTable extends Component {
     const tableProps = {
       className: styles.tableContainer,
       columns: [
-        {
-          title: <FormattedMessage id={'Rank'} />,
-          width: 110,
-          ellipse: 8,
-          dataIndex: 'name',
-          render: (value, item, index) => {
-            return (
-              <div className={styles.trustee}>
-                <span className={styles.rank}>{index + 1}</span>
-                {item.isTrustee && item.isTrustee.length ? (
-                  <HoverTip tip={'负责联合托管⽤户的链外资产'}>
-                    <LanguageContent zh={<img src={trustee_zh} alt="" />} en={<img src={trustee_en} alt="" />} />
-                  </HoverTip>
-                ) : null}
-                {!item.isActive && (
-                  <HoverTip tip={'无法参与验证节点的选举，并且没有任何收益'}>
-                    <LanguageContent zh={<img src={inactive_zh} alt="" />} en={<img src={inactive_en} alt="" />} />
-                  </HoverTip>
-                )}
-              </div>
-            );
-          },
-        },
+        activeIndex === 2
+          ? null
+          : {
+              title: <FormattedMessage id={'Rank'} />,
+              width: 110,
+              ellipse: 8,
+              dataIndex: 'name',
+              render: (value, item, index) => {
+                return (
+                  <div className={styles.trustee}>
+                    <span className={styles.rank}>{index + 1}</span>
+                    {item.isTrustee && item.isTrustee.length ? (
+                      <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                        {msg => (
+                          <HoverTip tip={msg}>
+                            <LanguageContent
+                              zh={<img src={trustee_zh} alt="" />}
+                              en={<img src={trustee_en} alt="" />}
+                            />
+                          </HoverTip>
+                        )}
+                      </FormattedMessage>
+                    ) : null}
+                    {!item.isActive && (
+                      <FormattedMessage id={'ElectionValidatorUnableParticipate'}>
+                        {msg => (
+                          <HoverTip tip={msg}>
+                            <LanguageContent
+                              zh={<img src={inactive_zh} alt="" />}
+                              en={<img src={inactive_en} alt="" />}
+                            />
+                          </HoverTip>
+                        )}
+                      </FormattedMessage>
+                    )}
+                  </div>
+                );
+              },
+            },
         {
           title: <FormattedMessage id={'Name'} />,
           ellipse: 10,
@@ -97,9 +113,13 @@ class NodeTable extends Component {
           render: (value, item) => {
             const tip =
               value && !item.isActive ? (
-                <HoverTip tip={'退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0'}>
-                  <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
-                </HoverTip>
+                <FormattedMessage id={'InactiveJackpotNotIncrease'}>
+                  {msg => (
+                    <HoverTip tip={msg}>
+                      <Icon name="icon-jieshishuoming" className={styles.warnIcon} />
+                    </HoverTip>
+                  )}
+                </FormattedMessage>
               ) : null;
 
             return (
@@ -196,7 +216,7 @@ class NodeTable extends Component {
             </ButtonGroup>
           ),
         },
-      ],
+      ].filter(item => item),
       dataSource: dataSources[activeIndex].sort((a = {}, b = {}) => {
         const aLength = _.get(a, 'isTrustee.length');
         const bLength = _.get(b, 'isTrustee.length');

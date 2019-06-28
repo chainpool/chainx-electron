@@ -446,3 +446,23 @@ export const SetFullScreen = Ele => {
 };
 
 export const setNet = net => ChainX.account.setNet(net);
+
+export const isElectron = () => window.electronStore;
+
+export const groupArrayByCount = (array = [], count) => {
+  const result = [];
+  let newArray = [];
+  while (array.length && count) {
+    if (newArray.length < count) {
+      newArray.push(array.shift());
+    } else {
+      result.push(newArray.slice());
+      newArray = [];
+    }
+  }
+  if (newArray.length) {
+    result.push(newArray);
+  }
+
+  return result;
+};
