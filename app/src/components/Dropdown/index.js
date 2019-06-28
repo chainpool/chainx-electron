@@ -43,7 +43,6 @@ export default class Dropdown extends Component {
       width,
       drop = 'drop按钮',
       children: down = <div>down</div>,
-      style,
     } = this.props;
     if (trigger === 'hover') {
     } else if (trigger === 'click') {

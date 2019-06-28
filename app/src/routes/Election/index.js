@@ -55,14 +55,15 @@ class Election extends Mixin {
             }}
           />
           <Dropdown
+            trigger="click"
             drop={
               <span>
                 排序: {sort.name}
                 <span className={styles.triangle}>{dropdownIcon}</span>
               </span>
             }
-            place="middle-bottom"
-            distance={20}
+            place="right-bottom"
+            distance={30}
             className={styles.sortdropdowm}>
             <ul className={styles.sortList}>
               {[
