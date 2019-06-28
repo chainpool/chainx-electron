@@ -14,6 +14,7 @@ class ActiveValidatorsList extends Component {
     const {
       activeIndex,
       sort = {},
+      searchName,
       model: {
         dispatch,
         openModal,
@@ -29,7 +30,7 @@ class ActiveValidatorsList extends Component {
     } = this.props;
 
     const dataSources = [[], [], [], allActiveValidator, allInActiveValidator][activeIndex];
-    const dataSourceResult =
+    let dataSourceResult =
       sort['value'] === 'name'
         ? _.sortBy([...dataSources], [sort['value']], ['desc'])
         : [...dataSources].sort((item1, item2) => {
@@ -37,6 +38,11 @@ class ActiveValidatorsList extends Component {
               return item2[sort['value']] - item1[sort['value']];
             }
           });
+    if (searchName) {
+      dataSourceResult = dataSourceResult.filter(item => {
+        return new RegExp(searchName, 'i').test(item.name);
+      });
+    }
 
     const groupDataSources = groupArrayByCount(dataSourceResult, 5);
 

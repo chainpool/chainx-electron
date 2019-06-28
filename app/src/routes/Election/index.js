@@ -16,6 +16,7 @@ import { dropdownIcon } from '../../resource';
 class Election extends Mixin {
   state = {
     sort: { name: '自抵押', value: 'selfVote' },
+    searchName: '',
   };
   startInit = async () => {
     const {
@@ -26,7 +27,7 @@ class Election extends Mixin {
   };
 
   render() {
-    const { sort } = this.state;
+    const { sort, searchName } = this.state;
     const {
       model: { openModal },
       accountStore: { isValidator, currentAddress },
@@ -62,7 +63,15 @@ class Election extends Mixin {
     const operations = (
       <div className={styles.operation}>
         <div className={styles.filterandsort}>
-          <input />
+          <input
+            placeholder={'输入节点名搜索'}
+            value={searchName}
+            onChange={e => {
+              this.setState({
+                searchName: e.target.value.trim(),
+              });
+            }}
+          />
           <Dropdown
             drop={
               <span>
@@ -141,7 +150,12 @@ class Election extends Mixin {
                 {currentAddress ? operations : null}
                 {activeIndex === 3 || activeIndex === 4 ? (
                   <div className={styles.ActiveValidatorsList}>
-                    <ActiveValidatorsList activeIndex={activeIndex} sort={sort} {...this.props} />
+                    <ActiveValidatorsList
+                      activeIndex={activeIndex}
+                      sort={sort}
+                      searchName={searchName}
+                      {...this.props}
+                    />
                   </div>
                 ) : (
                   <div className={styles.nodetable}>
