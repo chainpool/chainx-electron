@@ -49,6 +49,7 @@ export const lodash_helper = {
   random: _.random,
   shuffle: _.shuffle,
   unionBy: _.unionBy,
+  sortBy: _.sortBy,
 };
 
 export const Rx = {

@@ -50,6 +50,55 @@
   }
 }
 
+.operation{
+  position:relative;
+  display: flex;
+  align-items: center;
+  top:-14px;
+  .filterandsort{
+    margin-right: 24px;
+    .triangle{
+      margin-left: 4px;
+    }
+  }
+
+  input{
+    margin-right: 24px;
+    padding:0 14px;
+    width:160px;
+    height:28px;
+    background: #FFFFFF;
+    border: 1px solid #DCE0E2;
+    border-radius: 16px;
+  }
+  .sortdropdowm{
+
+  }
+  .sortList{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:90px;
+    background: #FFFFFF;
+    border: 1px solid #DCE0E2;
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+    border-radius: 4px;
+    padding:12px 0;
+    li{
+      width:100%;
+      &:hover{
+        background: #F8F8F8;
+      }
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height:38px;
+    }
+  }
+}
+
 .name {
   & > span {
     display: flex;

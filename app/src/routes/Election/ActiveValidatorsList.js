@@ -13,6 +13,7 @@ class ActiveValidatorsList extends Component {
   render() {
     const {
       activeIndex,
+      sort = {},
       model: {
         dispatch,
         openModal,
@@ -28,8 +29,16 @@ class ActiveValidatorsList extends Component {
     } = this.props;
 
     const dataSources = [[], [], [], allActiveValidator, allInActiveValidator][activeIndex];
+    const dataSourceResult =
+      sort['value'] === 'name'
+        ? _.sortBy([...dataSources], [sort['value']], ['desc'])
+        : [...dataSources].sort((item1, item2) => {
+            if (sort['value']) {
+              return item2[sort['value']] - item1[sort['value']];
+            }
+          });
 
-    const groupDataSources = groupArrayByCount(dataSources, 5);
+    const groupDataSources = groupArrayByCount(dataSourceResult, 5);
 
     return (
       <div className={styles.ActiveValidatorsList}>
