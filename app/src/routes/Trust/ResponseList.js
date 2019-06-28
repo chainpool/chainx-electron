@@ -75,9 +75,9 @@ class ResponseList extends Component {
       return (
         <li key={index}>
           {one.name}
+          {one.isHotEntity ? <span>(热)</span> : one.isColdEntity ? <span>(冷)</span> : null}
           {one.isSelf && (
             <>
-              {' '}
               (<FormattedMessage id={'Self'} />)
             </>
           )}
@@ -153,6 +153,7 @@ class ResponseList extends Component {
                 </span>
                 <span className={styles.count}>
                   <HoverTip
+                    width={550}
                     className={styles.hoverTrusteeList}
                     tip={
                       <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>

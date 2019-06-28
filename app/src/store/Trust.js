@@ -208,7 +208,9 @@ export default class Trust extends ModelExtend {
     const signList = inputs.signatures.map((item, index) => {
       const pubKey = inputs.pubkeys[index].toString('hex');
       const filterOne =
-        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] || {};
+        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] ||
+        this.chainConfigTrusteeList.filter(one => one.props.coldEntity.replace(/^0x/, '') === pubKey)[0] ||
+        {};
       return {
         trusteeSign: _.isUndefined(item) ? item : !!item,
         pubKey,
@@ -218,7 +220,6 @@ export default class Trust extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const mergeSignList = signList.map(item => {
       const isColdOrHotEntity = this.isColdOrHotEntity(`0x${item.pubKey}`);
-      console.log(isColdOrHotEntity, '---------------isColdOrHotEntity');
       if (item.accountId) {
         const findOne = this.rootStore.electionStore.trustIntentions.filter(
           one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
@@ -228,12 +229,16 @@ export default class Trust extends ModelExtend {
           return {
             ...findOne,
             ...item,
+            isColdEntity: isColdOrHotEntity.isColdEntity,
+            isHotEntity: isColdOrHotEntity.isHotEntity,
             isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
           };
         }
       } else {
         return {
           ...item,
+          isColdEntity: isColdOrHotEntity.isColdEntity,
+          isHotEntity: isColdOrHotEntity.isHotEntity,
           name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
         };
       }
@@ -463,7 +468,6 @@ export default class Trust extends ModelExtend {
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
       const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
-      console.log(chainConfigTrusteeList, '---chainConfigTrusteeList');
       this.changeModel({
         tx,
         signStatus,
