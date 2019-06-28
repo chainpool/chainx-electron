@@ -30,7 +30,8 @@
       "app/build",
       "package.json",
       "resources",
-      "utils.js"
+      "utils.js",
+      "MultiSign/ledger"
     ],
     "publish": {
       "provider": "github",
