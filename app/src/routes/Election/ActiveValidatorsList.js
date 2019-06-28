@@ -33,7 +33,7 @@ class ActiveValidatorsList extends Component {
 
     return (
       <div className={styles.ActiveValidatorsList}>
-        <table style={{ borderCollapse: 'collapse' }}>
+        <table style={{ borderCollapse: 'collapse' }} className={styles.alltable}>
           <tbody>
             {groupDataSources.map((one, ins) => (
               <tr key={ins} className={styles.trs}>
@@ -65,8 +65,74 @@ class ActiveValidatorsList extends Component {
                               )}
                             </FormattedMessage>
                           ) : null}
-                          <Dropdown drop={'jjjjjj'} place="middle">
-                            <div style={{ width: 200, background: 'red' }}>hhhhh</div>
+                          <Dropdown
+                            distance={20}
+                            drop={<i className={classNames('iconfont icon-icon-jieshishuoming', styles.helpicon)} />}
+                            place={ins === 0 ? 'middle-bottom' : 'middle-top'}>
+                            <div className={styles.Nodedetail}>
+                              <table style={{ borderCollapse: 'collapse' }}>
+                                <tbody>
+                                  <tr>
+                                    <td>得票排名</td>
+                                    <td />
+                                  </tr>
+                                  <tr>
+                                    <td>节点类型</td>
+                                    <td>
+                                      <div className={styles.nodetype}>
+                                        <div
+                                          className={classNames(
+                                            styles.nodeType,
+                                            item.isTrustee && item.isTrustee.length
+                                              ? styles.trustee
+                                              : item.isValidator
+                                              ? styles.validator
+                                              : styles.backupValidators
+                                          )}
+                                        />
+                                        {item.isTrustee && item.isTrustee.length
+                                          ? '信托节点'
+                                          : item.isValidator
+                                          ? '验证节点'
+                                          : '同步节点'}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>节点网址</td>
+                                    <td>
+                                      <div className={styles.longaddress}>
+                                        <HoverTip tip={item.about}>
+                                          <div className={styles.overHidden}>
+                                            <RouterGo isOutSide go={{ pathname: item.url }}>
+                                              {item.url}
+                                            </RouterGo>
+                                          </div>
+                                        </HoverTip>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>账户地址</td>
+                                    <td>
+                                      <div className={styles.longaddress}>{item.address}</div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>奖池地址</td>
+                                    <td>
+                                      <div className={styles.longaddress}>{item.sessionAddress}</div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>奖池金额</td>
+                                    <td>
+                                      <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </Dropdown>
                         </div>
                         <div>
@@ -110,34 +176,6 @@ class ActiveValidatorsList extends Component {
       </div>
     );
   }
-}
-
-{
-  /*<ul key={ins} className={styles.trs}>*/
-}
-{
-  /*<li>*/
-}
-{
-  /*<ul className={styles.trList}>*/
-}
-{
-  /*{one.map((item, index) => (*/
-}
-{
-  /*<li key={index}>{index}</li>*/
-}
-{
-  /*))}*/
-}
-{
-  /*</ul>*/
-}
-{
-  /*</li>*/
-}
-{
-  /*</ul>*/
 }
 
 export default ActiveValidatorsList;

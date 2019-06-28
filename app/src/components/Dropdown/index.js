@@ -69,7 +69,7 @@ export default class Dropdown extends Component {
       right,
       top: bottom,
       bottom: top,
-      ...(place === 'middle' ? { transform: 'translate(-50%, -50%)' } : {}),
+      ...(place.includes('middle') ? { transform: 'translate(-50%, 0%)' } : {}),
     };
 
     return trigger === 'hover' ? (
