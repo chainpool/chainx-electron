@@ -144,9 +144,19 @@ export default class Election extends ModelExtend {
     return [...this.validatorsWithRecords.filter(intention => intention.isValidator)];
   }
 
-  // 候补节点
+  // 以前叫候选节点，后改为同步节点
   @computed get backupValidators() {
     return [...this.validatorsWithRecords.filter(intention => !intention.isValidator)];
+  }
+
+  //参选节点
+  @computed get allActiveValidator() {
+    return [...this.validatorsWithRecords.filter(intention => intention.isActive)];
+  }
+
+  //退选节点
+  @computed get allInActiveValidator() {
+    return [...this.validatorsWithRecords.filter(intention => !intention.isActive)];
   }
 
   // 我的投票

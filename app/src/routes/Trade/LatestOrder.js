@@ -39,6 +39,7 @@ class LatestOrder extends SwitchPair {
             </>
           ),
           dataIndex: 'priceShow',
+          render: (value, item) => <span className={item.direction === 'Sell' ? 'red' : 'green'}>{value}</span>,
         },
         {
           title: <FormattedMessage id={'Time'} />,
