@@ -10,8 +10,12 @@
     display: flex;
     flex-wrap:wrap;
     justify-content: space-between;
-    .nodetable,.ActiveValidatorsList{
-      //width:100%;
+
+    .nodetable,.ActiveValidatorsListContainer{
+      width:100%;
+    }
+    .ActiveValidatorsListContainer{
+      display: flex;
     }
   }
   .titledesc {
@@ -159,11 +163,12 @@
               color:#7B7F82;
             }
             .Nodedetail{
+              display: flex;
+              align-items: center;
               box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
               background: #FFFFFF;
               padding:16px;
               width:193px;
-              height:164px;
               table{
                 tr{
                   background:transparent;

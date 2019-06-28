@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Dropdown, FormattedMessage, LanguageContent, Icon } from '../../components';
-import { HoverTip, Balance } from '../components';
+import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
+import { HoverTip } from '../components';
 import { _, observer, groupArrayByCount, classNames } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
-import inactive_zh from '../../resource/inactive_zh.png';
-import inactive_en from '../../resource/inactive_en.png';
 
 @observer
 class ActiveValidatorsList extends Component {
@@ -15,21 +13,12 @@ class ActiveValidatorsList extends Component {
       activeIndex,
       sort = {},
       searchName,
-      model: {
-        dispatch,
-        openModal,
-        validators = [],
-        backupValidators = [],
-        validatorsWithMyNomination = [],
-        allActiveValidator = [],
-        allInActiveValidator = [],
-        setDefaultPrecision,
-      },
+      model: { openModal, allActiveValidator = [], allInActiveValidator = [], setDefaultPrecision },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName },
     } = this.props;
 
-    const dataSources = [[], [], [], allActiveValidator, allInActiveValidator][activeIndex];
+    const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
     let dataSourceResult =
       sort['value'] === 'name'
         ? _.sortBy([...dataSources], [sort['value']], ['desc'])
@@ -38,6 +27,20 @@ class ActiveValidatorsList extends Component {
               return item2[sort['value']] - item1[sort['value']];
             }
           });
+    const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
+      return item2.totalNomination - item1.totalNomination;
+    });
+
+    dataSourceResult = dataSourceResult.map(item => {
+      const findIndex = rankFromTotalnomination.findIndex(one => {
+        return one.account === item.account;
+      });
+      return {
+        ...item,
+        rank: findIndex + 1,
+      };
+    });
+
     if (searchName) {
       dataSourceResult = dataSourceResult.filter(item => {
         return new RegExp(searchName, 'i').test(item.name);
@@ -87,10 +90,15 @@ class ActiveValidatorsList extends Component {
                             <div className={styles.Nodedetail}>
                               <table style={{ borderCollapse: 'collapse' }}>
                                 <tbody>
-                                  <tr>
-                                    <td>得票排名</td>
-                                    <td />
-                                  </tr>
+                                  {item.isActive ? (
+                                    <tr>
+                                      <td>得票排名</td>
+                                      <td>
+                                        <div>{item.rank}</div>
+                                      </td>
+                                    </tr>
+                                  ) : null}
+
                                   <tr>
                                     <td>节点类型</td>
                                     <td>

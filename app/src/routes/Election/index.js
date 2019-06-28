@@ -39,25 +39,7 @@ class Election extends Mixin {
     } = this.props;
 
     const tabs = currentAddress
-      ? [
-          <FormattedMessage id={'ValidatorNodeTip'}>
-            {msg => (
-              <HoverTip tip={msg}>
-                <FormattedMessage id={'ValidatorNode'} />
-              </HoverTip>
-            )}
-          </FormattedMessage>,
-          <FormattedMessage id={'StandbyNodeTip'}>
-            {msg => (
-              <HoverTip tip={msg}>
-                <FormattedMessage id={'StandbyNode'} />
-              </HoverTip>
-            )}
-          </FormattedMessage>,
-          <FormattedMessage id={'MyNominations'} />,
-          '参选节点',
-          '退选节点',
-        ]
+      ? ['参选节点', '退选节点', <FormattedMessage id={'MyNominations'} />]
       : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
 
     const operations = (
@@ -144,12 +126,12 @@ class Election extends Mixin {
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
-          <Tabs tabs={tabs} defaultActiveIndex={3}>
+          <Tabs tabs={tabs} defaultActiveIndex={0}>
             {activeIndex => (
               <>
                 {currentAddress ? operations : null}
-                {activeIndex === 3 || activeIndex === 4 ? (
-                  <div className={styles.ActiveValidatorsList}>
+                {activeIndex === 0 || activeIndex === 1 ? (
+                  <div className={styles.ActiveValidatorsListContainer}>
                     <ActiveValidatorsList
                       activeIndex={activeIndex}
                       sort={sort}
