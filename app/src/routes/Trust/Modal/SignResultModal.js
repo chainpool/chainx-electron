@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormattedMessage, Modal, Input } from '../../../components';
+import { Button, FormattedMessage, Modal, Input, Clipboard } from '../../../components';
 import * as styles from './SignResultModal.less';
 import { Patterns } from '../../../utils';
 
@@ -106,6 +106,16 @@ class SignResultModal extends Component {
         }>
         <div className={styles.SignChannelSelectModal}>
           <Input.Text
+            label={
+              <span className={styles.tosign}>
+                复制原文
+                <Clipboard id="copy">
+                  <div style={{ width: 1, height: 0, opacity: 0 }}>
+                    {desc === 'other' ? otherSignResult : signResult}
+                  </div>
+                </Clipboard>
+              </span>
+            }
             errMsg={otherSignResultErrMsg}
             isTextArea
             value={desc === 'other' ? otherSignResult : signResult}

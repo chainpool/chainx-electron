@@ -92,6 +92,19 @@ export default class Trust extends ModelExtend {
     this._trusts = value;
   }
 
+  @computed get allColdOrHotPubKey() {
+    const [coldEntity, hotEntity] = [[], []];
+    this.chainConfigTrusteeList.forEach(item => {
+      if (_.get(item, 'props.coldEntity')) {
+        coldEntity.push(_.get(item, 'props.coldEntity'));
+      }
+      if (_.get(item, 'props.hotEntity')) {
+        hotEntity.push(_.get(item, 'props.hotEntity'));
+      }
+    });
+    return { coldEntity, hotEntity };
+  }
+
   @computed get normalizedOnChainAllWithdrawList() {
     const assetNamePrecisionMap = this.rootStore.globalStore.assetNamePrecisionMap; // 获取资产 name => precision map数据结构
     if (Object.keys(assetNamePrecisionMap).length <= 0) {
@@ -204,10 +217,13 @@ export default class Trust extends ModelExtend {
     });
     const currentAccount = this.getCurrentAccount();
     const mergeSignList = signList.map(item => {
+      // const isColdOrHotEntity = this.isColdOrHotEntity(item.pubKey);
+      // console.log(isColdOrHotEntity, '---------------isColdOrHotEntity');
       if (item.accountId) {
         const findOne = this.rootStore.electionStore.trustIntentions.filter(
           one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
         )[0];
+
         if (findOne) {
           return {
             ...findOne,
@@ -364,11 +380,10 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = url ? withdraw.amount : withdraw.amount - BitCoinFee;
+          const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
-
         //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
         const change = totalInputAmount - feeSum - userInputbitFee;
@@ -448,6 +463,7 @@ export default class Trust extends ModelExtend {
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
       const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
+      console.log(chainConfigTrusteeList, '---chainConfigTrusteeList');
       this.changeModel({
         tx,
         signStatus,
@@ -776,6 +792,15 @@ export default class Trust extends ModelExtend {
     if (res && res.fee) {
       this.changeModel('BitCoinFee', res.fee);
     }
+  };
+
+  isColdOrHotEntity = pubkey => {
+    const allColds = this.allColdOrHotPubKey.coldEntity;
+    const allHots = this.allColdOrHotPubKey.hotEntity;
+    return {
+      isColdEntity: allColds.includes(pubkey),
+      isHotEntity: allHots.includes(pubkey),
+    };
   };
 
   updateTxSpecial = ({ txSpecial }) => {
