@@ -254,6 +254,7 @@ export default class Trust extends ModelExtend {
         const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
         let multisigAddress = await this.getBitcoinTrusteeAddress();
         if (url) {
+          //特殊交易
           multisigAddress = url;
         } else {
           multisigAddress = await this.getBitcoinTrusteeAddress();
@@ -267,7 +268,7 @@ export default class Trust extends ModelExtend {
 
         const nodeUrl = findOne.node;
         const BitCoinFee = this.BitCoinFee;
-        if (!BitCoinFee) {
+        if (!url && !BitCoinFee) {
           throw new Error({
             info: '未获取到提现手续费',
             toString: () => 'NotFindTrusteeFee',
@@ -363,7 +364,7 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = withdraw.amount - BitCoinFee;
+          const fee = url ? withdraw.amount : withdraw.amount - BitCoinFee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
