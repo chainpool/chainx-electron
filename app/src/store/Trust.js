@@ -217,8 +217,8 @@ export default class Trust extends ModelExtend {
     });
     const currentAccount = this.getCurrentAccount();
     const mergeSignList = signList.map(item => {
-      // const isColdOrHotEntity = this.isColdOrHotEntity(item.pubKey);
-      // console.log(isColdOrHotEntity, '---------------isColdOrHotEntity');
+      const isColdOrHotEntity = this.isColdOrHotEntity(`0x${item.pubKey}`);
+      console.log(isColdOrHotEntity, '---------------isColdOrHotEntity');
       if (item.accountId) {
         const findOne = this.rootStore.electionStore.trustIntentions.filter(
           one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
