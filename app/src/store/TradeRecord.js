@@ -65,6 +65,7 @@ export default class TradeRecord extends ModelExtend {
             ...item,
             ...translation({
               ...item,
+              currentAccount: account,
               setPrecision: this.setPrecision,
               setDefaultPrecision: this.setDefaultPrecision,
               getPair: this.rootStore.tradeStore.getPair,

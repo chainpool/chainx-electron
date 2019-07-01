@@ -198,7 +198,7 @@ export const getBlockTime = payload => {
 export const getTradeRecordApi = payload => {
   const { accountId, page } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/txs?page_size=10&&page=${page}`,
+    url: `${API}/account/${accountId}/txs?page_size=10&&page=${page}&include_payee=true`,
     method: 'get',
     ...payload,
   });

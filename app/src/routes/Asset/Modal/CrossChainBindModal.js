@@ -66,7 +66,7 @@ class CrossChainBindModal extends Mixin {
     const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
     const result = regexp.exec(tradeId);
     if (result && result[3]) {
-      return result[3];
+      return `0x${result[3]}`;
     }
   };
 
@@ -683,9 +683,10 @@ class CrossChainBindModal extends Mixin {
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                    {item.content}
-                  </HoverTip>
+                  {/*<HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>*/}
+                  {/*{item.content}*/}
+                  {/*</HoverTip>*/}
+                  {item.content}
                 </span>
               ))}
             </div>
