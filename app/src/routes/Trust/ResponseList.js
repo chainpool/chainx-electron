@@ -289,7 +289,7 @@ class ResponseList extends Component {
           </div>
           <div className={styles.inputoutputContainer}>
             {inputList.length > 4 || outputList.length > 4 ? (
-              <Scroller scroll={{ y: 330 }}>InputOutputList</Scroller>
+              <Scroller scroll={{ y: 135 }}>{InputOutputList}</Scroller>
             ) : (
               InputOutputList
             )}
