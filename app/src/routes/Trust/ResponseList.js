@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip } from '../components';
-import { classNames, observer, getAllPubsFromRedeemScript } from '../../utils';
+import { classNames, observer } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
@@ -21,7 +21,6 @@ class ResponseList extends Component {
         tx,
         txSpecial,
         redeemScript,
-        redeemScriptSpecial,
         txOutputList = [],
         txInputList = [],
         txSpecialOutputList = [],
@@ -31,7 +30,9 @@ class ResponseList extends Component {
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
+        maxSignCountSpecial,
         totalSignCount,
+        totalSignCountSpecial,
         signHash,
         signHashSpecial,
         BitCoinFeeShow,
@@ -43,12 +44,9 @@ class ResponseList extends Component {
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
     const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
-    const totalSignCountMath = isSpecialModel
-      ? txSpecialSignTrusteeList.length ||
-        (redeemScriptSpecial && getAllPubsFromRedeemScript(redeemScriptSpecial).length)
-      : totalSignCount;
-
+    const totalSignCountMath = isSpecialModel ? totalSignCountSpecial : totalSignCount;
     const signHashMatch = isSpecialModel ? signHashSpecial : signHash;
+    const maxSignCountMatch = isSpecialModel ? Number(maxSignCountSpecial) : maxSignCount;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -160,7 +158,7 @@ class ResponseList extends Component {
                     tip={
                       <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
                     }>
-                    {isSpecialModel ? haveSignList.length : `${haveSignList.length}/${maxSignCount}`}
+                    {`${haveSignList.length}/${maxSignCountMatch}`}
                   </HoverTip>
                 </span>
               </li>
@@ -178,7 +176,7 @@ class ResponseList extends Component {
                           {haveRefuseList.map((one, index) => renderSignLi(one, index))}
                         </ul>
                       }>
-                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCount + 1}`}
+                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCountMatch + 1}`}
                     </HoverTip>
                   </span>
                 </li>

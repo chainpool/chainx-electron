@@ -184,6 +184,7 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signTrusteeList() {
+    if (!this.tx) return [];
     const currentAccount = this.getCurrentAccount();
     return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
       const newItem = {
@@ -263,20 +264,46 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signHashSpecial() {
-    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    if (!this.txSpecial) return '';
-    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-    const inputs = txb.__inputs[0];
-    if (inputs && inputs.redeemScript) {
-      const redeemScript = inputs.redeemScript.toString('hex');
-      const { m } = getMNFromRedeemScript(redeemScript);
-      if (this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= m) {
-        const tx = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-        const hash = tx.getHash();
-        return reverse(hash).toString('hex');
+    if (
+      this.txSpecial &&
+      this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCountSpecial
+    ) {
+      const tx = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const hash = tx.getHash();
+      return reverse(hash).toString('hex');
+    }
+    return '';
+  }
+
+  @computed get maxSignCountSpecial() {
+    let redeemScriptSpecial = this.redeemScriptSpecial;
+    if (redeemScriptSpecial) {
+      return getMNFromRedeemScript(this.redeemScriptSpecial).m;
+    } else if (this.txSpecial) {
+      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const inputs = txb.__inputs[0];
+      if (inputs && inputs.redeemScript) {
+        redeemScriptSpecial = inputs.redeemScript;
+        return getMNFromRedeemScript(redeemScriptSpecial).m;
       }
-      return '';
+    }
+  }
+
+  @computed get totalSignCountSpecial() {
+    let redeemScriptSpecial = this.redeemScriptSpecial;
+    if (redeemScriptSpecial) {
+      return getMNFromRedeemScript(this.redeemScriptSpecial).n;
+    } else if (this.txSpecial) {
+      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const inputs = txb.__inputs[0];
+      if (inputs && inputs.redeemScript) {
+        redeemScriptSpecial = inputs.redeemScript;
+        return getMNFromRedeemScript(redeemScriptSpecial).n;
+      }
     }
   }
 
