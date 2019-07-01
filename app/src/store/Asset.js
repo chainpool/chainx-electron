@@ -158,33 +158,51 @@ export default class Asset extends ModelExtend {
     this.changeModel('accountAssets', accountAssetsResp.data.filter(asset => names.includes(asset.name)));
   };
 
-  processTxState = txstate => {
-    switch (txstate && txstate.toUpperCase()) {
-      case 'NOTAPPLYING':
-        return 'NotApplying';
-      case 'APPLYING':
-        return 'Applying';
-      case 'SIGNING':
-        return 'Singing';
-      case 'BROADCASTING':
-        return 'BroadCasting';
-      case 'PROCESSING':
-        return 'Processing';
-      case 'CONFIRMING':
-        return 'Confirming';
-      case 'CONFIRMED':
-        return 'Confirmed';
-      case 'NORMALFINISH':
-        return 'NormalFinish';
-      case 'ROOTFINISH':
-        return 'RootFinish';
-      case 'NORMALCANCEL':
-        return 'NormalCancel';
-      case 'ROOTCANCEL':
-        return 'RootCancel';
-      default:
-        return 'Unknown';
+  processTxState = (txstate, item) => {
+    let state;
+    const applicationStatus = _.get(item, 'applicationStatus');
+    if (applicationStatus && applicationStatus.toUpperCase() !== 'PROCESSING') {
+      state = applicationStatus;
+    } else {
+      switch (txstate && txstate.toUpperCase()) {
+        case 'NOTAPPLYING':
+          state = applicationStatus;
+          break;
+        case 'APPLYING':
+          state = applicationStatus;
+          break;
+        case 'SIGNING':
+          state = 'Singing';
+          break;
+        case 'BROADCASTING':
+          state = 'BroadCasting';
+          break;
+        case 'PROCESSING':
+          state = 'Processing';
+          break;
+        case 'CONFIRMING':
+          state = 'Confirming';
+          break;
+        case 'CONFIRMED':
+          state = 'Confirmed';
+          break;
+        case 'NORMALFINISH':
+          state = applicationStatus;
+          break;
+        case 'ROOTFINISH':
+          state = applicationStatus;
+          break;
+        case 'NORMALCANCEL':
+          state = applicationStatus;
+          break;
+        case 'ROOTCANCEL':
+          state = applicationStatus;
+          break;
+        default:
+          state = 'Unknown';
+      }
     }
+    return state;
   };
 
   async getWithdrawalListByAccount() {
@@ -262,7 +280,7 @@ export default class Asset extends ModelExtend {
             return {
               ...item,
               balanceShow: this.setPrecision(item.balance, item.token),
-              statusValue: this.processTxState(_.get(item, 'status.value')),
+              statusValue: this.processTxState(_.get(item, 'status.value'), item),
             };
           }),
         });
@@ -312,7 +330,7 @@ export default class Asset extends ModelExtend {
           depositRecords: data.map(item => ({
             ...item,
             amount: this.setPrecision(item.balance, item.token),
-            statusValue: this.processTxState(item.txstate),
+            statusValue: this.processTxState(item.txstate, item),
           })),
         });
       });

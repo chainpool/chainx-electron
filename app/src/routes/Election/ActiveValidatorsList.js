@@ -19,17 +19,25 @@ class ActiveValidatorsList extends Component {
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
-    let dataSourceResult =
-      sort['value'] === 'name'
-        ? _.sortBy([...dataSources], [sort['value']], ['desc'])
-        : [...dataSources].sort((item1, item2) => {
-            if (sort['value']) {
-              return item2[sort['value']] - item1[sort['value']];
-            }
-          });
+    let dataSourceResult = _.sortBy([...dataSources], ['name'], ['desc']);
+
+    dataSourceResult.sort((a = {}, b = {}) => {
+      const aLength = _.get(a, 'isTrustee.length');
+      const bLength = _.get(b, 'isTrustee.length');
+      if (aLength || bLength) {
+        if (aLength && bLength) {
+          return b[sort['value']] - a[sort['value']];
+        } else {
+          return bLength - aLength;
+        }
+      } else {
+        return b[sort['value']] - a[sort['value']];
+      }
+    });
+
     const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
       return item2.totalNomination - item1.totalNomination;
-    });
+    }); // rank 排名按总得票数算
 
     dataSourceResult = dataSourceResult.map(item => {
       const findIndex = rankFromTotalnomination.findIndex(one => {
@@ -63,7 +71,9 @@ class ActiveValidatorsList extends Component {
                           <div
                             className={classNames(
                               styles.nodeType,
-                              item.isTrustee && item.isTrustee.length
+                              !item.isActive
+                                ? styles.inActive
+                                : item.isTrustee && item.isTrustee.length
                                 ? styles.trustee
                                 : item.isValidator
                                 ? styles.validator
@@ -88,6 +98,7 @@ class ActiveValidatorsList extends Component {
                             </FormattedMessage>
                           ) : null}
                           <Dropdown
+                            zIndex={1000000001}
                             distance={20}
                             drop={<i className={classNames('iconfont icon-icon-jieshishuoming', styles.helpicon)} />}
                             place={ins === 0 ? 'middle-bottom' : 'middle-top'}>
@@ -110,15 +121,20 @@ class ActiveValidatorsList extends Component {
                                         <div
                                           className={classNames(
                                             styles.nodeType,
-                                            item.isTrustee && item.isTrustee.length
+                                            !item.isActive
+                                              ? styles.inActive
+                                              : item.isTrustee && item.isTrustee.length
                                               ? styles.trustee
                                               : item.isValidator
                                               ? styles.validator
                                               : styles.backupValidators
                                           )}
                                         />
+
                                         {item.isTrustee && item.isTrustee.length
                                           ? '信托节点'
+                                          : !item.isActive
+                                          ? '退选节点'
                                           : item.isValidator
                                           ? '验证节点'
                                           : '同步节点'}

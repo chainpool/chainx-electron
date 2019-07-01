@@ -103,42 +103,48 @@ export default class Trust extends ModelExtend {
       let state = withdraw.status;
       const statusValue = _.get(withdraw.status, 'value') || '';
 
-      switch (statusValue.toUpperCase()) {
-        case 'NOTAPPLYING':
-          state = 'NotApplying';
-          break;
-        case 'APPLYING':
-          state = 'Applying';
-          break;
-        case 'SIGNING':
-          state = 'Singing';
-          break;
-        case 'BROADCASTING':
-          state = 'BroadCasting';
-          break;
-        case 'PROCESSING':
-          state = 'Processing';
-          break;
-        case 'CONFIRMING':
-          state = 'Confirming';
-          break;
-        case 'CONFIRMED':
-          state = 'Confirmed';
-          break;
-        case 'NORMALFINISH':
-          state = 'NormalFinish';
-          break;
-        case 'ROOTFINISH':
-          state = 'RootFinish';
-          break;
-        case 'NORMALCANCEL':
-          state = 'NormalCancel';
-          break;
-        case 'ROOTCANCEL':
-          state = 'RootCancel';
-          break;
-        default:
-          state = 'Unknown';
+      const applicationStatus = withdraw.applicationStatus;
+
+      if (applicationStatus && applicationStatus.toUpperCase() !== 'PROCESSING') {
+        state = applicationStatus;
+      } else {
+        switch (statusValue.toUpperCase()) {
+          case 'NOTAPPLYING':
+            state = applicationStatus;
+            break;
+          case 'APPLYING':
+            state = applicationStatus;
+            break;
+          case 'SIGNING':
+            state = 'Singing';
+            break;
+          case 'BROADCASTING':
+            state = 'BroadCasting';
+            break;
+          case 'PROCESSING':
+            state = 'Processing';
+            break;
+          case 'CONFIRMING':
+            state = 'Confirming';
+            break;
+          case 'CONFIRMED':
+            state = 'Confirmed';
+            break;
+          case 'NORMALFINISH':
+            state = applicationStatus;
+            break;
+          case 'ROOTFINISH':
+            state = applicationStatus;
+            break;
+          case 'NORMALCANCEL':
+            state = applicationStatus;
+            break;
+          case 'ROOTCANCEL':
+            state = applicationStatus;
+            break;
+          default:
+            state = 'Unknown';
+        }
       }
 
       return {
