@@ -66,7 +66,7 @@ class CrossChainBindModal extends Mixin {
     const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
     const result = regexp.exec(tradeId);
     if (result && result[3]) {
-      return result[3];
+      return `0x${result[3]}`;
     }
   };
 
