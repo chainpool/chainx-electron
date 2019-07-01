@@ -174,7 +174,7 @@ class Trust extends Mixin {
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
-            <ButtonGroup>
+            <ButtonGroup className={styles.groups}>
               {isTrustee ? (
                 <Button
                   {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}

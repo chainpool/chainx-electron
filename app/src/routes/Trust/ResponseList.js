@@ -184,33 +184,40 @@ class ResponseList extends Component {
             </ul>
             {signHashMatch ? (
               <div className={styles.completeSign}>
-                <div className={styles.resok}>
-                  <FormattedMessage id={'ResponseOkThenDealing'} />
-                </div>
-                <div className={styles.hash}>
-                  <RouterGo
-                    isOutSide
-                    go={{ pathname: blockChain.tx(signHashMatch, isTestBitCoinNetWork()) }}
-                    className={styles.hashvalue}>
-                    {`0x${signHashMatch}`}
-                  </RouterGo>
-                </div>
-                <Button
-                  className={classNames(
-                    styles.refuseButton,
-                    isShowResponseWithdraw ? null : styles.disabeld,
-                    styles.gray
-                  )}
-                  onClick={() => {
-                    dispatch({
-                      type: 'updateTxSpecial',
-                      payload: {
-                        txSpecial: null,
-                      },
-                    });
-                  }}>
-                  取消
-                </Button>
+                {isSpecialModel ? null : (
+                  <>
+                    <div className={styles.resok}>
+                      <FormattedMessage id={'ResponseOkThenDealing'} />
+                    </div>
+                    <div className={styles.hash}>
+                      <RouterGo
+                        isOutSide
+                        go={{ pathname: blockChain.tx(signHashMatch, isTestBitCoinNetWork()) }}
+                        className={styles.hashvalue}>
+                        {`0x${signHashMatch}`}
+                      </RouterGo>
+                    </div>
+                  </>
+                )}
+
+                {isSpecialModel ? (
+                  <Button
+                    className={classNames(
+                      styles.refuseButton,
+                      isShowResponseWithdraw ? null : styles.disabeld,
+                      styles.gray
+                    )}
+                    onClick={() => {
+                      dispatch({
+                        type: 'updateTxSpecial',
+                        payload: {
+                          txSpecial: null,
+                        },
+                      });
+                    }}>
+                    取消
+                  </Button>
+                ) : null}
               </div>
             ) : (
               <ButtonGroup>
