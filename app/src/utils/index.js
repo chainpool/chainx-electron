@@ -108,8 +108,17 @@ export const setColumnsWidth = (table = [], widths = []) => {
 export const getAllPubsFromRedeemScript = redeemScript => {
   const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
   const pubBufs = chunks.slice(1, chunks.length - 2);
-
   return pubBufs.map(chunk => chunk.toString('hex'));
+};
+
+export const getMNFromRedeemScript = redeemScript => {
+  const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
+  const m = chunks[0] - 80;
+  const n = chunks[chunks.length - 2] - 80;
+  return {
+    m,
+    n,
+  };
 };
 
 export const Patterns = {
@@ -481,3 +490,21 @@ export const SetFullScreen = Ele => {
 export const setNet = net => ChainX.account.setNet(net);
 
 export const isElectron = () => window.electronStore;
+
+export const groupArrayByCount = (array = [], count) => {
+  const result = [];
+  let newArray = [];
+  while (array.length && count) {
+    if (newArray.length < count) {
+      newArray.push(array.shift());
+    } else {
+      result.push(newArray.slice());
+      newArray = [];
+    }
+  }
+  if (newArray.length) {
+    result.push(newArray);
+  }
+
+  return result;
+};

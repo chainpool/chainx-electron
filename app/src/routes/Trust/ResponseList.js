@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
 import { HoverTip } from '../components';
-import { classNames, observer, getAllPubsFromRedeemScript } from '../../utils';
+import { classNames, observer } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
@@ -21,7 +21,6 @@ class ResponseList extends Component {
         tx,
         txSpecial,
         redeemScript,
-        redeemScriptSpecial,
         txOutputList = [],
         txInputList = [],
         txSpecialOutputList = [],
@@ -31,8 +30,11 @@ class ResponseList extends Component {
         trusts = [],
         normalizedOnChainAllWithdrawList = [],
         maxSignCount,
+        maxSignCountSpecial,
         totalSignCount,
+        totalSignCountSpecial,
         signHash,
+        signHashSpecial,
         BitCoinFeeShow,
         isTestBitCoinNetWork,
       },
@@ -42,10 +44,9 @@ class ResponseList extends Component {
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
     const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
-    const totalSignCountMath = isSpecialModel
-      ? txSpecialSignTrusteeList.length ||
-        (redeemScriptSpecial && getAllPubsFromRedeemScript(redeemScriptSpecial).length)
-      : totalSignCount;
+    const totalSignCountMath = isSpecialModel ? totalSignCountSpecial : totalSignCount;
+    const signHashMatch = isSpecialModel ? signHashSpecial : signHash;
+    const maxSignCountMatch = isSpecialModel ? Number(maxSignCountSpecial) : maxSignCount;
 
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -63,7 +64,6 @@ class ResponseList extends Component {
     const notResponseList = signTrusteeListMatch.filter(
       (item = {}) => item.trusteeSign !== false && item.trusteeSign !== true
     );
-    const haveBroadcast = signTrusteeListMatch.filter((item = {}) => item.trusteeSign).length >= maxSignCount;
 
     const totalInputValue = inputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
     const totalOutputValue = outputList.reduce((sum, next) => sum + Number(next.satoshi), 0);
@@ -75,9 +75,9 @@ class ResponseList extends Component {
       return (
         <li key={index}>
           {one.name}
+          {one.isHotEntity ? <span>(热)</span> : one.isColdEntity ? <span>(冷)</span> : null}
           {one.isSelf && (
             <>
-              {' '}
               (<FormattedMessage id={'Self'} />)
             </>
           )}
@@ -153,11 +153,12 @@ class ResponseList extends Component {
                 </span>
                 <span className={styles.count}>
                   <HoverTip
+                    width={550}
                     className={styles.hoverTrusteeList}
                     tip={
                       <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
                     }>
-                    {isSpecialModel ? haveSignList.length : `${haveSignList.length}/${maxSignCount}`}
+                    {`${haveSignList.length}/${maxSignCountMatch}`}
                   </HoverTip>
                 </span>
               </li>
@@ -175,13 +176,13 @@ class ResponseList extends Component {
                           {haveRefuseList.map((one, index) => renderSignLi(one, index))}
                         </ul>
                       }>
-                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCount + 1}`}
+                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCountMatch + 1}`}
                     </HoverTip>
                   </span>
                 </li>
               )}
             </ul>
-            {haveBroadcast ? (
+            {signHashMatch ? (
               <div className={styles.completeSign}>
                 <div className={styles.resok}>
                   <FormattedMessage id={'ResponseOkThenDealing'} />
@@ -189,11 +190,27 @@ class ResponseList extends Component {
                 <div className={styles.hash}>
                   <RouterGo
                     isOutSide
-                    go={{ pathname: blockChain.tx(signHash, isTestBitCoinNetWork()) }}
+                    go={{ pathname: blockChain.tx(signHashMatch, isTestBitCoinNetWork()) }}
                     className={styles.hashvalue}>
-                    {`0x${signHash}`}
+                    {`0x${signHashMatch}`}
                   </RouterGo>
                 </div>
+                <Button
+                  className={classNames(
+                    styles.refuseButton,
+                    isShowResponseWithdraw ? null : styles.disabeld,
+                    styles.gray
+                  )}
+                  onClick={() => {
+                    dispatch({
+                      type: 'updateTxSpecial',
+                      payload: {
+                        txSpecial: null,
+                      },
+                    });
+                  }}>
+                  取消
+                </Button>
               </div>
             ) : (
               <ButtonGroup>

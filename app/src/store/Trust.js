@@ -10,6 +10,7 @@ import {
   hexPrefix,
   toJS,
   convertAddressChecksumAll,
+  getMNFromRedeemScript,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -121,42 +122,48 @@ export default class Trust extends ModelExtend {
       let state = withdraw.status;
       const statusValue = _.get(withdraw.status, 'value') || '';
 
-      switch (statusValue.toUpperCase()) {
-        case 'NOTAPPLYING':
-          state = 'NotApplying';
-          break;
-        case 'APPLYING':
-          state = 'Applying';
-          break;
-        case 'SIGNING':
-          state = 'Singing';
-          break;
-        case 'BROADCASTING':
-          state = 'BroadCasting';
-          break;
-        case 'PROCESSING':
-          state = 'Processing';
-          break;
-        case 'CONFIRMING':
-          state = 'Confirming';
-          break;
-        case 'CONFIRMED':
-          state = 'Confirmed';
-          break;
-        case 'NORMALFINISH':
-          state = 'NormalFinish';
-          break;
-        case 'ROOTFINISH':
-          state = 'RootFinish';
-          break;
-        case 'NORMALCANCEL':
-          state = 'NormalCancel';
-          break;
-        case 'ROOTCANCEL':
-          state = 'RootCancel';
-          break;
-        default:
-          state = 'Unknown';
+      const applicationStatus = withdraw.applicationStatus;
+
+      if (applicationStatus && applicationStatus.toUpperCase() !== 'PROCESSING') {
+        state = applicationStatus;
+      } else {
+        switch (statusValue.toUpperCase()) {
+          case 'NOTAPPLYING':
+            state = applicationStatus;
+            break;
+          case 'APPLYING':
+            state = applicationStatus;
+            break;
+          case 'SIGNING':
+            state = 'Singing';
+            break;
+          case 'BROADCASTING':
+            state = 'BroadCasting';
+            break;
+          case 'PROCESSING':
+            state = 'Processing';
+            break;
+          case 'CONFIRMING':
+            state = 'Confirming';
+            break;
+          case 'CONFIRMED':
+            state = 'Confirmed';
+            break;
+          case 'NORMALFINISH':
+            state = applicationStatus;
+            break;
+          case 'ROOTFINISH':
+            state = applicationStatus;
+            break;
+          case 'NORMALCANCEL':
+            state = applicationStatus;
+            break;
+          case 'ROOTCANCEL':
+            state = applicationStatus;
+            break;
+          default:
+            state = 'Unknown';
+        }
       }
 
       return {
@@ -177,6 +184,7 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signTrusteeList() {
+    if (!this.tx) return [];
     const currentAccount = this.getCurrentAccount();
     return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
       const newItem = {
@@ -208,7 +216,9 @@ export default class Trust extends ModelExtend {
     const signList = inputs.signatures.map((item, index) => {
       const pubKey = inputs.pubkeys[index].toString('hex');
       const filterOne =
-        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] || {};
+        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] ||
+        this.chainConfigTrusteeList.filter(one => one.props.coldEntity.replace(/^0x/, '') === pubKey)[0] ||
+        {};
       return {
         trusteeSign: _.isUndefined(item) ? item : !!item,
         pubKey,
@@ -217,8 +227,7 @@ export default class Trust extends ModelExtend {
     });
     const currentAccount = this.getCurrentAccount();
     const mergeSignList = signList.map(item => {
-      // const isColdOrHotEntity = this.isColdOrHotEntity(item.pubKey);
-      // console.log(isColdOrHotEntity, '---------------isColdOrHotEntity');
+      const isColdOrHotEntity = this.isColdOrHotEntity(`0x${item.pubKey}`);
       if (item.accountId) {
         const findOne = this.rootStore.electionStore.trustIntentions.filter(
           one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
@@ -228,12 +237,16 @@ export default class Trust extends ModelExtend {
           return {
             ...findOne,
             ...item,
+            isColdEntity: isColdOrHotEntity.isColdEntity,
+            isHotEntity: isColdOrHotEntity.isHotEntity,
             isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
           };
         }
       } else {
         return {
           ...item,
+          isColdEntity: isColdOrHotEntity.isColdEntity,
+          isHotEntity: isColdOrHotEntity.isHotEntity,
           name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
         };
       }
@@ -248,6 +261,50 @@ export default class Trust extends ModelExtend {
       return reverse(hash).toString('hex');
     }
     return '';
+  }
+
+  @computed get signHashSpecial() {
+    if (
+      this.txSpecial &&
+      this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCountSpecial
+    ) {
+      const tx = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const hash = tx.getHash();
+      return reverse(hash).toString('hex');
+    }
+    return '';
+  }
+
+  @computed get maxSignCountSpecial() {
+    let redeemScriptSpecial = this.redeemScriptSpecial;
+    if (redeemScriptSpecial) {
+      return getMNFromRedeemScript(this.redeemScriptSpecial).m;
+    } else if (this.txSpecial) {
+      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const inputs = txb.__inputs[0];
+      if (inputs && inputs.redeemScript) {
+        redeemScriptSpecial = inputs.redeemScript;
+        return getMNFromRedeemScript(redeemScriptSpecial).m;
+      }
+    }
+  }
+
+  @computed get totalSignCountSpecial() {
+    let redeemScriptSpecial = this.redeemScriptSpecial;
+    if (redeemScriptSpecial) {
+      return getMNFromRedeemScript(this.redeemScriptSpecial).n;
+    } else if (this.txSpecial) {
+      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const inputs = txb.__inputs[0];
+      if (inputs && inputs.redeemScript) {
+        redeemScriptSpecial = inputs.redeemScript;
+        return getMNFromRedeemScript(redeemScriptSpecial).n;
+      }
+    }
   }
 
   reload = () => {
@@ -463,7 +520,6 @@ export default class Trust extends ModelExtend {
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
       const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
-      console.log(chainConfigTrusteeList, '---chainConfigTrusteeList');
       this.changeModel({
         tx,
         signStatus,
