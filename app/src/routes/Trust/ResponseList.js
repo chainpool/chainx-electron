@@ -287,13 +287,7 @@ class ResponseList extends Component {
               <div>实付手续费：{setPrecision(totalInputValue - totalOutputValue, 'BTC')} BTC</div>
             </div>
           </div>
-          <div className={styles.inputoutputContainer}>
-            {inputList.length > 4 || outputList.length > 4 ? (
-              <Scroller scroll={{ y: 135 }}>{InputOutputList}</Scroller>
-            ) : (
-              InputOutputList
-            )}
-          </div>
+          <div className={styles.inputoutputContainer}>{InputOutputList}</div>
         </div>
       </div>
     );
