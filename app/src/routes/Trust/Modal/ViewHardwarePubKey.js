@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
-import { Modal, Button, FormattedMessage, Clipboard } from '../../../components';
+import { Modal, Button, FormattedMessage, Clipboard, Mixin } from '../../../components';
 import * as styles from './ViewHardwarePubKey.less';
 
-class ViewHardwarePubKey extends Component {
+class ViewHardwarePubKey extends Mixin {
   state = {
     pubKey: '',
     linkStatus: false,
   };
-  async componentDidMount() {
+  startInit = () => {
+    const {
+      globalStore: {
+        modal: {
+          data: { desc },
+        },
+      },
+    } = this.props;
+    if (desc === 'Ledger') {
+      this.fetchPollIfFail(this.getPubkey, 2000);
+    } else if (desc === 'Trezor') {
+      this.getPubkey();
+    }
+  };
+
+  getPubkey = async () => {
     const {
       globalStore: {
         modal: {
@@ -15,13 +30,16 @@ class ViewHardwarePubKey extends Component {
         },
       },
     } = this.props;
-    const res = await callback().catch(err => console.log(err));
+    const res = await callback().catch(err => {
+      console.log(err);
+      return Promise.reject(err);
+    });
     if (res)
       this.setState({
         pubKey: res,
         linkStatus: true,
       });
-  }
+  };
 
   render() {
     const { pubKey, linkStatus } = this.state;
@@ -55,7 +73,7 @@ class ViewHardwarePubKey extends Component {
           <ul>
             <li>
               <span>状态：</span>
-              <span>{linkStatus ? '已连接' : '未连接'}</span>
+              {linkStatus ? <span className={styles.haveLinked}>已连接</span> : <span>未连接</span>}
             </li>
             <li>
               <span>PATH：</span>

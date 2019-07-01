@@ -105,6 +105,22 @@ export const setColumnsWidth = (table = [], widths = []) => {
   }));
 };
 
+export const getAllPubsFromRedeemScript = redeemScript => {
+  const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
+  const pubBufs = chunks.slice(1, chunks.length - 2);
+  return pubBufs.map(chunk => chunk.toString('hex'));
+};
+
+export const getMNFromRedeemScript = redeemScript => {
+  const chunks = bitcoin.script.decompile(Buffer.from(redeemScript, 'hex'));
+  const m = chunks[0] - 80;
+  const n = chunks[chunks.length - 2] - 80;
+  return {
+    m,
+    n,
+  };
+};
+
 export const Patterns = {
   decode: (encoded, password, errMsg = 'PasswordError') => {
     try {
@@ -172,7 +188,7 @@ export const Patterns = {
   },
   isPublicKey: (pubkey, errMsg = 'NotMathTheFormat') => {
     try {
-      Buffer.from(pubkey, 'hex');
+      bitcoin.ECPair.fromPublicKey(Buffer.from(pubkey.replace(/^0x/, ''), 'hex'), { compressed: true });
       return '';
     } catch (err) {
       return errMsg;
@@ -240,7 +256,33 @@ export const Patterns = {
     if (result) return '';
     return errMsg;
   },
-
+  isTransactionTx: (tx, isTest, errMsg = 'NotMathTheFormat') => {
+    try {
+      const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
+      bitcoin.TransactionBuilder.fromTransaction(
+        transactionRaw,
+        isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
+      );
+      return '';
+    } catch {
+      return errMsg;
+    }
+  },
+  isTransactionTxSigned: (tx, isTest, errMsg = '未签名') => {
+    const network = isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+    const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
+    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const inputs = txb.__inputs[0];
+    return _.get(inputs, 'signatures.length') ? '' : errMsg;
+  },
+  isRedeemScript: (redeemScript, errMsg = '赎回脚本格式错误') => {
+    try {
+      const res = getAllPubsFromRedeemScript(redeemScript);
+      return res.length ? '' : errMsg;
+    } catch {
+      return errMsg;
+    }
+  },
   check: value => {
     return (...params) => {
       if (!Patterns[value]) {

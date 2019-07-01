@@ -275,7 +275,7 @@ class InputText extends Mixin {
       onFocus,
     };
     const input = isTextArea ? (
-      <textarea {...props} rows={rows} />
+      <textarea {...props} rows={rows} style={{ overflowY: 'auto' }} />
     ) : (
       <>
         {isPassword ? <input type="password" name="password" style={{ display: 'none' }} /> : null}
@@ -309,15 +309,17 @@ class InputText extends Mixin {
               <div
                 className={styles.icon}
                 onClick={() => {
-                  this.setState({
-                    passwordType: !passwordType,
-                  });
+                  if (!icon) {
+                    this.setState({
+                      passwordType: !passwordType,
+                    });
+                  }
                 }}>
-                {isPassword ? (
-                  <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
-                ) : (
-                  icon || isPassword
-                )}
+                {isPassword
+                  ? icon || (
+                      <i className={classNames('iconfont', `icon-${passwordType ? 'icon-bukejian' : 'icon-kejian'}`)} />
+                    )
+                  : icon || isPassword}
               </div>
             ) : null}
           </div>
@@ -388,6 +390,7 @@ class InputAddress extends React.Component {
       getOptionValue = (item = {}) => item.value,
       prefix = '',
       placeholder = '',
+      showMatchOption = true,
     } = this.props;
 
     const matchOption = options.find(option => getOptionValue(option) === value);
@@ -398,7 +401,9 @@ class InputAddress extends React.Component {
           <div className={styles.label}>
             <span>
               {label}
-              {matchOption && <span className={styles.labelName}>（{getOptionLabel(matchOption)}）</span>}
+              {showMatchOption && matchOption && (
+                <span className={styles.labelName}>（{getOptionLabel(matchOption)}）</span>
+              )}
             </span>
           </div>
         ) : null}

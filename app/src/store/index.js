@@ -4,7 +4,7 @@ import { default as GlobalStore } from './Global';
 import { default as TradeStore } from './Trade';
 import { default as AccountStore } from './Account';
 import { default as Configure } from './Configure';
-import { default as Trust } from './Trust/index';
+import { default as Trust } from './Trust';
 import { default as AddressManage } from './AddressManage';
 import { default as TradeRecord } from './TradeRecord';
 import Chain from './Chain';

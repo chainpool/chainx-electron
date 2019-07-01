@@ -1,3 +1,4 @@
+@import '~@styles/index.less';
 .ExportHardwarePubKey{
 
   ul{
@@ -11,6 +12,14 @@
       border: 1px solid #DCE0E2;
       border-radius: 1px;
       height:70px;
+      &.disabeld{
+        border:1px solid #DCE0E2;
+        color: #e0e2e4;
+        &.active{
+          border:1px solid #DCE0E2;
+          border-radius: 1px;
+        }
+      }
       &.active{
         border: 1px solid #F6C94A;
         border-radius: 1px;
@@ -22,5 +31,10 @@
         margin-left: 31px;
       }
     }
+  }
+
+  .trezorConnectErrMsg{
+    color:@red;
+    margin-top: 5px;
   }
 }

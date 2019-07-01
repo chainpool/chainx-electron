@@ -1,15 +1,14 @@
 require("babel-polyfill");
 const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid").default;
 const AppBtc = require("@ledgerhq/hw-app-btc").default;
+const bitcoinjs = require("bitcoinjs-lib");
+const { getRedeemScriptFromRaw } = require("./bitcoin-utils");
 
 const bitcore = require("bitcore-lib");
 const mainnetPath = "m/45'/0'/0'/0/0";
 const testnetPath = "m/45'/1'/0'/0/0";
 
-async function getPublicKey(network = "mainnet") {
-  const transport = await TransportNodeHid.open("");
-  const btc = new AppBtc(transport);
-
+async function getPubKeyFromLedger(btc, network = "mainnet") {
   const path = network === "mainnet" ? mainnetPath : testnetPath;
 
   const result = await btc.getWalletPublicKey(path);
@@ -18,6 +17,14 @@ async function getPublicKey(network = "mainnet") {
   );
 
   return compressed.toString("hex");
+}
+
+async function getPublicKey(network = "mainnet") {
+  const transport = await TransportNodeHid.open("");
+  const btc = new AppBtc(transport);
+
+  const key = await getPubKeyFromLedger(btc, network);
+  return key;
 }
 
 function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
@@ -53,16 +60,65 @@ function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
 
     txObj.to(address.toString(), output.satoshis);
   }
+  applyAlreadyExistedSig(txObj, raw, network);
 
   return txObj;
 }
 
-async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
+function applyAlreadyExistedSig(txObj, raw, network) {
+  const tx = bitcoinjs.Transaction.fromHex(raw);
+  const txb = bitcoinjs.TransactionBuilder.fromTransaction(
+    tx,
+    network === "mainnet"
+      ? bitcoinjs.networks.bitcoin
+      : bitcoinjs.networks.testnet
+  );
+
+  txb.__inputs.forEach((input, index) => {
+    if (!input.pubkeys) {
+      return;
+    }
+
+    const pubkyes = input.pubkeys.map(key => key.toString("hex"));
+    input.signatures.forEach((sig, sigIdx) => {
+      if (typeof sig === "undefined") {
+        return;
+      }
+
+      const pubkey = pubkyes[sigIdx];
+      const obj = {
+        inputIndex: index,
+        signature: bitcore.crypto.Signature.fromBuffer(sig, false),
+        sigtype: bitcore.crypto.Signature.SIGHASH_ALL,
+        publicKey: bitcore.PublicKey(pubkey, {
+          network:
+            network === "mainnet"
+              ? bitcore.Networks.mainnet
+              : bitcore.Networks.testnet,
+          compressed: true
+        })
+      };
+
+      txObj.applySignature(obj);
+    });
+  });
+}
+
+async function sign(raw, inputsObj, redeemScript, network = "mainnet") {
   const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
+  const pubkey = await getPubKeyFromLedger(btc, network);
+
+  if (!redeemScript) {
+    redeemScript = getRedeemScriptFromRaw(raw, network);
+  }
+
+  if (!redeemScript) {
+    throw new Error("redeem script not provided");
+  }
 
   const toSignInputs = inputsObj.map(({ raw, index }) => {
-    const tx = btc.splitTransaction(raw);
+    const tx = btc.splitTransaction(raw, true);
     return [tx, index, redeemScript];
   });
 
@@ -71,9 +127,10 @@ async function sign(raw, inputsObj, redeemScript, pubkey, network = "mainnet") {
     .toString("hex");
 
   const path = network === "mainnet" ? mainnetPath : testnetPath;
+  const paths = toSignInputs.map(() => path);
   const result = await btc.signP2SHTransaction(
     toSignInputs,
-    [path],
+    paths,
     outputScript
   );
 
