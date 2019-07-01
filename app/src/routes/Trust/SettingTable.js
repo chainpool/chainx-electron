@@ -16,6 +16,7 @@ class SettingTable extends Component {
         {
           title: <FormattedMessage id={'Chain'} />,
           dataIndex: 'chain',
+          width: 100,
         },
         {
           title: <FormattedMessage id={'NodeStatus'} />,
