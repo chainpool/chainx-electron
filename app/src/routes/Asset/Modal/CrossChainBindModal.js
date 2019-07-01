@@ -683,9 +683,10 @@ class CrossChainBindModal extends Mixin {
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                    {item.content}
-                  </HoverTip>
+                  {/*<HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>*/}
+                  {/*{item.content}*/}
+                  {/*</HoverTip>*/}
+                  {item.content}
                 </span>
               ))}
             </div>
