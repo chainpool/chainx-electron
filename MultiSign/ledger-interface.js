@@ -118,7 +118,7 @@ async function sign(raw, inputsObj, redeemScript, network = "mainnet") {
   }
 
   const toSignInputs = inputsObj.map(({ raw, index }) => {
-    const tx = btc.splitTransaction(raw);
+    const tx = btc.splitTransaction(raw, true);
     return [tx, index, redeemScript];
   });
 

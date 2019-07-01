@@ -194,10 +194,10 @@ class AfterSelectChannelModal extends Component {
             </div>
           )}
 
-          <div className={styles.secret}>
-            <div className={styles.label}>待签原文：</div>
-            <div className={styles.result}>{tx}</div>
-          </div>
+          {/*<div className={styles.secret}>*/}
+          {/*<div className={styles.label}>待签原文：</div>*/}
+          {/*<div className={styles.result}>{tx}</div>*/}
+          {/*</div>*/}
         </div>
       </Modal>
     );

@@ -107,7 +107,9 @@ class ActiveValidatorsList extends Component {
                                 <tbody>
                                   {item.isActive ? (
                                     <tr>
-                                      <td>得票排名</td>
+                                      <td>
+                                        <FormattedMessage id={'VoteRank'} />
+                                      </td>
                                       <td>
                                         <div>{item.rank}</div>
                                       </td>
@@ -115,7 +117,9 @@ class ActiveValidatorsList extends Component {
                                   ) : null}
 
                                   <tr>
-                                    <td>节点类型</td>
+                                    <td>
+                                      <FormattedMessage id={'NodeType'} />
+                                    </td>
                                     <td>
                                       <div className={styles.nodetype}>
                                         <div
@@ -142,7 +146,9 @@ class ActiveValidatorsList extends Component {
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>节点网址</td>
+                                    <td>
+                                      <FormattedMessage id={'NodeWebsite'} />
+                                    </td>
                                     <td>
                                       <div className={styles.longaddress}>
                                         <RouterGo isOutSide go={{ pathname: item.url }}>
@@ -152,19 +158,25 @@ class ActiveValidatorsList extends Component {
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>账户地址</td>
+                                    <td>
+                                      <FormattedMessage id={'AccountAddressQuick'} />
+                                    </td>
                                     <td>
                                       <div className={styles.longaddress}>{item.address}</div>
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>奖池地址</td>
+                                    <td>
+                                      <FormattedMessage id={'PoolAddress'} />
+                                    </td>
                                     <td>
                                       <div className={styles.longaddress}>{item.sessionAddress}</div>
                                     </td>
                                   </tr>
                                   <tr>
-                                    <td>奖池金额</td>
+                                    <td>
+                                      <FormattedMessage id={'PoolAmount'} />
+                                    </td>
                                     <td>
                                       <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
                                     </td>
@@ -199,10 +211,12 @@ class ActiveValidatorsList extends Component {
                       </div>
                       <div className={styles.down}>
                         <div>
-                          自抵押数:<span>{parseInt(setDefaultPrecision(item.selfVote))}</span>
+                          <FormattedMessage id={'SelfIntentionBondedQuick'} />:
+                          <span>{parseInt(setDefaultPrecision(item.selfVote))}</span>
                         </div>
                         <div>
-                          总得票数:<span>{parseInt(setDefaultPrecision(item.totalNomination))}</span>
+                          <FormattedMessage id={'TotalVotesQuick'} />:
+                          <span>{parseInt(setDefaultPrecision(item.totalNomination))}</span>
                         </div>
                       </div>
                     </div>

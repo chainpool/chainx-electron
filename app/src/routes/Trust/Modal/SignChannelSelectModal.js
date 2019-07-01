@@ -130,7 +130,7 @@ class SignChannelSelectModal extends Component {
             {[
               { name: 'Ledger', icon: 'ledger' },
               { name: 'Trezor', icon: 'trezor' },
-              { name: '手机冷钱包', icon: 'phone', disabeld: true },
+              // { name: '手机冷钱包', icon: 'phone', disabeld: true },
               { name: 'other', icon: 'icon-gengduocaozuo', desc: '其他' },
             ].map((item, index) => (
               <li

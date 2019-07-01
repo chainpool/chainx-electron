@@ -84,13 +84,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width:90px;
     background: #FFFFFF;
     border: 1px solid #DCE0E2;
     box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
     border-radius: 4px;
     padding:12px 0;
     li{
+      white-space: nowrap;
+      padding:0 23px;
       width:100%;
       &:hover{
         background: #F8F8F8;
@@ -168,7 +169,7 @@
               box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
               background: #FFFFFF;
               padding:16px;
-              width:193px;
+              min-width:193px;
               table{
                 tr{
                   background:transparent;
@@ -217,7 +218,12 @@
         }
         .down{
           display: flex;
-          justify-content: space-between;
+          >div{
+            width:50%;
+            span{
+              margin-left: 3px;
+            }
+          }
           margin-top: 10px;
           font-size: 12px;
         }

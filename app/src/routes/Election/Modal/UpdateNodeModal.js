@@ -84,7 +84,7 @@ class UpdateNodeModal extends Component {
       blockInfo = {},
     } = this.state;
     const {
-      model: { dispatch, openModal, encodeAddressAccountId },
+      electionStore: { dispatch, openModal, encodeAddressAccountId },
       electionStore: { accountValidator: { sessionAddress } = {} },
     } = this.props;
 
