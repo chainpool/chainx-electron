@@ -131,37 +131,40 @@ class WithdrawModal extends Mixin {
       <Modal
         title={<FormattedMessage id={'CrossChainWithdraw'} />}
         button={
-          <Button
-            size="full"
-            type="confirm"
-            onClick={async () => {
-              if (await checkAll.confirm()) {
-                openModal({
-                  name: 'SignModal',
-                  data: {
-                    description: [
-                      { name: 'operation', value: () => <FormattedMessage id={'Withdraw'} /> },
-                      { name: () => <FormattedMessage id={'ReceiptAddress'} />, value: address, toastShow: false },
-                      { name: () => <FormattedMessage id={'Amount'} />, value: setBlankSpace(amount, token) },
-                      { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
-                    ],
-                    callback: () => {
-                      return dispatch({
-                        type: 'withdraw',
-                        payload: {
-                          token, // 注意这里的token不要用callback的参数
-                          amount,
-                          dest: address,
-                          remark: remark.trim(),
-                        },
-                      });
+          <>
+            <Button
+              size="full"
+              type="confirm"
+              onClick={async () => {
+                if (await checkAll.confirm()) {
+                  openModal({
+                    name: 'SignModal',
+                    data: {
+                      description: [
+                        { name: 'operation', value: () => <FormattedMessage id={'Withdraw'} /> },
+                        { name: () => <FormattedMessage id={'ReceiptAddress'} />, value: address, toastShow: false },
+                        { name: () => <FormattedMessage id={'Amount'} />, value: setBlankSpace(amount, token) },
+                        { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
+                      ],
+                      callback: () => {
+                        return dispatch({
+                          type: 'withdraw',
+                          payload: {
+                            token, // 注意这里的token不要用callback的参数
+                            amount,
+                            dest: address,
+                            remark: remark.trim(),
+                          },
+                        });
+                      },
                     },
-                  },
-                });
-              }
-            }}>
-            <FormattedMessage id={'Confirm'} />
-          </Button>
+                  });
+                }
+              }}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+            <div className={styles.withdrawwarn}>提现申请会在24小时内处理</div>
+          </>
         }>
         <div>
           <Input.Address
