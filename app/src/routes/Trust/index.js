@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, FormattedMessage } from '../../components';
-import { TableTitle } from '../components';
+import { TableTitle, HoverTip } from '../components';
 import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
