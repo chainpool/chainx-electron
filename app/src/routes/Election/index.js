@@ -2,10 +2,8 @@ import React from 'react';
 import { Button, Icon, Mixin, Tabs, FormattedMessage, Dropdown } from '../../components';
 import * as styles from './index.less';
 import NodeTable from './NodeTable';
-import UpdateNodeModal from './Modal/UpdateNodeModal';
 import VoteModal from './Modal/VoteModal';
 import UnFreezeModal from './Modal/UnFreezeModal';
-import RegisterNodeModal from './Modal/RegisterNodeModal';
 import InactiveVoteConfirmModal from './Modal/InactiveVoteConfirmModal';
 import ActiveValidatorsList from './ActiveValidatorsList';
 import { Inject } from '../../utils';
@@ -155,10 +153,8 @@ class Election extends Mixin {
             )}
           </Tabs>
         </div>
-        {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}
-        {name === 'RegisterNodeModal' ? <RegisterNodeModal {...this.props} /> : null}
         {name === 'InactiveVoteConfirmModal' ? <InactiveVoteConfirmModal {...this.props} /> : null}
       </div>
     );
