@@ -42,48 +42,50 @@ class Election extends Mixin {
       ? ['参选节点', '退选节点', <FormattedMessage id={'MyNominations'} />]
       : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
 
-    const operations = (
+    const getOperations = activeIndex => (
       <div className={styles.operation}>
-        <div className={styles.filterandsort}>
-          <input
-            placeholder={'输入节点名搜索'}
-            value={searchName}
-            onChange={e => {
-              this.setState({
-                searchName: e.target.value.trim(),
-              });
-            }}
-          />
-          <Dropdown
-            trigger="click"
-            drop={
-              <span>
-                排序: {sort.name}
-                <span className={styles.triangle}>{dropdownIcon}</span>
-              </span>
-            }
-            place="right-bottom"
-            distance={30}
-            className={styles.sortdropdowm}>
-            <ul className={styles.sortList}>
-              {[
-                { name: '自抵押', value: 'selfVote' },
-                { name: '总得票', value: 'totalNomination' },
-                { name: '节点名', value: 'name' },
-              ].map((item, index) => (
-                <li
-                  key={index}
-                  onClick={() => {
-                    this.setState({
-                      sort: item,
-                    });
-                  }}>
-                  {item.name}
-                </li>
-              ))}
-            </ul>
-          </Dropdown>
-        </div>
+        {activeIndex !== 2 && (
+          <div className={styles.filterandsort}>
+            <input
+              placeholder={'输入节点名搜索'}
+              value={searchName}
+              onChange={e => {
+                this.setState({
+                  searchName: e.target.value.trim(),
+                });
+              }}
+            />
+            <Dropdown
+              trigger="click"
+              drop={
+                <span>
+                  排序: {sort.name}
+                  <span className={styles.triangle}>{dropdownIcon}</span>
+                </span>
+              }
+              place="right-bottom"
+              distance={30}
+              className={styles.sortdropdowm}>
+              <ul className={styles.sortList}>
+                {[
+                  { name: '自抵押', value: 'selfVote' },
+                  { name: '总得票', value: 'totalNomination' },
+                  { name: '节点名', value: 'name' },
+                ].map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      this.setState({
+                        sort: item,
+                      });
+                    }}>
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            </Dropdown>
+          </div>
+        )}
         <ul>
           {isValidator ? (
             <li>
@@ -130,7 +132,7 @@ class Election extends Mixin {
           <Tabs tabs={tabs} defaultActiveIndex={0}>
             {activeIndex => (
               <>
-                {currentAddress ? operations : null}
+                {currentAddress ? getOperations(activeIndex) : null}
                 {activeIndex === 0 || activeIndex === 1 ? (
                   <div className={styles.ActiveValidatorsListContainer}>
                     <ActiveValidatorsList
