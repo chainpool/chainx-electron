@@ -18,6 +18,8 @@ import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
+import UpdateNodeModal from '../Election/Modal/UpdateNodeModal';
+import RegisterNodeModal from '../Election/Modal/RegisterNodeModal';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
@@ -387,6 +389,37 @@ class Trust extends Mixin {
                   <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
               ) : null}
+              {isValidator ? (
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'UpdateNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  <FormattedMessage id={'UpdateNodeTip'}>
+                    {msg => (
+                      <HoverTip tip={msg}>
+                        <FormattedMessage id={'UpdateNode'} />
+                      </HoverTip>
+                    )}
+                  </FormattedMessage>
+                </Button>
+              ) : (
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'RegisterNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  <HoverTip tip="注册并成功部署后，即可参与验证节点选举">
+                    <FormattedMessage id={'RegisterNode'} />
+                  </HoverTip>
+                </Button>
+              )}
             </ButtonGroup>
           </TableTitle>
           <WithdrawTable {...props} />
@@ -403,6 +436,8 @@ class Trust extends Mixin {
         {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
         {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
         {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
+        {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
+        {name === 'RegisterNodeModal' ? <RegisterNodeModal {...this.props} /> : null}
       </div>
     );
   }
