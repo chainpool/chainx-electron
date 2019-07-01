@@ -176,6 +176,10 @@ const zh_en = {
   Help: ['帮助', 'Help'],
   ResponseWithDraw: ['响应提现', 'Response Withdraw'],
   CrossChainWithdraw: ['跨链提现', 'Withdraw'],
+  WithdrawalProcessedWithin24H: [
+    '提现申请会在24小时内处理',
+    'The withdrawal application will be processed within 24 hours.',
+  ],
   Mapping: ['映射', 'Map'],
   CrossChainMapping: ['跨链映射', 'Map'],
   ReceiveAddress: ['接收人地址', 'Receive Address'],

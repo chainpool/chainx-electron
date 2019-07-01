@@ -163,7 +163,9 @@ class WithdrawModal extends Mixin {
               }}>
               <FormattedMessage id={'Confirm'} />
             </Button>
-            <div className={styles.withdrawwarn}>提现申请会在24小时内处理</div>
+            <div className={styles.withdrawwarn}>
+              <FormattedMessage id={'WithdrawalProcessedWithin24H'} />
+            </div>
           </>
         }>
         <div>
