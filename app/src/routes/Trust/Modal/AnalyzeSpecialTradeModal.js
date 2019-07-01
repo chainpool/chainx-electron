@@ -97,7 +97,7 @@ class AnalyzeSpecialTradeModal extends Component {
               value={redeemScriptSpecial}
               onChange={value =>
                 this.setState({
-                  redeemScriptSpecial: value,
+                  redeemScriptSpecial: value.replace(/^0x/, ''),
                 })
               }
               onBlur={this.checkAll.checkRedeemScriptSpecial}

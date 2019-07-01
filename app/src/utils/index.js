@@ -188,7 +188,7 @@ export const Patterns = {
   },
   isPublicKey: (pubkey, errMsg = 'NotMathTheFormat') => {
     try {
-      Buffer.from(pubkey, 'hex');
+      bitcoin.ECPair.fromPublicKey(Buffer.from(pubkey.replace(/^0x/, ''), 'hex'), { compressed: true });
       return '';
     } catch (err) {
       return errMsg;
