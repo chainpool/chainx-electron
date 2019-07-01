@@ -77,6 +77,7 @@ const translation = ({
   showUnitPrecision,
   originIntentions = [],
   nativeAssetName,
+  currentAccount,
   encodeAddressAccountId,
   accounts = [],
 }) => {
@@ -131,6 +132,9 @@ const translation = ({
 
   switch (`${module}|${call}`) {
     case 'XAssets|transfer': {
+      const dest = args.filter(item => item.name === 'dest')[0];
+      const accountId = findAccount(dest.data);
+      operation = accountId === currentAccount.address ? 'TransferIn' : 'TransferOut';
       info = merge(args, [
         { name: 'token' },
         { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), d.token) },

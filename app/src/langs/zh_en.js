@@ -163,6 +163,8 @@ const zh_en = {
   GetFreeCoin: ['领币', 'Get'],
   GetSDOT: ['领SDOT', 'Get SDOT'],
   Transfer: ['转账', 'Transfer'],
+  TransferIn: ['转入', 'Transfer In'],
+  TransferOut: ['转出', 'Transfer Out'],
   InnerChainTransfer: ['链内转账', 'Transfer'],
   OriginalChain: ['原链', 'Original Chain'],
   OriginalChainAddr: ['原链地址', 'Original Chain Addr'],
