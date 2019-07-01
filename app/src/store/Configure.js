@@ -351,7 +351,7 @@ export default class Configure extends ModelExtend {
           url: httpUrl,
           method: 'POST',
           methodAlias: 'chain_getBlock',
-          timeOut: 7000,
+          timeOut: 8000,
         });
       };
 
@@ -359,7 +359,7 @@ export default class Configure extends ModelExtend {
         return fetchFromWs({
           url,
           method: 'chain_getBlock',
-          timeOut: 7000,
+          timeOut: 8000,
         });
       };
 
@@ -382,9 +382,9 @@ export default class Configure extends ModelExtend {
     const reloadPage = () => {
       clearInterval(this.interval);
       this.interval = setTimeout(() => {
-        const { pathname, search } = this.setQueryParams('bestNode', true);
+        const { search } = this.setQueryParams('bestNode', true);
         if (refresh) {
-          window.location.href = `${pathname}${search}`;
+          window.location.search = search;
         }
       }, 0);
     };

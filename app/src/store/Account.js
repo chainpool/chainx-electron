@@ -1,8 +1,9 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, convertAddressChecksumAll } from '../utils';
+import { _, localSave, accountSave, convertAddressChecksumAll } from '../utils';
 import ModelExtend from './ModelExtend';
-import { default as downloadFile } from 'downloadjs';
 import { Toast } from '../components';
+import { default as downloadFile } from 'downloadjs';
+import uniqid from 'uniqid';
 
 export default class Store extends ModelExtend {
   constructor(rootStore) {
@@ -12,18 +13,18 @@ export default class Store extends ModelExtend {
       localSave.set('currentSelectTest', this.currentSelectTest);
       localSave.set('currentSelectMain', this.currentSelectMain);
       localSave.set('currentSelectPreMain', this.currentSelectPreMain);
-      localSave.set('accountsTest', this.accountsTest);
-      localSave.set('accountsMain', this.accountsMain);
-      localSave.set('accountsPreMain', this.accountsPreMain);
+      accountSave.set('accountsTest', this.accountsTest);
+      accountSave.set('accountsMain', this.accountsMain);
+      accountSave.set('accountsPreMain', this.accountsPreMain);
     });
   }
 
-  @observable accountsTest = localSave.get('accountsTest') || localSave.get('accounts') || [];
-  @observable accountsMain = localSave.get('accountsMain') || [];
-  @observable accountsPreMain = localSave.get('accountsPreMain') || [];
-  @observable currentSelectTest = localSave.get('currentSelectTest') || {};
-  @observable currentSelectMain = localSave.get('currentSelectMain') || {};
-  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || {};
+  @observable accountsTest = accountSave.get('accountsTest') || [];
+  @observable accountsMain = accountSave.get('accountsMain') || [];
+  @observable accountsPreMain = accountSave.get('accountsPreMain') || [];
+  @observable currentSelectTest = localSave.get('currentSelectTest') || '';
+  @observable currentSelectMain = localSave.get('currentSelectMain') || '';
+  @observable currentSelectPreMain = localSave.get('currentSelectPreMain') || '';
 
   @computed
   get currentAccount() {

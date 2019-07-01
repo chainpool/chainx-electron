@@ -1,0 +1,43 @@
+@import '~@styles/index.less';
+.SignChannelSelectModal{
+  ul{
+    li+li{
+      margin-top: 16px;
+    }
+    li{
+      &.disabeld{
+        color: #e0e2e4;
+        &.active{
+          border: 1px solid #DCE0E2;
+        }
+      }
+      padding-left: 30px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #DCE0E2;
+      border-radius: 1px;
+      height:70px;
+      &.active{
+        border: 1px solid #F6C94A;
+        border-radius: 1px;
+      }
+      i{
+        font-size: 28px;
+      }
+      span{
+        margin-left: 31px;
+      }
+    }
+  }
+}
+
+.trezorConnectErrMsg{
+  color:@red;
+  margin-top: 5px;
+}
+
+.supportdesc{
+  //font-size: 14px;
+  margin-left: 8px;
+  color:#959595;
+}

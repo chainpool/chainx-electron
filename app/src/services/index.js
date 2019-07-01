@@ -221,3 +221,30 @@ export const bindTxHash = payload => {
     params: [params],
   });
 };
+
+export const getUnspent = payload => {
+  const { address, isTest } = payload;
+  return fetchFromHttp({
+    method: 'get',
+    url: `https://api.chainx.org/chainx_trustee/${isTest ? 'testnet' : 'mainnet'}/unspents/${address}`,
+  });
+};
+
+export const getTxFromTxhash = payload => {
+  const { txhash, isTest } = payload;
+  return fetchFromHttp({
+    method: 'get',
+    url: `https://api.chainx.org/chainx_trustee/${isTest ? 'testnet' : 'mainnet'}/tx/${txhash}`,
+  });
+};
+
+export const getTxsFromTxidList = payload => {
+  const { ids, isTest } = payload;
+  return fetchFromHttp({
+    method: 'post',
+    url: `https://api.chainx.org/chainx_trustee/${isTest ? 'testnet' : 'mainnet'}/txs`,
+    body: {
+      ids,
+    },
+  });
+};

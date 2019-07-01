@@ -27,6 +27,73 @@
         line-height: 16px;
         margin-left: 8px;
       }
+      .setListbutton{
+        display: flex;
+
+
+        .utils{
+          .trustutils{
+            &.disabeld{
+              color:#C2C2C2 !important
+            }
+          }
+          cursor: pointer;
+          margin-left: 32px;
+          font-weight: bold;
+          i{
+            margin-right: 8px;
+            color: #F6C94A;
+          }
+          position:relative;
+          &:hover{
+            .utilsContainer{
+
+              display: block;
+            }
+
+          }
+          .utilsContainer{
+            padding-top: 10px;
+            width:162px;
+            right:0;
+            //background: red;
+            z-index: 1;
+            position: absolute;
+            display: none;
+            ul{
+              background: #FFFFFF;
+              border: 1px solid #DCE0E2;
+              box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
+              border-radius: 4px;
+              padding:12px 0;
+              display: flex;
+              flex-direction: column;
+              li+li{
+                margin-left: unset;
+              }
+              li{
+                width:100%;
+                &:hover{
+                  background: #F8F8F8;
+                }
+                i{
+                  margin-right: 16px;
+                }
+                height:38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
+        }
+
+        button{
+          span{
+            font-weight: bold !important;
+          }
+        }
+      }
 
       & > div:last-of-type {
         display: flex;
@@ -48,42 +115,101 @@
 
 
 
+  .responsetitle{
+    font-weight: bold;
+    font-size: 16px;
+  }
   .signStatus{
+    .reslist{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .statusList{
+        :global{
+
+          .__react_component_tooltip.type-dark{
+            background-color:white;
+            font-size: 14px;
+            color: #3F3F3F;
+            box-shadow: 0 4px 10px 0 rgba(0,0,0,0.20);
+            &.place-top:after{
+              border-top-color:white;
+              font-size: 14px;
+              color: #3F3F3F;
+            }
+          }
+
+        }
+        display:flex;
+        >li+li{
+          margin-left: 25px;
+        }
+        li{
+          &.notdealwith{
+            padding-right:30px;
+            border-right:1px solid #C2C2C2;
+          }
+          i{
+            margin-right: 8px;
+          }
+          .count{
+            margin-left: 5px;
+            .account{
+              display: flex;
+              li+li{
+                margin-left: 16px;
+              }
+            }
+          }
+        }
+      }
+    }
     position:relative;
-    border:1px solid @yellow;
-    padding:20px;
-    margin:40px 0;
+    background: #F5F5F5;
+    border: 1px solid #DCE0E2;
+    border-radius: 2px;
+    // border:1px solid @yellow;
+     padding:20px;
+    margin:20px 0;
     .completeSign{
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-content: center;
+      //flex-direction: column;
+      justify-content: flex-end;
       align-items: center;
-      color:white;
-      background: rgba(0,0,0,.7);
-      left:0;
-      top:0;
-      width:100%;
-      height:100%;
-      position:absolute;
       .resok{
-        margin:12px 0 16px;
-        color:@yellow;
+        //margin:12px 0 16px;
       }
       .hash{
+        margin-left: 8px;
+        display: flex;
         text-align: center;
-        font-size: 12px;
-        >div+div{
-          margin-top: 8px;
-        }
         .hashvalue{
-          color:@yellow !important;
+          margin-right: 5px;
+
         }
       }
       i{
         font-size: 30px;
         color:@yellow;
       }
+    }
+    .signButton,.refuseButton{
+      color:white;
+      &.disabeld{
+        background: #c7c8c9;
+        color:unset;
+        pointer-events: none;
+      }
+      &.gray{
+        color: #3F3F3F;
+        background: #DEDEDE !important;
+      }
+    }
+    .signButton{
+      background: @green;
+    }
+    .refuseButton{
+      background: @red;
     }
     >ul{
       >li+li{
@@ -116,6 +242,79 @@
         }
       }
     }
+    .copytx{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin:20px  -20px 0;
+      height:38px;
+      background: #EEEEEE;
+      border: 1px solid #DCE0E2;
+      border-radius: 2px;
+      padding:0 20px;
+      .tx{
+        .txlabel{
+          font-size: 12px;
+          font-weight: bold;
+          margin-right: 5px;
+        }
+      }
+      .fees{
+        display: flex;
+        >div{
+          font-weight: bold;
+          font-size: 12px;
+        }
+        >div+div{
+          margin-left: 10px;
+        }
+      }
+    }
+    .inputoutputContainer{
+      // background: red;
+      margin:0  -20px -20px;
+
+      .inputoutput{
+        padding:12px 20px 20px;
+        //background: black;
+        display: flex;
+        justify-content: space-between;
+        .input,.output{
+          .title{
+            font-size: 14px;
+            color: #3F3F3F;
+            margin-bottom: 12px;
+            font-weight: bold;
+          }
+          ul{
+            li+li{
+              margin-top: 8px;
+            }
+            li{
+              width:532px;
+              //height:64px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              .from{
+                display: flex;
+                align-items: center;
+              }
+              span.hash{
+                display: inline-block;
+                max-width: 350px;
+                .mixin_ellipse();
+                margin-left: 0;
+              }
+              span{
+                margin-left: 15px;
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
 
   .withdrawTitle {

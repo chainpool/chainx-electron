@@ -1,0 +1,88 @@
+{
+  "name": "chainx",
+  "productName": "ChainX",
+  "version": "1.0.1",
+  "description": "My Electron application description",
+  "main": "./main.js",
+  "scripts": {
+    "build": "cd app && yarn build",
+    "start": "NODE_ENV=development electron . --debug",
+    "startWin": "cross-env NODE_ENV=development electron . --debug",
+    "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
+    "pack": "electron-builder --dir",
+    "dist": "yarn build && rimraf dist && electron-builder",
+    "postinstall": "electron-rebuild"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.2",
+    "electron-builder": "^20.41.0",
+    "electron-debug": "^3.0.0",
+    "electron-rebuild": "^1.8.4",
+    "rimraf": "^2.6.3"
+  },
+  "build": {
+    "productName": "ChainX Wallet",
+    "appId": "org.chainx.wallet",
+    "files": [
+      "preload.js",
+      "main.js",
+      "app/build",
+      "package.json",
+      "resources",
+      "utils.js",
+      "MultiSign"
+    ],
+    "publish": {
+      "provider": "github",
+      "repo": "chainx-wallet",
+      "owner": "chainx-org"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "directories": {
+      "app": "./",
+      "buildResources": "./resources"
+    }
+  },
+  "dependencies": {
+    "@ledgerhq/hw-app-btc": "^4.61.0",
+    "@ledgerhq/hw-transport-node-hid": "^4.61.1",
+    "add": "^2.0.6",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babel-polyfill": "^6.26.0",
+    "bitcoinjs-lib": "git+https://github.com/chainpool/bitcoinjs-lib.git#electron",
+    "bitcoinjs-lib-zcash": "git+https://github.com/wliyongfeng/bitcoinjs-lib-zcash.git#electron",
+    "bitcore-lib": "^8.3.4",
+    "bs58check": "^2.1.2",
+    "buffer-reverse": "^1.0.1",
+    "cross-env": "^5.2.0",
+    "electron-store": "^3.2.0",
+    "electron-updater": "^4.0.6",
+    "semver": "^6.1.1",
+    "trezor.js": "git+https://github.com/chainpool/trezor.js.git#electron",
+    "ws": "^7.0.0"
+  }
+}

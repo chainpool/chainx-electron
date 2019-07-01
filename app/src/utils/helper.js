@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
-import store from 'store';
+import createStore from './createStore';
 import { forkJoin, from, of, Subject, combineLatest, interval, never, empty } from 'rxjs';
 import {
   mergeMap,
@@ -74,20 +74,8 @@ export const Rx = {
   empty,
 };
 
-export const localSave = {
-  get: key => {
-    return store.get(key);
-  },
-  set: (key, value) => {
-    store.set(key, value);
-  },
-  remove: key => {
-    store.remove(key);
-  },
-  clearAll: () => {
-    store.clearAll();
-  },
-};
+export const localSave = createStore('chainx_local');
+export const accountSave = createStore('chainx_account');
 
 export const moment_helper = {
   format: (time = Date.now(), format = 'YYYY-MM-DD') => {

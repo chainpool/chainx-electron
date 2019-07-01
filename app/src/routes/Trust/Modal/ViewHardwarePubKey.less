@@ -1,0 +1,38 @@
+@import '~@styles/index.less';
+.ViewHardwarePubKey {
+  ul{
+    margin-bottom: 24px;
+    li+li{
+      margin-top: 24px;
+    }
+    li{
+      display: flex;
+      justify-content: center;
+      span+span{
+        margin-left: 5px;
+      }
+      .haveLinked{
+        color: @green;
+      }
+    }
+  }
+  .secret {
+    span.label{
+      white-space: nowrap;
+    }
+    word-break: keep-all;
+    .result {
+      line-height: 20px;
+      word-break: break-all;
+    }
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    margin: 0 -24px;
+    background: #f2f3f4;
+
+    border: 1px solid #dce0e2;
+    height: 60px;
+    margin-bottom: 24px;
+  }
+}

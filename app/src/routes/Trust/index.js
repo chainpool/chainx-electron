@@ -1,8 +1,7 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
-import * as styles from './index.less';
+import { Mixin, ButtonGroup, Button, Icon, FormattedMessage } from '../../components';
 import { TableTitle } from '../components';
-import { Inject } from '../../utils';
+import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -10,7 +9,17 @@ import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
-import { blockChain } from '../../constants';
+import SignChannelSelectModal from './Modal/SignChannelSelectModal';
+import SignResultModal from './Modal/SignResultModal';
+import ConstructSpecialTradeModal from './Modal/ConstructSpecialTradeModal';
+import AnalyzeSpecialTradeModal from './Modal/AnalyzeSpecialTradeModal';
+import ExportHardwarePubKey from './Modal/ExportHardwarePubKey';
+import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
+import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
+import TrezorPasswordModal from './Modal/TrezorPasswordModal';
+import ResponseList from './ResponseList';
+
+import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
 class Trust extends Mixin {
@@ -18,6 +27,10 @@ class Trust extends Mixin {
     this.fetchPoll(this.getAllWithdrawalList);
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
+    this.getMinimalWithdrawalValueByToken();
+    // this.props.model.openModal({
+    //   name: 'TrezorPasswordModal',
+    // });
   };
 
   getAllWithdrawalList = async () => {
@@ -33,6 +46,15 @@ class Trust extends Mixin {
     } = this.props;
     return dispatch({
       type: 'getSomeOneInfo',
+    });
+  };
+
+  getMinimalWithdrawalValueByToken = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    return dispatch({
+      type: 'getMinimalWithdrawalValueByToken',
     });
   };
 
@@ -61,7 +83,7 @@ class Trust extends Mixin {
       globalStore: {
         modal: { name },
       },
-      model: { tx, signTrusteeList = [], trusts = [], normalizedOnChainAllWithdrawList = [], maxSignCount, signHash },
+      model: { trusts = [], tx },
     } = this.props;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -70,34 +92,7 @@ class Trust extends Mixin {
       currentTrustNode,
     };
 
-    const isSelfSign = signTrusteeList.filter(
-      (item = {}) => (item.trusteeSign === true || item.trusteeSign === false) && item.isSelf
-    )[0];
-
-    const isShowResponseWithdraw =
-      isTrustee && currentTrustNode && normalizedOnChainAllWithdrawList.length > 0 && !isSelfSign;
-
-    const isShowConstructureWithdraw =
-      isTrustee &&
-      normalizedOnChainAllWithdrawList.filter((item = {}) => {
-        return item.status.value.toUpperCase() === 'SIGNING' || item.status.value === 'PROCESSING';
-      }).length === 0 &&
-      currentTrustNode.decodedHotPrivateKey &&
-      normalizedOnChainAllWithdrawList.filter((item = {}) => item.status.value.toUpperCase() === 'APPLYING').length > 0;
-
-    const renderSignLi = (one, index) => {
-      return (
-        <li key={index}>
-          {one.name}
-          {one.isSelf && (
-            <>
-              {' '}
-              (<FormattedMessage id={'Self'} />)
-            </>
-          )}
-        </li>
-      );
-    };
+    const isShowConstructureWithdraw = isTrustee && !tx;
 
     return (
       <div className={styles.trust}>
@@ -115,102 +110,65 @@ class Trust extends Mixin {
                 )}
                 )
               </span>
-              <Button
-                type="blank"
-                onClick={() => {
-                  openModal({ name: 'TrustSetting' });
-                }}>
-                <Icon name="icon-shezhixintuo" />
-                <span>
-                  <FormattedMessage id={'SetupTrustee'} />
-                </span>
-              </Button>
+              <div className={styles.setListbutton}>
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({ name: 'TrustSetting' });
+                  }}>
+                  <Icon name="icon-shezhixintuo" />
+                  <span>
+                    <FormattedMessage id={'SetupTrustee'} />
+                  </span>
+                </Button>
+                <div className={styles.utils}>
+                  <span className={classNames(styles.trustutils)}>
+                    <Icon name="xintuogongju" />
+                    信托工具
+                  </span>
+                  {
+                    <div className={styles.utilsContainer}>
+                      <ul>
+                        <li
+                          type="blank"
+                          onClick={() => {
+                            openModal({ name: 'ExportHardwarePubKey' });
+                          }}>
+                          <Icon name="daochugongyue" />
+                          <span>导出硬件公钥</span>
+                        </li>
+                        {isTrustee ? (
+                          <>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({ name: 'ConstructSpecialTradeModal' });
+                              }}>
+                              <Icon name="gouzaoteshujiaoyi" />
+                              <span>构造特殊交易</span>
+                            </li>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({ name: 'AnalyzeSpecialTradeModal' });
+                              }}>
+                              <Icon name="jiexi" />
+                              <span>解析特殊交易</span>
+                            </li>
+                          </>
+                        ) : null}
+                      </ul>
+                    </div>
+                  }
+                </div>
+              </div>
             </TableTitle>
             <SettingTable {...this.props} />
           </div>
         )}
-        {isTrustee && signTrusteeList.length > 0 && tx ? (
-          <div className={styles.signStatus}>
-            {signTrusteeList.filter((item = {}) => item.trusteeSign).length >= maxSignCount && (
-              <div className={styles.completeSign}>
-                <Icon name="dengdai" />
-                <div className={styles.resok}>
-                  <FormattedMessage id={'ResponseOkThenDealing'} />
-                </div>
-                <div className={styles.hash}>
-                  <div>
-                    <FormattedMessage id={'TransactionHash'} />
-                  </div>
-                  <div>
-                    <RouterGo isOutSide go={{ pathname: blockChain.tx(signHash) }} className={styles.hashvalue}>
-                      {signHash}
-                    </RouterGo>
-                  </div>
-                </div>
-              </div>
-            )}
 
-            <TableTitle title={<FormattedMessage id={'ResponseList'} />}>
-              <div id="copy" style={{ width: 1, height: 1, overflow: 'hidden' }}>
-                <span>{tx}</span>
-              </div>
-              <ButtonGroup>
-                <Button>
-                  <Clipboard
-                    id="copy"
-                    outInner={
-                      <span className={styles.desc}>
-                        <FormattedMessage id={'CopyOriginalDataToSigned'} />
-                      </span>
-                    }
-                  />
-                </Button>
-                <Button
-                  {...(isShowResponseWithdraw ? { type: 'success' } : { type: 'disabeld' })}
-                  onClick={() => {
-                    openModal({ name: 'WithdrawSignModal' });
-                  }}>
-                  <FormattedMessage id={'RespondMultiSigWithdrawal'} />
-                </Button>
-              </ButtonGroup>
-            </TableTitle>
-            <ul>
-              <li>
-                <Icon name="icon-wancheng" className={'green'} />
-                <span>
-                  <FormattedMessage id={'HaveSigned'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-              <li>
-                <Icon name="icon-cuowu" className={'red'} />
-                <span>
-                  <FormattedMessage id={'HaveVetoedSign'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign === false)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-              <li>
-                <Icon name="weixiangying" className={'yellow'} />
-                <span>
-                  <FormattedMessage id={'NoResponseSign'} />
-                </span>
-                <ul>
-                  {signTrusteeList
-                    .filter((item = {}) => item.trusteeSign !== false && item.trusteeSign !== true)
-                    .map((one, index) => renderSignLi(one, index))}
-                </ul>
-              </li>
-            </ul>
-          </div>
-        ) : null}
+        <ResponseList {...this.props} isSpecialModel />
+        <ResponseList {...this.props} isNormalModel />
 
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
@@ -234,6 +192,14 @@ class Trust extends Mixin {
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
+        {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
+        {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
+        {name === 'ConstructSpecialTradeModal' ? <ConstructSpecialTradeModal {...props} /> : null}
+        {name === 'AnalyzeSpecialTradeModal' ? <AnalyzeSpecialTradeModal {...props} /> : null}
+        {name === 'ExportHardwarePubKey' ? <ExportHardwarePubKey {...props} /> : null}
+        {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
+        {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
+        {name === 'TrezorPasswordModal' ? <TrezorPasswordModal {...props} /> : null}
       </div>
     );
   }
