@@ -316,6 +316,7 @@ const zh_en = {
   ComingSoon: ['敬请期待', 'ComingSoon'],
   ThisAccount: ['本账户', 'This account'],
   TargetAccount: ['目标账户', 'Target Account'],
+  SourceTarget: ['来源账户', 'Source Account'],
   NetworkSetting: ['网络设置', 'Network Management'],
   SelectNetType: ['选择网络类型', 'Select Net Type'],
   NodeSetting: ['节点管理', 'Node Management'],
