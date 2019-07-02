@@ -48,7 +48,7 @@ class StopDepositModal extends Component {
             <li>
               <LanguageContent
                 zh={
-                  '2. BTC挖矿算力由之前兑PCX价格的5折调整为1折，这将降低 80% 的BTC充值挖矿收益,同时增加DOT映射挖矿和PCX投票挖矿的权重。'
+                  '2. BTC挖矿算力由之前兑PCX价格的5折调整为1折，这将降低 80% 的BTC跨链挖矿收益,同时增加DOT映射挖矿和PCX投票挖矿的权重。'
                 }
                 en={
                   '2. The mining power of BTC is adjusted from the previous discount of 50% to 90% of PCX price, which will affect 80% BTC top up’s mining income negatively and increase the weight of DOT mapping mining and PCX voting mining.'

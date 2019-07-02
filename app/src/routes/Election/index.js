@@ -80,7 +80,7 @@ class Election extends Mixin {
                 {[
                   { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
                   { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
-                  { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
+                  // { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
                 ].map((item, index) => (
                   <li
                     key={index}
