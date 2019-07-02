@@ -90,8 +90,8 @@ class ActiveValidatorsList extends Component {
                               {msg => (
                                 <HoverTip tip={msg}>
                                   <LanguageContent
-                                    zh={<img src={trustee_zh} alt="" />}
-                                    en={<img src={trustee_en} alt="" />}
+                                    zh={<img src={trustee_zh} alt="" height={18} />}
+                                    en={<img src={trustee_en} alt="" height={18} />}
                                   />
                                 </HoverTip>
                               )}
@@ -134,13 +134,15 @@ class ActiveValidatorsList extends Component {
                                           )}
                                         />
 
-                                        {item.isTrustee && item.isTrustee.length
-                                          ? '信托节点'
-                                          : !item.isActive
-                                          ? '退选节点'
-                                          : item.isValidator
-                                          ? '验证节点'
-                                          : '同步节点'}
+                                        {item.isTrustee && item.isTrustee.length ? (
+                                          <FormattedMessage id={'TrusteeNode'} />
+                                        ) : !item.isActive ? (
+                                          <FormattedMessage id={'DropOut'} />
+                                        ) : item.isValidator ? (
+                                          <FormattedMessage id={'ValidatorNode'} />
+                                        ) : (
+                                          <FormattedMessage id={'StandbyNode'} />
+                                        )}
                                       </div>
                                     </td>
                                   </tr>
@@ -203,7 +205,7 @@ class ActiveValidatorsList extends Component {
                                   });
                                 vote();
                               }}>
-                              <FormattedMessage id={'Nominate'} />
+                              <FormattedMessage id={'NominateQuick'} />
                             </Button>
                           ) : null}
                         </div>
