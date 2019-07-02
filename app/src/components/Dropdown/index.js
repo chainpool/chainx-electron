@@ -43,7 +43,7 @@ export default class Dropdown extends Component {
       width,
       drop = 'drop按钮',
       children: down = <div>down</div>,
-      zIndex = 100000000,
+      zIndex = 10001,
     } = this.props;
     if (trigger === 'hover') {
     } else if (trigger === 'click') {
@@ -69,13 +69,14 @@ export default class Dropdown extends Component {
       right,
       top: bottom,
       bottom: top,
+      zIndex: zIndex,
       ...(place.includes('middle') ? { transform: 'translate(-50%, 0%)' } : {}),
     };
 
     return trigger === 'hover' ? (
       <div className={classNames(styles.dropdown, styles[trigger])}>
         <div className={styles.dropArea}>{drop}</div>
-        <div className={styles.downAreaContainer} style={styleMerge} zindex={zIndex}>
+        <div className={styles.downAreaContainer} style={styleMerge}>
           <div
             className={styles.downArea}
             style={{
@@ -91,7 +92,7 @@ export default class Dropdown extends Component {
           {drop}
         </div>
         {toggled && (
-          <div className={styles.downAreaContainer} style={styleMerge} zindex={zIndex}>
+          <div className={styles.downAreaContainer} style={styleMerge}>
             <div
               onClick={this.handleClick}
               className={styles.downArea}

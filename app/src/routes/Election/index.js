@@ -48,16 +48,22 @@ class Election extends Mixin {
       <div className={styles.operation}>
         {activeIndex !== 2 && (
           <div className={styles.filterandsort}>
-            <input
-              placeholder={'输入节点名搜索'}
-              value={searchName}
-              onChange={e => {
-                this.setState({
-                  searchName: e.target.value.trim(),
-                });
-              }}
-            />
+            <FormattedMessage id={'SearchNodeName'}>
+              {msg => (
+                <input
+                  placeholder={msg}
+                  value={searchName}
+                  onChange={e => {
+                    this.setState({
+                      searchName: e.target.value.trim(),
+                    });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+
             <Dropdown
+              zIndex={10003}
               trigger="click"
               drop={
                 <span>
@@ -72,7 +78,7 @@ class Election extends Mixin {
                 {[
                   { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
                   { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
-                  { name: <FormattedMessage id={'NodeNameQuick'} />, value: 'name' },
+                  { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
                 ].map((item, index) => (
                   <li
                     key={index}

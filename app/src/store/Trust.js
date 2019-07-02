@@ -11,6 +11,7 @@ import {
   toJS,
   convertAddressChecksumAll,
   getMNFromRedeemScript,
+  getAllPubsFromRedeemScript,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
@@ -207,27 +208,57 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get txSpecialSignTrusteeList() {
-    if (!this.txSpecial) return [];
-    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-    const inputs = txb.__inputs[0];
-    if (!inputs.signatures) return [];
-    const signList = inputs.signatures.map((item, index) => {
-      const pubKey = inputs.pubkeys[index].toString('hex');
-      const filterOne =
-        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] ||
-        this.chainConfigTrusteeList.filter(one => one.props.coldEntity.replace(/^0x/, '') === pubKey)[0] ||
-        {};
+    let pubKeyInfos = [];
+    const configs = this.chainConfigTrusteeList;
+    const getAccountIdAndColdHotTypeFromPubKey = (pubKey, trusteeSign) => {
+      const prefixPubKey = hexPrefix(pubKey);
+      let isColdEntity = false;
+      let isHotEntity = false;
+      let accountId = '';
+      configs.forEach((item = {}) => {
+        const {
+          props: { coldEntity, hotEntity },
+        } = item;
+        if (coldEntity === prefixPubKey) {
+          isColdEntity = true;
+          accountId = item.accountId;
+        }
+        if (hotEntity === prefixPubKey) {
+          isHotEntity = true;
+          accountId = item.accountId;
+        }
+      });
       return {
-        trusteeSign: _.isUndefined(item) ? item : !!item,
+        accountId,
         pubKey,
-        accountId: filterOne.accountId,
+        isColdEntity,
+        isHotEntity,
+        trusteeSign,
       };
-    });
+    };
+
+    if (this.redeemScriptSpecial) {
+      const pubKeys = getAllPubsFromRedeemScript(this.redeemScriptSpecial);
+      pubKeyInfos = pubKeys.map(item => getAccountIdAndColdHotTypeFromPubKey(item));
+    }
+
+    if (this.txSpecial) {
+      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
+      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const inputs = txb.__inputs[0];
+      if (_.get(inputs, 'signatures.length')) {
+        pubKeyInfos = inputs.signatures.map((item, index) =>
+          getAccountIdAndColdHotTypeFromPubKey(
+            inputs.pubkeys[index].toString('hex'),
+            _.isUndefined(item) ? item : !!item
+          )
+        );
+      }
+    }
+
     const currentAccount = this.getCurrentAccount();
-    const mergeSignList = signList.map(item => {
-      const isColdOrHotEntity = this.isColdOrHotEntity(`0x${item.pubKey}`);
+    const mergeSignList = pubKeyInfos.map(item => {
       if (item.accountId) {
         const findOne = this.rootStore.electionStore.trustIntentions.filter(
           one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
@@ -237,16 +268,12 @@ export default class Trust extends ModelExtend {
           return {
             ...findOne,
             ...item,
-            isColdEntity: isColdOrHotEntity.isColdEntity,
-            isHotEntity: isColdOrHotEntity.isHotEntity,
             isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
           };
         }
       } else {
         return {
           ...item,
-          isColdEntity: isColdOrHotEntity.isColdEntity,
-          isHotEntity: isColdOrHotEntity.isHotEntity,
           name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
         };
       }
