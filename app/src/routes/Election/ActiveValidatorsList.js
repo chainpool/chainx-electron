@@ -82,7 +82,9 @@ class ActiveValidatorsList extends Component {
                           />
                           <span>
                             <HoverTip tip={item.about}>
-                              <div className={styles.overHidden}>{item.name}</div>
+                              <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
+                                {item.name}
+                              </div>
                             </HoverTip>
                           </span>
                           {item.isTrustee && item.isTrustee.length ? (
@@ -91,7 +93,7 @@ class ActiveValidatorsList extends Component {
                                 <HoverTip tip={msg}>
                                   <LanguageContent
                                     zh={<img src={trustee_zh} alt="" height={18} />}
-                                    en={<img src={trustee_en} alt="" height={18} />}
+                                    en={<img src={trustee_en} alt="" width={45} />}
                                   />
                                 </HoverTip>
                               )}
