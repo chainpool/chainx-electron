@@ -63,6 +63,7 @@ class Election extends Mixin {
             </FormattedMessage>
 
             <Dropdown
+              zIndex={10003}
               trigger="click"
               drop={
                 <span>
@@ -77,7 +78,7 @@ class Election extends Mixin {
                 {[
                   { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
                   { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
-                  { name: <FormattedMessage id={'NodeNameQuick'} />, value: 'name' },
+                  { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
                 ].map((item, index) => (
                   <li
                     key={index}
