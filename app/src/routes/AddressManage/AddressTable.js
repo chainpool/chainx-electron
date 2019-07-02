@@ -25,7 +25,7 @@ class AddressTable extends Component {
         {
           title: <FormattedMessage id={'Address'} />,
           dataIndex: 'address',
-          render: value => <Clipboard width={320}>{value}</Clipboard>,
+          render: value => <Clipboard>{value}</Clipboard>,
         },
         {
           title: '',

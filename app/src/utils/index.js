@@ -171,11 +171,15 @@ export const Patterns = {
     return /(http|https):\/\/([\w.]+\/?)\S*/.test(address) ? '' : errMsg;
   },
   isPublicKey: (pubkey, errMsg = 'NotMathTheFormat') => {
-    try {
-      Buffer.from(pubkey, 'hex');
-      return '';
-    } catch (err) {
+    if (pubkey.replace(/^0x/, '').length !== 66) {
       return errMsg;
+    } else {
+      try {
+        bitcoin.ECPair.fromPublicKey(Buffer.from(pubkey.replace(/^0x/, ''), 'hex'), { compressed: true });
+        return '';
+      } catch (err) {
+        return errMsg;
+      }
     }
   },
   isHotPrivateKey: (priKey, pubKey, isTest, callback, errMsg = 'NotMathTheFormat') => {
