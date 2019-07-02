@@ -48,15 +48,20 @@ class Election extends Mixin {
       <div className={styles.operation}>
         {activeIndex !== 2 && (
           <div className={styles.filterandsort}>
-            <input
-              placeholder={'输入节点名搜索'}
-              value={searchName}
-              onChange={e => {
-                this.setState({
-                  searchName: e.target.value.trim(),
-                });
-              }}
-            />
+            <FormattedMessage id={'SearchNodeName'}>
+              {msg => (
+                <input
+                  placeholder={msg}
+                  value={searchName}
+                  onChange={e => {
+                    this.setState({
+                      searchName: e.target.value.trim(),
+                    });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+
             <Dropdown
               trigger="click"
               drop={

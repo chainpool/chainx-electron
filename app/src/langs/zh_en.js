@@ -104,6 +104,7 @@ const zh_en = {
   Inactive: ['已退选', 'Inactive'],
   UnfreezeLocked: ['赎回解冻', 'Unfreeze Locked'],
   Nominate: ['投票', 'Nominate'],
+  NominateQuick: ['投票', 'Vote'],
   SwitchNominate: ['换票', 'Switch Nominate'],
   IncreaseNomination: ['追加投票', 'Increase'],
   DecreaseNomination: ['赎回投票', 'Decrease'],
@@ -256,6 +257,7 @@ const zh_en = {
   YouAre: ['您当前是', 'You are'],
   Price: ['价格', 'Price'],
   Total: ['累计', 'Total'],
+  SearchNodeName: ['节点名搜索', 'Search node name'],
 
   Revoke: ['撤销', 'Cancel'],
   FilledAverage: ['成交均价', 'Average'],
