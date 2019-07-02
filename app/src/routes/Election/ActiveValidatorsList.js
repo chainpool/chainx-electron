@@ -98,7 +98,6 @@ class ActiveValidatorsList extends Component {
                             </FormattedMessage>
                           ) : null}
                           <Dropdown
-                            zIndex={1000000001}
                             distance={20}
                             drop={<i className={classNames('iconfont icon-icon-jieshishuoming', styles.helpicon)} />}
                             place={ins === 0 ? 'middle-bottom' : 'middle-top'}>
@@ -186,7 +185,7 @@ class ActiveValidatorsList extends Component {
                             </div>
                           </Dropdown>
                         </div>
-                        <div>
+                        <div className={styles.buttoncontainer}>
                           {currentAddress ? (
                             <Button
                               type="confirm"
