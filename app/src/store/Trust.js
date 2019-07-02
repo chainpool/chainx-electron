@@ -236,10 +236,8 @@ export default class Trust extends ModelExtend {
         trusteeSign,
       };
     };
-    if (this.redeemScriptSpecial) {
-      const pubKeys = getAllPubsFromRedeemScript(this.redeemScriptSpecial);
-      pubKeyInfos = pubKeys.map(item => getAccountIdAndColdHotTypeFromPubKey(item));
-    } else if (this.txSpecial) {
+
+    if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
       const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
@@ -248,6 +246,9 @@ export default class Trust extends ModelExtend {
       pubKeyInfos = inputs.signatures.map((item, index) =>
         getAccountIdAndColdHotTypeFromPubKey(inputs.pubkeys[index].toString('hex'), _.isUndefined(item) ? item : !!item)
       );
+    } else if (this.redeemScriptSpecial) {
+      const pubKeys = getAllPubsFromRedeemScript(this.redeemScriptSpecial);
+      pubKeyInfos = pubKeys.map(item => getAccountIdAndColdHotTypeFromPubKey(item));
     }
     const currentAccount = this.getCurrentAccount();
     const mergeSignList = pubKeyInfos.map(item => {
@@ -314,7 +315,8 @@ export default class Trust extends ModelExtend {
     let redeemScriptSpecial = this.redeemScriptSpecial;
     if (redeemScriptSpecial) {
       return getMNFromRedeemScript(this.redeemScriptSpecial).n;
-    } else if (this.txSpecial) {
+    }
+    if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
       const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
