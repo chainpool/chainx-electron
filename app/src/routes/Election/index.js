@@ -63,6 +63,7 @@ class Election extends Mixin {
             </FormattedMessage>
 
             <Dropdown
+              style={{ top: 30 }}
               zIndex={10003}
               trigger="click"
               drop={
@@ -72,7 +73,7 @@ class Election extends Mixin {
                 </span>
               }
               place="right-bottom"
-              distance={30}
+              distance={0}
               className={styles.sortdropdowm}>
               <ul className={styles.sortList}>
                 {[
