@@ -44,6 +44,7 @@ export default class Dropdown extends Component {
       drop = 'drop按钮',
       children: down = <div>down</div>,
       zIndex = 10001,
+      style = {},
     } = this.props;
     if (trigger === 'hover') {
     } else if (trigger === 'click') {
@@ -71,6 +72,7 @@ export default class Dropdown extends Component {
       bottom: top,
       zIndex: zIndex,
       ...(place.includes('middle') ? { transform: 'translate(-50%, 0%)' } : {}),
+      ...style,
     };
 
     return trigger === 'hover' ? (
