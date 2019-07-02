@@ -114,6 +114,9 @@
 
 .overHidden{
   //.mixin_ellipse()
+  &.myVote{
+    color:#D89601;
+  }
 }
 
 .warnIcon{
@@ -171,7 +174,7 @@
               box-shadow: 0 6px 12px 0 rgba(0,0,0,0.20);
               background: #FFFFFF;
               padding:16px;
-              min-width:193px;
+              //min-width:193px;
               table{
                 tr{
                   background:transparent;
@@ -187,7 +190,6 @@
                     border:unset;
                     height:unset;
                     .nodetype{
-
                       padding-left:17px;
                       display: flex;
                       flex-direction: row;
@@ -195,9 +197,12 @@
                       align-items: center;
                     }
                     .longaddress{
-                      padding-left:17px;
+                      line-height: 18px;
+
+                      padding:0 0 0 17px;
+                      // padding-left:17px;
                       display: block;
-                      width: 120px;
+                      width: 160px;
                       .mixin_ellipse();
                     }
                   }
@@ -224,7 +229,6 @@
 
           img{
             margin-left: 4px;
-            width:28px;
           }
         }
         .down{

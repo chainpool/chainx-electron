@@ -246,7 +246,7 @@ class CrossChainBindModal extends Mixin {
                     {
                       content: (
                         <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
-                          ImToken
+                          imToken
                         </RouterGo>
                       ),
                       style: { left: -100 },

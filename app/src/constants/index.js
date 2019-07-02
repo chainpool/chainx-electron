@@ -68,6 +68,9 @@ export const blockChain = {
       ? `https://live.blockcypher.com/btc-testnet/address/${v}`
       : `https://live.blockcypher.com/btc/address/${v}`;
   },
+  chainXAccount: address => {
+    return `https://scan.chainx.org/accounts/${address}`;
+  },
 };
 
 export const OrderStatus = {

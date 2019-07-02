@@ -63,6 +63,7 @@ class Election extends Mixin {
             </FormattedMessage>
 
             <Dropdown
+              style={{ top: 30 }}
               zIndex={10003}
               trigger="click"
               drop={
@@ -72,13 +73,13 @@ class Election extends Mixin {
                 </span>
               }
               place="right-bottom"
-              distance={30}
+              distance={0}
               className={styles.sortdropdowm}>
               <ul className={styles.sortList}>
                 {[
                   { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
                   { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
-                  { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
+                  // { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
                 ].map((item, index) => (
                   <li
                     key={index}
