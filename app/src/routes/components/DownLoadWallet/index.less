@@ -1,0 +1,98 @@
+@import '~@styles/index.less';
+.download {
+  position: relative;
+  &:hover {
+    >div {
+      display: block !important;
+    }
+  }
+  > div {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    right: 0;
+    top: 26px;
+    > div {
+      position:relative;
+      top:5px;
+      cursor: Default;
+      box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      background: white;
+    }
+  }
+}
+.download {
+  white-space: unset !important;
+  font-size: 12px;
+  padding:0 12px !important;
+  color:@fontgray;
+  > div {
+    > div {
+      margin-top: 8px;
+      .desc{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        div{
+          text-align: center;
+          width:100%;
+        }
+      }
+      .textdesc{
+        text-align: center;
+        margin-top: 12px;
+        line-height: 16px;
+        word-break:break-all;
+        word-wrap:break-word;
+      }
+      padding: 16px 32px 32px;
+      color: #95989a;
+      width: 480px;
+      .downloadicon {
+        font-size: 50px;
+        color: @yellow;
+      }
+      .appname {
+        margin-top: 16px;
+        color: #3F3F3F;
+      }
+      .desc {
+        font-size: 14px;
+        margin-top: 12px;
+      }
+      ul {
+        margin-top: 24px;
+        display: flex;
+        ///justify-content: space-between;
+        li+li{
+          margin-left: 16px;
+        }
+        li {
+          width: 128px;
+          height: 152px;
+          border: 1px solid #dce0e2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 0 16px;
+          img {
+            width: 60px;
+          }
+          .button {
+            font-size: 12px;
+            padding:0 16px;
+            height: 26px;
+            .mixin_button();
+            border: 1px solid @yellow;
+            color: @yellow;
+            .downloadUrl{
+              color:unset;
+            }
+          }
+        }
+      }
+    }
+  }
+}

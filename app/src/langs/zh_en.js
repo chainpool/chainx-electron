@@ -27,7 +27,13 @@ const zh_en = {
     '不要将您的私钥存储在您的电脑上，或者网上某处。任何能够访问您备份私钥的人就能取用您的资金。',
     "Don't store your private key on your computer or somewhere online. Anyone who has access to your backup private key can access your funds",
   ],
-  DownloadWallet: ['下载钱包', 'Download Wallet'],
+  DownloadWallet: ['下载钱包', 'Download'],
+  Download: ['下载', 'Download'],
+  DecentralizedFullClientwallet: [
+    '去中心化全节点钱包，不依赖中心化交易所',
+    'Decentralized Full Client wallet, Independent on Centrailzed Exchanges',
+  ],
+  DesktopEndSecurityWallet: ['桌面端安全钱包', 'Desktop end security wallet'],
   SetupAccount: ['请先设置账户', 'Setup Account'],
 
   Complete: ['完成', 'Complete'],
@@ -333,6 +339,7 @@ const zh_en = {
   ProvideCoreAssetData: ['提供核心资产数据', 'Providing core asset data'],
   ProvideDetailedListData: ['提供列表详情数据', 'Provide detailed list data'],
   ImportAccount: ['导入账户', 'Import Account'],
+  SimulateAccount: ['模拟体验账户', 'Demo Account'],
   EnsureCustomerBackUp: [
     '确保您已备份账户，否则您的账户将无法找回',
     'Ensure you have backed up the account, or your account will be unable to be restored.',

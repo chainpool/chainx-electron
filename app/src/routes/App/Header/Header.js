@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { AuthorityComponent, Icon, RouterGo, FormattedMessage } from '../../../components';
+import { DownLoadWallet } from '../../components';
 import { PATH, ShowLanguage } from '../../../constants';
 import routers from '../../App/routers';
 import * as styles from './Header.less';
@@ -128,6 +129,9 @@ class Header extends Component {
                   </li>
                 )}
               </ul>
+              <div className={styles.download}>
+                <DownLoadWallet {...this.props} />
+              </div>
             </div>
           </div>
         </div>

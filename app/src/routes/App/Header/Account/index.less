@@ -1,8 +1,6 @@
 @import '~@styles/index.less';
 .account {
-  .addaccount,
-  .download {
-
+  .addaccount{
     position: relative;
     &:hover {
        >div {
@@ -46,62 +44,6 @@
             i {
               color: @yellow;
               margin-right: 16px;
-            }
-          }
-        }
-      }
-    }
-  }
-  .download {
-    color:@fontgray;
-    > div {
-      > div {
-        .desc{
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          div{
-            text-align: center;
-            width:100%;
-          }
-        }
-        padding: 16px 32px 32px;
-        color: #95989a;
-        width: 480px;
-        .downloadicon {
-          font-size: 50px;
-          color: @blue;
-        }
-        .appname {
-          margin-top: 12px;
-          color: @blue;
-        }
-        .desc {
-          margin-top: 12px;
-        }
-        ul {
-          margin-top: 24px;
-          display: flex;
-          justify-content: space-between;
-          li {
-            width: 128px;
-            height: 152px;
-            border: 1px solid #dce0e2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0 16px;
-            img {
-              width: 60px;
-            }
-            .button {
-              font-size: 12px;
-              width: 54px;
-              height: 26px;
-              .mixin_button();
-              border: 1px solid @yellow;
-              color: @yellow;
             }
           }
         }

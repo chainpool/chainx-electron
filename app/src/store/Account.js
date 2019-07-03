@@ -1,8 +1,9 @@
 import { autorun, computed, observable } from 'mobx';
-import { _, localSave, convertAddressChecksumAll } from '../utils';
+import { _, localSave, convertAddressChecksumAll, isElectron } from '../utils';
 import ModelExtend from './ModelExtend';
 import { default as downloadFile } from 'downloadjs';
 import { Toast } from '../components';
+import { SimulatedAccount } from '../constants';
 
 export default class Store extends ModelExtend {
   constructor(rootStore) {
@@ -51,6 +52,11 @@ export default class Store extends ModelExtend {
     if (this.isTestNetWork()) {
       return this.accountsTest.filter((item = {}) => !item.net || item.net === 'test');
     } else if (this.isMainNetWork()) {
+      if (!isElectron() && this.accountsMain.findIndex(item => item.address === SimulatedAccount.address) === -1) {
+        const newList = [...this.accountsMain];
+        newList.unshift(SimulatedAccount);
+        return newList;
+      }
       return this.accountsMain;
     } else if (this.isPreMainNetWork()) {
       return this.accountsPreMain;
