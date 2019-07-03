@@ -3,6 +3,9 @@ import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
 import { observer } from '../../utils';
 import { Balance, HoverTip } from '../components';
+import btcIcon from '../../resource/btc.png';
+import sdotLogo from '../../resource/xdot.png';
+import miniLogo from '../../resource/miniLogo.png';
 
 @observer
 class DepositMineTable extends Mixin {
@@ -26,15 +29,17 @@ class DepositMineTable extends Mixin {
       className: styles.tableContainer,
       columns: [
         {
-          title: <FormattedMessage id={'Rank'} />,
-          width: 85,
-          dataIndex: 'id',
-          render: (value, item, index) => index + 1,
-        },
-        {
           title: <FormattedMessage id={'AssetType'} />,
           dataIndex: 'id',
           width: 120,
+          render: (value, item) => {
+            return (
+              <div className={styles.miniLogo}>
+                <img src={item.id === 'BTC' ? btcIcon : item.name === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
+                {value}
+              </div>
+            );
+          },
         },
         {
           title: <FormattedMessage id={'TotalChainBalance'} />,
