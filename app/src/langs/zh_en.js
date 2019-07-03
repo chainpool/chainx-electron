@@ -30,7 +30,7 @@ const zh_en = {
   DownloadWallet: ['下载钱包', 'Download'],
   Download: ['下载', 'Download'],
   DecentralizedFullClientwallet: [
-    '去中心化全节点钱包，不依赖中心化交易所',
+    '去中心化轻钱包，不依赖中心化交易所',
     'Decentralized Full Client wallet, Independent on Centrailzed Exchanges',
   ],
   DesktopEndSecurityWallet: ['桌面端安全钱包', 'Desktop end security wallet'],

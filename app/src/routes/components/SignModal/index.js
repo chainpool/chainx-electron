@@ -306,22 +306,24 @@ class SignModal extends Mixin {
               </span>
             </div>
           ) : null}
-          <FormattedMessage id={'InputPassword'}>
-            {msg => (
-              <Input.Text
-                errMsgIsOutside
-                isPassword
-                placeholder={msg}
-                label=""
-                value={password}
-                errMsg={passwordErrMsg}
-                onChange={value => {
-                  this.setState({ password: value });
-                }}
-                onBlur={checkAll.confirm}
-              />
-            )}
-          </FormattedMessage>
+          {!isElectron() && isSimulatedAccount(currentAccount) ? null : (
+            <FormattedMessage id={'InputPassword'}>
+              {msg => (
+                <Input.Text
+                  errMsgIsOutside
+                  isPassword
+                  placeholder={msg}
+                  label=""
+                  value={password}
+                  errMsg={passwordErrMsg}
+                  onChange={value => {
+                    this.setState({ password: value });
+                  }}
+                  onBlur={checkAll.confirm}
+                />
+              )}
+            </FormattedMessage>
+          )}
         </div>
       </Modal>
     );

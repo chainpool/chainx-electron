@@ -21,11 +21,16 @@ class DownloadWalletWarnModal extends Component {
             确定
           </Button>
         }>
-        ChainX 在线钱包 https://wallet.chainx.org
+        ChainX 在线钱包{' '}
+        <RouterGo isOutSide go={{ pathname: 'https://wallet.chainx.org' }}>
+          https://wallet.chainx.org
+        </RouterGo>{' '}
         将于两周后(2019年7月17日)正式停止相关功能服务，届时在线钱包页面将仅提供一个模拟体验账户供新用户对主要的钱包功能进行体验,
-        历史已导入账户只能查看和导出，不再能发送交易。我们推荐用户使用ChainX桌面钱包, 大家可在
-        https://github.com/chainx-org/chainx-wallet/releases 下载最新版的桌面钱包.
-        相比在线钱包，桌面钱包更加安全，未来ChainX
+        历史已导入账户只能查看和导出，不再能发送交易。我们推荐用户使用ChainX桌面钱包, 大家可在{' '}
+        <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/chainx-wallet/releases' }}>
+          https://github.com/chainx-org/chainx-wallet/releases
+        </RouterGo>{' '}
+        下载最新版的桌面钱包. 相比在线钱包，桌面钱包更加安全，未来ChainX
         Core团队将只支持桌面钱包的开发更新，而移动端钱包将由社区进行开发，目前麦子钱包3.0已经正式支持ChainX，用户可以通过麦子钱包参与到ChainX的投票选举和资产挖矿。
       </Modal>
     );
