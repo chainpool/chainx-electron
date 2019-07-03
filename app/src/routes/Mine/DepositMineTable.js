@@ -32,10 +32,10 @@ class DepositMineTable extends Mixin {
           title: <FormattedMessage id={'AssetType'} />,
           dataIndex: 'id',
           width: 120,
-          render: (value, item) => {
+          render: value => {
             return (
               <div className={styles.miniLogo}>
-                <img src={item.id === 'BTC' ? btcIcon : item.name === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
+                <img src={value === 'BTC' ? btcIcon : value === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
                 {value}
               </div>
             );
