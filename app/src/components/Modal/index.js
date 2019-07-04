@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { default as ReactModal } from 'react-modal';
+import Draggable from 'react-draggable';
 import { _, Inject, classNames } from '../../utils';
 import * as styles from './index.less';
 
@@ -28,7 +29,27 @@ class Modal extends Component {
       isOverflow = false,
       className,
       scroll = true,
+      draggable = true,
     } = this.props;
+
+    const content = (
+      <div className={classNames(styles.modalcontainer, className)}>
+        <div className={classNames(styles.header, 'modalHeader')} style={{ cursor: draggable ? 'move' : 'auto' }}>
+          <div className={styles.label}>{title}</div>
+          <span
+            className={styles.close}
+            onClick={() => {
+              this.closeModal();
+            }}>
+            <i className="iconfont icon-icon-guanbi" />
+          </span>
+        </div>
+        <div className={classNames(scroll ? styles.content : null)}>
+          {children}
+          {button ? <div className={classNames(styles.button, 'button')}>{button}</div> : null}
+        </div>
+      </div>
+    );
 
     return (
       <ReactModal
@@ -42,7 +63,6 @@ class Modal extends Component {
             boxShadow: '0 6px 12px 0 rgba(0,0,0,0.20)',
             background: 'transparent',
             width: style.width || 580,
-            ...(isOverflow ? { overflowX: 'unset', overflowY: 'unset' } : { overflowX: 'hidden', overflowY: 'hidden' }),
             border: 'none',
             padding: 0,
             margin: 0,
@@ -52,26 +72,16 @@ class Modal extends Component {
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
+            ...(draggable
+              ? { overflow: 'unset', boxShadow: 'unset' }
+              : isOverflow
+              ? { overflowX: 'unset', overflowY: 'unset' }
+              : { overflowX: 'hidden', overflowY: 'hidden' }),
           },
         }}
         onAfterOpen={onAfterOpen}
         isOpen={status}>
-        <div className={classNames(styles.modalcontainer, className)}>
-          <div className={styles.header}>
-            <div className={styles.label}>{title}</div>
-            <span
-              className={styles.close}
-              onClick={() => {
-                this.closeModal();
-              }}>
-              <i className="iconfont icon-icon-guanbi" />
-            </span>
-          </div>
-          <div className={classNames(scroll ? styles.content : null)}>
-            {children}
-            {button ? <div className={classNames(styles.button, 'button')}>{button}</div> : null}
-          </div>
-        </div>
+        {draggable ? <Draggable handle=".modalHeader">{content}</Draggable> : content}
       </ReactModal>
     );
   }
