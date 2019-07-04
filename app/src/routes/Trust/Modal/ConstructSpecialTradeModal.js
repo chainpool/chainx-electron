@@ -11,6 +11,8 @@ class ConstructSpecialTradeModal extends Component {
     senderErrMsg: '',
     receiver: '',
     receiverErrMsg: '',
+    redeemScript: '',
+    redeemScriptErrMsg: '',
     balance: '',
     balanceErrMsg: '',
     balanceMinValue: '',
@@ -63,6 +65,12 @@ class ConstructSpecialTradeModal extends Component {
       this.setState({ receiverErrMsg: errMsg });
       return errMsg;
     },
+    checkRedeemScript: () => {
+      const { redeemScript } = this.state;
+      const errMsg = Patterns.check('required')(redeemScript) || Patterns.check('isRedeemScript')(redeemScript);
+      this.setState({ redeemScriptErrMsg: errMsg });
+      return errMsg;
+    },
     checkBalance: () => {
       const { balance, balanceMinValue } = this.state;
       const errMsg =
@@ -82,12 +90,14 @@ class ConstructSpecialTradeModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      return ['checkSender', 'checkReceiver', 'checkBalance', 'checkFee'].every(item => !this.checkAll[item]());
+      return ['checkSender', 'checkReceiver', 'checkRedeemScript', 'checkBalance', 'checkFee'].every(
+        item => !this.checkAll[item]()
+      );
     },
   };
 
   constructSpecialTrade = () => {
-    const { sender, balance, receiver, feeRate } = this.state;
+    const { sender, balance, receiver, redeemScript, feeRate } = this.state;
     if (this.checkAll.confirm()) {
       const {
         model: { dispatch },
@@ -105,8 +115,9 @@ class ConstructSpecialTradeModal extends Component {
               addr: receiver,
             },
           ],
-          userInputbitFee: formatNumber.toPrecision(feeRate, 8, true),
+          userInputbitFee: feeRate,
           url: sender,
+          redeemScript,
         },
       })
         .then(res => {
@@ -136,6 +147,8 @@ class ConstructSpecialTradeModal extends Component {
       senderErrMsg,
       receiver,
       receiverErrMsg,
+      redeemScript,
+      redeemScriptErrMsg,
       balance,
       balanceMinValue,
       balanceErrMsg,
@@ -186,6 +199,22 @@ class ConstructSpecialTradeModal extends Component {
               );
             }}
           />
+          <Input.Text
+            isTextArea
+            rows={5}
+            isOutSide
+            errMsg={redeemScriptErrMsg}
+            label={'赎回脚本'}
+            value={redeemScript}
+            onChange={value => {
+              this.setState(
+                {
+                  redeemScript: value.replace(/^0x/, ''),
+                },
+                constructSpecialTrade
+              );
+            }}
+          />
           <InputHorizotalList
             left={
               <Input.Text
@@ -219,9 +248,9 @@ class ConstructSpecialTradeModal extends Component {
                 isOutSide
                 errMsg={feeRateErrMsg}
                 isDecimal="decimal"
-                label="手续费"
+                label="手续费率"
                 value={feeRate}
-                suffix="BTC"
+                suffix="Satoshis/KB"
                 onChange={value => {
                   this.setState(
                     {
@@ -248,7 +277,7 @@ class ConstructSpecialTradeModal extends Component {
               </span>
             }
             isTextArea
-            rows={10}
+            rows={5}
             disabled
             value={tx}
           />

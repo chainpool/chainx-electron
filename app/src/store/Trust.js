@@ -346,161 +346,163 @@ export default class Trust extends ModelExtend {
     this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0, url }) => {
+  pickNeedUtxos = (unSpents, withdrawals, n, m, feeRate, chainxFee) => {
+    console.log(unSpents, withdrawals, n, m, feeRate, chainxFee);
+    function getSize(inputLength, outputLength, n, m) {
+      return inputLength * (48 + 73 * n + 34 * m) + 34 * (outputLength + 1) + 14;
+    }
+
+    function pickUtxos(utxos, outSum) {
+      let result = [];
+      let inSum = 0;
+      for (let utxo of utxos) {
+        result.push(utxo);
+        inSum += utxo.amount;
+        if (inSum >= outSum) {
+          break;
+        }
+      }
+      if (inSum < outSum) {
+        throw new Error({
+          info: 'utxo总额不够支付提现',
+          toString: () => 'UTXONotEnoughFee',
+        });
+      }
+      return result;
+    }
+
+    function prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee) {
+      unSpents.sort((a, b) => a.amount > b.amount);
+
+      let outSum = withdrawals.reduce((result, withdraw) => result + withdraw.amount - chainxFee, 0);
+
+      let targetInputs = pickUtxos(unSpents, outSum);
+      let inputSum = targetInputs.reduce((sum, input) => sum + input.amount, 0);
+      let size = getSize(targetInputs.length, withdrawals.length, n, m);
+      let minerFee = parseInt(feeRate * size);
+
+      while (inputSum < outSum + minerFee) {
+        targetInputs = pickUtxos(unSpents, outSum + minerFee);
+        size = getSize(targetInputs.length, withdrawals.length, n, m);
+        minerFee = parseInt(feeRate * size);
+      }
+
+      return { targetInputs, minerFee };
+    }
+
+    return prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee);
+  };
+
+  sign = async ({ withdrawList, userInputbitFee = 0, url, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
-      if (withdrawList) {
-        const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-        let multisigAddress = await this.getBitcoinTrusteeAddress();
-        if (url) {
-          //特殊交易
-          multisigAddress = url;
-        } else {
-          multisigAddress = await this.getBitcoinTrusteeAddress();
-        }
-        if (!multisigAddress) {
-          throw new Error({
-            info: '未获取到信托地址',
-            toString: () => 'NotFindTrusteeAddress',
-          });
-        }
-
-        const nodeUrl = findOne.node;
-        const BitCoinFee = this.BitCoinFee;
-        if (!url && !BitCoinFee) {
-          throw new Error({
-            info: '未获取到提现手续费',
-            toString: () => 'NotFindTrusteeFee',
-          });
-        }
-
-        const getUnspents = address =>
-          getUnspent({ address, isTest: this.isTestBitCoinNetWork() }).then((res = {}) => {
-            return res.result;
-          });
-
-        const filterUnspentsByAmount = (unspents = [], amount) => {
-          const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
-          nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
-
-          const result = [];
-          let sum = new BigNumber(0);
-          for (let utxo of nonZeroUnspents) {
-            result.push(utxo);
-            const value = new BigNumber(10).exponentiatedBy(8).multipliedBy(utxo.amount);
-            sum = sum.plus(value);
-            if (sum.isGreaterThan(amount)) {
-              break;
-            }
-          }
-          return sum.isLessThan(amount) ? [] : result;
-        };
-
-        const caculateCommentFeeFromSatoshiKB = async (satoshiKB, inputLength, withdrawalLength) => {
-          const fee = satoshiKB;
-          const res = await this.getTrusteeSessionInfo('Bitcoin');
-          const { maxSignCount: n, totalSignCount: m } = res;
-          const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
-          return formatNumber.toFixed((bytes / 1024) * fee, 8);
-        };
-
-        const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
-          const fee = await this.fetchNodeFeeRate(url);
-          const res = await this.getTrusteeSessionInfo('Bitcoin');
-          const { maxSignCount: n, totalSignCount: m } = res;
-          const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
-          const result = formatNumber.toFixed(bytes * fee, 8);
-          console.log(
-            inputLength,
-            withdrawalLength,
-            fee,
-            n,
-            m,
-            bytes,
-            result,
-            'inputLength,withdrawalLength,fee,n,m,bytes,result'
-          );
-          if (result) {
-            this.changeModel('commentFee', result);
-            this.changeModel('lastPredictTradeLength', bytes);
-          }
-        };
-
-        const utxos = await getUnspents(multisigAddress);
-        if (!(utxos && utxos.length)) {
-          throw new Error({
-            info: '当前节点无任何utxo',
-            toString: () => 'NodeHasNoUTXO',
-          });
-        }
-
-        const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
-          return result + withdraw.amount;
-        }, 0);
-
-        if (totalWithdrawAmount <= 0) {
-          throw new Error({
-            info: '提现总额应大于0',
-            toString: () => 'WithDrawTotalMustBiggerZero',
-          });
-        }
-        const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
-        if (targetUtxos.length <= 0) {
-          throw new Error({
-            info: '构造失败，账户余额不足',
-            toString: () => 'ConstructionFailedBalanceInnsufficient',
-          });
-        }
-        const totalInputAmount = targetUtxos.reduce((result, utxo) => {
-          return new BigNumber(10)
-            .exponentiatedBy(8)
-            .multipliedBy(utxo.amount)
-            .plus(result)
-            .toNumber();
-        }, 0);
-        const txb = new bitcoin.TransactionBuilder(network);
-        txb.setVersion(1);
-        targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
-        let feeSum = 0;
-        withdrawList.forEach(withdraw => {
-          const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
-          txb.addOutput(withdraw.addr, fee);
-          feeSum += fee;
-        });
-        //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
-        // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - feeSum - userInputbitFee;
-
-        if (change < 0) {
-          throw new Error({
-            info: 'utxo总额不够支付手续费',
-            toString: () => 'UTXONotEnoughFee',
-          });
-        }
-        if (change > 1000) {
-          txb.addOutput(multisigAddress, change);
-        }
-
-        rawTransaction = txb.buildIncomplete().toHex();
-        //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
+      let multisigAddress = await this.getBitcoinTrusteeAddress();
+      let redeemScriptMatch;
+      if (url) {
+        //特殊交易
+        multisigAddress = url;
+        redeemScriptMatch = redeemScript;
       } else {
-        redeemScript = Buffer.from(redeemScript, 'hex');
-        const privateKeys = [privateKey];
-        const transaction = bitcoin.Transaction.fromHex(tx);
-        const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
-        const keypairs = privateKeys.map(key => bitcoin.ECPair.fromWIF(key, network));
-        try {
-          for (let pair of keypairs) {
-            transaction.ins.forEach((utxo, index) => {
-              txb.sign(index, pair, redeemScript);
-            });
-          }
-        } catch (err) {
-          alert(err.message);
-        }
-        rawTransaction = txb.build().toHex();
+        multisigAddress = await this.getBitcoinTrusteeAddress();
+        redeemScriptMatch = this.redeemScript;
       }
+      if (!multisigAddress) {
+        throw new Error({
+          info: '未获取到信托地址',
+          toString: () => 'NotFindTrusteeAddress',
+        });
+      }
+
+      const BitCoinFee = this.BitCoinFee;
+      if (!url && !BitCoinFee) {
+        throw new Error({
+          info: '未获取到提现手续费',
+          toString: () => 'NotFindTrusteeFee',
+        });
+      }
+
+      const getUnspents = address =>
+        getUnspent({ address, isTest: this.isTestBitCoinNetWork() }).then((res = {}) => {
+          return res.result;
+        });
+
+      const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
+        return result + withdraw.amount;
+      }, 0);
+
+      if (totalWithdrawAmount <= 0) {
+        throw new Error({
+          info: '提现总额应大于0',
+          toString: () => 'WithDrawTotalMustBiggerZero',
+        });
+      }
+
+      let utxos = await getUnspents(multisigAddress);
+      utxos = utxos.map(item => ({
+        ...item,
+        amount: new BigNumber(10)
+          .exponentiatedBy(8)
+          .multipliedBy(item.amount)
+          .toNumber(),
+      }));
+
+      if (!(utxos && utxos.length)) {
+        throw new Error({
+          info: '当前节点无任何utxo',
+          toString: () => 'NodeHasNoUTXO',
+        });
+      }
+
+      const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
+
+      const getTargetUtxoAndMinerFee = () => {
+        return this.pickNeedUtxos(utxos, withdrawList, m, n, userInputbitFee / 1000, BitCoinFee);
+      };
+
+      const targetUtxoAndMinerFee = getTargetUtxoAndMinerFee();
+
+      const targetUtxos = targetUtxoAndMinerFee.targetInputs;
+
+      const calculateUserInputbitFee = targetUtxoAndMinerFee.minerFee;
+
+      if (targetUtxos.length <= 0) {
+        throw new Error({
+          info: '构造失败，账户余额不足',
+          toString: () => 'ConstructionFailedBalanceInnsufficient',
+        });
+      }
+
+      const totalInputAmount = targetUtxos.reduce((result, utxo) => {
+        return result + utxo.amount;
+      }, 0);
+
+      const txb = new bitcoin.TransactionBuilder(network);
+      txb.setVersion(1);
+      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+      let feeSum = 0;
+      withdrawList.forEach(withdraw => {
+        const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+        txb.addOutput(withdraw.addr, fee);
+        feeSum += fee;
+      });
+      //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
+      // const change = totalInputAmount - totalWithdrawAmount - minerFee;
+      const change = totalInputAmount - feeSum - calculateUserInputbitFee;
+
+      if (change < 0) {
+        throw new Error({
+          info: 'utxo总额不够支付提现',
+          toString: () => 'UTXONotEnoughFee',
+        });
+      }
+
+      if (change > 1000) {
+        txb.addOutput(multisigAddress, change);
+      }
+
+      rawTransaction = txb.buildIncomplete().toHex();
+      //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       return rawTransaction;
     };
     return compose();
@@ -573,6 +575,13 @@ export default class Trust extends ModelExtend {
   };
 
   getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
+    const getAddressFromScript = (script, network) => {
+      try {
+        return bitcoin.address.fromOutputScript(script, network);
+      } catch {
+        return '';
+      }
+    };
     const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
     const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
@@ -583,11 +592,12 @@ export default class Trust extends ModelExtend {
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
     const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
     const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
-      const address = bitcoin.address.fromOutputScript(item.script, network);
+      const address = getAddressFromScript(item.script, network);
       return {
         address,
         value: this.setPrecision(item.value, 8),
         satoshi: item.value,
+        ...(address ? {} : { err: true }),
       };
     });
     this.changeModel(txOutputList, resultOutputs);
@@ -606,7 +616,7 @@ export default class Trust extends ModelExtend {
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const filterOne = ins.filter((one = {}) => one.hash === item.txid)[0];
         const findOne = txb.__tx.outs[filterOne.index];
-        const address = bitcoin.address.fromOutputScript(findOne.script, network);
+        const address = getAddressFromScript(findOne.script, network);
         return {
           index: filterOne.index,
           raw: item.raw,
@@ -614,6 +624,7 @@ export default class Trust extends ModelExtend {
           hash: item.txid,
           value: this.setPrecision(findOne.value, 8),
           satoshi: findOne.value,
+          ...(address ? {} : { err: true }),
         };
       });
       this.changeModel(txInputList, insTXs);
