@@ -49,10 +49,7 @@ class DownLoadWallet extends Component {
                   <div>{item.name}</div>
 
                   <div className={classNames(styles.button, Device.getOS() === `${item.alias}` ? styles.active : null)}>
-                    <RouterGo
-                      isOutSide
-                      go={{ pathname: 'https://github.com/chainx-org/chainx-wallet/releases' }}
-                      className={styles.downloadUrl}>
+                    <RouterGo isOutSide go={{ pathname: item.url }} className={styles.downloadUrl}>
                       <FormattedMessage id={'Download'} />
                     </RouterGo>
                   </div>

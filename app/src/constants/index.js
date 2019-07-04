@@ -90,8 +90,8 @@ export const CloseFetures = {
 };
 
 export const DowloadWalletUrl = {
-  Win: 'https://github.com/chainx-org/chainx-wallet/releases/dowload/v1.0.1/chainx-1.0.1-win.zip',
-  Mac: 'https://github.com/chainx-org/chainx-wallet/releases/dowload/v1.0.1/chainx-1.0.1.dmg',
+  Win: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.1/chainx-1.0.1-win.zip',
+  Mac: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.1/chainx-1.0.1.dmg',
   Linux: '',
 };
 
