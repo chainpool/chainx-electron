@@ -28,7 +28,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: this.getWithdrawList(withDrawIndexSignList),
-            ...(fee ? { userInputbitFee: setPrecision(fee, 8, true) } : {}),
+            ...(fee ? { userInputbitFee: fee } : {}),
           },
         });
       } catch (err) {
@@ -108,7 +108,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: this.getWithdrawList(withDrawIndexSignList),
-            ...(fee ? { userInputbitFee: setPrecision(fee, 8, true) } : {}),
+            ...(fee ? { userInputbitFee: fee } : {}),
           },
         });
         if (tx) {
@@ -176,7 +176,7 @@ class WithdrawConstructModal extends Component {
             precision={8}
             errMsgIsOutside
             value={fee}
-            suffix={'BTC'}
+            suffix={'Satoshis/KB'}
             errMsg={feeErrMsg}
             onChange={async value => {
               this.setState(
@@ -191,7 +191,7 @@ class WithdrawConstructModal extends Component {
             }}
             label={
               <div>
-                <FormattedMessage id={'BitCoinFee'} />
+                <FormattedMessage id={'BitCoinFeeRate'} />
                 <span className={styles.bitcoinfee}>
                   {lastPredictTradeLength ? (
                     <>
