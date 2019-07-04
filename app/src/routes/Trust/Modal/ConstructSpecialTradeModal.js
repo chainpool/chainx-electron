@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, FormattedMessage, Modal, Clipboard } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
+import { formatNumber, Inject, Patterns } from '../../../utils';
 import * as styles from './ConstructSpecialTradeModal.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -15,33 +15,10 @@ class ConstructSpecialTradeModal extends Component {
     redeemScriptErrMsg: '',
     balance: '',
     balanceErrMsg: '',
-    balanceMinValue: '',
     feeRate: '',
     feeRateErrMsg: '',
     tx: '',
     errMsg: '',
-  };
-
-  componentDidMount() {
-    this.startInit();
-  }
-
-  startInit = () => {
-    const {
-      assetStore: { dispatch: dispatchAssetStore },
-    } = this.props;
-    dispatchAssetStore({
-      type: 'getMinimalWithdrawalValueByToken',
-      payload: {
-        token: 'BTC',
-      },
-    }).then(res => {
-      if (res) {
-        this.setState({
-          balanceMinValue: res.minimalWithdrawal,
-        });
-      }
-    });
   };
 
   checkAll = {
@@ -55,6 +32,12 @@ class ConstructSpecialTradeModal extends Component {
       this.setState({ senderErrMsg: errMsg });
       return errMsg;
     },
+    checkRedeemScript: () => {
+      const { redeemScript } = this.state;
+      const errMsg = Patterns.check('required')(redeemScript) || Patterns.check('isRedeemScript')(redeemScript);
+      this.setState({ redeemScriptErrMsg: errMsg });
+      return errMsg;
+    },
     checkReceiver: () => {
       const {
         model: { isTestBitCoinNetWork },
@@ -65,21 +48,9 @@ class ConstructSpecialTradeModal extends Component {
       this.setState({ receiverErrMsg: errMsg });
       return errMsg;
     },
-    checkRedeemScript: () => {
-      const { redeemScript } = this.state;
-      const errMsg = Patterns.check('required')(redeemScript) || Patterns.check('isRedeemScript')(redeemScript);
-      this.setState({ redeemScriptErrMsg: errMsg });
-      return errMsg;
-    },
     checkBalance: () => {
-      const { balance, balanceMinValue } = this.state;
-      const errMsg =
-        Patterns.check('required')(balance) ||
-        Patterns.check('smallerOrEqual')(
-          Number(this.props.model.setPrecision(balanceMinValue, 'BTC')),
-          balance,
-          <FormattedMessage id={'WithdrawAmountMustOverFee'} />
-        );
+      const { balance } = this.state;
+      const errMsg = Patterns.check('required')(balance) || Patterns.check('smaller')(0, balance, '必须大于0');
       this.setState({ balanceErrMsg: errMsg });
       return errMsg;
     },
@@ -90,7 +61,7 @@ class ConstructSpecialTradeModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      return ['checkSender', 'checkReceiver', 'checkRedeemScript', 'checkBalance', 'checkFee'].every(
+      return ['checkSender', 'checkRedeemScript', 'checkReceiver', 'checkBalance', 'checkFee'].every(
         item => !this.checkAll[item]()
       );
     },
@@ -150,18 +121,12 @@ class ConstructSpecialTradeModal extends Component {
       redeemScript,
       redeemScriptErrMsg,
       balance,
-      balanceMinValue,
       balanceErrMsg,
       feeRate,
       feeRateErrMsg,
       tx,
       errMsg,
     } = this.state;
-    const {
-      model: { setPrecision },
-    } = this.props;
-
-    const balanceMinValueShow = setPrecision(balanceMinValue, 'BTC');
 
     return (
       <Modal title={'构造特殊交易'} button={null}>
@@ -181,23 +146,7 @@ class ConstructSpecialTradeModal extends Component {
                 constructSpecialTrade
               );
             }}
-            //onBlur={constructSpecialTrade}
-          />
-          <Input.Text
-            isOutSide
-            errMsg={receiverErrMsg}
-            showMatchOption={false}
-            label={'接收方地址'}
-            value={receiver}
-            options={[{ label: '1', value: 1 }]}
-            onChange={value => {
-              this.setState(
-                {
-                  receiver: value,
-                },
-                constructSpecialTrade
-              );
-            }}
+            onBlur={constructSpecialTrade}
           />
           <Input.Text
             isTextArea
@@ -215,22 +164,29 @@ class ConstructSpecialTradeModal extends Component {
               );
             }}
           />
+          <Input.Text
+            isOutSide
+            errMsg={receiverErrMsg}
+            showMatchOption={false}
+            label={'接收方地址'}
+            value={receiver}
+            options={[{ label: '1', value: 1 }]}
+            onChange={value => {
+              this.setState(
+                {
+                  receiver: value,
+                },
+                constructSpecialTrade
+              );
+            }}
+          />
           <InputHorizotalList
             left={
               <Input.Text
                 isOutSide
                 errMsg={balanceErrMsg}
                 isDecimal="decimal"
-                label={
-                  <span>
-                    金额
-                    {balanceMinValueShow && (
-                      <span className={styles.minValue}>
-                        (最小提现金额 {setBlankSpace(balanceMinValueShow, 'BTC')})
-                      </span>
-                    )}
-                  </span>
-                }
+                label="金额"
                 value={balance}
                 suffix="BTC"
                 onChange={value => {
@@ -250,7 +206,7 @@ class ConstructSpecialTradeModal extends Component {
                 isDecimal="decimal"
                 label="手续费率"
                 value={feeRate}
-                suffix="Satoshis/KB"
+                suffix="Satoshis/byte"
                 onChange={value => {
                   this.setState(
                     {

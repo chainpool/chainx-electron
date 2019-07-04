@@ -176,7 +176,7 @@ class WithdrawConstructModal extends Component {
             precision={8}
             errMsgIsOutside
             value={fee}
-            suffix={'Satoshis/KB'}
+            suffix={'Satoshis/byte'}
             errMsg={feeErrMsg}
             onChange={async value => {
               this.setState(
