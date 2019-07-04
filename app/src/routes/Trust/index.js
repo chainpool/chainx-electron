@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
 import * as styles from './index.less';
-import { TableTitle } from '../components';
+import { TableTitle, HoverTip } from '../components';
 import { Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
@@ -10,6 +10,8 @@ import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
+import UpdateNodeModal from '../Election/Modal/UpdateNodeModal';
+import RegisterNodeModal from '../Election/Modal/RegisterNodeModal';
 import { blockChain } from '../../constants';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
@@ -225,6 +227,37 @@ class Trust extends Mixin {
                   <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
               ) : null}
+              {isValidator ? (
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'UpdateNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  <FormattedMessage id={'UpdateNodeTip'}>
+                    {msg => (
+                      <HoverTip tip={msg}>
+                        <FormattedMessage id={'UpdateNode'} />
+                      </HoverTip>
+                    )}
+                  </FormattedMessage>
+                </Button>
+              ) : (
+                <Button
+                  type="blank"
+                  onClick={() => {
+                    openModal({
+                      name: 'RegisterNodeModal',
+                    });
+                  }}>
+                  <Icon name="icon-xiugaipeizhi" />
+                  <HoverTip tip="注册并成功部署后，即可参与验证节点选举">
+                    <FormattedMessage id={'RegisterNode'} />
+                  </HoverTip>
+                </Button>
+              )}
             </ButtonGroup>
           </TableTitle>
           <WithdrawTable {...props} />
@@ -234,6 +267,8 @@ class Trust extends Mixin {
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
+        {name === 'UpdateNodeModal' ? <UpdateNodeModal {...props} /> : null}
+        {name === 'RegisterNodeModal' ? <RegisterNodeModal {...props} /> : null}
       </div>
     );
   }

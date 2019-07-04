@@ -48,7 +48,7 @@ class RegisterNodeModal extends Component {
     const { checkAll } = this;
     const { name, nameErrMsg, haveRead, haveReadErrMsg } = this.state;
     const {
-      model: { dispatch, openModal },
+      electionStore: { dispatch, openModal },
     } = this.props;
 
     return (
