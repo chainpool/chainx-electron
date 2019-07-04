@@ -573,6 +573,13 @@ export default class Trust extends ModelExtend {
   };
 
   getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
+    const getAddressFromScript = (script, network) => {
+      try {
+        return bitcoin.address.fromOutputScript(script, network);
+      } catch {
+        return '';
+      }
+    };
     const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
     const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
@@ -583,11 +590,12 @@ export default class Trust extends ModelExtend {
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
     const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
     const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
-      const address = bitcoin.address.fromOutputScript(item.script, network);
+      const address = getAddressFromScript(item.script, network);
       return {
         address,
         value: this.setPrecision(item.value, 8),
         satoshi: item.value,
+        ...(address ? {} : { err: true }),
       };
     });
     this.changeModel(txOutputList, resultOutputs);
@@ -606,7 +614,7 @@ export default class Trust extends ModelExtend {
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
         const filterOne = ins.filter((one = {}) => one.hash === item.txid)[0];
         const findOne = txb.__tx.outs[filterOne.index];
-        const address = bitcoin.address.fromOutputScript(findOne.script, network);
+        const address = getAddressFromScript(findOne.script, network);
         return {
           index: filterOne.index,
           raw: item.raw,
@@ -614,6 +622,7 @@ export default class Trust extends ModelExtend {
           hash: item.txid,
           value: this.setPrecision(findOne.value, 8),
           satoshi: findOne.value,
+          ...(address ? {} : { err: true }),
         };
       });
       this.changeModel(txInputList, insTXs);

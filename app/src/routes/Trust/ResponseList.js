@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo, Scroller } from '../../components';
+import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
 import { HoverTip } from '../components';
 import { classNames, observer } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
@@ -93,9 +93,13 @@ class ResponseList extends Component {
             {inputList.map((item, index) => (
               <li key={index}>
                 <div className={styles.from}>
-                  <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
-                    <span className={styles.hash}>{`0x${item.hash}`}</span>
-                  </RouterGo>
+                  {item.err ? (
+                    <span className={styles.errAddress}>Unable to decode input address</span>
+                  ) : (
+                    <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
+                      <span className={styles.hash}>{`0x${item.hash}`}</span>
+                    </RouterGo>
+                  )}
                   <span>({item.value})</span>
                 </div>
               </li>
@@ -109,9 +113,14 @@ class ResponseList extends Component {
               <li key={index}>
                 <div className={styles.left}>
                   <div className={styles.from}>
-                    <RouterGo isOutSide go={{ pathname: blockChain.address(item.address, isTestBitCoinNetWork()) }}>
-                      {item.address}
-                    </RouterGo>
+                    {item.err ? (
+                      <span className={styles.errAddress}>Unable to decode output address</span>
+                    ) : (
+                      <RouterGo isOutSide go={{ pathname: blockChain.address(item.address, isTestBitCoinNetWork()) }}>
+                        {item.address}
+                      </RouterGo>
+                    )}
+
                     <span>({item.value})</span>
                   </div>
                 </div>
