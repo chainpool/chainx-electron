@@ -36,7 +36,7 @@ class AddressTable extends Component {
               <Button
                 onClick={() => {
                   openModal({
-                    name: 'EditLabelModal',
+                    name: 'EditAddressLabelModal',
                     data: {
                       index,
                     },

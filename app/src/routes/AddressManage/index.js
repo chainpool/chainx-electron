@@ -44,7 +44,7 @@ class AddressManage extends Mixin {
         </TableTitle>
         {activeIndex === 0 ? <AddressTable {...this.props} /> : null}
         {name === 'AddAddressModal' ? <AddAddressModal {...this.props} /> : null}
-        {name === 'EditLabelModal' ? <EditLabelModal {...this.props} /> : null}
+        {name === 'EditAddressLabelModal' ? <EditLabelModal {...this.props} /> : null}
         {name === 'ConfirmAndCancelModal' ? <ConfirmAndCancelModal {...this.props} /> : null}
       </div>
     );
