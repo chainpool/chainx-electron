@@ -157,12 +157,12 @@ class UpdateNodeModal extends Component {
               </span>
               {blockInfo.sessionKeyAddress}
             </li>
-            <li>
-              <span>
-                <FormattedMessage id={'CurrentJackpotAddress'} />:
-              </span>
-              {blockInfo.jackpotAddress}
-            </li>
+            {/*<li>*/}
+            {/*<span>*/}
+            {/*<FormattedMessage id={'CurrentJackpotAddress'} />:*/}
+            {/*</span>*/}
+            {/*{blockInfo.jackpotAddress}*/}
+            {/*</li>*/}
           </ul>
           <Input.Text
             prefix="ChainX"

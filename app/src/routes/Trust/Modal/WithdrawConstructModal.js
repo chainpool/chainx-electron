@@ -81,7 +81,7 @@ class WithdrawConstructModal extends Component {
     const { checkAll } = this;
     const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg, loading } = this.state;
     const {
-      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, commentFee, lastPredictTradeLength },
+      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
     const options = normalizedOnChainAllWithdrawList
       .map((item = {}) => ({
@@ -185,18 +185,6 @@ class WithdrawConstructModal extends Component {
             label={
               <div>
                 <FormattedMessage id={'BitCoinFeeRate'} />
-                <span className={styles.bitcoinfee}>
-                  {lastPredictTradeLength ? (
-                    <>
-                      (<FormattedMessage id={'EstimationFinalTransactionLength'} />:{lastPredictTradeLength})
-                    </>
-                  ) : null}
-                </span>
-                {commentFee && false && (
-                  <span className={styles.bitcoinfee}>
-                    <FormattedMessage id={'RecommendationFee'} />:{commentFee}
-                  </span>
-                )}
               </div>
             }
             onBlur={() => {

@@ -46,7 +46,8 @@ export default class Trust extends ModelExtend {
             connected: '',
             hotPubKey: '',
             coldPubKey: '',
-            node: item.node,
+            apiNode: item.apiNode,
+            node: item.node, //已经弃用
             trusteeAddress: null,
           };
         })
@@ -58,19 +59,16 @@ export default class Trust extends ModelExtend {
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
 
   @observable _trusts = localSave.get('trusts') || [];
-  @observable tx = '';
-  @observable txSpecial = '';
-  @observable signStatus = '';
-  @observable redeemScript = '';
-  @observable redeemScriptSpecial = '';
-  @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
+  @observable tx = ''; //普通交易原文
+  @observable txSpecial = ''; //特殊交易原文
+  @observable redeemScript = ''; //普通交易赎回脚本
+  @observable redeemScriptSpecial = ''; //特殊交易赎回脚本
+  @observable trusteeList = []; //普通交易已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
   @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
-  @observable commentFee = ''; // 推荐手续费
-  @observable totalSignCount = '';
-  @observable maxSignCount = '';
-  @observable lastPredictTradeLength = '';
-  @observable BitCoinFee = '';
-  @observable txInputList = [];
+  @observable totalSignCount = ''; // 普通交易总签名个数
+  @observable maxSignCount = ''; // 普通交易最大签名个数
+  @observable BitCoinFee = ''; // 普通交易需要的chianx链上比特币手续费，特殊交易不需要要用
+  @observable txInputList = []; // 普通交易input
   @observable txOutputList = [];
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
@@ -83,28 +81,15 @@ export default class Trust extends ModelExtend {
   get trusts() {
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
-    return (
+    const trusts =
       this._trusts.filter(
         (item = {}) => item.address === currentAccount.address && item.net === currentNetWork.value
-      ) || []
-    );
+      ) || [];
+    return trusts;
   }
 
   set trusts(value) {
     this._trusts = value;
-  }
-
-  @computed get allColdOrHotPubKey() {
-    const [coldEntity, hotEntity] = [[], []];
-    this.chainConfigTrusteeList.forEach(item => {
-      if (_.get(item, 'props.coldEntity')) {
-        coldEntity.push(_.get(item, 'props.coldEntity'));
-      }
-      if (_.get(item, 'props.hotEntity')) {
-        hotEntity.push(_.get(item, 'props.hotEntity'));
-      }
-    });
-    return { coldEntity, hotEntity };
   }
 
   @computed get normalizedOnChainAllWithdrawList() {
@@ -398,6 +383,8 @@ export default class Trust extends ModelExtend {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
+      const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+      const nodeUrl = findOne.apiNode;
       let multisigAddress = await this.getBitcoinTrusteeAddress();
       let redeemScriptMatch;
       if (url) {
@@ -408,6 +395,14 @@ export default class Trust extends ModelExtend {
         multisigAddress = await this.getBitcoinTrusteeAddress();
         redeemScriptMatch = this.redeemScript;
       }
+
+      if (!nodeUrl) {
+        throw new Error({
+          info: '未设置节点',
+          toString: () => 'NotSetNode',
+        });
+      }
+
       if (!multisigAddress) {
         throw new Error({
           info: '未获取到信托地址',
@@ -424,11 +419,18 @@ export default class Trust extends ModelExtend {
       }
 
       const getUnspents = address =>
-        getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
+        this.fetchNodeStatus(nodeUrl, address)
           .then((res = {}) => {
             return res.result;
           })
           .catch(() => Promise.reject('超时'));
+
+      // const getUnspents = address =>
+      //   getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
+      //     .then((res = {}) => {
+      //       return res.result;
+      //     })
+      //     .catch(() => Promise.reject('超时'));
 
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
         return result + withdraw.amount;
@@ -505,7 +507,7 @@ export default class Trust extends ModelExtend {
         });
       }
 
-      if (change > 1000) {
+      if (change > 10000) {
         txb.addOutput(multisigAddress, change);
       }
 
@@ -559,7 +561,6 @@ export default class Trust extends ModelExtend {
       const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
       this.changeModel({
         tx,
-        signStatus,
         redeemScript,
         trusteeList,
         totalSignCount,
@@ -573,7 +574,6 @@ export default class Trust extends ModelExtend {
     } else {
       this.changeModel({
         tx: '',
-        signStatus: '',
         redeemScript: '',
         trusteeList: [],
         totalSignCount: '',
@@ -789,12 +789,35 @@ export default class Trust extends ModelExtend {
     });
   };
 
+  subScribeApiNodeStatus = async ({ url }) => {
+    let Authorization;
+    if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
+      url = url.split('@')[1];
+    }
+    const res = await fetchFromHttp({
+      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+      methodAlias: 'getblockchaininfo',
+      method: 'POST',
+      timeOut: 3500,
+      params: [],
+      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+    }).catch(err => Promise.reject(err));
+    if (res && res.result) {
+      return res.result;
+    }
+  };
+
   updateTrust = (obj = {}) => {
     const trusts = _.cloneDeep(this._trusts);
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey, hotPubKeyColdPubKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node, apiNode, decodedHotPrivateKey, hotPubKeyColdPubKey } = obj;
     const findOne = trusts.filter(
       (item = {}) => item.address === address && item.chain === chain && item.net === currentNetWork.value
     )[0];
@@ -810,7 +833,8 @@ export default class Trust extends ModelExtend {
     } else {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
-      if (node) findOne.node = node;
+      if (node) findOne.apiNode = node;
+      if (apiNode) findOne.apiNode = apiNode;
       if (hotPubKeyColdPubKey) {
         if (findOne.decodedHotPrivateKey && hotPubKeyColdPubKey !== findOne.hotPubKeyColdPubKey) {
           findOne.decodedHotPrivateKey = '';
@@ -820,7 +844,7 @@ export default class Trust extends ModelExtend {
       if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
-    this.subScribeNodeStatus();
+    //this.subScribeNodeStatus();
   };
 
   updateTrustToChain = ({ about = '', hotPubKey, coldPubKey }) => {
@@ -894,15 +918,6 @@ export default class Trust extends ModelExtend {
     if (res && res.fee) {
       this.changeModel('BitCoinFee', res.fee);
     }
-  };
-
-  isColdOrHotEntity = pubkey => {
-    const allColds = this.allColdOrHotPubKey.coldEntity;
-    const allHots = this.allColdOrHotPubKey.hotEntity;
-    return {
-      isColdEntity: allColds.includes(pubkey),
-      isHotEntity: allHots.includes(pubkey),
-    };
   };
 
   updateTxSpecial = ({ txSpecial }) => {
