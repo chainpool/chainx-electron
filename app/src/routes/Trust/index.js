@@ -165,6 +165,7 @@ class Trust extends Mixin {
                                   name: 'APINodeSettingModal',
                                   data: {
                                     chain: 'Bitcoin',
+                                    node: currentTrustNode.apiNode,
                                   },
                                 });
                               }}>

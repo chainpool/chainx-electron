@@ -383,6 +383,8 @@ export default class Trust extends ModelExtend {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
+      const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+      const nodeUrl = findOne.apiNode;
       let multisigAddress = await this.getBitcoinTrusteeAddress();
       let redeemScriptMatch;
       if (url) {
@@ -393,6 +395,14 @@ export default class Trust extends ModelExtend {
         multisigAddress = await this.getBitcoinTrusteeAddress();
         redeemScriptMatch = this.redeemScript;
       }
+
+      if (!nodeUrl) {
+        throw new Error({
+          info: '未设置节点',
+          toString: () => 'NotSetNode',
+        });
+      }
+
       if (!multisigAddress) {
         throw new Error({
           info: '未获取到信托地址',
@@ -409,11 +419,18 @@ export default class Trust extends ModelExtend {
       }
 
       const getUnspents = address =>
-        getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
+        this.fetchNodeStatus(nodeUrl, address)
           .then((res = {}) => {
             return res.result;
           })
           .catch(() => Promise.reject('超时'));
+
+      // const getUnspents = address =>
+      //   getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
+      //     .then((res = {}) => {
+      //       return res.result;
+      //     })
+      //     .catch(() => Promise.reject('超时'));
 
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
         return result + withdraw.amount;
@@ -490,7 +507,7 @@ export default class Trust extends ModelExtend {
         });
       }
 
-      if (change > 1000) {
+      if (change > 10000) {
         txb.addOutput(multisigAddress, change);
       }
 
@@ -770,6 +787,29 @@ export default class Trust extends ModelExtend {
           });
       }
     });
+  };
+
+  subScribeApiNodeStatus = async ({ url }) => {
+    let Authorization;
+    if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
+      url = url.split('@')[1];
+    }
+    const res = await fetchFromHttp({
+      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+      methodAlias: 'getblockchaininfo',
+      method: 'POST',
+      timeOut: 3500,
+      params: [],
+      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+    }).catch(err => Promise.reject(err));
+    if (res && res.result) {
+      return res.result;
+    }
   };
 
   updateTrust = (obj = {}) => {

@@ -11,7 +11,7 @@ class APINodeSettingModal extends Component {
       globalStore: { modal: { data: { node: node_prev } = {} } = {} },
     } = props;
     this.state = {
-      node: node_prev || 'auth:bitcoin-b2dd077@47.111.89.46:18332',
+      node: node_prev || '',
       nodeErrMsg: '',
       chain: '',
     };
@@ -20,16 +20,32 @@ class APINodeSettingModal extends Component {
   updateTrust = () => {
     const { node } = this.state;
     const {
-      model: { dispatch },
+      model: { dispatch, closeModal },
       globalStore: { modal: { data: { chain } = {} } = {} },
     } = this.props;
     dispatch({
-      type: 'updateTrust',
+      type: 'subScribeApiNodeStatus',
       payload: {
-        node,
-        chain,
+        url: node,
       },
-    });
+    })
+      .then(res => {
+        if (res) {
+          dispatch({
+            type: 'updateTrust',
+            payload: {
+              node,
+              chain,
+            },
+          });
+          closeModal();
+        }
+      })
+      .catch(() =>
+        this.setState({
+          nodeErrMsg: '节点连接失败',
+        })
+      );
   };
 
   checkAll = {
@@ -51,7 +67,6 @@ class APINodeSettingModal extends Component {
     const { checkAll } = this;
     const { node, nodeErrMsg } = this.state;
     const {
-      model: { closeModal },
       globalStore: {
         assets = [],
         modal: { data: { chain } = {} },
@@ -72,7 +87,6 @@ class APINodeSettingModal extends Component {
             onClick={() => {
               if (this.checkAll.confirm()) {
                 this.updateTrust();
-                closeModal();
               }
             }}>
             <FormattedMessage id={'Confirm'} />
@@ -95,6 +109,7 @@ class APINodeSettingModal extends Component {
             right=""
           />
           <Input.Text
+            errMsgIsOutside
             label={
               <div className={styles.nodeexample}>
                 <FormattedMessage id={'NodeAddress'} />
