@@ -58,19 +58,16 @@ export default class Trust extends ModelExtend {
   @observable onChainAllWithdrawList = []; // runtime中所有跨链提现记录
 
   @observable _trusts = localSave.get('trusts') || [];
-  @observable tx = '';
-  @observable txSpecial = '';
-  @observable signStatus = '';
-  @observable redeemScript = '';
-  @observable redeemScriptSpecial = '';
-  @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
+  @observable tx = ''; //普通交易原文
+  @observable txSpecial = ''; //特殊交易原文
+  @observable redeemScript = ''; //普通交易赎回脚本
+  @observable redeemScriptSpecial = ''; //特殊交易赎回脚本
+  @observable trusteeList = []; //普通交易已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
   @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
-  @observable commentFee = ''; // 推荐手续费
-  @observable totalSignCount = '';
-  @observable maxSignCount = '';
-  @observable lastPredictTradeLength = '';
-  @observable BitCoinFee = '';
-  @observable txInputList = [];
+  @observable totalSignCount = ''; // 普通交易总签名个数
+  @observable maxSignCount = ''; // 普通交易最大签名个数
+  @observable BitCoinFee = ''; // 普通交易需要的chianx链上比特币手续费，特殊交易不需要要用
+  @observable txInputList = []; // 普通交易input
   @observable txOutputList = [];
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
@@ -92,19 +89,6 @@ export default class Trust extends ModelExtend {
 
   set trusts(value) {
     this._trusts = value;
-  }
-
-  @computed get allColdOrHotPubKey() {
-    const [coldEntity, hotEntity] = [[], []];
-    this.chainConfigTrusteeList.forEach(item => {
-      if (_.get(item, 'props.coldEntity')) {
-        coldEntity.push(_.get(item, 'props.coldEntity'));
-      }
-      if (_.get(item, 'props.hotEntity')) {
-        hotEntity.push(_.get(item, 'props.hotEntity'));
-      }
-    });
-    return { coldEntity, hotEntity };
   }
 
   @computed get normalizedOnChainAllWithdrawList() {
@@ -559,7 +543,6 @@ export default class Trust extends ModelExtend {
       const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
       this.changeModel({
         tx,
-        signStatus,
         redeemScript,
         trusteeList,
         totalSignCount,
@@ -573,7 +556,6 @@ export default class Trust extends ModelExtend {
     } else {
       this.changeModel({
         tx: '',
-        signStatus: '',
         redeemScript: '',
         trusteeList: [],
         totalSignCount: '',
@@ -894,15 +876,6 @@ export default class Trust extends ModelExtend {
     if (res && res.fee) {
       this.changeModel('BitCoinFee', res.fee);
     }
-  };
-
-  isColdOrHotEntity = pubkey => {
-    const allColds = this.allColdOrHotPubKey.coldEntity;
-    const allHots = this.allColdOrHotPubKey.hotEntity;
-    return {
-      isColdEntity: allColds.includes(pubkey),
-      isHotEntity: allHots.includes(pubkey),
-    };
   };
 
   updateTxSpecial = ({ txSpecial }) => {
