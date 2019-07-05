@@ -20,7 +20,7 @@ class WithdrawConstructModal extends Component {
     checkWithDrawIndexSignList: async () => {
       const { withDrawIndexSignList, fee } = this.state;
       const {
-        model: { dispatch, setPrecision },
+        model: { dispatch },
       } = this.props;
       let error = '';
       try {
@@ -81,14 +81,7 @@ class WithdrawConstructModal extends Component {
     const { checkAll } = this;
     const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg, loading } = this.state;
     const {
-      model: {
-        normalizedOnChainAllWithdrawList = [],
-        dispatch,
-        openModal,
-        setPrecision,
-        commentFee,
-        lastPredictTradeLength,
-      },
+      model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal, commentFee, lastPredictTradeLength },
     } = this.props;
     const options = normalizedOnChainAllWithdrawList
       .map((item = {}) => ({
