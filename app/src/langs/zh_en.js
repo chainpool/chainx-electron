@@ -73,7 +73,7 @@ const zh_en = {
   RemoveMultiSign: ['删除多签', 'Remove Multi-sign'],
   ExecuteMultiSign: ['执行多签', 'Execute Multi-sign'],
   ConfirmMultiSign: ['确认多签', 'Confirm Multi-sign'],
-  BuildMultiSigWithdrawal: ['构造多签提现', 'Build MultiSig Withdrawal'],
+  BuildMultiSigWithdrawal: ['构造提现', 'Build MultiSig Withdrawal'],
   OpenOrders: ['挂单列表', 'Open Orders'],
   LimitTrade: ['限价交易', 'Limit'],
   LimitOrder: ['限价单', 'Limit Order'],

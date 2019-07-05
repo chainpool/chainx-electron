@@ -19,7 +19,7 @@ class SettingTable extends Component {
           width: 100,
         },
         {
-          title: 'API端口',
+          title: '跨链节点',
           dataIndex: 'apiNode',
           width: 200,
         },
