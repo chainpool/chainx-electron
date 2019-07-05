@@ -95,7 +95,7 @@ class Trust extends Mixin {
       currentTrustNode,
     };
 
-    const isShowConstructureWithdraw = isTrustee && !tx;
+    const isShowConstructureWithdraw = isTrustee && !tx && currentTrustNode.apiNode;
 
     return (
       <div className={styles.trust}>
@@ -135,13 +135,28 @@ class Trust extends Mixin {
                         <li
                           type="blank"
                           onClick={() => {
-                            openModal({ name: 'ExportHardwarePubKey' });
+                            openModal({
+                              name: 'APINodeSettingModal',
+                              data: {
+                                chain: 'Bitcoin',
+                                node: currentTrustNode.apiNode,
+                              },
+                            });
                           }}>
-                          <Icon name="daochugongyue" />
-                          <span>导出硬件公钥</span>
+                          <Icon name="jiexi" />
+                          <span>设置跨链节点</span>
                         </li>
-                        {isTrustee ? (
+
+                        {currentTrustNode.apiNode ? (
                           <>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({ name: 'ExportHardwarePubKey' });
+                              }}>
+                              <Icon name="daochugongyue" />
+                              <span>导出硬件公钥</span>
+                            </li>
                             <li
                               type="blank"
                               onClick={() => {
@@ -157,20 +172,6 @@ class Trust extends Mixin {
                               }}>
                               <Icon name="jiexi" />
                               <span>解析特殊交易</span>
-                            </li>
-                            <li
-                              type="blank"
-                              onClick={() => {
-                                openModal({
-                                  name: 'APINodeSettingModal',
-                                  data: {
-                                    chain: 'Bitcoin',
-                                    node: currentTrustNode.apiNode,
-                                  },
-                                });
-                              }}>
-                              <Icon name="jiexi" />
-                              <span>设置跨链节点</span>
                             </li>
                           </>
                         ) : null}
