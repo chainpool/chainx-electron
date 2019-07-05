@@ -383,6 +383,7 @@ export default class Trust extends ModelExtend {
 
       while (inputSum < outSum + minerFee) {
         targetInputs = pickUtxos(unSpents, outSum + minerFee);
+        inputSum = targetInputs.reduce((sum, input) => sum + input.amount, 0);
         size = getSize(targetInputs.length, withdrawals.length, n, m);
         minerFee = parseInt(feeRate * size);
       }
