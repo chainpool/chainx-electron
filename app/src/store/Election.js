@@ -75,7 +75,7 @@ export default class Election extends ModelExtend {
     return this.originIntentions.map(intention => {
       return Object.assign({}, intention, {
         address: ChainX.account.encodeAddress(intention.account),
-        sessionAddress: ChainX.account.encodeAddress(intention.sessionKey),
+        jackpotAddress: ChainX.account.encodeAddress(intention.jackpotAccount),
       });
     });
   }

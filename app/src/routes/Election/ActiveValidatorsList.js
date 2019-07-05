@@ -188,7 +188,7 @@ class ActiveValidatorsList extends Component {
                                       <FormattedMessage id={'PoolAddress'} />
                                     </td>
                                     <td>
-                                      <div className={styles.longaddress}>{item.sessionAddress}</div>
+                                      <div className={styles.longaddress}>{item.jackpotAddress}</div>
                                     </td>
                                   </tr>
                                   <tr>
