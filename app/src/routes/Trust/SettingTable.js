@@ -18,6 +18,11 @@ class SettingTable extends Component {
           dataIndex: 'chain',
           width: 100,
         },
+        {
+          title: 'API端口',
+          dataIndex: 'apiNode',
+          width: 200,
+        },
         // {
         //   title: <FormattedMessage id={'NodeStatus'} />,
         //   dataIndex: 'connected',

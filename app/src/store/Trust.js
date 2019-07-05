@@ -46,7 +46,8 @@ export default class Trust extends ModelExtend {
             connected: '',
             hotPubKey: '',
             coldPubKey: '',
-            node: item.node,
+            apiNode: item.apiNode,
+            node: item.node, //已经弃用
             trusteeAddress: null,
           };
         })
@@ -80,11 +81,11 @@ export default class Trust extends ModelExtend {
   get trusts() {
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
-    return (
+    const trusts =
       this._trusts.filter(
         (item = {}) => item.address === currentAccount.address && item.net === currentNetWork.value
-      ) || []
-    );
+      ) || [];
+    return trusts;
   }
 
   set trusts(value) {
@@ -776,7 +777,7 @@ export default class Trust extends ModelExtend {
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
     const { address } = currentAccount;
-    const { chain, hotPubKey, coldPubKey, node, decodedHotPrivateKey, hotPubKeyColdPubKey } = obj;
+    const { chain, hotPubKey, coldPubKey, node, apiNode, decodedHotPrivateKey, hotPubKeyColdPubKey } = obj;
     const findOne = trusts.filter(
       (item = {}) => item.address === address && item.chain === chain && item.net === currentNetWork.value
     )[0];
@@ -792,7 +793,8 @@ export default class Trust extends ModelExtend {
     } else {
       if (hotPubKey) findOne.hotPubKey = hotPubKey;
       if (coldPubKey) findOne.coldPubKey = coldPubKey;
-      if (node) findOne.node = node;
+      if (node) findOne.apiNode = node;
+      if (apiNode) findOne.apiNode = apiNode;
       if (hotPubKeyColdPubKey) {
         if (findOne.decodedHotPrivateKey && hotPubKeyColdPubKey !== findOne.hotPubKeyColdPubKey) {
           findOne.decodedHotPrivateKey = '';
@@ -802,7 +804,7 @@ export default class Trust extends ModelExtend {
       if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
-    this.subScribeNodeStatus();
+    //this.subScribeNodeStatus();
   };
 
   updateTrustToChain = ({ about = '', hotPubKey, coldPubKey }) => {

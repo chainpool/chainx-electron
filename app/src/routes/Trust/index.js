@@ -20,6 +20,7 @@ import TrezorPasswordModal from './Modal/TrezorPasswordModal';
 import ResponseList from './ResponseList';
 import UpdateNodeModal from '../Election/Modal/UpdateNodeModal';
 import RegisterNodeModal from '../Election/Modal/RegisterNodeModal';
+import APINodeSettingModal from './Modal/APINodeSettingModal';
 
 import * as styles from './index.less';
 
@@ -157,6 +158,19 @@ class Trust extends Mixin {
                               <Icon name="jiexi" />
                               <span>解析特殊交易</span>
                             </li>
+                            <li
+                              type="blank"
+                              onClick={() => {
+                                openModal({
+                                  name: 'APINodeSettingModal',
+                                  data: {
+                                    chain: 'Bitcoin',
+                                  },
+                                });
+                              }}>
+                              <Icon name="jiexi" />
+                              <span>设置跨链节点</span>
+                            </li>
                           </>
                         ) : null}
                       </ul>
@@ -235,6 +249,7 @@ class Trust extends Mixin {
         {name === 'TrezorPasswordModal' ? <TrezorPasswordModal {...props} /> : null}
         {name === 'UpdateNodeModal' ? <UpdateNodeModal {...this.props} /> : null}
         {name === 'RegisterNodeModal' ? <RegisterNodeModal {...this.props} /> : null}
+        {name === 'APINodeSettingModal' ? <APINodeSettingModal {...this.props} /> : null}
       </div>
     );
   }
