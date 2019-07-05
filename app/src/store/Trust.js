@@ -383,6 +383,7 @@ export default class Trust extends ModelExtend {
 
       while (inputSum < outSum + minerFee) {
         targetInputs = pickUtxos(unSpents, outSum + minerFee);
+        inputSum = targetInputs.reduce((sum, input) => sum + input.amount, 0);
         size = getSize(targetInputs.length, withdrawals.length, n, m);
         minerFee = parseInt(feeRate * size);
       }
@@ -423,9 +424,11 @@ export default class Trust extends ModelExtend {
       }
 
       const getUnspents = address =>
-        getUnspent({ address, isTest: this.isTestBitCoinNetWork() }).then((res = {}) => {
-          return res.result;
-        });
+        getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
+          .then((res = {}) => {
+            return res.result;
+          })
+          .catch(() => Promise.reject('超时'));
 
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
         return result + withdraw.amount;
@@ -438,7 +441,12 @@ export default class Trust extends ModelExtend {
         });
       }
 
-      let utxos = await getUnspents(multisigAddress);
+      let utxos = await getUnspents(multisigAddress).catch(() => {
+        throw new Error({
+          info: '超时',
+          toString: () => 'OverTime',
+        });
+      });
       utxos = utxos.map(item => ({
         ...item,
         amount: new BigNumber(10)
@@ -457,7 +465,7 @@ export default class Trust extends ModelExtend {
       const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
 
       const getTargetUtxoAndMinerFee = () => {
-        return this.pickNeedUtxos(utxos, withdrawList, m, n, userInputbitFee / 1000, BitCoinFee);
+        return this.pickNeedUtxos(utxos, withdrawList, m, n, Number(userInputbitFee), BitCoinFee);
       };
 
       const targetUtxoAndMinerFee = getTargetUtxoAndMinerFee();

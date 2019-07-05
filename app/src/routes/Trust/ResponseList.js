@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
 import { HoverTip } from '../components';
-import { classNames, observer } from '../../utils';
+import { classNames, observer, setBlankSpace, formatNumber } from '../../utils';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
@@ -44,7 +44,7 @@ class ResponseList extends Component {
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
     const signTrusteeListMatch = isSpecialModel ? txSpecialSignTrusteeList : signTrusteeList;
-    const totalSignCountMath = isSpecialModel ? totalSignCountSpecial : totalSignCount;
+    const totalSignCountMatch = isSpecialModel ? totalSignCountSpecial : totalSignCount;
     const signHashMatch = isSpecialModel ? signHashSpecial : signHash;
     const maxSignCountMatch = isSpecialModel ? Number(maxSignCountSpecial) : maxSignCount;
 
@@ -70,6 +70,17 @@ class ResponseList extends Component {
 
     const showSpecialModel = isTrustee && txSpecial;
     const showNormalModel = isTrustee && signTrusteeListMatch.length > 0 && txMatchOne;
+
+    const calculateInfactFeeRate = (inputLength, outputLength, m, n) => {
+      const size = inputLength * (48 + 73 * n + 34 * m) + 34 * (outputLength + 1) + 14;
+      return size ? formatNumber.toFixed((totalInputValue - totalOutputValue) / size, 0) : 0;
+    };
+    const infactFeeRate = calculateInfactFeeRate(
+      inputList.length,
+      outputList.length,
+      totalSignCountMatch,
+      maxSignCountMatch
+    );
 
     const renderSignLi = (one, index) => {
       return (
@@ -151,7 +162,7 @@ class ResponseList extends Component {
                         {notResponseList.map((one, index) => renderSignLi(one, index))}
                       </ul>
                     }>
-                    {notResponseList.length}/{totalSignCountMath}
+                    {notResponseList.length}/{totalSignCountMatch}
                   </HoverTip>
                 </span>
               </li>
@@ -185,7 +196,7 @@ class ResponseList extends Component {
                           {haveRefuseList.map((one, index) => renderSignLi(one, index))}
                         </ul>
                       }>
-                      {`${haveRefuseList.length}/${totalSignCountMath - maxSignCountMatch + 1}`}
+                      {`${haveRefuseList.length}/${totalSignCountMatch - maxSignCountMatch + 1}`}
                     </HoverTip>
                   </span>
                 </li>
@@ -301,6 +312,7 @@ class ResponseList extends Component {
             <div className={styles.fees}>
               {!isSpecialModel && <div>收取手续费： {BitCoinFeeShow} BTC</div>}
               <div>实付手续费：{setPrecision(totalInputValue - totalOutputValue, 'BTC')} BTC</div>
+              <div>实际费率：{setBlankSpace(infactFeeRate, 'Satoshis/byte')}</div>
             </div>
           </div>
           <div className={styles.inputoutputContainer}>{InputOutputList}</div>
