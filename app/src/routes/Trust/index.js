@@ -143,7 +143,7 @@ class Trust extends Mixin {
                               },
                             });
                           }}>
-                          <Icon name="jiexi" />
+                          <Icon name="shezhiquanjiedian" />
                           <span>设置跨链节点</span>
                         </li>
 
