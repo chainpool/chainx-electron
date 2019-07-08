@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX-Wallet-Test",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
