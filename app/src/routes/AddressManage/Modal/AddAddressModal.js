@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
 import { Inject, Patterns } from '../../../utils';
+import * as styles from './AddAddressModal.less';
 
 @Inject(({ globalStore }) => ({ globalStore }))
 class AddAddressModal extends Component {
@@ -85,7 +86,7 @@ class AddAddressModal extends Component {
             <FormattedMessage id={'Confirm'} />
           </Button>
         }>
-        <div>
+        <div className={styles.addressmanage}>
           <InputHorizotalList
             left={
               <Input.Select

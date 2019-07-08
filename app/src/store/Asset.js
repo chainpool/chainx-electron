@@ -253,7 +253,7 @@ export default class Asset extends ModelExtend {
         )
       )
       .subscribe(([resRpc = [], resApi = { items: [] }]) => {
-        console.log(resRpc, resApi, '-------resRpc,resApi');
+        console.log(resRpc, resApi, '-------提现resRpc,resApi');
         const dataRpc = resRpc
           .filter(withdraw => this.encodeAddressAccountId(withdraw.accountid) === account.address)
           .map((item = {}) => ({
@@ -308,6 +308,7 @@ export default class Asset extends ModelExtend {
         )
       )
       .subscribe(([resRpc = { data: [] }, resApi = { items: [] }]) => {
+        console.log(resRpc, resApi, '-------充值resRpc,resApi');
         const dataRpc = resRpc.data
           .filter(record => record.accountid && this.encodeAddressAccountId(record.accountid) === account.address)
           .map(record => {
