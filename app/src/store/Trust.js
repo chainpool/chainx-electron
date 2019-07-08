@@ -60,7 +60,7 @@ export default class Trust extends ModelExtend {
 
   @observable _trusts = localSave.get('trusts') || [];
   @observable tx = ''; //普通交易原文
-  @observable txSpecial = ''; //特殊交易原文
+  @observable txSpecial = '';
   @observable redeemScript = ''; //普通交易赎回脚本
   @observable redeemScriptSpecial = ''; //特殊交易赎回脚本
   @observable trusteeList = []; //普通交易已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
@@ -200,19 +200,21 @@ export default class Trust extends ModelExtend {
       let isColdEntity = false;
       let isHotEntity = false;
       let accountId = '';
-      configs.forEach((item = {}) => {
+      for (let i = 0; i < configs.length; i++) {
+        const item = configs[i];
         const {
           props: { coldEntity, hotEntity },
         } = item;
         if (coldEntity === prefixPubKey) {
+          accountId = item.accountId;
           isColdEntity = true;
+          break;
+        } else if (hotEntity === prefixPubKey) {
           accountId = item.accountId;
-        }
-        if (hotEntity === prefixPubKey) {
           isHotEntity = true;
-          accountId = item.accountId;
+          break;
         }
-      });
+      }
       return {
         accountId,
         pubKey,

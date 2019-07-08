@@ -3,7 +3,7 @@ import * as styles from './index.less';
 import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames } from '../../utils';
+import { _, observer, groupArrayByCount, classNames, hexPrefix } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 
@@ -176,7 +176,9 @@ class ActiveValidatorsList extends Component {
                                         <RouterGo
                                           isOutSide
                                           go={{
-                                            pathname: blockChain.chainXAccount(decodeAddressAccountId(item.address)),
+                                            pathname: blockChain.chainXAccount(
+                                              hexPrefix(decodeAddressAccountId(item.address))
+                                            ),
                                           }}>
                                           {item.address}
                                         </RouterGo>

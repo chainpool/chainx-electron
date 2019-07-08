@@ -108,7 +108,7 @@ class ResponseList extends Component {
                     <span className={styles.errAddress}>Unable to decode input address</span>
                   ) : (
                     <RouterGo isOutSide go={{ pathname: blockChain.tx(item.hash, isTestBitCoinNetWork()) }}>
-                      <span className={styles.hash}>{`0x${item.hash}`}</span>
+                      <span className={styles.hash}>{item.address}</span>
                     </RouterGo>
                   )}
                   <span>({item.value})</span>
@@ -144,7 +144,7 @@ class ResponseList extends Component {
 
     const content = (
       <div>
-        <div className={styles.responsetitle}>{isSpecialModel ? '特殊交易' : '多签提现'}</div>
+        <div className={styles.responsetitle}>{isSpecialModel ? '特殊交易' : '日常提现'}</div>
         <div className={styles.signStatus}>
           <div className={styles.reslist}>
             <ul className={styles.statusList}>
