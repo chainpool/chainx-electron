@@ -282,7 +282,7 @@ const zh_en = {
   TimeSharing: ['分时', 'Time-Sharing chart'],
   Operation: ['操作', 'Operation'],
   ParamsInfo: ['参数信息', 'Params Info'],
-  BitCoinFeeRate: ['BitCoin 手续费率', 'BitCoin Fee Rate'],
+  BitCoinFeeRate: ['手续费率', 'Fee Rate'],
   UTXONotEnoughFee: ['utxo总额不够支付手续费', 'The utxos is Insufficient payment for fee'],
   WithDrawTotalMustBiggerZero: ['提现总额应大于0', 'total balance must greater than 0'],
   ConstructionFailedBalanceInnsufficient: [
