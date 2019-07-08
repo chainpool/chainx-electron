@@ -621,19 +621,19 @@ export default class Trust extends ModelExtend {
     const ids = ins.map(item => item.hash);
     const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
-      const insTXs = result.map(item => {
-        const transaction = bitcoin.Transaction.fromHex(item.raw);
+      const insTXs = ins.map(item => {
+        const findOne = result.find(one => one.txid === item.hash);
+        const transaction = bitcoin.Transaction.fromHex(findOne.raw);
         const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
-        const filterOne = ins.filter((one = {}) => one.hash === item.txid)[0];
-        const findOne = txb.__tx.outs[filterOne.index];
-        const address = getAddressFromScript(findOne.script, network);
+        const findOutputOne = txb.__tx.outs[item.index];
+        const address = getAddressFromScript(findOutputOne.script, network);
         return {
-          index: filterOne.index,
-          raw: item.raw,
+          index: item.index,
+          raw: findOne.raw,
           address,
-          hash: item.txid,
-          value: this.setPrecision(findOne.value, 8),
-          satoshi: findOne.value,
+          hash: findOne.txid,
+          value: this.setPrecision(findOutputOne.value, 8),
+          satoshi: findOutputOne.value,
           ...(address ? {} : { err: true }),
         };
       });
