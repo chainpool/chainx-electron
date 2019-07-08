@@ -103,30 +103,30 @@ class Header extends Component {
                   ) : null;
                 })}
 
-                {ShowLanguage && (
-                  <li className={styles.language}>
-                    {language === 'zh' ? '中文' : 'English'}
-                    <div>
-                      <ul>
-                        {[{ name: 'zh', value: '中文' }, { name: 'en', value: 'English' }].map(item => (
-                          <li
-                            key={item.name}
-                            className={language === item.name ? styles.active : null}
-                            onClick={() => {
-                              dispatchGlobal({
-                                type: 'switchLanguage',
-                                payload: {
-                                  lang: item.name,
-                                },
-                              });
-                            }}>
-                            {item.value}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                )}
+                {/*{ShowLanguage && (*/}
+                {/*<li className={styles.language}>*/}
+                {/*{language === 'zh' ? '中文' : 'English'}*/}
+                {/*<div>*/}
+                {/*<ul>*/}
+                {/*{[{ name: 'zh', value: '中文' }, { name: 'en', value: 'English' }].map(item => (*/}
+                {/*<li*/}
+                {/*key={item.name}*/}
+                {/*className={language === item.name ? styles.active : null}*/}
+                {/*onClick={() => {*/}
+                {/*dispatchGlobal({*/}
+                {/*type: 'switchLanguage',*/}
+                {/*payload: {*/}
+                {/*lang: item.name,*/}
+                {/*},*/}
+                {/*});*/}
+                {/*}}>*/}
+                {/*{item.value}*/}
+                {/*</li>*/}
+                {/*))}*/}
+                {/*</ul>*/}
+                {/*</div>*/}
+                {/*</li>*/}
+                {/*)}*/}
               </ul>
             </div>
           </div>
