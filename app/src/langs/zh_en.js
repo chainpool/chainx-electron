@@ -320,6 +320,7 @@ const zh_en = {
   SourceTarget: ['来源账户', 'Source Account'],
   NetworkSetting: ['网络设置', 'Network Management'],
   SelectNetType: ['选择网络类型', 'Select Net Type'],
+  SelectWalletLanguage: ['选择钱包语言', 'Select Language'],
   NodeSetting: ['节点管理', 'Node Management'],
   APISetting: ['Api管理', 'Api Management'],
   AddNode: ['添加节点', 'Add Node'],
