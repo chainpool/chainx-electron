@@ -357,7 +357,7 @@ export default class Trust extends ModelExtend {
     }
 
     function prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee) {
-      unSpents.sort((a, b) => a.amount > b.amount);
+      unSpents.sort((a, b) => b.amount - a.amount);
 
       let outSum = withdrawals.reduce((result, withdraw) => result + withdraw.amount - chainxFee, 0);
 
