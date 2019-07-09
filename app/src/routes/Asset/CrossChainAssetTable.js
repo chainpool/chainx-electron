@@ -1,5 +1,5 @@
 import React from 'react';
-import { _, formatNumber, Inject, setColumnsWidth } from '../../utils';
+import { _, formatNumber, observer, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
 import { HoverTip } from '../components';
@@ -8,7 +8,7 @@ import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
 import Asset from './components/Asset';
 
-@Inject(({ configureStore }) => ({ configureStore }))
+@observer
 class CrossChainAssetTable extends Mixin {
   startInit = () => {
     const {
@@ -19,12 +19,9 @@ class CrossChainAssetTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, crossChainAccountAssetsWithZero, btcAddresses },
-      configureStore: { isTestNet },
+      model: { openModal, crossChainAccountAssetsWithZero },
       widths,
     } = this.props;
-
-    const hasBindAddress = btcAddresses.length > 0;
 
     const tableProps = {
       className: styles.tableContainer,
@@ -75,22 +72,15 @@ class CrossChainAssetTable extends Mixin {
               const isBTC = item.name === 'BTC';
               return (
                 <ButtonGroup>
-                  {isTestNet && false && isBTC ? (
-                    <Button
-                      type="warn"
-                      onClick={() => {
-                        openModal({
-                          name: 'GetCollarModal',
-                          // name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
-                        });
-                      }}>
-                      <FormattedMessage id={'GetFreeCoin'} />
-                    </Button>
-                  ) : null}
-
                   <Button
-                    //{...(isBTC ? { canClick: false } : {})}
                     onClick={() => {
+                      // openModal({
+                      //   name: 'CrossChainBindModal',
+                      //   data: {
+                      //     token: item.name,
+                      //     trusteeAddr: item.trusteeAddr,
+                      //   },
+                      // });
                       isBTC
                         ? openModal({
                             name: 'StopDepositModal',
@@ -119,7 +109,7 @@ class CrossChainAssetTable extends Mixin {
                       <FormattedMessage id={'Mapping'} />
                     )}
                   </Button>
-                  {!isSDOT ? (
+                  {isBTC && (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
@@ -142,7 +132,7 @@ class CrossChainAssetTable extends Mixin {
                       }}>
                       <FormattedMessage id={'Withdraw'} />
                     </Button>
-                  ) : null}
+                  )}
 
                   <Button
                     type={item.free > 0 ? 'primary' : 'disabled'}

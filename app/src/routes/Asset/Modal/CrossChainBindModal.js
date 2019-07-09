@@ -1,19 +1,8 @@
-import React from 'react';
-import {
-  Clipboard,
-  Mixin,
-  Modal,
-  Input,
-  Button,
-  Toast,
-  RouterGo,
-  FormattedMessage,
-  Icon,
-  Popover,
-} from '../../../components';
+import React, { Component } from 'react';
+import { Clipboard, Mixin, Modal, Input, Button, RouterGo, FormattedMessage, Icon, Popover } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, _, Patterns } from '../../../utils';
+import { classNames, Inject, Patterns, observer } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -27,48 +16,77 @@ import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
 import QRious from 'qrious';
 
-@Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
-class CrossChainBindModal extends Mixin {
+@observer
+class OptionalChannelSelect extends Component {
   constructor(props) {
     super(props);
-    const {
-      globalStore: {
-        modal: {
-          data: { token },
-        },
-      },
-    } = this.props;
     this.state = {
-      step: token === 'BTC' ? -1 : 1,
-      recommendChannelSelect: '',
-      tradeId: '',
-      tradeIdErrMsg: '',
-      qr: '',
       isAddChanel: false,
     };
   }
 
-  checkAll = {
-    checkTradeId: () => {
-      const { tradeId } = this.state;
-      const result = this.getTradeId();
-      const errMsg = Patterns.check('required')(tradeId) || (!result ? '交易ID错误' : '');
-      this.setState({ tradeIdErrMsg: errMsg });
-      return errMsg;
-    },
-    confirm: () => {
-      return ['checkTradeId'].every(item => !this.checkAll[item]());
-    },
-  };
+  render() {
+    const { recommendChannelSelect = {}, updateRecommendChannelSelect } = this.props;
+    const { isAddChanel } = this.state;
+    const {
+      electionStore: { originIntentions = [] },
+    } = this.props;
 
-  getTradeId = () => {
-    const { tradeId } = this.state;
-    const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
-    const result = regexp.exec(tradeId);
-    if (result && result[3]) {
-      return `0x${result[3]}`;
-    }
-  };
+    const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
+    const OptionalChannel = (
+      <div>
+        <Input.Checkbox
+          value={isAddChanel}
+          size="small"
+          className={styles.addChannel}
+          onClick={() => {
+            this.setState(
+              {
+                isAddChanel: !isAddChanel,
+              },
+              () => {
+                updateRecommendChannelSelect('');
+              }
+            );
+          }}>
+          <span className={!isAddChanel ? styles.addChanneldesc : null}>
+            <FormattedMessage id={'AddOptionalChannel'} />
+          </span>
+        </Input.Checkbox>
+        {isAddChanel && (
+          <FormattedMessage id={'NodeName'}>
+            {msg => (
+              <Input.Select
+                maxHeight={150}
+                allowCreate={false}
+                value={recommendChannelSelect}
+                placeholder={msg}
+                options={selectNameOptions}
+                onChange={value => {
+                  updateRecommendChannelSelect(value);
+                }}
+              />
+            )}
+          </FormattedMessage>
+        )}
+      </div>
+    );
+
+    return OptionalChannel;
+  }
+}
+
+@observer
+class X_BTC extends Mixin {
+  constructor(props) {
+    super(props);
+    this.state = {
+      step: -1,
+      recommendChannelSelect: '',
+      tradeIdErrMsg: '',
+      qr: '',
+    };
+  }
 
   startInit = () => {
     const {
@@ -88,306 +106,142 @@ class CrossChainBindModal extends Mixin {
   };
 
   render() {
-    const { checkAll } = this;
-    const { step, recommendChannelSelect = {}, tradeId, tradeIdErrMsg, qr, isAddChanel } = this.state;
+    const { step, recommendChannelSelect = {}, qr } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
-      accountStore: { currentAddress, closeModal },
-      assetStore: { btcAddresses = [], btcTrusteeAddress, dispatch, loading },
-
-      electionStore: { originIntentions = [] },
+      accountStore: { currentAddress },
+      assetStore: { btcAddresses = [], btcTrusteeAddress },
       globalStore: {
-        language,
         modal: {
           data: { token },
         },
       },
+      getChainXAddressHex,
     } = this.props;
 
-    const channel = recommendChannel ? `@${recommendChannel}` : '';
-    const chainxAddressHex = u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`)).replace(
-      /^0x/,
-      ''
-    );
-    const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
-    const show = {
-      BTC: {
-        desc1: (
-          <>
-            <span>
-              <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
-                {msg => {
-                  const msgs = msg.split('BTC_replace');
-                  return (
-                    <>
-                      {msgs[0]}
-                      <strong>{msgs[1]}</strong>
-                      {msgs[2]}
-                      <strong>{msgs[3]}</strong>
-                      {msgs[4]}
-                      <strong>{msgs[5]}</strong>
-                      {msgs[6]}
-                      <strong className={styles.isolatedWitness}>
-                        (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
-                      </strong>
-                    </>
-                  );
-                }}
-              </FormattedMessage>
-            </span>
-          </>
-        ),
-        value1: chainxAddressHex,
-        desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
-        value2: btcTrusteeAddress,
-        warn: (
-          <Warn>
-            <div className={styles.hoverImg}>
-              <span>
-                {
-                  <FormattedMessage id={'BTCWarn'}>
-                    {msg => {
-                      const link = (
-                        <span>
-                          {[
-                            {
-                              content: (
-                                <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
-                                  BitX
-                                </RouterGo>
-                              ),
-                              style: { left: -100 },
-                              imgWidth: 244,
-                              show: true,
-                            },
-                            {
-                              content: (
-                                <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
-                                  Trezor
-                                </RouterGo>
-                              ),
-                              style: { left: -160 },
-                              src: trezor,
-                              imgWidth: 352,
-                            },
-                            {
-                              content: (
-                                <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
-                                  Coinb.in
-                                </RouterGo>
-                              ),
-                              style: { left: -160 },
-                              src: coinbin,
-                              imgWidth: 352,
-                            },
-                          ]
-                            .filter(item => item.show)
-                            .map((item, index) => (
-                              <span key={index} className={styles.anchor}>
-                                <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                                  {item.content}
-                                </HoverTip>
-                              </span>
-                            ))}
-                        </span>
-                      );
-                      const msgs = msg.split('BitX_replace');
+    const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
 
-                      return (
-                        <span>
-                          {msgs[0]}
-                          {msgs[1]}
-                          <strong>{msgs[2]}</strong>
-                          {msgs[3]}
-                        </span>
-                      );
-                    }}
-                  </FormattedMessage>
-                }
-                <RouterGo
-                  isOutSide
-                  go={{
-                    pathname:
-                      'https://github.com/chainx-org/ChainX/wiki/%E5%85%85%E5%80%BC%E6%8C%96%E7%9F%BF#%E5%85%85%E5%80%BC%E5%A5%96%E5%8A%B1',
-                  }}>
-                  查看充值奖励规则
-                </RouterGo>
-              </span>
-            </div>
-          </Warn>
-        ),
-      },
-      SDOT: {
-        desc1: (
+    const findOne = {
+      desc1: (
+        <>
           <span>
-            <FormattedMessage id={'SDOTStepFirst'}>
+            <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
               {msg => {
-                const msgs = msg.split('SDOT_replace');
+                const msgs = msg.split('BTC_replace');
                 return (
-                  <span>
+                  <>
                     {msgs[0]}
                     <strong>{msgs[1]}</strong>
                     {msgs[2]}
-                  </span>
+                    <strong>{msgs[3]}</strong>
+                    {msgs[4]}
+                    <strong>{msgs[5]}</strong>
+                    {msgs[6]}
+                    <strong className={styles.isolatedWitness}>
+                      (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
+                    </strong>
+                  </>
                 );
               }}
             </FormattedMessage>
           </span>
-        ),
-        value1: `${chainxAddressHex}`,
-        desc2: '公共地址',
-        value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
-        warn: (
-          <Warn>
-            <div className={styles.hoverImg}>
-              <FormattedMessage id={'WalletCurrentlySupport'}>
-                {msg => {
-                  const links = [
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
-                          imToken
-                        </RouterGo>
-                      ),
-                      style: { left: -100 },
-                      src: imtoken,
-                      imgWidth: 244,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
-                          Parity
-                        </RouterGo>
-                      ),
-                      style: { left: -160 },
-                      src: parity,
-                      imgWidth: 352,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
-                          MyEtherWallet
-                        </RouterGo>
-                      ),
-                      style: { left: -120 },
-                      src: myEtherWallet,
-                      imgWidth: 352,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
-                          Jaxx
-                        </RouterGo>
-                      ),
-                      style: { left: -160 },
-                      src: Jaxx,
-                      imgWidth: 352,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
-                          MyCrypto
-                        </RouterGo>
-                      ),
-                      style: { left: -160 },
-                      src: myCrypto,
-                      imgWidth: 352,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
-                          Trust
-                        </RouterGo>
-                      ),
-                      style: { left: -160 },
-                      src: trust,
-                      imgWidth: 352,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
-                          bitpie
-                        </RouterGo>
-                      ),
-                      style: { left: -100 },
-                      src: bitpie,
-                      imgWidth: 244,
-                    },
-                    {
-                      content: (
-                        <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
-                          coinomi
-                        </RouterGo>
-                      ),
-                      style: { left: -160 },
-                      src: coinomi,
-                      imgWidth: 352,
-                    },
-                  ].map((item, index) => (
-                    <span key={index} className={styles.anchor}>
-                      <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                        {item.content}
-                      </HoverTip>
-                      {index === 7 ? null : '、'}
-                    </span>
-                  ));
-                  const msgs = msg.split('SDOT_replace');
-                  return (
-                    <>
-                      {msgs[0]}
-                      {links} {msgs[1]}
-                    </>
-                  );
-                }}
-              </FormattedMessage>
-            </div>
-          </Warn>
-        ),
-      },
+        </>
+      ),
+      value1: chainxAddressHex,
+      desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
+      value2: btcTrusteeAddress,
+      warn: (
+        <Warn>
+          <div className={styles.hoverImg}>
+            <span>
+              {
+                <FormattedMessage id={'BTCWarn'}>
+                  {msg => {
+                    const link = (
+                      <span>
+                        {[
+                          {
+                            content: (
+                              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                                BitX
+                              </RouterGo>
+                            ),
+                            style: { left: -100 },
+                            imgWidth: 244,
+                            show: true,
+                          },
+                          {
+                            content: (
+                              <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                                Trezor
+                              </RouterGo>
+                            ),
+                            style: { left: -160 },
+                            src: trezor,
+                            imgWidth: 352,
+                          },
+                          {
+                            content: (
+                              <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                                Coinb.in
+                              </RouterGo>
+                            ),
+                            style: { left: -160 },
+                            src: coinbin,
+                            imgWidth: 352,
+                          },
+                        ]
+                          .filter(item => item.show)
+                          .map((item, index) => (
+                            <span key={index} className={styles.anchor}>
+                              <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                                {item.content}
+                              </HoverTip>
+                            </span>
+                          ))}
+                      </span>
+                    );
+                    const msgs = msg.split('BitX_replace');
+
+                    return (
+                      <span>
+                        {msgs[0]}
+                        {msgs[1]}
+                        <strong>{msgs[2]}</strong>
+                        {msgs[3]}
+                      </span>
+                    );
+                  }}
+                </FormattedMessage>
+              }
+              <RouterGo
+                isOutSide
+                go={{
+                  pathname:
+                    'https://github.com/chainx-org/ChainX/wiki/%E5%85%85%E5%80%BC%E6%8C%96%E7%9F%BF#%E5%85%85%E5%80%BC%E5%A5%96%E5%8A%B1',
+                }}>
+                查看充值奖励规则
+              </RouterGo>
+            </span>
+          </div>
+        </Warn>
+      ),
     };
-
-    const findOne = show[token];
-
-    const OptionalChannel = (
-      <div>
-        <Input.Checkbox
-          value={isAddChanel}
-          size="small"
-          className={styles.addChannel}
-          onClick={() => {
-            this.setState({
-              isAddChanel: !isAddChanel,
-              recommendChannelSelect: '',
-            });
-          }}>
-          <span className={!isAddChanel ? styles.addChanneldesc : null}>
-            <FormattedMessage id={'AddOptionalChannel'} />
-          </span>
-        </Input.Checkbox>
-        {isAddChanel && (
-          <FormattedMessage id={'NodeName'}>
-            {msg => (
-              <Input.Select
-                maxHeight={150}
-                allowCreate={false}
-                value={recommendChannelSelect}
-                placeholder={msg}
-                options={selectNameOptions}
-                onChange={value => {
-                  this.setState({
-                    recommendChannelSelect: value,
-                  });
-                }}
-              />
-            )}
-          </FormattedMessage>
-        )}
-      </div>
-    );
 
     const BTC = (
       <>
         <div className={styles.desc}>{findOne.desc1}</div>
+        {btcAddresses.length > 0 ? null : (
+          <OptionalChannelSelect
+            {...this.props}
+            recommendChannelSelect={recommendChannelSelect}
+            updateRecommendChannelSelect={value => {
+              this.setState({
+                recommendChannelSelect: value,
+              });
+            }}
+          />
+        )}
         <div className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNtitle}>
@@ -450,132 +304,6 @@ class CrossChainBindModal extends Mixin {
             </ul>
           </div>
         )}
-        {btcAddresses.length > 0 ? null : OptionalChannel}
-      </>
-    );
-
-    const SDOT = (
-      <>
-        <div className={styles.grayblock1}>
-          <div>
-            <FormattedMessage id={'SDOTICO'}>
-              {msg => {
-                const msgs = msg.split('SDOT_replace');
-                return (
-                  <span>
-                    <strong>{msgs[0]}</strong>
-                    {msgs[1]}
-                  </span>
-                );
-              }}
-            </FormattedMessage>
-            <RouterGo
-              style={{ fontWeight: 'bold' }}
-              isOutSide
-              go={{
-                pathname: 'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
-              }}>
-              <FormattedMessage id={'ViewETHList'} />
-            </RouterGo>
-          </div>
-        </div>
-        <div className={styles.desc}>
-          <span className={styles.step}>
-            <FormattedMessage id={'FistStep'} />
-          </span>
-          {findOne.desc1}
-        </div>
-        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
-          <div className={styles.address}>
-            <div className={styles.OP_RETURNtitle}>
-              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
-              <Clipboard
-                id="copy"
-                dataText={findOne.value1}
-                outInner={
-                  <span className={styles.desc}>
-                    <FormattedMessage id={'CopyMessage'} />
-                  </span>
-                }
-              />
-            </div>
-            <div className={styles.OP_RETURNcopy}>
-              <div>
-                <span id="copy">{findOne.value1}</span>
-                <HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>
-                  <Icon name={'icon-jieshishuoming'} />
-                </HoverTip>
-                <div className={styles.dataerror}>
-                  <FormattedMessage id={'IncorrectDataFormat'}>
-                    {msg => {
-                      const msgs = msg.split('SDOT_replace');
-                      return (
-                        <>
-                          {msgs[0]}
-                          <span>{msgs[1]}</span>
-                          {msgs[2]}
-                        </>
-                      );
-                    }}
-                  </FormattedMessage>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {OptionalChannel}
-        <div className={styles.desc}>
-          <span className={styles.step}>
-            <FormattedMessage id={'SecondStep'} />
-          </span>
-          <FormattedMessage id={'SDOTSent'}>
-            {msg => {
-              const msgs = msg.split('SDOT_replace');
-              return (
-                <span>
-                  {msgs[0]}
-                  <strong>{msgs[1]}</strong>
-                  {msgs[2]}
-                </span>
-              );
-            }}
-          </FormattedMessage>
-        </div>
-        <div className={styles.tradeid}>
-          <Input.Text
-            isTextArea
-            rows={2}
-            value={tradeId}
-            errMsg={tradeIdErrMsg}
-            placeholder={'0x002a3bfcf910ed48c3837c7293062caee146bb72ca1cfd0bd398315e3a07ce79'}
-            onChange={value => {
-              this.setState({
-                tradeId: value,
-              });
-            }}
-            onBlur={checkAll.checkTradeId}
-          />
-
-          <Button
-            size="full"
-            type="confirm"
-            loading={loading.bindTxHashLoading}
-            onClick={() => {
-              if (checkAll.confirm()) {
-                const params = this.getTradeId();
-                dispatch({
-                  type: 'bindTxHash',
-                  payload: {
-                    params,
-                  },
-                }).then(res => {
-                  if (res) closeModal();
-                });
-              }
-            }}>
-            <FormattedMessage id={'Confirm'} />
-          </Button>
-        </div>
       </>
     );
 
@@ -696,7 +424,7 @@ class CrossChainBindModal extends Mixin {
           className={styles.agree}
           size="full"
           type="confirm"
-          onClick={() => this.setState({ step: btcAddresses.length ? 1 : 1 })}>
+          onClick={() => this.setState({ step: btcAddresses.length > 0 ? 1 : 1 })}>
           同意
         </Button>
         <Warn className={styles.warning}>
@@ -711,15 +439,13 @@ class CrossChainBindModal extends Mixin {
 
     return (
       <Modal
-        scroll={token === 'SDOT'}
         title={
           <>
-            {token === 'BTC' && step === -1 ? (
+            {step === -1 ? (
               <FormattedMessage id={'UserInstructions'} />
             ) : (
               <>
-                {token === 'SDOT' && <FormattedMessage id={'CrossChainMapping'} />}
-                {token === 'BTC' && <FormattedMessage id={'CrossChainDeposit'} />}({token})
+                {<FormattedMessage id={'CrossChainDeposit'} />}({token})
               </>
             )}
           </>
@@ -729,13 +455,371 @@ class CrossChainBindModal extends Mixin {
           {step === -1 && BTCGuide}
           {step === 1 && (
             <>
-              {token === 'BTC' && BTC}
-              {token === 'SDOT' && SDOT}
+              {BTC}
               <div className={styles.warn}>{findOne.warn}</div>
             </>
           )}
         </div>
       </Modal>
+    );
+  }
+}
+
+@observer
+class S_DOT extends Mixin {
+  constructor(props) {
+    super(props);
+    this.state = {
+      recommendChannelSelect: '',
+      tradeId: '',
+      tradeIdErrMsg: '',
+    };
+  }
+
+  checkAll = {
+    checkTradeId: () => {
+      const { tradeId } = this.state;
+      const result = this.getTradeId();
+      const errMsg = Patterns.check('required')(tradeId) || (!result ? '交易ID错误' : '');
+      this.setState({ tradeIdErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkTradeId'].every(item => !this.checkAll[item]());
+    },
+  };
+
+  getTradeId = () => {
+    const { tradeId } = this.state;
+    const regexp = /^(https:\/\/etherscan.io\/tx\/)?(0x)?([\da-f]{64})$/;
+    const result = regexp.exec(tradeId);
+    if (result && result[3]) {
+      return `0x${result[3]}`;
+    }
+  };
+
+  render() {
+    const { checkAll } = this;
+    const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg } = this.state;
+    const recommendChannel = recommendChannelSelect.value;
+    const {
+      accountStore: { currentAddress, closeModal },
+      assetStore: { dispatch, loading },
+      globalStore: {
+        language,
+        modal: {
+          data: { token },
+        },
+      },
+      getChainXAddressHex,
+    } = this.props;
+
+    const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
+
+    const findOne = {
+      desc1: (
+        <span>
+          <FormattedMessage id={'SDOTStepFirst'}>
+            {msg => {
+              const msgs = msg.split('SDOT_replace');
+              return (
+                <span>
+                  {msgs[0]}
+                  <strong>{msgs[1]}</strong>
+                  {msgs[2]}
+                </span>
+              );
+            }}
+          </FormattedMessage>
+        </span>
+      ),
+      value1: `${chainxAddressHex}`,
+      desc2: '公共地址',
+      value2: '0x008C343fcFB7b55430B8520B8d91D92609d2E482',
+      warn: (
+        <Warn>
+          <div className={styles.hoverImg}>
+            <FormattedMessage id={'WalletCurrentlySupport'}>
+              {msg => {
+                const links = [
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
+                        imToken
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: imtoken,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
+                        Parity
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: parity,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
+                        MyEtherWallet
+                      </RouterGo>
+                    ),
+                    style: { left: -120 },
+                    src: myEtherWallet,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
+                        Jaxx
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: Jaxx,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
+                        MyCrypto
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: myCrypto,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
+                        Trust
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: trust,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                        bitpie
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: bitpie,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
+                        coinomi
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: coinomi,
+                    imgWidth: 352,
+                  },
+                ].map((item, index) => (
+                  <span key={index} className={styles.anchor}>
+                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                      {item.content}
+                    </HoverTip>
+                    {index === 7 ? null : '、'}
+                  </span>
+                ));
+                const msgs = msg.split('SDOT_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    {links} {msgs[1]}
+                  </>
+                );
+              }}
+            </FormattedMessage>
+          </div>
+        </Warn>
+      ),
+    };
+
+    const SDOT = (
+      <>
+        <div className={styles.grayblock1}>
+          <div>
+            <FormattedMessage id={'SDOTICO'}>
+              {msg => {
+                const msgs = msg.split('SDOT_replace');
+                return (
+                  <span>
+                    <strong>{msgs[0]}</strong>
+                    {msgs[1]}
+                  </span>
+                );
+              }}
+            </FormattedMessage>
+            <RouterGo
+              style={{ fontWeight: 'bold' }}
+              isOutSide
+              go={{
+                pathname: 'https://etherscan.io/token/tokenholderchart/0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907',
+              }}>
+              <FormattedMessage id={'ViewETHList'} />
+            </RouterGo>
+          </div>
+        </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'FistStep'} />
+          </span>
+          {findOne.desc1}
+        </div>
+        <OptionalChannelSelect
+          {...this.props}
+          recommendChannelSelect={recommendChannelSelect}
+          updateRecommendChannelSelect={value => {
+            this.setState({
+              recommendChannelSelect: value,
+            });
+          }}
+        />
+        <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
+          <div className={styles.address}>
+            <div className={styles.OP_RETURNtitle}>
+              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
+              <Clipboard
+                id="copy"
+                dataText={findOne.value1}
+                outInner={
+                  <span className={styles.desc}>
+                    <FormattedMessage id={'CopyMessage'} />
+                  </span>
+                }
+              />
+            </div>
+            <div className={styles.OP_RETURNcopy}>
+              <div>
+                <span id="copy">{findOne.value1}</span>
+                <HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>
+                  <Icon name={'icon-jieshishuoming'} />
+                </HoverTip>
+                <div className={styles.dataerror}>
+                  <FormattedMessage id={'IncorrectDataFormat'}>
+                    {msg => {
+                      const msgs = msg.split('SDOT_replace');
+                      return (
+                        <>
+                          {msgs[0]}
+                          <span>{msgs[1]}</span>
+                          {msgs[2]}
+                        </>
+                      );
+                    }}
+                  </FormattedMessage>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'SecondStep'} />
+          </span>
+          <FormattedMessage id={'SDOTSent'}>
+            {msg => {
+              const msgs = msg.split('SDOT_replace');
+              return (
+                <span>
+                  {msgs[0]}
+                  <strong>{msgs[1]}</strong>
+                  {msgs[2]}
+                </span>
+              );
+            }}
+          </FormattedMessage>
+        </div>
+        <div className={styles.tradeid}>
+          <Input.Text
+            isTextArea
+            rows={2}
+            value={tradeId}
+            errMsg={tradeIdErrMsg}
+            placeholder={'0x002a3bfcf910ed48c3837c7293062caee146bb72ca1cfd0bd398315e3a07ce79'}
+            onChange={value => {
+              this.setState({
+                tradeId: value,
+              });
+            }}
+            onBlur={checkAll.checkTradeId}
+          />
+
+          <Button
+            size="full"
+            type="confirm"
+            loading={loading.bindTxHashLoading}
+            onClick={() => {
+              if (checkAll.confirm()) {
+                const params = this.getTradeId();
+                dispatch({
+                  type: 'bindTxHash',
+                  payload: {
+                    params,
+                  },
+                }).then(res => {
+                  if (res) closeModal();
+                });
+              }
+            }}>
+            <FormattedMessage id={'Confirm'} />
+          </Button>
+        </div>
+      </>
+    );
+
+    return (
+      <Modal
+        scroll={true}
+        title={
+          <>
+            <FormattedMessage id={'CrossChainMapping'} />({token})
+          </>
+        }
+        isOverflow>
+        <div className={styles.crossChainBind}>
+          {SDOT}
+          <div className={styles.warn}>{findOne.warn}</div>
+        </div>
+      </Modal>
+    );
+  }
+}
+
+@Inject(({ assetStore, electionStore }) => ({ assetStore, electionStore }))
+class CrossChainBindModal extends Mixin {
+  getChainXAddressHex = (recommendChannel, currentAddress) => {
+    const channel = recommendChannel ? `@${recommendChannel}` : '';
+    return u8aToHex(new TextEncoder('utf-8').encode(`${currentAddress}${channel}`)).replace(/^0x/, '');
+  };
+
+  render() {
+    const {
+      globalStore: {
+        modal: {
+          data: { token },
+        },
+      },
+    } = this.props;
+
+    const props = {
+      ...this.props,
+      getChainXAddressHex: this.getChainXAddressHex,
+    };
+    return (
+      <>
+        {token === 'SDOT' && <S_DOT {...props} />}
+        {token === 'BTC' && <X_BTC {...props} />}
+      </>
     );
   }
 }
