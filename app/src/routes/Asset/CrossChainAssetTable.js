@@ -138,6 +138,18 @@ class CrossChainAssetTable extends Mixin {
                     </Button>
                   )}
 
+                  {/*LBTC锁仓列表 */}
+                  {isLBTC && (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'LockPositionListModal',
+                        });
+                      }}>
+                      查看
+                    </Button>
+                  )}
+
                   {/*BTC提现*/}
                   {isBTC && _.get(item, 'limitProps.CanWithdraw') && (
                     <Button
