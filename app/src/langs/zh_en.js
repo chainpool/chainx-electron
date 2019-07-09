@@ -416,7 +416,7 @@ const zh_en = {
   ViewETHList: ['点击查看参与用户地址列表', 'View the list of all qualified ETH addresses.'],
   FistStep: ['第一步', 'Firstly'],
   SecondStep: ['第二步', 'Secondly'],
-  InformationToFilled: ['{data}中需要输入的信息：', 'Information to be filled in the {data} field:'],
+  InformationToFilled: ['{data}', '{data}'],
   IncorrectDataFormat: [
     '如果出现SDOT_replace“Data格式不正确”SDOT_replace的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
     'Try appending `0x` at the beginning if you run into a error like SDOT_replace `Incorrect Data format` SDOT_replace',

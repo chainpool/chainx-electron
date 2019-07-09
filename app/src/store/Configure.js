@@ -419,19 +419,19 @@ export default class Configure extends ModelExtend {
           if (this.autoSwitchBestNode) {
             prevBestNodeOrApi.best = false;
             bestNodeOrApi.best = true;
-            console.log(
-              `---------------1分钟后切换到最优${target === 'Node' ? '节点' : 'Api'}，最优结果：${bestNodeOrApi.name}`,
-              bestNodeOrApi
-            );
+            // console.log(
+            //   `---------------1分钟后切换到最优${target === 'Node' ? '节点' : 'Api'}，最优结果：${bestNodeOrApi.name}`,
+            //   bestNodeOrApi
+            // );
             reloadPage();
           } else {
-            console.log(
-              `用户未允许自动切换${target === 'Node' ? '节点' : 'Api'}功能，最优结果：${bestNodeOrApi.name}`,
-              bestNodeOrApi
-            );
+            // console.log(
+            //   `用户未允许自动切换${target === 'Node' ? '节点' : 'Api'}功能，最优结果：${bestNodeOrApi.name}`,
+            //   bestNodeOrApi
+            // );
           }
         } else {
-          console.log(`最优${target === 'Node' ? '节点' : 'Api'}相等，不切换,最优结果：${bestNodeOrApi.name}`);
+          // console.log(`最优${target === 'Node' ? '节点' : 'Api'}相等，不切换,最优结果：${bestNodeOrApi.name}`);
         }
         /*初始websocket连接失败用下面这行重新连接 最可靠的节点*/
         this.changeModel(target === 'Node' ? 'nodes' : 'api', list);

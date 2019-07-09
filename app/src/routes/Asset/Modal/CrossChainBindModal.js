@@ -230,7 +230,16 @@ class X_BTC extends Mixin {
 
     const BTC = (
       <>
-        <div className={styles.desc}>{findOne.desc1}</div>
+        {/*<div className={styles.desc}>{findOne.desc1}</div>*/}
+
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'FistStep'} />
+          </span>
+          <span className={styles.bold}>获取OP_RETURN</span>
+          <div>获取含有16进制ChainX地址的OP_RETURN信息。</div>
+        </div>
+
         {btcAddresses.length > 0 ? null : (
           <OptionalChannelSelect
             {...this.props}
@@ -266,24 +275,40 @@ class X_BTC extends Mixin {
             </div>
           </div>
         </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'SecondStep'} />
+          </span>
+          <span className={styles.bold}>发起跨链充值</span>
+          <div>
+            使用支持OP_RETURN的钱包向信托热多签地址充值，并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+          </div>
+        </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
           <div className={styles.depositaddresstitle}>
             <span className={styles.label}>
               {findOne.desc2}
               <span>（向该地址充值）</span>
             </span>
-            <Button type={'outline'}>
-              <Popover body={<img src={qr} />}>
-                <span>
-                  <Icon name={'erweima'} />
-                  地址二维码
+            <Clipboard
+              id="copy2"
+              dataText={findOne.value2}
+              outInner={
+                <span className={styles.desc}>
+                  <FormattedMessage id={'CopyMessage'} />
                 </span>
-              </Popover>
-            </Button>
+              }
+            />
+            {/*<Button type={'outline'}>*/}
+            {/*<Popover body={<img src={qr} />}>*/}
+            {/*<span>*/}
+            {/*<Icon name={'erweima'} />*/}
+            {/*地址二维码*/}
+            {/*</span>*/}
+            {/*</Popover>*/}
+            {/*</Button>*/}
           </div>
-          <Clipboard>
-            <span className={styles.depositaddressvalue}>{findOne.value2}</span>
-          </Clipboard>
+          <span className={styles.depositaddressvalue}>{findOne.value2}</span>
         </div>
         {btcAddresses.length > 0 && (
           <div className={classNames(styles.grayblock, styles.bitcoinlinks)}>
@@ -454,11 +479,269 @@ class X_BTC extends Mixin {
         <div className={styles.crossChainBind}>
           {step === -1 && BTCGuide}
           {step === 1 && (
-            <>
+            <div className={styles.btccontent}>
               {BTC}
               <div className={styles.warn}>{findOne.warn}</div>
-            </>
+            </div>
           )}
+        </div>
+      </Modal>
+    );
+  }
+}
+
+@observer
+class L_BTC extends Mixin {
+  constructor(props) {
+    super(props);
+    this.state = {
+      recommendChannelSelect: '',
+    };
+  }
+
+  render() {
+    const { recommendChannelSelect = {} } = this.state;
+    const recommendChannel = recommendChannelSelect.value;
+    const {
+      accountStore: { currentAddress },
+      assetStore: { btcAddresses = [], btcTrusteeAddress },
+      globalStore: {
+        modal: {
+          data: { token },
+        },
+      },
+      getChainXAddressHex,
+    } = this.props;
+
+    const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
+
+    const findOne = {
+      desc1: (
+        <>
+          <span>
+            <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
+              {msg => {
+                const msgs = msg.split('BTC_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    <strong>{msgs[1]}</strong>
+                    {msgs[2]}
+                    <strong>{msgs[3]}</strong>
+                    {msgs[4]}
+                    <strong>{msgs[5]}</strong>
+                    {msgs[6]}
+                    <strong className={styles.isolatedWitness}>
+                      (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
+                    </strong>
+                  </>
+                );
+              }}
+            </FormattedMessage>
+          </span>
+        </>
+      ),
+      value1: chainxAddressHex,
+      desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
+      value2: btcTrusteeAddress,
+      warn: (
+        <Warn>
+          <div className={styles.hoverImg}>
+            <FormattedMessage id={'WalletCurrentlySupport'}>
+              {msg => {
+                const links = [
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
+                        imToken
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: imtoken,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
+                        Parity
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: parity,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
+                        MyEtherWallet
+                      </RouterGo>
+                    ),
+                    style: { left: -120 },
+                    src: myEtherWallet,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
+                        Jaxx
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: Jaxx,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
+                        MyCrypto
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: myCrypto,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
+                        Trust
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: trust,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                        bitpie
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: bitpie,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
+                        coinomi
+                      </RouterGo>
+                    ),
+                    style: { left: -160 },
+                    src: coinomi,
+                    imgWidth: 352,
+                  },
+                ].map((item, index) => (
+                  <span key={index} className={styles.anchor}>
+                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                      {item.content}
+                    </HoverTip>
+                    {index === 7 ? null : '、'}
+                  </span>
+                ));
+                const msgs = msg.split('SDOT_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    {links} {msgs[1]}
+                  </>
+                );
+              }}
+            </FormattedMessage>
+          </div>
+        </Warn>
+      ),
+    };
+
+    const BTC = (
+      <>
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'FistStep'} />
+          </span>
+          <span className={styles.bold}>创建锁仓地址</span>
+          <div>
+            使用任意BTC钱包创建1或3开头的BTC地址用于锁仓。但请注意使用该新钱包的任意转出操作都可能花费锁仓金额，而导致锁仓挖矿停止。
+          </div>
+        </div>
+
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'SecondStep'} />
+          </span>
+          <span className={styles.bold}>生成OP_RETURN</span>
+          <div>
+            输入你创建的BTC锁仓地址。
+            <div className={styles.lockpositionaddress}>
+              <Input.Text />
+            </div>
+          </div>
+        </div>
+
+        {btcAddresses.length > 0 ? null : (
+          <OptionalChannelSelect
+            {...this.props}
+            recommendChannelSelect={recommendChannelSelect}
+            updateRecommendChannelSelect={value => {
+              this.setState({
+                recommendChannelSelect: value,
+              });
+            }}
+          />
+        )}
+        <div className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
+          <div className={styles.address}>
+            <div className={styles.OP_RETURNtitle}>
+              <strong>
+                <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
+              </strong>
+              <Clipboard
+                id="copy"
+                dataText={findOne.value1}
+                outInner={
+                  <span className={styles.desc}>
+                    <FormattedMessage id={'CopyMessage'} />
+                  </span>
+                }
+              />
+            </div>
+            <div className={styles.OP_RETURNcopy}>
+              <span id="copy">{findOne.value1}</span>
+              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
+                <Icon name={'icon-jieshishuoming'} />
+              </HoverTip>
+            </div>
+          </div>
+        </div>
+        <div className={styles.desc}>
+          <span className={styles.step}>
+            <FormattedMessage id={'SecondStep'} />
+          </span>
+          <span className={styles.bold}>发起跨链充值</span>
+          <div>
+            使用支持OP_RETURN的钱包向信托热多签地址充值，并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+          </div>
+        </div>
+      </>
+    );
+
+    return (
+      <Modal
+        title={
+          <>
+            {'跨链锁仓'}({token})
+          </>
+        }
+        isOverflow>
+        <div className={styles.crossChainBind}>
+          <div className={styles.btccontent}>
+            {BTC}
+
+            <Button size="full" type="confirm" onClick={() => {}}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+
+            <div className={styles.warn}>{findOne.warn}</div>
+          </div>
         </div>
       </Modal>
     );
@@ -819,6 +1102,7 @@ class CrossChainBindModal extends Mixin {
       <>
         {token === 'SDOT' && <S_DOT {...props} />}
         {token === 'BTC' && <X_BTC {...props} />}
+        {token === 'LBTC' && <L_BTC {...props} />}
       </>
     );
   }
