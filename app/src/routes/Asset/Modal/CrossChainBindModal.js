@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Clipboard, Mixin, Modal, Input, Button, RouterGo, FormattedMessage, Icon, Popover } from '../../../components';
+import { Clipboard, Mixin, Modal, Input, Button, RouterGo, FormattedMessage, Icon } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject, Patterns, observer } from '../../../utils';
@@ -122,31 +122,7 @@ class X_BTC extends Mixin {
     const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
 
     const findOne = {
-      desc1: (
-        <>
-          <span>
-            <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
-              {msg => {
-                const msgs = msg.split('BTC_replace');
-                return (
-                  <>
-                    {msgs[0]}
-                    <strong>{msgs[1]}</strong>
-                    {msgs[2]}
-                    <strong>{msgs[3]}</strong>
-                    {msgs[4]}
-                    <strong>{msgs[5]}</strong>
-                    {msgs[6]}
-                    <strong className={styles.isolatedWitness}>
-                      (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
-                    </strong>
-                  </>
-                );
-              }}
-            </FormattedMessage>
-          </span>
-        </>
-      ),
+      desc1: '',
       value1: chainxAddressHex,
       desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
       value2: btcTrusteeAddress,
@@ -516,31 +492,7 @@ class L_BTC extends Mixin {
     const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
 
     const findOne = {
-      desc1: (
-        <>
-          <span>
-            <FormattedMessage id={'DepositBTCSupportOP_RETURN'}>
-              {msg => {
-                const msgs = msg.split('BTC_replace');
-                return (
-                  <>
-                    {msgs[0]}
-                    <strong>{msgs[1]}</strong>
-                    {msgs[2]}
-                    <strong>{msgs[3]}</strong>
-                    {msgs[4]}
-                    <strong>{msgs[5]}</strong>
-                    {msgs[6]}
-                    <strong className={styles.isolatedWitness}>
-                      (<FormattedMessage id={'BTCNotSupportSegWitAddress'} />)
-                    </strong>
-                  </>
-                );
-              }}
-            </FormattedMessage>
-          </span>
-        </>
-      ),
+      desc1: '',
       value1: chainxAddressHex,
       desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
       value2: btcTrusteeAddress,
@@ -1102,7 +1054,7 @@ class CrossChainBindModal extends Mixin {
       <>
         {token === 'SDOT' && <S_DOT {...props} />}
         {token === 'BTC' && <X_BTC {...props} />}
-        {token === 'LBTC' && <L_BTC {...props} />}
+        {token === 'L-BTC' && <L_BTC {...props} />}
       </>
     );
   }

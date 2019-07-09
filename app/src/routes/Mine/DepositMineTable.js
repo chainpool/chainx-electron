@@ -1,11 +1,12 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { observer } from '../../utils';
+import { observer, _ } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
 import miniLogo from '../../resource/miniLogo.png';
+import LBTCIcon from '../../resource/LBTC.png';
 
 @observer
 class DepositMineTable extends Mixin {
@@ -35,7 +36,12 @@ class DepositMineTable extends Mixin {
           render: value => {
             return (
               <div className={styles.miniLogo}>
-                <img src={value === 'BTC' ? btcIcon : value === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
+                <img
+                  src={
+                    value === 'BTC' ? btcIcon : value === 'SDOT' ? sdotLogo : value === 'L-BTC' ? LBTCIcon : miniLogo
+                  }
+                  alt="miniLogo"
+                />
                 {value}
               </div>
             );
@@ -126,7 +132,7 @@ class DepositMineTable extends Mixin {
           ),
         },
       ],
-      dataSource: normalizedPseduIntentions,
+      dataSource: _.sortBy(normalizedPseduIntentions, ['id']),
     };
     return <Table {...tableProps} />;
   }

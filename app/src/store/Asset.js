@@ -36,6 +36,7 @@ function getAssetWithZeroBalance(info) {
     precision: info.precision,
     trusteeAddr: info.trusteeAddr,
     desc: info.desc,
+    limitProps: { ...info.limitProps },
   };
 }
 
