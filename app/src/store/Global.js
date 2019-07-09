@@ -105,9 +105,7 @@ export default class Global extends ModelExtend {
           ...(item.details ? item.details : {}),
         };
       });
-      this.changeModel({
-        assets: result,
-      });
+      this.changeModel('assets', result);
       return result;
     };
     if (this.assets.length) {

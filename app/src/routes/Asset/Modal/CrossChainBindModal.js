@@ -471,12 +471,14 @@ class L_BTC extends Mixin {
   constructor(props) {
     super(props);
     this.state = {
+      lockLocationPosition: '',
+      lockLocationPositionErrMsg: '',
       recommendChannelSelect: '',
     };
   }
 
   render() {
-    const { recommendChannelSelect = {} } = this.state;
+    const { recommendChannelSelect = {}, lockLocationPosition } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress },
@@ -485,11 +487,12 @@ class L_BTC extends Mixin {
         modal: {
           data: { token },
         },
+        closeModal,
       },
       getChainXAddressHex,
     } = this.props;
 
-    const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
+    const chainxAddressHex = getChainXAddressHex(recommendChannel, lockLocationPosition);
 
     const findOne = {
       desc1: '',
@@ -624,7 +627,14 @@ class L_BTC extends Mixin {
           <div>
             输入你创建的BTC锁仓地址。
             <div className={styles.lockpositionaddress}>
-              <Input.Text />
+              <Input.Text
+                value={lockLocationPosition}
+                onChange={value => {
+                  this.setState({
+                    lockLocationPosition: value,
+                  });
+                }}
+              />
             </div>
           </div>
         </div>
@@ -646,20 +656,22 @@ class L_BTC extends Mixin {
               <strong>
                 <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
               </strong>
-              <Clipboard
-                id="copy"
-                dataText={findOne.value1}
-                outInner={
-                  <span className={styles.desc}>
-                    <FormattedMessage id={'CopyMessage'} />
-                  </span>
-                }
-              />
+              {chainxAddressHex && (
+                <Clipboard
+                  id="copy"
+                  dataText={findOne.value1}
+                  outInner={
+                    <span className={styles.desc}>
+                      <FormattedMessage id={'CopyMessage'} />
+                    </span>
+                  }
+                />
+              )}
             </div>
             <div className={styles.OP_RETURNcopy}>
               <span id="copy">{findOne.value1}</span>
               <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
-                <Icon name={'icon-jieshishuoming'} />
+                {chainxAddressHex && <Icon name={'icon-jieshishuoming'} />}
               </HoverTip>
             </div>
           </div>
@@ -670,7 +682,8 @@ class L_BTC extends Mixin {
           </span>
           <span className={styles.bold}>发起跨链充值</span>
           <div>
-            使用支持OP_RETURN的钱包向信托热多签地址充值，并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+            {'使用支持OP_RETURN的钱包向锁仓地址充值（充值金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须\n' +
+              '            >= 0.01BTC；单个BTC锁仓地址总额必须 <= 10BTC；单个ChainX地址锁仓总额不限。'}
           </div>
         </div>
       </>
@@ -688,7 +701,12 @@ class L_BTC extends Mixin {
           <div className={styles.btccontent}>
             {BTC}
 
-            <Button size="full" type="confirm" onClick={() => {}}>
+            <Button
+              size="full"
+              type="confirm"
+              onClick={() => {
+                closeModal();
+              }}>
               <FormattedMessage id={'Confirm'} />
             </Button>
 

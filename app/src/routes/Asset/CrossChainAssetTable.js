@@ -88,7 +88,7 @@ class CrossChainAssetTable extends Mixin {
               return (
                 <ButtonGroup>
                   {/*BTC充值*/}
-                  {isBTC && item.limitProps.CanDeposit && (
+                  {isBTC && _.get(item, 'limitProps.CanDeposit') && (
                     <Button
                       onClick={() => {
                         openModal({
@@ -139,7 +139,7 @@ class CrossChainAssetTable extends Mixin {
                   )}
 
                   {/*BTC提现*/}
-                  {isBTC && item.limitProps.CanWithdraw && (
+                  {isBTC && _.get(item, 'limitProps.CanWithdraw') && (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
@@ -164,7 +164,7 @@ class CrossChainAssetTable extends Mixin {
                     </Button>
                   )}
                   {/*BTC和SDOT转账*/}
-                  {(isSDOT || isBTC) && item.limitProps.CanTransfer && (
+                  {(isSDOT || isBTC) && _.get(item, 'limitProps.CanTransfer') && (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
