@@ -1,9 +1,8 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _, setBlankSpace } from '../../utils';
+import { observer } from '../../utils';
 import { blockChain } from '../../constants';
-import removewithdrawl from '../../resource/removewithdrawl.png';
 
 @observer
 class LockListTable extends Mixin {
@@ -25,7 +24,7 @@ class LockListTable extends Mixin {
 
   render() {
     const {
-      model: { lockRecords, dispatch, openModal },
+      model: { lockRecords },
     } = this.props;
 
     const tableProps = {
@@ -38,6 +37,7 @@ class LockListTable extends Mixin {
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
           ellipse: true,
+          width: 300,
           dataIndex: 'originChainTxId',
           render: value =>
             value ? (
@@ -57,63 +57,25 @@ class LockListTable extends Mixin {
           title: <FormattedMessage id={'Address'} />,
           ellipse: true,
           dataIndex: 'address',
+          render: value => {
+            return (
+              <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
+                {value}
+              </RouterGo>
+            );
+          },
         },
         {
           title: <FormattedMessage id={'Amount'} />,
           dataIndex: 'balanceShow',
         },
         {
-          title: <FormattedMessage id={'Memo'} />,
-          dataIndex: 'memo',
-        },
-        {
           title: <FormattedMessage id={'Status'} />,
-          dataIndex: 'statusValue',
+          width: 100,
+          ellipse: 0,
+          dataIndex: 'originChainTxId',
           render: (value, item = {}) => {
-            const statusValue = _.get(item, 'status.value') || '';
-            if (statusValue.toUpperCase() === 'CONFIRMING') {
-              return (
-                <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
-                </>
-              );
-            }
-            if (statusValue.toUpperCase() === 'APPLYING') {
-              return (
-                <div className={styles.removewithdrawl}>
-                  <FormattedMessage id={value} />
-                  {item.id !== undefined ? (
-                    <img
-                      src={removewithdrawl}
-                      alt={'removewithdrawl'}
-                      onClick={() => {
-                        openModal({
-                          name: 'SignModal',
-                          data: {
-                            description: [
-                              { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
-                              {
-                                name: () => <FormattedMessage id={'WithdrawAmount'} />,
-                                value: setBlankSpace(item.balanceShow, item.token),
-                              },
-                            ],
-                            callback: () => {
-                              return dispatch({
-                                type: 'revokeWithdraw',
-                                payload: {
-                                  id: item.id,
-                                },
-                              });
-                            },
-                          },
-                        });
-                      }}
-                    />
-                  ) : null}
-                </div>
-              );
-            }
-            return <FormattedMessage id={value} />;
+            return item.unlock_hash ? '未锁定' : '锁定';
           },
         },
       ],

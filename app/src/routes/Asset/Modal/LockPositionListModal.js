@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Table } from '../../../components';
+import { Modal, RouterGo, Table } from '../../../components';
+import { blockChain } from '../../../constants';
 import * as styles from './LockPositionListModal.less';
 import { observer } from '../../../utils';
 
@@ -7,17 +8,27 @@ import { observer } from '../../../utils';
 class LockPositionListModal extends Component {
   render() {
     const {
+      globalStore: {
+        modal: {
+          data: { token },
+        },
+      },
       model: { accountLock = [] },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
-          title: 'BTC 锁仓地址',
+          title: '锁仓地址',
           dataIndex: 'address',
+          render: value => (
+            <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
+              {value}
+            </RouterGo>
+          ),
         },
         {
-          title: '锁仓总额',
+          title: '锁仓总额 (BTC)',
           dataIndex: 'amountShow',
         },
       ],
@@ -25,7 +36,7 @@ class LockPositionListModal extends Component {
     };
 
     return (
-      <Modal title={'锁仓列表'}>
+      <Modal title={`锁仓列表 (${token})`}>
         <div className={styles.LockPositionListModal}>
           <Table {...tableProps} />
         </div>
