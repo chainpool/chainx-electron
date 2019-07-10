@@ -8,7 +8,7 @@ import removewithdrawl from '../../resource/removewithdrawl.png';
 @observer
 class LockListTable extends Mixin {
   startInit = () => {
-    this.getLockList();
+    this.fetchPoll(this.getLockList);
   };
 
   getLockList = async () => {
