@@ -15,6 +15,8 @@ import coinomi from '../../../resource/coinomi.png';
 import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
 import BitX from '../../../resource/BitX.png';
+import MathWallet from '../../../resource/MathWallet.png';
+import WOOKONG from '../../../resource/WOOKONG.png';
 import QRious from 'qrious';
 
 @observer
@@ -519,11 +521,30 @@ class L_BTC extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                        MathWallet
+                      </RouterGo>
+                    ),
+                    src: MathWallet,
+                    imgWidth: 244,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                        WOOKONG
+                      </RouterGo>
+                    ),
+                    src: WOOKONG,
+                    imgWidth: 506,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
                         BitX
                       </RouterGo>
                     ),
                     src: BitX,
-                    style: { left: -100 },
                     imgWidth: 244,
                     show: true,
                   },
@@ -533,7 +554,6 @@ class L_BTC extends Mixin {
                         Trezor
                       </RouterGo>
                     ),
-                    style: { left: -160 },
                     src: trezor,
                     imgWidth: 352,
                   },
@@ -543,7 +563,6 @@ class L_BTC extends Mixin {
                         Coinb.in
                       </RouterGo>
                     ),
-                    style: { left: -160 },
                     src: coinbin,
                     imgWidth: 650,
                   },
@@ -555,7 +574,7 @@ class L_BTC extends Mixin {
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
-                    {index === 7 ? null : '、'}
+                    {index === 4 ? null : '、'}
                   </span>
                 ));
                 const msgs = msg.split('OP_RETURN_replace');
@@ -622,7 +641,7 @@ class L_BTC extends Mixin {
               <strong>
                 <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
               </strong>
-              {chainxAddressHex && (
+              {chainxAddressHex ? (
                 <Clipboard
                   id="copy"
                   dataText={findOne.value1}
@@ -632,14 +651,19 @@ class L_BTC extends Mixin {
                     </span>
                   }
                 />
+              ) : (
+                <span className={styles.warnwritebtc}>请先输入 BTC锁仓地址</span>
               )}
             </div>
-            <div className={styles.OP_RETURNcopy}>
-              <span id="copy">{findOne.value1}</span>
-              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
-                {chainxAddressHex && <Icon name={'icon-jieshishuoming'} />}
-              </HoverTip>
-            </div>
+            {chainxAddressHex && (
+              <div className={styles.OP_RETURNcopy}>
+                <span id="copy">{findOne.value1}</span>
+
+                <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
+                  <Icon name={'icon-jieshishuoming'} />
+                </HoverTip>
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.desc}>

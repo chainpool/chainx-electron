@@ -441,7 +441,7 @@ const zh_en = {
     '如果你的充值未到账，可能是OP_RETURN格式错误，需要重新绑定以领取，deposit_replace 点击查看充值未认领列表',
     'If your deposit is not received, it may be because the OP_RETURN format is wrong, thus you have to re-bind. deposit_replace Click to view the unclaimed deposits list.',
   ],
-  AddOptionalChannel: ['添加渠道（非必选）', 'Add a referrer (optional)'],
+  AddOptionalChannel: ['添加渠道（选填）', 'Add a referrer (optional)'],
   RecommendedClaimInterestRegularly: [
     '待领利息由跨链资产票龄所占比例实时计算，出现波动为正常现象，建议适时领取',
     'The interest to be paid is calculated by the proportion of the inter-chain assets in real time, so fluctuations are natural. It is recommended to claim your interest regularly.',
