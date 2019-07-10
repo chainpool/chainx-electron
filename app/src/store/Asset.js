@@ -167,16 +167,20 @@ export default class Asset extends ModelExtend {
   getAccountTotalLockPositions = async () => {
     const currentAccount = this.getCurrentAccount();
     const res = await getAccountTotalLockPositionApi({ accountId: this.decodeAddressAccountId(currentAccount) });
-    if (res && res.length) {
-      this.changeModel(
-        'accountLock',
-        res.map(item => {
-          return {
-            ...item,
-            amountShow: this.setPrecision(item.value, 'L-BTC'),
-          };
-        })
-      );
+    if (res) {
+      if (res.length) {
+        this.changeModel(
+          'accountLock',
+          res.map(item => {
+            return {
+              ...item,
+              amountShow: this.setPrecision(item.value, 'L-BTC'),
+            };
+          })
+        );
+      } else if (res.length === 0) {
+        this.changeModel('accountLock', []);
+      }
     }
   };
 
@@ -397,7 +401,7 @@ export default class Asset extends ModelExtend {
             balanceShow: this.setPrecision(item.value, 'L-BTC'),
           };
         });
-        if (res && res.length) {
+        if (res && res.length >= 0) {
           this.changeModel('lockRecords', res);
         }
       });
