@@ -144,7 +144,7 @@ class CrossChainAssetTable extends Mixin {
                   )}
 
                   {/*LBTC锁仓列表 */}
-                  {isLBTC && accountLock && accountLock.length && (
+                  {isLBTC && accountLock && accountLock.length > 0 && (
                     <Button
                       onClick={() => {
                         openModal({
