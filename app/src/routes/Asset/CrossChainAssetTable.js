@@ -149,6 +149,9 @@ class CrossChainAssetTable extends Mixin {
                       onClick={() => {
                         openModal({
                           name: 'LockPositionListModal',
+                          data: {
+                            token: item.name,
+                          },
                         });
                       }}>
                       查看
