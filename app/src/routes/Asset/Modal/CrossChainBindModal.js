@@ -14,6 +14,7 @@ import bitpie from '../../../resource/bitpie.png';
 import coinomi from '../../../resource/coinomi.png';
 import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
+import BitX from '../../../resource/BitX.png';
 import QRious from 'qrious';
 
 @observer
@@ -478,7 +479,7 @@ class L_BTC extends Mixin {
   }
 
   render() {
-    const { recommendChannelSelect = {}, lockLocationPosition } = this.state;
+    const { recommendChannelSelect = {}, lockLocationPosition = '' } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress },
@@ -489,8 +490,17 @@ class L_BTC extends Mixin {
         },
         closeModal,
       },
-      getChainXAddressHex,
     } = this.props;
+
+    const getChainXAddressHex = () => {
+      //ChainX:用户ChainX地址[@channel]:用户BTC锁仓地址[0..4]
+      const channel = recommendChannel ? `@${recommendChannel}` : '';
+      const positionSlice = lockLocationPosition ? `:${lockLocationPosition.slice(0, 4)}` : '';
+      return u8aToHex(new TextEncoder('utf-8').encode(`ChainX:${currentAddress}${channel}${positionSlice}`)).replace(
+        /^0x/,
+        ''
+      );
+    };
 
     const chainxAddressHex = getChainXAddressHex(recommendChannel, lockLocationPosition);
 
@@ -502,98 +512,52 @@ class L_BTC extends Mixin {
       warn: (
         <Warn>
           <div className={styles.hoverImg}>
-            <FormattedMessage id={'WalletCurrentlySupport'}>
+            <FormattedMessage id={'WalletOpreturnSupport'}>
               {msg => {
                 const links = [
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://token.im/' }}>
-                        imToken
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                        BitX
                       </RouterGo>
                     ),
+                    src: BitX,
                     style: { left: -100 },
-                    src: imtoken,
                     imgWidth: 244,
+                    show: true,
                   },
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://github.com/paritytech/parity-ethereum/releases' }}>
-                        Parity
+                      <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                        Trezor
                       </RouterGo>
                     ),
                     style: { left: -160 },
-                    src: parity,
+                    src: trezor,
                     imgWidth: 352,
                   },
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://www.myetherwallet.com/' }}>
-                        MyEtherWallet
-                      </RouterGo>
-                    ),
-                    style: { left: -120 },
-                    src: myEtherWallet,
-                    imgWidth: 352,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://jaxx.io/' }}>
-                        Jaxx
+                      <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                        Coinb.in
                       </RouterGo>
                     ),
                     style: { left: -160 },
-                    src: Jaxx,
-                    imgWidth: 352,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://mycrypto.com' }}>
-                        MyCrypto
-                      </RouterGo>
-                    ),
-                    style: { left: -160 },
-                    src: myCrypto,
-                    imgWidth: 352,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://trustwallet.com/' }}>
-                        Trust
-                      </RouterGo>
-                    ),
-                    style: { left: -160 },
-                    src: trust,
-                    imgWidth: 352,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
-                        bitpie
-                      </RouterGo>
-                    ),
-                    style: { left: -100 },
-                    src: bitpie,
-                    imgWidth: 244,
-                  },
-                  {
-                    content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
-                        coinomi
-                      </RouterGo>
-                    ),
-                    style: { left: -160 },
-                    src: coinomi,
-                    imgWidth: 352,
+                    src: coinbin,
+                    imgWidth: 650,
                   },
                 ].map((item, index) => (
                   <span key={index} className={styles.anchor}>
-                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                    <HoverTip
+                      width={item.imgWidth}
+                      tip={<img src={item.src} width={item.imgWidth} />}
+                      className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
                     {index === 7 ? null : '、'}
                   </span>
                 ));
-                const msgs = msg.split('SDOT_replace');
+                const msgs = msg.split('OP_RETURN_replace');
                 return (
                   <>
                     {msgs[0]}
@@ -678,7 +642,7 @@ class L_BTC extends Mixin {
         </div>
         <div className={styles.desc}>
           <span className={styles.step}>
-            <FormattedMessage id={'SecondStep'} />
+            <FormattedMessage id={'ThirdStep'} />
           </span>
           <span className={styles.bold}>发起跨链充值</span>
           <div>
@@ -691,6 +655,7 @@ class L_BTC extends Mixin {
 
     return (
       <Modal
+        scroll={true}
         title={
           <>
             {'跨链锁仓'}({token})
@@ -700,7 +665,6 @@ class L_BTC extends Mixin {
         <div className={styles.crossChainBind}>
           <div className={styles.btccontent}>
             {BTC}
-
             <Button
               size="full"
               type="confirm"
@@ -709,7 +673,6 @@ class L_BTC extends Mixin {
               }}>
               <FormattedMessage id={'Confirm'} />
             </Button>
-
             <div className={styles.warn}>{findOne.warn}</div>
           </div>
         </div>

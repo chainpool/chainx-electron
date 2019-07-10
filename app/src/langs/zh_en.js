@@ -416,6 +416,7 @@ const zh_en = {
   ViewETHList: ['点击查看参与用户地址列表', 'View the list of all qualified ETH addresses.'],
   FistStep: ['第一步', 'Firstly'],
   SecondStep: ['第二步', 'Secondly'],
+  ThirdStep: ['第三步', 'Thirdly'],
   InformationToFilled: ['{data}', '{data}'],
   IncorrectDataFormat: [
     '如果出现SDOT_replace“Data格式不正确”SDOT_replace的提示，您可以尝试在本条信息前面添加 0x 以解决该问题。',
@@ -429,6 +430,10 @@ const zh_en = {
   WalletCurrentlySupport: [
     '目前支持Data的钱包有: SDOT_replace 等。',
     'Wallets with Data support currently: SDOT_replace ,etc',
+  ],
+  WalletOpreturnSupport: [
+    '目前支持OP_RETURN的钱包有: OP_RETURN_replace 等。',
+    'Wallets with Data support currently: OP_RETURN_replace ,etc',
   ],
   UserInstructions: ['用户须知', 'User Instructions'],
   ExportKeystore: ['导出Keystore', 'Export Keystore'],

@@ -91,6 +91,13 @@ class CrossChainAssetTable extends Mixin {
                   {isBTC && _.get(item, 'limitProps.CanDeposit') && (
                     <Button
                       onClick={() => {
+                        // openModal({
+                        //   name: 'CrossChainBindModal',
+                        //   data: {
+                        //     token: item.name,
+                        //     trusteeAddr: item.trusteeAddr,
+                        //   },
+                        // });
                         openModal({
                           name: 'StopDepositModal',
                         });
@@ -139,7 +146,7 @@ class CrossChainAssetTable extends Mixin {
                   )}
 
                   {/*LBTC锁仓列表 */}
-                  {isLBTC && (
+                  {isLBTC && false && (
                     <Button
                       onClick={() => {
                         openModal({
