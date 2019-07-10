@@ -15,8 +15,11 @@ class Configure extends Mixin {
       model: { netWork = [], currentNetWork = {}, dispatch, openModal },
       globalStore: {
         modal: { name },
+        language,
+        dispatch: dispatchGlobal,
       },
     } = this.props;
+    const languages = [{ value: 'zh', label: '中文' }, { value: 'en', label: 'English' }];
 
     const tableProps = {
       ...this.props,
@@ -27,26 +30,51 @@ class Configure extends Mixin {
         <div className={styles.title}>
           <TableTitle title={<FormattedMessage id={'NetworkSetting'} />} />
         </div>
-        <div className={styles.network}>
-          <span>
-            <FormattedMessage id={'SelectNetType'} />
-          </span>
-          <div>
-            <Input.Select
-              value={{ label: currentNetWork.name, value: currentNetWork.value }}
-              getOptionLabel={item => <FormattedMessage id={item.label} />}
-              options={netWork.map(({ name, value }) => ({ label: name, value }))}
-              onChange={({ label: name, value }) => {
-                dispatch({
-                  type: 'setCurrentNetWork',
-                  payload: { name, value },
-                });
+        <ul>
+          <li>
+            <div className={styles.language}>
+              <span>
+                <FormattedMessage id={'SelectNetType'} />
+              </span>
+              <div>
+                <Input.Select
+                  value={{ label: currentNetWork.name, value: currentNetWork.value }}
+                  getOptionLabel={item => <FormattedMessage id={item.label} />}
+                  options={netWork.map(({ name, value }) => ({ label: name, value }))}
+                  onChange={({ label: name, value }) => {
+                    dispatch({
+                      type: 'setCurrentNetWork',
+                      payload: { name, value },
+                    });
 
-                window.location.reload();
-              }}
-            />
-          </div>
-        </div>
+                    window.location.reload();
+                  }}
+                />
+              </div>
+            </div>
+          </li>
+          <li>
+            <div className={styles.network}>
+              <span>
+                <FormattedMessage id={'SelectWalletLanguage'} />
+              </span>
+              <div>
+                <Input.Select
+                  value={languages.filter(item => item.value === language)[0]}
+                  options={languages}
+                  onChange={item => {
+                    dispatchGlobal({
+                      type: 'switchLanguage',
+                      payload: {
+                        lang: item.value,
+                      },
+                    });
+                  }}
+                />
+              </div>
+            </div>
+          </li>
+        </ul>
 
         <TableTitle title={<FormattedMessage id={'NodeSetting'} />}>
           <ButtonGroup className={styles.settingButton}>

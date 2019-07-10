@@ -9,6 +9,13 @@
       height:40px;
     }
   }
+
+  .btccontent{
+    margin-top: -24px;
+    button{
+      margin-top: 16px;
+    }
+  }
   .tradeid{
     margin:12px 0 28px;
     button{
@@ -16,7 +23,7 @@
     }
   }
   .desc {
-    margin-top: 20px;
+    margin-top: 16px;
     line-height: 22px;
     padding-left: 4px;
     position: relative;
@@ -24,6 +31,12 @@
       font-weight: bold;
       color: @yellow;
       margin-right: 8px;
+    }
+    span.bold{
+      font-weight: bold;
+    }
+    .lockpositionaddress{
+      margin-top: 8px;
     }
     .coverclick {
       background: transparent;
@@ -45,10 +58,10 @@
     }
     .imgtip{
       opacity:1;
-      padding:0;
-      overflow: hidden;
-      background-color:transparent;
-      margin-top: 5px;
+      padding:5px 5px 2px;
+      //overflow: hidden;
+      // background-color:transparent;
+      margin-top: -5px;
     }
   }
 
@@ -60,6 +73,7 @@
     .depositaddresstitle{
       width:100%;
       display: flex;
+      align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
       button{

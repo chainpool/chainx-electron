@@ -6,26 +6,26 @@ import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
 
 @observer
-class WithDrawTable extends Mixin {
-  startInit() {
-    this.getWithdrawalListByAccount();
-  }
+class LockListTable extends Mixin {
+  startInit = () => {
+    this.getLockList();
+  };
 
-  getWithdrawalListByAccount = async () => {
+  getLockList = async () => {
     const {
       model: { dispatch },
     } = this.props;
 
-    this.subscribeWithdrawalList = await dispatch({ type: 'getWithdrawalListByAccount' });
+    this.subscribeLockList = await dispatch({ type: 'getLockListApi' });
   };
 
   componentWillUnsubscribe = () => {
-    this.subscribeWithdrawalList && this.subscribeWithdrawalList.unsubscribe();
+    this.subscribeLockList && this.subscribeLockList.unsubscribe();
   };
 
   render() {
     const {
-      model: { onChainAccountWithdrawList, dispatch, openModal },
+      model: { lockRecords, dispatch, openModal },
     } = this.props;
 
     const tableProps = {
@@ -117,10 +117,10 @@ class WithDrawTable extends Mixin {
           },
         },
       ],
-      dataSource: onChainAccountWithdrawList,
+      dataSource: lockRecords,
     };
     return <Table {...tableProps} />;
   }
 }
 
-export default WithDrawTable;
+export default LockListTable;

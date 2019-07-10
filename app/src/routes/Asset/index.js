@@ -13,6 +13,7 @@ import GetCollarModalSDOT from './Modal/GetCollarModalSDOT';
 import BtcBindModal from './Modal/BtcBindModal';
 import StopDepositModal from './Modal/StopDepositModal';
 import WithdrawWarnModal from './Modal/WithdrawWarnModal';
+import LockPositionListModal from './Modal/LockPositionListModal';
 import { Inject } from '../../utils';
 import * as styles from './index.less';
 
@@ -22,7 +23,7 @@ class Asset extends Mixin {
 
   startInit = () => {
     const {
-      model: { dispatch },
+      model: { dispatch, openModal },
     } = this.props;
     this.fetchPoll(() =>
       dispatch({
@@ -39,7 +40,7 @@ class Asset extends Mixin {
     } = this.props;
     const props = {
       ...this.props,
-      widths: [210, 130, 140, undefined, undefined, undefined, 280],
+      widths: [230, 130, 140, undefined, undefined, undefined, 280],
     };
 
     return (
@@ -87,6 +88,7 @@ class Asset extends Mixin {
         {name === 'BtcBindModal' ? <BtcBindModal {...this.props} /> : null}
         {name === 'StopDepositModal' ? <StopDepositModal {...this.props} /> : null}
         {name === 'WithdrawWarnModal' ? <WithdrawWarnModal {...this.props} /> : null}
+        {name === 'LockPositionListModal' ? <LockPositionListModal {...this.props} /> : null}
       </div>
     );
   }

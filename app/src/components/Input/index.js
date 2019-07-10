@@ -391,6 +391,20 @@ class InputAddress extends React.Component {
     } = this.props;
 
     const matchOption = options.find(option => getOptionValue(option) === value);
+    const sortedOptions = options.sort((next1, next2) => {
+      if (value) {
+        const match1 = new RegExp(value, 'ig').test(next1.label);
+        const match2 = new RegExp(value, 'ig').test(next2.label);
+        if (match1 || match2) {
+          if (match1 && !match2) {
+            return -1;
+          } else if (!match1 && match2) {
+            return 1;
+          }
+          return 0;
+        }
+      }
+    });
 
     return (
       <div className={classNames(styles.inputcontainer, styles.inputAddress, className)}>
@@ -425,7 +439,7 @@ class InputAddress extends React.Component {
             {showDropdown && options.length > 0 ? (
               <div className={styles.dropdown}>
                 <div className={styles.dropdownBody}>
-                  {options.map((option, index) => {
+                  {sortedOptions.map((option, index) => {
                     return (
                       <div
                         key={index}
