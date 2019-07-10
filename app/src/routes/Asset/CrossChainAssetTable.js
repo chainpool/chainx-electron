@@ -144,7 +144,7 @@ class CrossChainAssetTable extends Mixin {
                   )}
 
                   {/*LBTC锁仓列表 */}
-                  {isLBTC && accountLock && accountLock.length > 0 && (
+                  {isLBTC && accountLock && accountLock.length > 0 ? (
                     <Button
                       onClick={() => {
                         openModal({
@@ -153,7 +153,7 @@ class CrossChainAssetTable extends Mixin {
                       }}>
                       查看
                     </Button>
-                  )}
+                  ) : null}
 
                   {/*BTC提现*/}
                   {isBTC && _.get(item, 'limitProps.CanWithdraw') && (
