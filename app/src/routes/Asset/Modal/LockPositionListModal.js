@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import { Modal, Table } from '../../../components';
 import * as styles from './LockPositionListModal.less';
-import { Inject } from '../../../utils';
+import { observer } from '../../../utils';
 
-@Inject(({ chainStore }) => ({ chainStore }))
-class LockPoditionListModal extends Component {
+@observer
+class LockPositionListModal extends Component {
   render() {
+    const {
+      model: { accountLock = [] },
+    } = this.props;
     const tableProps = {
       className: styles.tableContainer,
       columns: [
         {
-          //width: 150,
           title: 'BTC 锁仓地址',
           dataIndex: 'address',
         },
         {
           title: '锁仓总额',
-          dataIndex: 'amount',
+          dataIndex: 'amountShow',
         },
       ],
-      dataSource: [
-        {
-          address: '19zdMbaZnD8ze6XUZuVTYt8ze6XUZuVTYt',
-          amount: '1,000,000',
-        },
-      ],
+      dataSource: accountLock,
     };
 
     return (
@@ -37,4 +34,4 @@ class LockPoditionListModal extends Component {
   }
 }
 
-export default LockPoditionListModal;
+export default LockPositionListModal;

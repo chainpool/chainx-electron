@@ -493,6 +493,7 @@ class L_BTC extends Mixin {
     } = this.props;
 
     const getChainXAddressHex = () => {
+      if (!lockLocationPosition) return '';
       //ChainX:用户ChainX地址[@channel]:用户BTC锁仓地址[0..4]
       const channel = recommendChannel ? `@${recommendChannel}` : '';
       const positionSlice = lockLocationPosition ? `:${lockLocationPosition.slice(0, 4)}` : '';
@@ -592,6 +593,7 @@ class L_BTC extends Mixin {
             输入你创建的BTC锁仓地址。
             <div className={styles.lockpositionaddress}>
               <Input.Text
+                placeholder={'BTC锁仓地址'}
                 value={lockLocationPosition}
                 onChange={value => {
                   this.setState({
@@ -603,7 +605,7 @@ class L_BTC extends Mixin {
           </div>
         </div>
 
-        {btcAddresses.length > 0 ? null : (
+        {
           <OptionalChannelSelect
             {...this.props}
             recommendChannelSelect={recommendChannelSelect}
@@ -613,7 +615,7 @@ class L_BTC extends Mixin {
               });
             }}
           />
-        )}
+        }
         <div className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNtitle}>

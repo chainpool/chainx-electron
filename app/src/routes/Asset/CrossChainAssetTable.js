@@ -20,11 +20,9 @@ class CrossChainAssetTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, crossChainAccountAssetsWithZero },
+      model: { openModal, crossChainAccountAssetsWithZero, accountLock },
       widths,
     } = this.props;
-
-    console.log(crossChainAccountAssetsWithZero, '--crossChainAccountAssetsWithZero');
 
     const tableProps = {
       className: styles.tableContainer,
@@ -146,7 +144,7 @@ class CrossChainAssetTable extends Mixin {
                   )}
 
                   {/*LBTC锁仓列表 */}
-                  {isLBTC && false && (
+                  {isLBTC && accountLock && accountLock.length && (
                     <Button
                       onClick={() => {
                         openModal({

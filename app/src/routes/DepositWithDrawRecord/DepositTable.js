@@ -7,12 +7,20 @@ import { blockChain } from '../../constants';
 @Inject(({ assetStore }) => ({ assetStore }))
 class DepositTable extends Mixin {
   startInit() {
+    this.getDepositRecords();
+  }
+
+  getDepositRecords = async () => {
     const {
       assetStore: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getDepositRecords' });
-  }
+    this.subscribeDepositRecords = await dispatch({ type: 'getDepositRecords' });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeDepositRecords && this.subscribeDepositRecords.unsubscribe();
+  };
 
   render() {
     const {
