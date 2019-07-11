@@ -250,8 +250,8 @@ const translation = ({
     case 'XStaking|setup_trustee': {
       info = merge(args, [
         { name: 'chain', dataTrans: (v, r) => _.get(r, 'hot_entity.option') },
-        { name: 'hot_entity', dataTrans: v => _.get(v, 'value') },
-        { name: 'cold_entity', dataTrans: v => _.get(v, 'value') },
+        { name: 'hot_entity', dataTrans: v => v },
+        { name: 'cold_entity', dataTrans: v => v },
         { name: 'about' },
       ]);
       break;
@@ -279,7 +279,10 @@ const translation = ({
       break;
     }
     case 'XBridgeFeatures|setup_bitcoin_trustee': {
-      info = merge(args, [{ name: 'hot_entity' }, { name: 'cold_entity' }]);
+      info = merge(args, [
+        { name: 'hot_entity', dataTrans: v => Buffer.from(v).toString('hex') },
+        { name: 'cold_entity', dataTrans: v => Buffer.from(v).toString('hex') },
+      ]);
       break;
     }
   }

@@ -75,7 +75,7 @@ class LockListTable extends Mixin {
           ellipse: 0,
           dataIndex: 'originChainTxId',
           render: (value, item = {}) => {
-            return item.unlock_hash ? '未锁定' : '锁定';
+            return item.unlock_hash ? '已解锁' : '锁定';
           },
         },
       ],
