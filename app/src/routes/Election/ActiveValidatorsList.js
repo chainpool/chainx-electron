@@ -42,17 +42,17 @@ class ActiveValidatorsList extends Component {
       }
     });
 
-    const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
-      return item2.totalNomination - item1.totalNomination;
-    }); // rank 排名按总得票数算
+    // const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
+    //   return item2.totalNomination - item1.totalNomination;
+    // }); // rank 排名按总得票数算
 
-    dataSourceResult = dataSourceResult.map(item => {
-      const findIndex = rankFromTotalnomination.findIndex(one => {
-        return one.account === item.account;
-      });
+    dataSourceResult = dataSourceResult.map((item, index) => {
+      // const findIndex = [...dataSourceResult].findIndex(one => {
+      //   return one.account === item.account;
+      // });
       return {
         ...item,
-        rank: findIndex + 1,
+        rank: index + 1,
       };
     });
 
@@ -154,9 +154,7 @@ class ActiveValidatorsList extends Component {
                         <tbody>
                           {item.isActive ? (
                             <tr>
-                              <td>
-                                <FormattedMessage id={'VoteRank'} />
-                              </td>
+                              <td>{sort.value === 'selfVote' ? '抵押排名' : '得票排名'}</td>
                               <td>
                                 <div className={styles.rank}>{item.rank}</div>
                               </td>
