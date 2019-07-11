@@ -16,6 +16,7 @@ import {
   voteClaim,
   renominate,
   getIntentionsByAccount,
+  getIntentionImages,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -190,8 +191,46 @@ export default class Election extends ModelExtend {
 
   getIntentions = async () => {
     const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
-    this.changeModel('originIntentions', intentions);
+    this.changeModel(
+      'originIntentions',
+      intentions.map(item => {
+        const findOne = this.originIntentions.find(one => one.account === item.account);
+        if (findOne) {
+          return {
+            ...findOne,
+            ...item,
+          };
+        }
+        return item;
+      })
+    );
     this.changeModel('originNominationRecords', records);
+  };
+
+  getIntentionImages = async () => {
+    const timeOut = () =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve([
+            // {
+            //   accountId: '0xc4861c414f53538990f9a0be1c62d43427b2ac9c09c58a17b75f959849ec2375',
+            //   nodeUrl: 'http://weixiaoyi.club/book.yijianxiazai.com/images/42222040.jpg',
+            // },
+          ]);
+        }, 3000);
+      });
+    const res = await timeOut();
+    const intentions = this.originIntentions.map(item => {
+      const findOne = res.find(one => one.accountId === item.account);
+      if (findOne) {
+        return {
+          ...item,
+          imageUrl: findOne.nodeUrl,
+        };
+      }
+      return item;
+    });
+    this.changeModel('originIntentions', intentions);
   };
 
   getNominationRecords = async () => {
