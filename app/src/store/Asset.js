@@ -192,10 +192,10 @@ export default class Asset extends ModelExtend {
     } else {
       switch (txstate && txstate.toUpperCase()) {
         case 'NOTAPPLYING':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'APPLYING':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'SIGNING':
           state = 'Singing';
@@ -213,16 +213,16 @@ export default class Asset extends ModelExtend {
           state = 'Confirmed';
           break;
         case 'NORMALFINISH':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'ROOTFINISH':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'NORMALCANCEL':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'ROOTCANCEL':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         default:
           state = 'Unknown';

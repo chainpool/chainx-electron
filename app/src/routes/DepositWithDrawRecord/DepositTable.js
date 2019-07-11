@@ -70,7 +70,10 @@ class DepositTable extends Mixin {
             if (value.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
+                  {_.get(item.value, 'confirm')
+                    ? `(${_.get(item.value, 'confirm')} / ${_.get(item.value, 'totalConfirm')}) `
+                    : null}
+                  {<FormattedMessage id={value} />}
                 </>
               );
             }
