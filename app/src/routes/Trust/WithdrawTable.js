@@ -78,10 +78,10 @@ class WithdrawTable extends Component {
             if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  <FormattedMessage id={value} />
                   {_.get(item.status, 'confirm') && (
                     <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'totalConfirm')}`})</span>
                   )}
+                  <FormattedMessage id={value} />
                 </>
               );
             }
