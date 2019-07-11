@@ -49,7 +49,11 @@ class TradeTable extends Mixin {
                 {(v || []).map((item, index) => (
                   <li key={index}>
                     {<FormattedMessage id={item.label} />}:
-                    {item.value === 'NoThing' ? <FormattedMessage id={'NoThing'} /> : item.value}
+                    {item.value === 'NoThing' ? (
+                      <FormattedMessage id={'NoThing'} />
+                    ) : (
+                      <div className={styles.value}>{item.value}</div>
+                    )}
                     {index === v.length - 1 ? '' : ','}
                   </li>
                 ))}
