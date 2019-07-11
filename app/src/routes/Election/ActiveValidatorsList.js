@@ -22,7 +22,7 @@ class ActiveValidatorsList extends Component {
         decodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
-      globalStore: { nativeAssetName },
+      globalStore: { nativeAssetName, language },
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
@@ -78,7 +78,11 @@ class ActiveValidatorsList extends Component {
                 {one.map((item, index) => (
                   <li key={index}>
                     <div className={styles.left}>
-                      <div>{item.name[0].toUpperCase()}</div>
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} width={40} height={40} />
+                      ) : (
+                        <div>{item.name[0].toUpperCase()}</div>
+                      )}
                     </div>
                     <div className={styles.right}>
                       <div className={styles.top}>
@@ -149,111 +153,109 @@ class ActiveValidatorsList extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className={styles.Nodedetail}>
-                      <table style={{ borderCollapse: 'collapse' }}>
-                        <tbody>
-                          {item.isActive ? (
-                            <tr>
-                              <td>{sort.value === 'selfVote' ? '抵押排名' : '得票排名'}</td>
-                              <td>
-                                <div className={styles.rank}>{item.rank}</div>
-                              </td>
-                            </tr>
-                          ) : null}
+                    <div className={classNames(language === 'zh' ? styles.zh : styles.en, styles.Nodedetail)}>
+                      <ul>
+                        {item.isActive ? (
+                          <li>
+                            <div>{sort.value === 'selfVote' ? '抵押排名' : '得票排名'}</div>
+                            <div>
+                              <div className={styles.rank}>{item.rank}</div>
+                            </div>
+                          </li>
+                        ) : null}
 
-                          <tr>
-                            <td>
-                              <FormattedMessage id={'NodeType'} />
-                            </td>
-                            <td>
-                              <div className={styles.nodetype}>
-                                {/*<div*/}
-                                {/*className={classNames(*/}
-                                {/*styles.nodeType,*/}
-                                {/*!item.isActive*/}
-                                {/*? styles.inActive*/}
-                                {/*: item.isTrustee && item.isTrustee.length*/}
-                                {/*? styles.trustee*/}
-                                {/*: item.isValidator*/}
-                                {/*? styles.validator*/}
-                                {/*: styles.backupValidators*/}
-                                {/*)}*/}
-                                {/*/>*/}
+                        <li>
+                          <div>
+                            <FormattedMessage id={'NodeType'} />
+                          </div>
+                          <div>
+                            <div className={styles.nodetype}>
+                              {/*<div*/}
+                              {/*className={classNames(*/}
+                              {/*styles.nodeType,*/}
+                              {/*!item.isActive*/}
+                              {/*? styles.inActive*/}
+                              {/*: item.isTrustee && item.isTrustee.length*/}
+                              {/*? styles.trustee*/}
+                              {/*: item.isValidator*/}
+                              {/*? styles.validator*/}
+                              {/*: styles.backupValidators*/}
+                              {/*)}*/}
+                              {/*/>*/}
 
-                                {item.isTrustee && item.isTrustee.length ? (
-                                  <FormattedMessage id={'TrusteeNode'} />
-                                ) : !item.isActive ? (
-                                  <FormattedMessage id={'DropOut'} />
-                                ) : item.isValidator ? (
-                                  <FormattedMessage id={'ValidatorNode'} />
-                                ) : (
-                                  <FormattedMessage id={'StandbyNode'} />
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <FormattedMessage id={'NodeWebsite'} />
-                            </td>
-                            <td>
-                              <div className={styles.longaddress}>
-                                <RouterGo isOutSide go={{ pathname: item.url }}>
-                                  {item.url}
-                                </RouterGo>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <FormattedMessage id={'AccountAddressQuick'} />
-                            </td>
-                            <td>
-                              <div className={styles.longaddress}>
-                                <RouterGo
-                                  isOutSide
-                                  go={{
-                                    pathname: blockChain.chainXAccount(hexPrefix(decodeAddressAccountId(item.address))),
-                                  }}>
-                                  {item.address}
-                                </RouterGo>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <FormattedMessage id={'PoolAddress'} />
-                            </td>
-                            <td>
-                              <div className={styles.longaddress}>
-                                <RouterGo
-                                  isOutSide
-                                  go={{
-                                    pathname: blockChain.chainXAccount(
-                                      hexPrefix(decodeAddressAccountId(item.jackpotAddress))
-                                    ),
-                                  }}>
-                                  {item.jackpotAddress}
-                                </RouterGo>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <FormattedMessage id={'PoolAmount'} />
-                            </td>
-                            <td>
-                              <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className={styles.introduceTitle}>节点简介</td>
-                            <td className={styles.introduce}>
-                              <div className={styles.introducedetail}>{item.about}</div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              {item.isTrustee && item.isTrustee.length ? (
+                                <FormattedMessage id={'TrusteeNode'} />
+                              ) : !item.isActive ? (
+                                <FormattedMessage id={'DropOut'} />
+                              ) : item.isValidator ? (
+                                <FormattedMessage id={'ValidatorNode'} />
+                              ) : (
+                                <FormattedMessage id={'StandbyNode'} />
+                              )}
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'NodeWebsite'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo isOutSide go={{ pathname: item.url }}>
+                                {item.url}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'AccountAddressQuick'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo
+                                isOutSide
+                                go={{
+                                  pathname: blockChain.chainXAccount(hexPrefix(decodeAddressAccountId(item.address))),
+                                }}>
+                                {item.address}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'PoolAddress'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo
+                                isOutSide
+                                go={{
+                                  pathname: blockChain.chainXAccount(
+                                    hexPrefix(decodeAddressAccountId(item.jackpotAddress))
+                                  ),
+                                }}>
+                                {item.jackpotAddress}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'PoolAmount'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
+                          </div>
+                        </li>
+                        <li>
+                          <div className={styles.introduceTitle}>节点简介</div>
+                          <div className={styles.introduce}>
+                            <div className={styles.introducedetail}>{item.about}</div>
+                          </div>
+                        </li>
+                      </ul>
                     </div>
                   </li>
                 ))}

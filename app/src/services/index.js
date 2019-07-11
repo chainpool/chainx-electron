@@ -230,6 +230,13 @@ export const getAccountTotalLockPositionApi = payload => {
   });
 };
 
+export const getIntentionImages = () => {
+  return fetchFromHttp({
+    url: `/intentions/images`,
+    method: 'get',
+  });
+};
+
 export const bindTxHash = payload => {
   const { params } = payload;
   return fetchFromHttp({

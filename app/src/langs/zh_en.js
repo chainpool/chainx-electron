@@ -131,7 +131,7 @@ const zh_en = {
   NodeWebsite: ['节点网址', 'Website'],
   AccountAddressQuick: ['账户地址', 'Account'],
   PoolAddress: ['奖池地址', 'Jackpot Address'],
-  PoolAmount: ['奖池金额', 'Jackpot Amount'],
+  PoolAmount: ['奖池金额', 'Jackpot Balance'],
   NewNode: ['新节点', 'New Node'],
   SourceNode: ['源节点', 'Source Node'],
   FreezeBalance: ['冻结金额', 'In Order'],
