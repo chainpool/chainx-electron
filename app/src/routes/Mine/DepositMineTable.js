@@ -63,7 +63,7 @@ class DepositMineTable extends Mixin {
                   tip={
                     item.id === 'SDOT'
                       ? `${item.discountResultShow}（跨链挖矿折扣）`
-                      : `每小时均价（BTC/PCX） * ${item.discountResultShow}（跨链挖矿折扣）`
+                      : `每小时均价（${showAssetName(item.id)}/PCX） * ${item.discountResultShow}（跨链挖矿折扣）`
                   }>
                   {' '}
                   {`1: ${value}`}
