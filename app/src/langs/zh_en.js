@@ -48,7 +48,7 @@ const zh_en = {
   DEX: ['币币交易', 'DEX'],
   DAPP: ['DAPP专区', 'DAPP'],
   TradingRecord: ['交易记录', 'Tradings'],
-  Contact: ['联系人', 'Contact'],
+  Contact: ['联系地址', 'Contact'],
   CrossChainAssets: ['跨链资产', 'Cross-chain Assets'],
   ValidatorNode: ['验证节点', 'Validator'],
   ValidatorNodeTip: [
