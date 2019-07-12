@@ -37,12 +37,12 @@ class DownLoadWallet extends Component {
                   name: 'MacOs',
                   url: DowloadWalletUrl.Mac,
                 },
-                // {
-                //   src: Linux,
-                //   alias: 'Linux',
-                //   name: 'Linux',
-                //   url: DowloadWalletUrl.Linux,
-                // },
+                {
+                  src: Linux,
+                  alias: 'Linux',
+                  name: 'Linux',
+                  url: DowloadWalletUrl.Linux,
+                },
               ].map(item => (
                 <li key={item.name}>
                   <img src={item.src} alt={`${item.src}`} />
