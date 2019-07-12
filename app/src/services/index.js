@@ -232,7 +232,7 @@ export const getAccountTotalLockPositionApi = payload => {
 
 export const getIntentionImages = () => {
   return fetchFromHttp({
-    url: `/intentions/images`,
+    url: `${API}/intention_logos`,
     method: 'get',
   });
 };
