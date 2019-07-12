@@ -31,18 +31,29 @@ export default class Election extends ModelExtend {
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
+    const orderPairs = this.rootStore.tradeStore.orderPairs;
 
     return this.originPseduIntentions.map((intention = {}) => {
+      let discountResultShow = '';
       const token = intention.id;
       // 折合投票数
       const discountVote = (intention.power * intention.circulation) / Math.pow(10, precisionMap[token]);
+      const price = formatNumber.toPrecision(intention.power, nativeAssetPrecision);
+
+      if (token === 'BTC' || token === 'L-BTC') {
+        const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
+        discountResultShow = (price / findAssetOne.averPrice).toFixed(2);
+      } else if (token === 'SDOT') {
+        discountResultShow = Number(price).toFixed(2);
+      }
 
       const result = {
         ...intention,
         discountVote: formatNumber.toPrecision(discountVote, nativeAssetPrecision),
         circulation: this.setPrecision(intention.circulation, token),
-        price: formatNumber.toPrecision(intention.power, nativeAssetPrecision),
+        price,
         jackpot: this.setPrecision(intention.jackpot, nativeAssetPrecision),
+        discountResultShow,
       };
 
       const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
@@ -208,24 +219,22 @@ export default class Election extends ModelExtend {
   };
 
   getIntentionImages = async () => {
-    const timeOut = () =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            // {
-            //   accountId: '0xc4861c414f53538990f9a0be1c62d43427b2ac9c09c58a17b75f959849ec2375',
-            //   nodeUrl: 'http://weixiaoyi.club/book.yijianxiazai.com/images/42222040.jpg',
-            // },
-          ]);
-        }, 3000);
-      });
-    const res = await timeOut();
+    let res = await getIntentionImages().catch(() => []);
+    res = res.map(item => {
+      const key = Object.keys(item)[0];
+      const value = Object.values(item)[0];
+      return {
+        name: key,
+        imageUrl: value,
+      };
+    });
+
     const intentions = this.originIntentions.map(item => {
-      const findOne = res.find(one => one.accountId === item.account);
+      const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
       if (findOne) {
         return {
           ...item,
-          imageUrl: findOne.nodeUrl,
+          imageUrl: findOne.imageUrl,
         };
       }
       return item;
