@@ -21,50 +21,15 @@ import QRious from 'qrious';
 
 @observer
 class OptionalChannelSelect extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAddChanel: false,
-    };
-  }
-
   render() {
-    const {
-      recommendChannelSelect = {},
-      updateRecommendChannelSelect,
-      showCheck = true,
-      isAddChanelProps,
-    } = this.props;
-    const { isAddChanel } = this.state;
+    const { recommendChannelSelect = {}, updateRecommendChannelSelect, isAddChanel } = this.props;
     const {
       electionStore: { originIntentions = [] },
     } = this.props;
-
     const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
     const OptionalChannel = (
       <div>
-        {showCheck ? (
-          <Input.Checkbox
-            value={isAddChanel}
-            size="small"
-            className={styles.addChannel}
-            onClick={() => {
-              this.setState(
-                {
-                  isAddChanel: !isAddChanel,
-                },
-                () => {
-                  updateRecommendChannelSelect('');
-                }
-              );
-            }}>
-            <span className={!isAddChanel ? styles.addChanneldesc : null}>
-              <FormattedMessage id={'AddOptionalChannel'} />
-            </span>
-          </Input.Checkbox>
-        ) : null}
-
-        {(isAddChanel || isAddChanelProps) && (
+        {isAddChanel && (
           <FormattedMessage id={'NodeName'}>
             {msg => (
               <Input.Select
@@ -679,8 +644,7 @@ class L_BTC extends Mixin {
               <div className={styles.OP_RETURNcopy}>
                 <div className={styles.select}>
                   <OptionalChannelSelect
-                    showCheck={false}
-                    isAddChanelProps={isAddChanel}
+                    isAddChanel={isAddChanel}
                     {...this.props}
                     recommendChannelSelect={recommendChannelSelect}
                     updateRecommendChannelSelect={value => {
@@ -747,6 +711,7 @@ class S_DOT extends Mixin {
   constructor(props) {
     super(props);
     this.state = {
+      isAddChanel: '',
       recommendChannelSelect: '',
       tradeId: '',
       tradeIdErrMsg: '',
@@ -777,7 +742,7 @@ class S_DOT extends Mixin {
 
   render() {
     const { checkAll } = this;
-    const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg } = this.state;
+    const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress, closeModal },
@@ -952,35 +917,62 @@ class S_DOT extends Mixin {
           </span>
           {findOne.desc1}
         </div>
-        <OptionalChannelSelect
-          {...this.props}
-          recommendChannelSelect={recommendChannelSelect}
-          updateRecommendChannelSelect={value => {
-            this.setState({
-              recommendChannelSelect: value,
-            });
-          }}
-        />
         <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNtitle}>
-              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
-              <Clipboard
-                id="copy"
-                dataText={findOne.value1}
-                outInner={
-                  <span className={styles.desc}>
-                    <FormattedMessage id={'CopyMessage'} />
-                  </span>
-                }
-              />
+              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data中需要输入的信息：' }} />
+              <Input.Checkbox
+                value={isAddChanel}
+                size="small"
+                className={styles.addChannel}
+                onClick={() => {
+                  this.setState(
+                    {
+                      isAddChanel: !isAddChanel,
+                    },
+                    () => {
+                      this.setState({
+                        recommendChannelSelect: '',
+                      });
+                    }
+                  );
+                }}>
+                <span className={!isAddChanel ? styles.addChanneldesc : null}>
+                  <FormattedMessage id={'AddOptionalChannel'} />
+                </span>
+              </Input.Checkbox>
+              {/*<Clipboard*/}
+              {/*id="copy"*/}
+              {/*dataText={findOne.value1}*/}
+              {/*outInner={*/}
+              {/*<span className={styles.desc}>*/}
+              {/*<FormattedMessage id={'CopyMessage'} />*/}
+              {/*</span>*/}
+              {/*}*/}
+              {/*/>*/}
             </div>
+
             <div className={styles.OP_RETURNcopy}>
+              {isAddChanel && (
+                <div className={styles.select}>
+                  <OptionalChannelSelect
+                    isAddChanel={isAddChanel}
+                    {...this.props}
+                    recommendChannelSelect={recommendChannelSelect}
+                    updateRecommendChannelSelect={value => {
+                      this.setState({
+                        recommendChannelSelect: value,
+                      });
+                    }}
+                  />
+                </div>
+              )}
+
               <div>
-                <span id="copy">{findOne.value1}</span>
-                <HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>
-                  <Icon name={'icon-jieshishuoming'} />
-                </HoverTip>
+                <Clipboard>{findOne.value1}</Clipboard>
+                {/*<HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>*/}
+                {/*<Icon name={'icon-jieshishuoming'} />*/}
+                {/*</HoverTip>*/}
                 <div className={styles.dataerror}>
                   <FormattedMessage id={'IncorrectDataFormat'}>
                     {msg => {

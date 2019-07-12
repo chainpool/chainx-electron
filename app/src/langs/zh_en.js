@@ -424,8 +424,8 @@ const zh_en = {
   ],
   SDOTMapToChainXAddress: ['本次SDOT跨链映射的ChainX地址(16进制)', 'Your SDOT mapped ChainX address(hex)'],
   SDOTSent: [
-    '交易打包成功后，在下方输入 SDOT_replace 交易ID (Txid/TxHash)。SDOT_replace 待交易签名验证无误，即可完成映射, SDOT会立即发放。',
-    'copy and paste the SDOT_replace transaction ID(Txid/TxHash) SDOT_replace you sent in the first step bellow. SDOT will be issued to your mapped ChainX address immediately once the transaction signature is validated successfully.',
+    '交易打包成功后，在下方输入 SDOT_replace 交易ID (Txid/TxHash)。SDOT_replace 待交易签名验证无误，即可完成映射, S-DOT会立即发放。',
+    'copy and paste the SDOT_replace transaction ID(Txid/TxHash) SDOT_replace you sent in the first step bellow. S-DOT will be issued to your mapped ChainX address immediately once the transaction signature is validated successfully.',
   ],
   WalletCurrentlySupport: [
     '目前支持Data的钱包有: SDOT_replace 等。',
