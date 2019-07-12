@@ -366,38 +366,13 @@ export default class Asset extends ModelExtend {
   async getLockListApi() {
     const account = this.getCurrentAccount();
     return from(getLockListApi({ accountId: this.decodeAddressAccountId(account) }))
-      .pipe(
-        map(res => res.items),
-        mergeMap((items = []) => {
-          if (!items.length) return of(items);
-          return combine(
-            items.map(item => {
-              return from(getBlockTime({ height: item.lock_time })).pipe(
-                map((res = {}) => {
-                  return {
-                    ...item,
-                    time: res.time,
-                  };
-                }),
-                catchError(() => {
-                  return of({
-                    ...item,
-                    time: null,
-                    blockHeight: item.lock_time,
-                  });
-                })
-              );
-            })
-          );
-        })
-      )
+      .pipe(map(res => res.items))
       .subscribe(res => {
-        //console.log(res, '--res');
         res = res.map(item => {
           return {
             ...item,
             token: 'L-BTC',
-            time: moment.formatHMS(new Date(item.time)),
+            time: moment.formatHMS(item.lock_time),
             balanceShow: this.setPrecision(item.value, 'L-BTC'),
             originChainTxId: item.lock_hash,
           };

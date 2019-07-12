@@ -111,7 +111,7 @@
 .overHidden{
   //.mixin_ellipse()
   &.myVote{
-    color:#D89601;
+    // color:#D89601;
   }
 }
 
@@ -166,6 +166,9 @@
               .buttoncontainer{
                 .votebutton{
                   display: block;
+                  &.hidden{
+                    display: block;
+                  }
                 }
               }
             }
@@ -215,7 +218,9 @@
             }
             .buttoncontainer{
               .votebutton{
-                display: none;
+                &.hidden{
+                  display: none;
+                }
                 font-size: 12px;
                 padding:4px 12px;
                 height:20px;

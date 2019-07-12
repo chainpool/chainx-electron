@@ -279,10 +279,7 @@ const translation = ({
       break;
     }
     case 'XBridgeFeatures|setup_bitcoin_trustee': {
-      info = merge(args, [
-        { name: 'hot_entity', dataTrans: v => Buffer.from(v).toString('hex') },
-        { name: 'cold_entity', dataTrans: v => Buffer.from(v).toString('hex') },
-      ]);
+      info = merge(args, [{ name: 'hot_entity', dataTrans: v => v }, { name: 'cold_entity', dataTrans: v => v }]);
       break;
     }
   }
