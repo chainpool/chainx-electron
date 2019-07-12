@@ -29,7 +29,12 @@ class OptionalChannelSelect extends Component {
   }
 
   render() {
-    const { recommendChannelSelect = {}, updateRecommendChannelSelect } = this.props;
+    const {
+      recommendChannelSelect = {},
+      updateRecommendChannelSelect,
+      showCheck = true,
+      isAddChanelProps,
+    } = this.props;
     const { isAddChanel } = this.state;
     const {
       electionStore: { originIntentions = [] },
@@ -38,25 +43,28 @@ class OptionalChannelSelect extends Component {
     const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
     const OptionalChannel = (
       <div>
-        <Input.Checkbox
-          value={isAddChanel}
-          size="small"
-          className={styles.addChannel}
-          onClick={() => {
-            this.setState(
-              {
-                isAddChanel: !isAddChanel,
-              },
-              () => {
-                updateRecommendChannelSelect('');
-              }
-            );
-          }}>
-          <span className={!isAddChanel ? styles.addChanneldesc : null}>
-            <FormattedMessage id={'AddOptionalChannel'} />
-          </span>
-        </Input.Checkbox>
-        {isAddChanel && (
+        {showCheck ? (
+          <Input.Checkbox
+            value={isAddChanel}
+            size="small"
+            className={styles.addChannel}
+            onClick={() => {
+              this.setState(
+                {
+                  isAddChanel: !isAddChanel,
+                },
+                () => {
+                  updateRecommendChannelSelect('');
+                }
+              );
+            }}>
+            <span className={!isAddChanel ? styles.addChanneldesc : null}>
+              <FormattedMessage id={'AddOptionalChannel'} />
+            </span>
+          </Input.Checkbox>
+        ) : null}
+
+        {(isAddChanel || isAddChanelProps) && (
           <FormattedMessage id={'NodeName'}>
             {msg => (
               <Input.Select
@@ -474,6 +482,7 @@ class L_BTC extends Mixin {
   constructor(props) {
     super(props);
     this.state = {
+      isAddChanel: '',
       lockLocationPosition: '',
       lockLocationPositionErrMsg: '',
       recommendChannelSelect: '',
@@ -481,7 +490,7 @@ class L_BTC extends Mixin {
   }
 
   render() {
-    const { recommendChannelSelect = {}, lockLocationPosition = '' } = this.state;
+    const { recommendChannelSelect = {}, lockLocationPosition = '', isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress },
@@ -624,17 +633,6 @@ class L_BTC extends Mixin {
           </div>
         </div>
 
-        {
-          <OptionalChannelSelect
-            {...this.props}
-            recommendChannelSelect={recommendChannelSelect}
-            updateRecommendChannelSelect={value => {
-              this.setState({
-                recommendChannelSelect: value,
-              });
-            }}
-          />
-        }
         <div className={classNames(styles.grayblock, styles.addressall, styles.btcopreturn)}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNtitle}>
@@ -642,26 +640,62 @@ class L_BTC extends Mixin {
                 <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
               </strong>
               {chainxAddressHex ? (
-                <Clipboard
-                  id="copy"
-                  dataText={findOne.value1}
-                  outInner={
-                    <span className={styles.desc}>
-                      <FormattedMessage id={'CopyMessage'} />
+                <>
+                  <Input.Checkbox
+                    value={isAddChanel}
+                    size="small"
+                    className={styles.addChannel}
+                    onClick={() => {
+                      this.setState(
+                        {
+                          isAddChanel: !isAddChanel,
+                        },
+                        () => {
+                          this.setState({
+                            recommendChannelSelect: '',
+                          });
+                        }
+                      );
+                    }}>
+                    <span className={!isAddChanel ? styles.addChanneldesc : null}>
+                      <FormattedMessage id={'AddOptionalChannel'} />
                     </span>
-                  }
-                />
+                  </Input.Checkbox>
+                  {/*<Clipboard*/}
+                  {/*id="copy"*/}
+                  {/*dataText={findOne.value1}*/}
+                  {/*outInner={*/}
+                  {/*<span className={styles.desc}>*/}
+                  {/*<FormattedMessage id={'CopyMessage'} />*/}
+                  {/*</span>*/}
+                  {/*}*/}
+                  {/*/>*/}
+                </>
               ) : (
                 <span className={styles.warnwritebtc}>请先输入 BTC锁仓地址</span>
               )}
             </div>
             {chainxAddressHex && (
               <div className={styles.OP_RETURNcopy}>
-                <span id="copy">{findOne.value1}</span>
+                <div className={styles.select}>
+                  <OptionalChannelSelect
+                    showCheck={false}
+                    isAddChanelProps={isAddChanel}
+                    {...this.props}
+                    recommendChannelSelect={recommendChannelSelect}
+                    updateRecommendChannelSelect={value => {
+                      this.setState({
+                        recommendChannelSelect: value,
+                      });
+                    }}
+                  />
+                </div>
+                <Clipboard>{findOne.value1}</Clipboard>
+                {/*<span id="copy"></span>*/}
 
-                <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
-                  <Icon name={'icon-jieshishuoming'} />
-                </HoverTip>
+                {/*<HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>*/}
+                {/*<Icon name={'icon-jieshishuoming'} />*/}
+                {/*</HoverTip>*/}
               </div>
             )}
           </div>
@@ -670,10 +704,11 @@ class L_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'ThirdStep'} />
           </span>
-          <span className={styles.bold}>发起跨链充值</span>
+          <span className={styles.bold}>发起锁仓交易</span>
           <div>
-            {'使用支持OP_RETURN的钱包向锁仓地址充值（充值金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须\n' +
-              '            >= 0.01BTC；单个BTC锁仓地址总额必须 <= 10BTC；单个ChainX地址锁仓总额不限。'}
+            {
+              '使用支持OP_RETURN的钱包向锁仓地址转账（转账金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须 >= 0.01 BTC；单个BTC锁仓地址总额必须 <= 10 BTC；单个ChainX地址锁仓总额不限。'
+            }
           </div>
         </div>
       </>
