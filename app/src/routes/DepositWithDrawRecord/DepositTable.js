@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
-import { _, Inject, showAssetName } from '../../utils';
+import { _, Inject, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -40,7 +40,7 @@ class DepositTable extends Mixin {
           ellipse: true,
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-              {value}
+              {hexPrefix(value)}
             </RouterGo>
           ),
         },
@@ -84,7 +84,28 @@ class DepositTable extends Mixin {
       ],
       dataSource: depositRecords,
     };
-    return <Table {...tableProps} />;
+    return (
+      <>
+        <Table {...tableProps} />
+        <div className={styles.notgetdeposit}>
+          <strong>
+            <FormattedMessage id={'DepositNotReceived'}>
+              {msg => {
+                const msgs = msg.split('deposit_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
+                      {msgs[1]}
+                    </RouterGo>
+                  </>
+                );
+              }}
+            </FormattedMessage>
+          </strong>
+        </div>
+      </>
+    );
   }
 }
 

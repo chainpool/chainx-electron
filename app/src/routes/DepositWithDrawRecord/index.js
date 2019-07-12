@@ -13,23 +13,6 @@ class DepositWithDrawRecord extends Mixin {
     return (
       <div className={styles.depositWithDrawRecord}>
         <BreadCrumb />
-        <div className={styles.notgetdeposit}>
-          <strong>
-            <FormattedMessage id={'DepositNotReceived'}>
-              {msg => {
-                const msgs = msg.split('deposit_replace');
-                return (
-                  <>
-                    {msgs[0]}
-                    <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
-                      {msgs[1]}
-                    </RouterGo>
-                  </>
-                );
-              }}
-            </FormattedMessage>
-          </strong>
-        </div>
         <div className={styles.tabLine}>
           <Tabs
             tabs={[
