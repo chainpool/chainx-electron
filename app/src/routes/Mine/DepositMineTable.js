@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { observer, _ } from '../../utils';
+import { observer, _, showAssetName } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
@@ -42,7 +42,7 @@ class DepositMineTable extends Mixin {
                   }
                   alt="miniLogo"
                 />
-                {value}
+                {showAssetName(value)}
               </div>
             );
           },
@@ -116,7 +116,7 @@ class DepositMineTable extends Mixin {
                       data: {
                         description: [
                           { name: 'operation', value: () => <FormattedMessage id={'ClaimDividend'} /> },
-                          { name: () => <FormattedMessage id={'AssetType'} />, value: item.id },
+                          { name: () => <FormattedMessage id={'AssetType'} />, value: showAssetName(item.id) },
                         ],
                         callback: () => {
                           return dispatch({

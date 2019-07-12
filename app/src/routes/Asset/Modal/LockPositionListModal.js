@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, RouterGo, Table } from '../../../components';
 import { blockChain } from '../../../constants';
 import * as styles from './LockPositionListModal.less';
-import { observer } from '../../../utils';
+import { observer, showAssetName } from '../../../utils';
 
 @observer
 class LockPositionListModal extends Component {
@@ -28,7 +28,7 @@ class LockPositionListModal extends Component {
           ),
         },
         {
-          title: '锁仓总额 (BTC)',
+          title: `锁仓总额 (${showAssetName(token)})`,
           dataIndex: 'amountShow',
         },
       ],
@@ -36,7 +36,7 @@ class LockPositionListModal extends Component {
     };
 
     return (
-      <Modal title={`锁仓列表 (${token})`}>
+      <Modal title={`锁仓列表 (${showAssetName(token)})`}>
         <div className={styles.LockPositionListModal}>
           <Table {...tableProps} />
         </div>

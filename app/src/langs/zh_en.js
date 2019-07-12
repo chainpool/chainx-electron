@@ -406,7 +406,7 @@ const zh_en = {
     'You need to deposit to the BTC BTC_replace public MultiSig address BTC_replace using a BTC wallet which BTC_replace supports OP_RETURN, BTC_replace  filling the following message in the BTC_replace OP_RETURN BTC_replace field:',
   ],
   SDOTICO: [
-    '参与了Polkadot第一期ICO的用户SDOT_replace，可以将锁定的DOT 1：1映射为SDOT，享受在ChainX内永久参与跨链挖矿的福利。',
+    '参与了Polkadot第一期ICO的用户SDOT_replace，可以将锁定的DOT 1：1映射为S-DOT，享受在ChainX内永久参与跨链挖矿的福利。',
     'Anyone who participated in the Polkadot ICO in 2017 SDOT_replace can map the untransferrable DOT to SDOT on ChainX in 1:1, enjoying the benefits of deposits mining in ChainX permanently.',
   ],
   SDOTStepFirst: [

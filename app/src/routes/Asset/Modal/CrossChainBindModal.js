@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Clipboard, Mixin, Modal, Input, Button, RouterGo, FormattedMessage, Icon } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, Patterns, observer } from '../../../utils';
+import { classNames, Inject, Patterns, observer, showAssetName } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -672,7 +672,7 @@ class L_BTC extends Mixin {
                   {/*/>*/}
                 </>
               ) : (
-                <span className={styles.warnwritebtc}>请先输入 BTC锁仓地址</span>
+                <span className={styles.warnwritebtc}>请先输入BTC锁仓地址</span>
               )}
             </div>
             {chainxAddressHex && (
@@ -1059,7 +1059,7 @@ class S_DOT extends Mixin {
         scroll={true}
         title={
           <>
-            <FormattedMessage id={'CrossChainMapping'} />({token})
+            <FormattedMessage id={'CrossChainMapping'} />({showAssetName(token)})
           </>
         }
         isOverflow>

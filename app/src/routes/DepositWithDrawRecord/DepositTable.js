@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
-import { _, Inject } from '../../utils';
+import { _, Inject, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -48,6 +48,7 @@ class DepositTable extends Mixin {
           title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Address'} />,
