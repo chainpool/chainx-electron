@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _, setBlankSpace } from '../../utils';
+import { observer, _, setBlankSpace, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
 
@@ -52,6 +52,7 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Address'} />,

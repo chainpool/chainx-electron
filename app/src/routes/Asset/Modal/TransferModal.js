@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal, FormattedMessage } from '../../../components';
 import { FreeBalance, InputHorizotalList } from '../../components';
-import { Inject, Patterns, setBlankSpace, isElectron, isSimulatedAccount } from '../../../utils';
+import { Inject, Patterns, setBlankSpace, isElectron, isSimulatedAccount, showAssetName } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ accountStore, addressManageStore }) => ({ accountStore, addressManageStore }))
@@ -61,7 +61,7 @@ class TransferModal extends Component {
         title={
           <>
             <FormattedMessage id={'InnerChainTransfer'} />
-            <span>({token})</span>
+            <span>({showAssetName(token)})</span>
           </>
         }
         button={
@@ -92,7 +92,7 @@ class TransferModal extends Component {
                       { name: 'operation', value: () => <FormattedMessage id={'Transfer'} /> },
                       {
                         name: () => <FormattedMessage id={'TransferAmount'} />,
-                        value: `${setBlankSpace(amount, token)}`,
+                        value: `${setBlankSpace(amount, showAssetName(token))}`,
                       },
                       { name: () => <FormattedMessage id={'ReceiveAddress'} />, value: address, toastShow: false },
                       { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
@@ -145,7 +145,7 @@ class TransferModal extends Component {
           <InputHorizotalList
             left={
               <Input.Text
-                suffix={token}
+                suffix={showAssetName(token)}
                 precision={getPrecision(token)}
                 label={<FormattedMessage id={'TransferAmount'} />}
                 value={amount}

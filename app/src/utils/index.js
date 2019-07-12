@@ -523,3 +523,18 @@ export const isSimulatedAccount = item => {
     return item.address === SimulatedAccount.address;
   }
 };
+
+export const showAssetName = asset => {
+  switch (asset) {
+    case 'BTC':
+      return 'X-BTC';
+    case 'SDOT':
+      return 'S-DOT';
+    case 'L-BTC':
+      return 'L-BTC';
+    case 'PCX':
+      return 'PCX';
+    default:
+      return '未知资产';
+  }
+};

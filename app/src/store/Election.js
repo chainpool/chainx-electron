@@ -32,7 +32,6 @@ export default class Election extends ModelExtend {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
     const orderPairs = this.rootStore.tradeStore.orderPairs;
-
     return this.originPseduIntentions.map((intention = {}) => {
       let discountResultShow = '';
       const token = intention.id;
@@ -42,9 +41,12 @@ export default class Election extends ModelExtend {
 
       if (token === 'BTC' || token === 'L-BTC') {
         const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
-        discountResultShow = (price / findAssetOne.averPrice).toFixed(2);
+        discountResultShow = (
+          Number(price) /
+          (findAssetOne.averPrice * (Math.pow(10, this.getDefaultPrecision()) / Math.pow(10, findAssetOne.precision)))
+        ).toFixed(1);
       } else if (token === 'SDOT') {
-        discountResultShow = Number(price).toFixed(2);
+        discountResultShow = Number(price).toFixed(1);
       }
 
       const result = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, moment_helper, SetFullScreen, formatNumber } from '../../utils';
+import { _, moment_helper, SetFullScreen, formatNumber, showAssetName } from '../../utils';
 import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
 
 import * as styles from './Kline.less';
@@ -149,6 +149,8 @@ class Kline extends SwitchPair {
         resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
           const filterOne = orderPairs.filter((item = {}) => `${item.currency}/${item.assets}` === symbolName)[0];
           const pricescale = filterOne.precision - filterOne.unitPrecision;
+          const symbolPairs = [showAssetName(symbolName.split('/')[0]), showAssetName(symbolName.split('/')[1])];
+          const symbolShow = `${symbolPairs[0]}/${symbolPairs[1]}`;
           setTimeout(() => {
             onSymbolResolvedCallback({
               name: symbolName,

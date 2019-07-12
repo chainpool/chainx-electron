@@ -1,5 +1,5 @@
 import React from 'react';
-import { _, formatNumber, observer, setColumnsWidth } from '../../utils';
+import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
 import { HoverTip } from '../components';
@@ -48,7 +48,7 @@ class CrossChainAssetTable extends Mixin {
                 <span>
                   <HoverTip tip={item.desc}> {value}</HoverTip>
                 </span>
-                <span className={styles.shortName}>({item.name})</span>
+                <span className={styles.shortName}>({showAssetName(item.name)})</span>
               </div>
             ),
           },

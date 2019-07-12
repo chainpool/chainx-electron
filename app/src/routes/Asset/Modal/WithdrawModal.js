@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Input, Button, Mixin, FormattedMessage, Toast } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
-import { formatNumber, Inject, Patterns, setBlankSpace } from '../../../utils';
+import { formatNumber, Inject, Patterns, setBlankSpace, showAssetName } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 import * as styles from './WithdrawModal.less';
 
@@ -143,7 +143,10 @@ class WithdrawModal extends Mixin {
                       description: [
                         { name: 'operation', value: () => <FormattedMessage id={'Withdraw'} /> },
                         { name: () => <FormattedMessage id={'ReceiptAddress'} />, value: address, toastShow: false },
-                        { name: () => <FormattedMessage id={'Amount'} />, value: setBlankSpace(amount, token) },
+                        {
+                          name: () => <FormattedMessage id={'Amount'} />,
+                          value: setBlankSpace(amount, showAssetName(token)),
+                        },
                         { name: () => <FormattedMessage id={'Memo'} />, value: remark.trim() },
                       ],
                       callback: () => {
@@ -191,14 +194,14 @@ class WithdrawModal extends Mixin {
           <InputHorizotalList
             left={
               <Input.Text
-                suffix="BTC"
+                suffix={showAssetName(token)}
                 precision={getPrecision('BTC')}
                 label={
                   <div className={styles.bitcoinfee}>
                     <FormattedMessage id={'WithdrawAmount'} />
                     <span>
-                      (<FormattedMessage id={'GetWithdrawFee'} /> {setBlankSpace(feeShow, token)},
-                      <FormattedMessage id={'MinWithdrawValue'} /> {setBlankSpace(minValueShow, token)})
+                      (<FormattedMessage id={'GetWithdrawFee'} /> {setBlankSpace(feeShow, showAssetName(token))},
+                      <FormattedMessage id={'MinWithdrawValue'} /> {setBlankSpace(minValueShow, showAssetName(token))})
                     </span>
                   </div>
                 }
