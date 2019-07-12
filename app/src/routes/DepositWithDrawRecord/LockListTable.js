@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer } from '../../utils';
+import { observer, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 
 @observer
@@ -42,7 +42,7 @@ class LockListTable extends Mixin {
           render: value =>
             value ? (
               <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-                {value}
+                {hexPrefix(value)}
               </RouterGo>
             ) : (
               '-'

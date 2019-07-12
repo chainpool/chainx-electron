@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _, setBlankSpace, showAssetName } from '../../utils';
+import { observer, _, setBlankSpace, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
 
@@ -42,7 +42,7 @@ class WithDrawTable extends Mixin {
           render: value =>
             value ? (
               <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-                {value}
+                {hexPrefix(value)}
               </RouterGo>
             ) : (
               '-'
