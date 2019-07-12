@@ -454,10 +454,33 @@ class L_BTC extends Mixin {
     };
   }
 
+  checkAll = {
+    checkLockLocationPosition: () => {
+      const { lockLocationPosition } = this.state;
+      const {
+        model: { isTestBitCoinNetWork },
+      } = this.props;
+      const errMsg =
+        Patterns.check('required')(lockLocationPosition) ||
+        Patterns.check('isBTCAddress')(lockLocationPosition, isTestBitCoinNetWork());
+      this.setState({ lockLocationPositionErrMsg: errMsg });
+      return errMsg;
+    },
+    confirm: () => {
+      return ['checkLockLocationPosition'].every(item => !this.checkAll[item]());
+    },
+  };
+
   render() {
-    const { recommendChannelSelect = {}, lockLocationPosition = '', isAddChanel } = this.state;
+    const {
+      recommendChannelSelect = {},
+      lockLocationPosition = '',
+      lockLocationPositionErrMsg,
+      isAddChanel,
+    } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
+      model: { isTestBitCoinNetWork },
       accountStore: { currentAddress },
       assetStore: { btcAddresses = [], btcTrusteeAddress },
       globalStore: {
@@ -470,6 +493,7 @@ class L_BTC extends Mixin {
 
     const getChainXAddressHex = () => {
       if (!lockLocationPosition) return '';
+      if (Patterns.check('isBTCAddress')(lockLocationPosition, isTestBitCoinNetWork())) return '';
       //ChainX:用户ChainX地址[@channel]:用户BTC锁仓地址[0..4]
       const channel = recommendChannel ? `@${recommendChannel}` : '';
       const positionSlice = lockLocationPosition ? `:${lockLocationPosition.slice(0, 4)}` : '';
@@ -586,6 +610,7 @@ class L_BTC extends Mixin {
             输入你创建的BTC锁仓地址。
             <div className={styles.lockpositionaddress}>
               <Input.Text
+                errMsg={lockLocationPositionErrMsg}
                 placeholder={'BTC锁仓地址'}
                 value={lockLocationPosition}
                 onChange={value => {
@@ -593,6 +618,7 @@ class L_BTC extends Mixin {
                     lockLocationPosition: value,
                   });
                 }}
+                onBlur={this.checkAll.checkLockLocationPosition}
               />
             </div>
           </div>
