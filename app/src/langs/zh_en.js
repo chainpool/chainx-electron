@@ -367,7 +367,7 @@ const zh_en = {
   Singing: ['签名中', 'Singing'],
   BroadCasting: ['广播中', 'BroadCasting'],
   Processing: ['处理中', 'Processing'],
-  Confirming: ['确认中', '确认中'],
+  Confirming: ['确认中', 'Confirming'],
   Confirmed: ['已确认', 'Confirmed'],
   NormalFinish: ['完成', 'Normal Finish'],
   RootFinish: ['系统结束', 'Root Finish'],

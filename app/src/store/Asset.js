@@ -338,10 +338,15 @@ export default class Asset extends ModelExtend {
         const dataRpc = resRpc.data
           .filter(record => record.accountid && this.encodeAddressAccountId(record.accountid) === account.address)
           .map(record => {
+            const item = {
+              ...record,
+              txstate: 'Confirming',
+            };
             return {
               ...record,
               time: moment.formatHMS(new Date(record.time * 1000)),
-              txstate: 'Confirming', // rpc返回的只有confirm和totalConfirm，状态一定是confirming
+              txstate: item.txstate, // rpc返回的只有confirm和totalConfirm，状态一定是confirming
+              statusValue: this.processTxState(item.txstate, item),
               ...(record.confirm
                 ? {
                     value: {
@@ -352,6 +357,7 @@ export default class Asset extends ModelExtend {
                 : {}),
             };
           });
+
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
           time: moment.formatHMS(item['block.time']),
