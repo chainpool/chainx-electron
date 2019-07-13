@@ -31,7 +31,7 @@ class LockListTable extends Mixin {
       className: styles.tableContainer,
       columns: [
         {
-          title: <FormattedMessage id={'ApplicationTime'} />,
+          title: <FormattedMessage id={'Time'} />,
           dataIndex: 'time',
         },
         {
