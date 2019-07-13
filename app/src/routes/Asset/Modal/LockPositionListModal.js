@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, RouterGo, Table } from '../../../components';
+import { FormattedMessage, Modal, RouterGo, Table } from '../../../components';
 import { blockChain } from '../../../constants';
 import * as styles from './LockPositionListModal.less';
 import { observer, showAssetName } from '../../../utils';
@@ -19,7 +19,7 @@ class LockPositionListModal extends Component {
       className: styles.tableContainer,
       columns: [
         {
-          title: '锁仓地址',
+          title: <FormattedMessage id={'LockAddress'} />,
           dataIndex: 'address',
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
@@ -28,7 +28,11 @@ class LockPositionListModal extends Component {
           ),
         },
         {
-          title: `锁仓总额 (${showAssetName(token)})`,
+          title: (
+            <span>
+              <FormattedMessage id={'LockTotalBalance'} /> ({showAssetName(token)})
+            </span>
+          ),
           dataIndex: 'amountShow',
         },
       ],
@@ -36,7 +40,12 @@ class LockPositionListModal extends Component {
     };
 
     return (
-      <Modal title={`锁仓列表 (${showAssetName(token)})`}>
+      <Modal
+        title={
+          <span>
+            <FormattedMessage id={'LockList'} />({showAssetName(token)})
+          </span>
+        }>
         <div className={styles.LockPositionListModal}>
           <Table {...tableProps} />
         </div>
