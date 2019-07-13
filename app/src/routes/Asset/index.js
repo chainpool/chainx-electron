@@ -40,7 +40,7 @@ class Asset extends Mixin {
     } = this.props;
     const props = {
       ...this.props,
-      widths: [240, 130, 140, undefined, undefined, undefined, 280],
+      widths: [240, 140, 140, undefined, undefined, undefined, 280],
     };
 
     return (
