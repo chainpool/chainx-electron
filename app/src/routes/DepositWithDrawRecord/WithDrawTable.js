@@ -25,7 +25,7 @@ class WithDrawTable extends Mixin {
 
   render() {
     const {
-      model: { onChainAccountWithdrawList, dispatch, openModal },
+      model: { onChainAccountWithdrawList, dispatch, openModal, isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -41,7 +41,7 @@ class WithDrawTable extends Mixin {
           dataIndex: 'originChainTxId',
           render: value =>
             value ? (
-              <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+              <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
                 {hexPrefix(value)}
               </RouterGo>
             ) : (
