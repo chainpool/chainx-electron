@@ -65,7 +65,7 @@ class CrossChainAssetTable extends Mixin {
             title: <FormattedMessage id={'WithdrawalReserved'} />,
             dataIndex: 'reservedWithdrawal',
             render: (value, item) =>
-              item.name === 'L-BTC' ? (
+              item.name === 'L-BTC' || item.name === 'SDOT' ? (
                 <Balance value={setPrecision(value, item.name)} />
               ) : (
                 <Asset value={value} precision={item.precision} />
@@ -75,7 +75,7 @@ class CrossChainAssetTable extends Mixin {
             title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
             render: (value, item) =>
-              item.name === 'L-BTC' || item.name === 'SDOT' ? (
+              item.name === 'L-BTC' ? (
                 <Balance value={setPrecision(value, item.name)} />
               ) : (
                 <Asset value={value} precision={item.precision} />
