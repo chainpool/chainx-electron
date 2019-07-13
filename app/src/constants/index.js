@@ -1,9 +1,9 @@
 export const PATH = {
   default: '/election',
-  mine: '/depositMine',
+  mine: '/mine',
   asset: '/asset',
   election: '/election',
-  depositWithdrawRecord: '/asset/depositWithdrawRecord',
+  depositWithdrawRecord: '/asset/crossChainRecord',
   tradeRecord: '/tradeRecord',
   addressManage: '/asset/addressManage',
   trade: '/trade',

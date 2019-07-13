@@ -189,6 +189,7 @@ const zh_en = {
   Withdraw: ['提现', 'Withdraw'],
   WithdrawNumber: ['提现编号', 'Withdraw Number'],
   ApplicationWithdrawal: ['申请提现', 'Withdraw'],
+  ConstructWithdrawal: ['构造提现', 'Construct Withdraw'],
   Help: ['帮助', 'Help'],
   ResponseWithDraw: ['响应提现', 'Response Withdraw'],
   CrossChainWithdraw: ['跨链提现', 'Withdraw'],
