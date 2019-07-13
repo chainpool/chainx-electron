@@ -113,7 +113,7 @@ class VoteModal extends Mixin {
 
     return (
       <Modal
-        title={myTotalVote ? '修改' : <FormattedMessage id={'Nominate'} />}
+        title={myTotalVote ? <FormattedMessage id={'ChangeNominate'} /> : <FormattedMessage id={'Nominate'} />}
         button={
           <Button
             size="full"

@@ -20,10 +20,13 @@ export default class TradeRecord extends ModelExtend {
     const account = this.getCurrentAccount();
     this.changeModel('loading.getTradeRecordApi', true);
     return from(
-      getTradeRecordApi({
-        accountId: this.decodeAddressAccountId(account),
-        page,
-      })
+      this.isApiUseAble(
+        getTradeRecordApi({
+          accountId: this.decodeAddressAccountId(account),
+          page,
+        }),
+        []
+      )
     )
       .pipe(
         map((res = {}) => {

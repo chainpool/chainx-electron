@@ -58,6 +58,7 @@ class X_BTC extends Mixin {
     super(props);
     this.state = {
       step: -1,
+      isAddChanel: '',
       recommendChannelSelect: '',
       tradeIdErrMsg: '',
       qr: '',
@@ -82,7 +83,7 @@ class X_BTC extends Mixin {
   };
 
   render() {
-    const { step, recommendChannelSelect = {}, qr } = this.state;
+    const { step, recommendChannelSelect = {}, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress },
@@ -209,21 +210,57 @@ class X_BTC extends Mixin {
               <strong>
                 <FormattedMessage id={'InformationToFilled'} values={{ data: 'OP_RETURN' }} />
               </strong>
-              <Clipboard
-                id="copy"
-                dataText={findOne.value1}
-                outInner={
-                  <span className={styles.desc}>
-                    <FormattedMessage id={'CopyMessage'} />
+              {btcAddresses.length > 0 ? null : (
+                <Input.Checkbox
+                  value={isAddChanel}
+                  size="small"
+                  className={styles.addChannel}
+                  onClick={() => {
+                    this.setState(
+                      {
+                        isAddChanel: !isAddChanel,
+                      },
+                      () => {
+                        this.setState({
+                          recommendChannelSelect: '',
+                        });
+                      }
+                    );
+                  }}>
+                  <span className={!isAddChanel ? styles.addChanneldesc : null}>
+                    <FormattedMessage id={'AddOptionalChannel'} />
                   </span>
-                }
-              />
+                </Input.Checkbox>
+              )}
+
+              {/*<Clipboard*/}
+              {/*id="copy"*/}
+              {/*dataText={findOne.value1}*/}
+              {/*outInner={*/}
+              {/*<span className={styles.desc}>*/}
+              {/*<FormattedMessage id={'CopyMessage'} />*/}
+              {/*</span>*/}
+              {/*}*/}
+              {/*/>*/}
             </div>
             <div className={styles.OP_RETURNcopy}>
-              <span id="copy">{findOne.value1}</span>
-              <HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>
-                <Icon name={'icon-jieshishuoming'} />
-              </HoverTip>
+              <div className={styles.select}>
+                <OptionalChannelSelect
+                  isAddChanel={isAddChanel}
+                  {...this.props}
+                  recommendChannelSelect={recommendChannelSelect}
+                  updateRecommendChannelSelect={value => {
+                    this.setState({
+                      recommendChannelSelect: value,
+                    });
+                  }}
+                />
+              </div>
+              <Clipboard>{findOne.value1}</Clipboard>
+              {/*<span id="copy">{findOne.value1}</span>*/}
+              {/*<HoverTip tip={<FormattedMessage id={'BTCMapToChainXAddress'} />}>*/}
+              {/*<Icon name={'icon-jieshishuoming'} />*/}
+              {/*</HoverTip>*/}
             </div>
           </div>
         </div>
@@ -422,7 +459,7 @@ class X_BTC extends Mixin {
               <FormattedMessage id={'UserInstructions'} />
             ) : (
               <>
-                {<FormattedMessage id={'CrossChainDeposit'} />}({token})
+                {<FormattedMessage id={'CrossChainDeposit'} />}({showAssetName(token)})
               </>
             )}
           </>
@@ -946,7 +983,7 @@ class S_DOT extends Mixin {
         <div className={classNames(styles.grayblock, styles.addressall, styles.sdot, styles[language])}>
           <div className={styles.address}>
             <div className={styles.OP_RETURNtitle}>
-              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data中需要输入的信息：' }} />
+              <FormattedMessage id={'InformationToFilled'} values={{ data: 'Data' }} />
               <Input.Checkbox
                 value={isAddChanel}
                 size="small"
