@@ -341,6 +341,15 @@ export default class Asset extends ModelExtend {
             return {
               ...record,
               time: moment.formatHMS(new Date(record.time * 1000)),
+              txstate: 'Confirming', // rpc返回的只有confirm和totalConfirm，状态一定是confirming
+              ...(record.confirm
+                ? {
+                    value: {
+                      confirm: record.confirm,
+                      totalConfirm: record.totalConfirm,
+                    },
+                  }
+                : {}),
             };
           });
         const dataApi = resApi.items.map((item = {}) => ({

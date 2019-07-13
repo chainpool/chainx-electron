@@ -68,16 +68,22 @@ class LockListTable extends Mixin {
         {
           title: <FormattedMessage id={'Amount'} />,
           dataIndex: 'balanceShow',
+          render: (v, item) => (
+            <span>
+              {item.type === 0 ? '+' : '-'}
+              {v}
+            </span>
+          ),
         },
-        {
-          title: <FormattedMessage id={'Status'} />,
-          width: 100,
-          ellipse: 0,
-          dataIndex: 'originChainTxId',
-          render: (value, item = {}) => {
-            return item.unlock_hash ? '已解锁' : '锁定';
-          },
-        },
+        // {
+        //   title: <FormattedMessage id={'Status'} />,
+        //   width: 100,
+        //   ellipse: 0,
+        //   dataIndex: 'originChainTxId',
+        //   render: (value, item = {}) => {
+        //     return item.unlock_hash ? '已解锁' : '锁定';
+        //   },
+        // },
       ],
       dataSource: lockRecords,
     };
