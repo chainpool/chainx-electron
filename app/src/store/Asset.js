@@ -14,6 +14,8 @@ import {
   getMinimalWithdrawalValueByToken,
   getBlockTime,
   revokeWithdraw,
+  getAccountTotalLockPositionApi,
+  getLockListApi,
 } from '../services';
 import { computed } from 'mobx';
 import { moment, formatNumber, _, observable } from '../utils/index';
@@ -36,6 +38,7 @@ function getAssetWithZeroBalance(info) {
     precision: info.precision,
     trusteeAddr: info.trusteeAddr,
     desc: info.desc,
+    limitProps: { ...info.limitProps },
   };
 }
 
@@ -44,7 +47,9 @@ export default class Asset extends ModelExtend {
   @observable btcAddresses = []; // 账户已绑定BTC地址列表
   @observable onChainAccountWithdrawList = []; // 提现记录
   @observable depositRecords = []; // 充值记录
+  @observable lockRecords = []; //锁仓记录
   @observable accountAssets = []; // 现账户资产
+  @observable accountLock = [];
   @observable btcTrusteeAddress; // BTC公共多签地址
   @observable loading = {
     bindTxHashLoading: false,
@@ -83,6 +88,8 @@ export default class Asset extends ModelExtend {
         chain: info.chain,
         precision: info.precision,
         trusteeAddr: info.trusteeAddr,
+        limitProps: { ...info.limitProps },
+        ...(asset.locks ? { locks: asset.locks } : {}), //锁仓L-BTC有
       };
     });
   }
@@ -127,9 +134,7 @@ export default class Asset extends ModelExtend {
     if (!assetsInfo) {
       return [];
     }
-
     const tokensWithValue = this.crossChainAccountAssets.map(asset => asset.name);
-
     const zeroAssets = assetsInfo
       .filter(info => !tokensWithValue.includes(info.name))
       .map(info => {
@@ -156,6 +161,27 @@ export default class Asset extends ModelExtend {
     const accountAssetsResp = await getAsset(currentAccount.address, 0, 100);
     const names = this.rootStore.globalStore.chainNames;
     this.changeModel('accountAssets', accountAssetsResp.data.filter(asset => names.includes(asset.name)));
+    this.getAccountTotalLockPositions();
+  };
+
+  getAccountTotalLockPositions = async () => {
+    const currentAccount = this.getCurrentAccount();
+    const res = await getAccountTotalLockPositionApi({ accountId: this.decodeAddressAccountId(currentAccount) });
+    if (res) {
+      if (res.length) {
+        this.changeModel(
+          'accountLock',
+          res.map(item => {
+            return {
+              ...item,
+              amountShow: this.setPrecision(item.value, 'L-BTC'),
+            };
+          })
+        );
+      } else if (res.length === 0) {
+        this.changeModel('accountLock', []);
+      }
+    }
   };
 
   processTxState = (txstate, item) => {
@@ -166,10 +192,10 @@ export default class Asset extends ModelExtend {
     } else {
       switch (txstate && txstate.toUpperCase()) {
         case 'NOTAPPLYING':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'APPLYING':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'SIGNING':
           state = 'Singing';
@@ -187,16 +213,16 @@ export default class Asset extends ModelExtend {
           state = 'Confirmed';
           break;
         case 'NORMALFINISH':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'ROOTFINISH':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'NORMALCANCEL':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         case 'ROOTCANCEL':
-          state = applicationStatus;
+          state = applicationStatus ? applicationStatus : txstate;
           break;
         default:
           state = 'Unknown';
@@ -207,7 +233,7 @@ export default class Asset extends ModelExtend {
 
   async getWithdrawalListByAccount() {
     const account = this.getCurrentAccount();
-    from(getWithdrawalList('Bitcoin', 0, 100))
+    return from(getWithdrawalList('Bitcoin', 0, 100))
       .pipe(
         map(res => {
           return res.data;
@@ -289,7 +315,7 @@ export default class Asset extends ModelExtend {
 
   async getDepositRecords() {
     const account = this.getCurrentAccount();
-    from(getDepositList('Bitcoin', 0, 100))
+    return from(getDepositList('Bitcoin', 0, 100))
       .pipe(
         combineLatest(
           from(
@@ -334,6 +360,26 @@ export default class Asset extends ModelExtend {
             statusValue: this.processTxState(item.txstate, item),
           })),
         });
+      });
+  }
+
+  async getLockListApi() {
+    const account = this.getCurrentAccount();
+    return from(getLockListApi({ accountId: this.decodeAddressAccountId(account) }))
+      .pipe(map(res => res.items))
+      .subscribe(res => {
+        res = res.map(item => {
+          return {
+            ...item,
+            token: 'L-BTC',
+            time: moment.formatHMS(item.lock_time),
+            balanceShow: this.setPrecision(item.value, 'L-BTC'),
+            originChainTxId: item.lock_hash,
+          };
+        });
+        if (res && res.length >= 0) {
+          this.changeModel('lockRecords', res);
+        }
       });
   }
 

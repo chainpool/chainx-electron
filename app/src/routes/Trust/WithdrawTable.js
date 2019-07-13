@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, RouterGo, Table } from '../../components';
-import { _, observer, toJS } from '../../utils';
+import { _, observer, toJS, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
 @observer
@@ -37,6 +37,7 @@ class WithdrawTable extends Component {
           title: <FormattedMessage id={'Asset'} />,
           dataIndex: 'token',
           width: 80,
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'OriginalChainAddr'} />,
@@ -78,10 +79,10 @@ class WithdrawTable extends Component {
             if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  <FormattedMessage id={value} />
                   {_.get(item.status, 'confirm') && (
                     <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'totalConfirm')}`})</span>
                   )}
+                  <FormattedMessage id={value} />
                 </>
               );
             }

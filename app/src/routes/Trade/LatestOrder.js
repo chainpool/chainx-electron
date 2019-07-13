@@ -3,7 +3,7 @@ import SwitchPair from './Mixin/SwitchPair';
 
 import * as styles from './LatestOrder.less';
 import { Table, FormattedMessage } from '../../components';
-import { observer } from '../../utils';
+import { observer, showAssetName } from '../../utils';
 
 @observer
 class LatestOrder extends SwitchPair {
@@ -35,7 +35,7 @@ class LatestOrder extends SwitchPair {
           width: '40%',
           title: (
             <>
-              <FormattedMessage id={'Price'} />({currentPair.currency})
+              <FormattedMessage id={'Price'} />({showAssetName(currentPair.currency)})
             </>
           ),
           dataIndex: 'priceShow',
@@ -48,7 +48,7 @@ class LatestOrder extends SwitchPair {
         {
           title: (
             <>
-              <FormattedMessage id={'Amount'} />({currentPair.assets})
+              <FormattedMessage id={'Amount'} />({showAssetName(currentPair.assets)})
             </>
           ),
           dataIndex: 'amountShow',

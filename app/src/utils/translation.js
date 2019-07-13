@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { setBlankSpace } from '../utils';
+import { setBlankSpace, showAssetName } from '../utils';
 
 const calls = {
   unnominate: 'DecreaseNomination',
@@ -143,8 +143,8 @@ const translation = ({
         });
       }
       info = merge(args, [
-        { name: 'token' },
-        { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), d.token) },
+        { name: 'token', dataTrans: v => showAssetName(v) },
+        { name: 'value', dataTrans: (v, d) => setBlankSpace(setPrecision(v, d.token), showAssetName(d.token)) },
         { name: 'memo' },
         operation === 'TransferIn'
           ? { name: 'source', dataTrans: v => findAccount(v) }
@@ -153,7 +153,7 @@ const translation = ({
       break;
     }
     case 'XTokens|claim': {
-      info = merge(args, [{ name: 'token' }]);
+      info = merge(args, [{ name: 'token', dataTrans: v => showAssetName(v) }]);
       break;
     }
     case 'XStaking|claim': {
@@ -204,14 +204,14 @@ const translation = ({
           dataTrans: (v, r) => {
             const filterPair = getPair({ id: r.pair_index });
             const showUnit = showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
-            return setBlankSpace(showUnit(setPrecision(v, filterPair.precision)), filterPair.currency);
+            return setBlankSpace(showUnit(setPrecision(v, filterPair.precision)), showAssetName(filterPair.currency));
           },
         },
         {
           name: 'amount',
           dataTrans: (v, r) => {
             const filterPair = getPair({ id: r.pair_index });
-            return setBlankSpace(setPrecision(v, filterPair.assets), filterPair.assets);
+            return setBlankSpace(setPrecision(v, filterPair.assets), showAssetName(filterPair.assets));
           },
         },
       ]);
@@ -240,7 +240,7 @@ const translation = ({
     }
     case 'Withdrawal|withdraw': {
       info = merge(args, [
-        { name: 'token' },
+        { name: 'token', dataTrans: v => showAssetName(v) },
         { name: 'value', dataTrans: (v, r) => setPrecision(v, r.token) },
         { name: 'addr', nameTrans: () => 'ReceiptAddress' },
         { name: 'ext' },
@@ -250,8 +250,8 @@ const translation = ({
     case 'XStaking|setup_trustee': {
       info = merge(args, [
         { name: 'chain', dataTrans: (v, r) => _.get(r, 'hot_entity.option') },
-        { name: 'hot_entity', dataTrans: v => _.get(v, 'value') },
-        { name: 'cold_entity', dataTrans: v => _.get(v, 'value') },
+        { name: 'hot_entity', dataTrans: v => v },
+        { name: 'cold_entity', dataTrans: v => v },
         { name: 'about' },
       ]);
       break;
@@ -279,7 +279,7 @@ const translation = ({
       break;
     }
     case 'XBridgeFeatures|setup_bitcoin_trustee': {
-      info = merge(args, [{ name: 'hot_entity' }, { name: 'cold_entity' }]);
+      info = merge(args, [{ name: 'hot_entity', dataTrans: v => v }, { name: 'cold_entity', dataTrans: v => v }]);
       break;
     }
   }
