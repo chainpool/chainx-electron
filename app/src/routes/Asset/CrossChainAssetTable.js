@@ -139,7 +139,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      锁仓
+                      <FormattedMessage id={'LockPosition'} />
                     </Button>
                   )}
 

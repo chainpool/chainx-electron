@@ -123,7 +123,11 @@ class ActiveValidatorsList extends Component {
                           {currentAddress ? (
                             <Button
                               type="confirm"
-                              className={classNames(styles.votebutton, item.myTotalVote ? styles.show : styles.hidden)}
+                              className={classNames(
+                                language === 'en' ? styles.en : null,
+                                styles.votebutton,
+                                item.myTotalVote ? styles.show : styles.hidden
+                              )}
                               onClick={() => {
                                 const vote = () =>
                                   openModal({
@@ -137,7 +141,11 @@ class ActiveValidatorsList extends Component {
                                   });
                                 vote();
                               }}>
-                              {item.myTotalVote ? '修改' : <FormattedMessage id={'NominateQuick'} />}
+                              {item.myTotalVote ? (
+                                <FormattedMessage id={'ChangeNominate'} />
+                              ) : (
+                                <FormattedMessage id={'NominateQuick'} />
+                              )}
                             </Button>
                           ) : null}
                         </div>

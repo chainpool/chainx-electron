@@ -50,6 +50,7 @@ export const lodash_helper = {
   shuffle: _.shuffle,
   unionBy: _.unionBy,
   sortBy: _.sortBy,
+  uniqBy: _.uniqBy,
 };
 
 export const Rx = {
