@@ -106,6 +106,7 @@ const zh_en = {
   UnfreezeLocked: ['赎回解冻', 'Unfreeze Locked'],
   Nominate: ['投票', 'Nominate'],
   ChangeNominate: ['修改', 'Change'],
+  LookUp: ['查看', 'Look'],
   LockPosition: ['锁仓', 'Lock'],
   NominateQuick: ['投票', 'Vote'],
   SwitchNominate: ['换票', 'Switch Nominate'],

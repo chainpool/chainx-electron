@@ -154,7 +154,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      查看
+                      <FormattedMessage id={'LookUp'} />
                     </Button>
                   ) : null}
 
