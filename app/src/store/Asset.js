@@ -338,11 +338,26 @@ export default class Asset extends ModelExtend {
         const dataRpc = resRpc.data
           .filter(record => record.accountid && this.encodeAddressAccountId(record.accountid) === account.address)
           .map(record => {
+            const item = {
+              ...record,
+              txstate: 'Confirming',
+            };
             return {
               ...record,
               time: moment.formatHMS(new Date(record.time * 1000)),
+              txstate: item.txstate, // rpc返回的只有confirm和totalConfirm，状态一定是confirming
+              statusValue: this.processTxState(item.txstate, item),
+              ...(record.confirm
+                ? {
+                    value: {
+                      confirm: record.confirm,
+                      totalConfirm: record.totalConfirm,
+                    },
+                  }
+                : {}),
             };
           });
+
         const dataApi = resApi.items.map((item = {}) => ({
           ...item,
           time: moment.formatHMS(item['block.time']),
@@ -374,7 +389,7 @@ export default class Asset extends ModelExtend {
             token: 'L-BTC',
             time: moment.formatHMS(item.lock_time),
             balanceShow: this.setPrecision(item.value, 'L-BTC'),
-            originChainTxId: item.lock_hash,
+            originChainTxId: item.hash,
           };
         });
         if (res && res.length >= 0) {

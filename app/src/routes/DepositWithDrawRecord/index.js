@@ -18,7 +18,7 @@ class DepositWithDrawRecord extends Mixin {
             tabs={[
               <FormattedMessage id={'DepositRecords'} />,
               <FormattedMessage id={'WithdrawalRecords'} />,
-              '锁仓记录',
+              <FormattedMessage id={'LockPositionRecords'} />,
             ]}>
             {activeIndex => (
               <>

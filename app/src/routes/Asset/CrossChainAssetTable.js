@@ -139,7 +139,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      锁仓
+                      <FormattedMessage id={'LockPosition'} />
                     </Button>
                   )}
 
@@ -154,7 +154,7 @@ class CrossChainAssetTable extends Mixin {
                           },
                         });
                       }}>
-                      查看
+                      <FormattedMessage id={'LookUp'} />
                     </Button>
                   ) : null}
 
