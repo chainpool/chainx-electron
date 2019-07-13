@@ -1,19 +1,27 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _, setBlankSpace } from '../../utils';
+import { observer, _, setBlankSpace, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
 
 @observer
 class WithDrawTable extends Mixin {
   startInit() {
+    this.getWithdrawalListByAccount();
+  }
+
+  getWithdrawalListByAccount = async () => {
     const {
       model: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getWithdrawalListByAccount' });
-  }
+    this.subscribeWithdrawalList = await dispatch({ type: 'getWithdrawalListByAccount' });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeWithdrawalList && this.subscribeWithdrawalList.unsubscribe();
+  };
 
   render() {
     const {
@@ -34,7 +42,7 @@ class WithDrawTable extends Mixin {
           render: value =>
             value ? (
               <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-                {value}
+                {hexPrefix(value)}
               </RouterGo>
             ) : (
               '-'
@@ -44,6 +52,7 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Address'} />,
@@ -66,7 +75,10 @@ class WithDrawTable extends Mixin {
             if (statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
+                  {_.get(item.value, 'confirm')
+                    ? `(${_.get(item.value, 'confirm')} / ${_.get(item.value, 'totalConfirm')}) `
+                    : null}
+                  {<FormattedMessage id={value} />}
                 </>
               );
             }

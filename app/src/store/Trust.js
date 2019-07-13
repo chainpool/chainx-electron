@@ -129,10 +129,10 @@ export default class Trust extends ModelExtend {
       } else {
         switch (statusValue.toUpperCase()) {
           case 'NOTAPPLYING':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           case 'APPLYING':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           case 'SIGNING':
             state = 'Singing';
@@ -150,16 +150,16 @@ export default class Trust extends ModelExtend {
             state = 'Confirmed';
             break;
           case 'NORMALFINISH':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           case 'ROOTFINISH':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           case 'NORMALCANCEL':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           case 'ROOTCANCEL':
-            state = applicationStatus;
+            state = applicationStatus ? applicationStatus : statusValue;
             break;
           default:
             state = 'Unknown';

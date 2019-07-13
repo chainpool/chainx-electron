@@ -68,7 +68,9 @@ class RegisterNodeModal extends Component {
                 }}>
                 <FormattedMessage id={'IHaveRead'} />
                 <span className={styles.documentLink}>
-                  <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Testnet' }}>
+                  <RouterGo
+                    isOutSide
+                    go={{ pathname: 'https://github.com/chainx-org/ChainX/wiki/Join-ChainX-Mainnet' }}>
                     <FormattedMessage id={'NodeDeployDocument'} />
                   </RouterGo>
                 </span>

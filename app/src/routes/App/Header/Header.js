@@ -103,7 +103,7 @@ class Header extends Component {
                   ) : null;
                 })}
 
-                {ShowLanguage && (
+                {/mywallet/.test(window.location.href) && ShowLanguage && (
                   <li className={styles.language}>
                     {language === 'zh' ? '中文' : 'English'}
                     <div>

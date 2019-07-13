@@ -4,7 +4,7 @@ import * as styles from './index.less';
 
 class Tab extends Component {
   render() {
-    const { tabs = [], onClick, activeIndex = 0, className } = this.props;
+    const { tabs = [], onClick, activeIndex = 0, className, renderItem } = this.props;
     return tabs.length ? (
       <ul className={classNames(styles.Tab, className)}>
         {tabs.map((item, index) => (
@@ -14,7 +14,7 @@ class Tab extends Component {
             onClick={() => {
               _.isFunction(onClick) && onClick(item, index);
             }}>
-            {item}
+            {_.isFunction(renderItem) ? renderItem(item) : item}
           </li>
         ))}
       </ul>

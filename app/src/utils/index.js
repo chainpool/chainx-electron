@@ -406,13 +406,20 @@ export const fetchFromHttp = ({
       ...(method.toUpperCase() === 'GET' ? {} : { body: message }),
     })
       .then(async res => {
-        if (res.status >= 200 && res.status < 300) {
-          return res.json();
-        } else {
-          const result = await res.json();
+        try {
+          if (res.status >= 200 && res.status < 300) {
+            return res.json();
+          } else {
+            const result = await res.json();
+            return Promise.reject({
+              status: res.status,
+              message: result,
+            });
+          }
+        } catch (e) {
           return Promise.reject({
             status: res.status,
-            message: result,
+            message: e.message,
           });
         }
       })
@@ -507,4 +514,19 @@ export const groupArrayByCount = (array = [], count) => {
   }
 
   return result;
+};
+
+export const showAssetName = asset => {
+  switch (asset) {
+    case 'BTC':
+      return 'X-BTC';
+    case 'SDOT':
+      return 'S-DOT';
+    case 'L-BTC':
+      return 'L-BTC';
+    case 'PCX':
+      return 'PCX';
+    default:
+      return '未知资产';
+  }
 };

@@ -102,6 +102,15 @@ export const getDepositListApi = payload => {
   });
 };
 
+export const getLockListApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `http://47.93.16.189:8098/btc/lock/records?accountid=${accountId}&page_zise=100&page=0`,
+    method: 'get',
+    ...payload,
+  });
+};
+
 export const getDepositList = (...payload) => asset.getDepositList(...payload);
 
 export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity(...payload);
@@ -210,6 +219,21 @@ export const getTradeDetailApi = payload => {
     url: `${API}/tx/${txhash}`,
     method: 'get',
     ...payload,
+  });
+};
+
+export const getAccountTotalLockPositionApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `http://47.93.16.189:8098/account/${accountId}/btc/lock/balances`,
+    method: 'get',
+  });
+};
+
+export const getIntentionImages = () => {
+  return fetchFromHttp({
+    url: `${API}/intention_logos`,
+    method: 'get',
   });
 };
 

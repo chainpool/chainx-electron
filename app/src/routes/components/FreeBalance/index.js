@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from '../../../components';
+import { showAssetName } from '../../../utils';
 import * as styles from './index.less';
 
 class FreeBalance extends Component {
@@ -10,7 +11,7 @@ class FreeBalance extends Component {
         <div className={styles.title}>{title}</div>
         <div className={styles.content}>
           <span>{label}:</span>
-          {value} {unit}
+          {value} {showAssetName(unit)}
         </div>
       </div>
     );

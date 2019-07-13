@@ -16,6 +16,7 @@ import {
   voteClaim,
   renominate,
   getIntentionsByAccount,
+  getIntentionImages,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -30,18 +31,31 @@ export default class Election extends ModelExtend {
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
-
+    const orderPairs = this.rootStore.tradeStore.orderPairs;
     return this.originPseduIntentions.map((intention = {}) => {
+      let discountResultShow = '';
       const token = intention.id;
       // 折合投票数
       const discountVote = (intention.power * intention.circulation) / Math.pow(10, precisionMap[token]);
+      const price = formatNumber.toPrecision(intention.power, nativeAssetPrecision);
+
+      if (token === 'BTC' || token === 'L-BTC') {
+        const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
+        discountResultShow = (
+          Number(price) /
+          (findAssetOne.averPrice * (Math.pow(10, this.getDefaultPrecision()) / Math.pow(10, findAssetOne.precision)))
+        ).toFixed(1);
+      } else if (token === 'SDOT') {
+        discountResultShow = Number(price).toFixed(1);
+      }
 
       const result = {
         ...intention,
         discountVote: formatNumber.toPrecision(discountVote, nativeAssetPrecision),
         circulation: this.setPrecision(intention.circulation, token),
-        price: formatNumber.toPrecision(intention.power, nativeAssetPrecision),
+        price,
         jackpot: this.setPrecision(intention.jackpot, nativeAssetPrecision),
+        discountResultShow,
       };
 
       const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
@@ -75,7 +89,7 @@ export default class Election extends ModelExtend {
     return this.originIntentions.map(intention => {
       return Object.assign({}, intention, {
         address: ChainX.account.encodeAddress(intention.account),
-        sessionAddress: ChainX.account.encodeAddress(intention.sessionKey),
+        jackpotAddress: ChainX.account.encodeAddress(intention.jackpotAccount),
       });
     });
   }
@@ -190,8 +204,44 @@ export default class Election extends ModelExtend {
 
   getIntentions = async () => {
     const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
-    this.changeModel('originIntentions', intentions);
+    this.changeModel(
+      'originIntentions',
+      intentions.map(item => {
+        const findOne = this.originIntentions.find(one => one.account === item.account);
+        if (findOne) {
+          return {
+            ...findOne,
+            ...item,
+          };
+        }
+        return item;
+      })
+    );
     this.changeModel('originNominationRecords', records);
+  };
+
+  getIntentionImages = async () => {
+    let res = await getIntentionImages().catch(() => []);
+    res = res.map(item => {
+      const key = Object.keys(item)[0];
+      const value = Object.values(item)[0];
+      return {
+        name: key,
+        imageUrl: value,
+      };
+    });
+
+    const intentions = this.originIntentions.map(item => {
+      const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
+      if (findOne) {
+        return {
+          ...item,
+          imageUrl: findOne.imageUrl,
+        };
+      }
+      return item;
+    });
+    this.changeModel('originIntentions', intentions);
   };
 
   getNominationRecords = async () => {

@@ -3,7 +3,7 @@ import * as styles from './index.less';
 import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames } from '../../utils';
+import { _, observer, groupArrayByCount, classNames, hexPrefix } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 
@@ -22,7 +22,7 @@ class ActiveValidatorsList extends Component {
         decodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
-      globalStore: { nativeAssetName },
+      globalStore: { nativeAssetName, language },
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
@@ -42,17 +42,17 @@ class ActiveValidatorsList extends Component {
       }
     });
 
-    const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
-      return item2.totalNomination - item1.totalNomination;
-    }); // rank 排名按总得票数算
+    // const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
+    //   return item2.totalNomination - item1.totalNomination;
+    // }); // rank 排名按总得票数算
 
-    dataSourceResult = dataSourceResult.map(item => {
-      const findIndex = rankFromTotalnomination.findIndex(one => {
-        return one.account === item.account;
-      });
+    dataSourceResult = dataSourceResult.map((item, index) => {
+      // const findIndex = [...dataSourceResult].findIndex(one => {
+      //   return one.account === item.account;
+      // });
       return {
         ...item,
-        rank: findIndex + 1,
+        rank: index + 1,
       };
     });
 
@@ -62,17 +62,29 @@ class ActiveValidatorsList extends Component {
       });
     }
 
-    const groupDataSources = groupArrayByCount(dataSourceResult, 5);
+    const groupDataSources = groupArrayByCount(dataSourceResult, 4);
 
     return (
-      <div className={styles.ActiveValidatorsList}>
-        <table style={{ borderCollapse: 'collapse' }} className={styles.alltable}>
-          <tbody>
-            {groupDataSources.map((one, ins) => (
-              <tr key={ins} className={styles.trs}>
+      <div className={styles.ActiveValidatorsListVersion2}>
+        <ul className={styles.list}>
+          {groupDataSources.map((one, ins) => (
+            <li
+              key={ins}
+              className={classNames(
+                styles.trs,
+                groupDataSources.length > 3 && ins > 2 && ins >= groupDataSources.length - 4 ? styles.up : null
+              )}>
+              <ul>
                 {one.map((item, index) => (
-                  <td key={index}>
-                    <div>
+                  <li key={index}>
+                    <div className={styles.left}>
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} width={40} height={40} />
+                      ) : (
+                        <div>{item.name[0].toUpperCase()}</div>
+                      )}
+                    </div>
+                    <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
                           <div
@@ -87,128 +99,35 @@ class ActiveValidatorsList extends Component {
                                 : styles.backupValidators
                             )}
                           />
-                          <span>
-                            <HoverTip tip={item.about}>
-                              <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
-                                {item.name}
-                              </div>
-                            </HoverTip>
-                          </span>
-                          {item.isTrustee && item.isTrustee.length ? (
-                            <FormattedMessage id={'ManageUserOutsidechainAssets'}>
-                              {msg => (
-                                <HoverTip tip={msg}>
-                                  <LanguageContent
-                                    zh={<img src={trustee_zh} alt="" height={18} />}
-                                    en={<img src={trustee_en} alt="" width={45} />}
-                                  />
-                                </HoverTip>
-                              )}
-                            </FormattedMessage>
-                          ) : null}
-                          <Dropdown
-                            distance={20}
-                            drop={<i className={classNames('iconfont icon-icon-jieshishuoming', styles.helpicon)} />}
-                            place={ins === 0 ? 'middle-bottom' : 'middle-top'}>
-                            <div className={styles.Nodedetail}>
-                              <table style={{ borderCollapse: 'collapse' }}>
-                                <tbody>
-                                  {item.isActive ? (
-                                    <tr>
-                                      <td>
-                                        <FormattedMessage id={'VoteRank'} />
-                                      </td>
-                                      <td>
-                                        <div>{item.rank}</div>
-                                      </td>
-                                    </tr>
-                                  ) : null}
-
-                                  <tr>
-                                    <td>
-                                      <FormattedMessage id={'NodeType'} />
-                                    </td>
-                                    <td>
-                                      <div className={styles.nodetype}>
-                                        <div
-                                          className={classNames(
-                                            styles.nodeType,
-                                            !item.isActive
-                                              ? styles.inActive
-                                              : item.isTrustee && item.isTrustee.length
-                                              ? styles.trustee
-                                              : item.isValidator
-                                              ? styles.validator
-                                              : styles.backupValidators
-                                          )}
-                                        />
-
-                                        {item.isTrustee && item.isTrustee.length ? (
-                                          <FormattedMessage id={'TrusteeNode'} />
-                                        ) : !item.isActive ? (
-                                          <FormattedMessage id={'DropOut'} />
-                                        ) : item.isValidator ? (
-                                          <FormattedMessage id={'ValidatorNode'} />
-                                        ) : (
-                                          <FormattedMessage id={'StandbyNode'} />
-                                        )}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <FormattedMessage id={'NodeWebsite'} />
-                                    </td>
-                                    <td>
-                                      <div className={styles.longaddress}>
-                                        <RouterGo isOutSide go={{ pathname: item.url }}>
-                                          {item.url}
-                                        </RouterGo>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <FormattedMessage id={'AccountAddressQuick'} />
-                                    </td>
-                                    <td>
-                                      <div className={styles.longaddress}>
-                                        <RouterGo
-                                          isOutSide
-                                          go={{
-                                            pathname: blockChain.chainXAccount(decodeAddressAccountId(item.address)),
-                                          }}>
-                                          {item.address}
-                                        </RouterGo>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <FormattedMessage id={'PoolAddress'} />
-                                    </td>
-                                    <td>
-                                      <div className={styles.longaddress}>{item.sessionAddress}</div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <FormattedMessage id={'PoolAmount'} />
-                                    </td>
-                                    <td>
-                                      <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                          <div>
+                            <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
+                              <span className={styles.name}> {item.name}</span>
                             </div>
-                          </Dropdown>
+                          </div>
+                          <div className={styles.trusteeImg}>
+                            {item.isTrustee && item.isTrustee.length ? (
+                              <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                                {msg => (
+                                  <HoverTip tip={msg}>
+                                    <LanguageContent
+                                      zh={<img src={trustee_zh} alt="" height={18} />}
+                                      en={<img src={trustee_en} alt="" width={45} />}
+                                    />
+                                  </HoverTip>
+                                )}
+                              </FormattedMessage>
+                            ) : null}
+                          </div>
                         </div>
                         <div className={styles.buttoncontainer}>
                           {currentAddress ? (
                             <Button
                               type="confirm"
-                              className={styles.votebutton}
+                              className={classNames(
+                                language === 'en' ? styles.en : null,
+                                styles.votebutton,
+                                item.myTotalVote ? styles.show : styles.hidden
+                              )}
                               onClick={() => {
                                 const vote = () =>
                                   openModal({
@@ -222,7 +141,11 @@ class ActiveValidatorsList extends Component {
                                   });
                                 vote();
                               }}>
-                              <FormattedMessage id={'NominateQuick'} />
+                              {item.myTotalVote ? (
+                                <FormattedMessage id={'ChangeNominate'} />
+                              ) : (
+                                <FormattedMessage id={'NominateQuick'} />
+                              )}
                             </Button>
                           ) : null}
                         </div>
@@ -238,12 +161,116 @@ class ActiveValidatorsList extends Component {
                         </div>
                       </div>
                     </div>
-                  </td>
+                    <div className={classNames(language === 'zh' ? styles.zh : styles.en, styles.Nodedetail)}>
+                      <ul>
+                        {item.isActive ? (
+                          <li>
+                            <div>{sort.value === 'selfVote' ? '抵押排名' : '得票排名'}</div>
+                            <div>
+                              <div className={styles.rank}>{item.rank}</div>
+                            </div>
+                          </li>
+                        ) : null}
+
+                        <li>
+                          <div>
+                            <FormattedMessage id={'NodeType'} />
+                          </div>
+                          <div>
+                            <div className={styles.nodetype}>
+                              {/*<div*/}
+                              {/*className={classNames(*/}
+                              {/*styles.nodeType,*/}
+                              {/*!item.isActive*/}
+                              {/*? styles.inActive*/}
+                              {/*: item.isTrustee && item.isTrustee.length*/}
+                              {/*? styles.trustee*/}
+                              {/*: item.isValidator*/}
+                              {/*? styles.validator*/}
+                              {/*: styles.backupValidators*/}
+                              {/*)}*/}
+                              {/*/>*/}
+
+                              {item.isTrustee && item.isTrustee.length ? (
+                                <FormattedMessage id={'TrusteeNode'} />
+                              ) : !item.isActive ? (
+                                <FormattedMessage id={'DropOut'} />
+                              ) : item.isValidator ? (
+                                <FormattedMessage id={'ValidatorNode'} />
+                              ) : (
+                                <FormattedMessage id={'StandbyNode'} />
+                              )}
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'NodeWebsite'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo isOutSide go={{ pathname: item.url }}>
+                                {item.url}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'AccountAddressQuick'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo
+                                isOutSide
+                                go={{
+                                  pathname: blockChain.chainXAccount(hexPrefix(decodeAddressAccountId(item.address))),
+                                }}>
+                                {item.address}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'PoolAddress'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>
+                              <RouterGo
+                                isOutSide
+                                go={{
+                                  pathname: blockChain.chainXAccount(
+                                    hexPrefix(decodeAddressAccountId(item.jackpotAddress))
+                                  ),
+                                }}>
+                                {item.jackpotAddress}
+                              </RouterGo>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <FormattedMessage id={'PoolAmount'} />
+                          </div>
+                          <div>
+                            <div className={styles.longaddress}>{setDefaultPrecision(item.jackpot)}</div>
+                          </div>
+                        </li>
+                        <li>
+                          <div className={styles.introduceTitle}>节点简介</div>
+                          <div className={styles.introduce}>
+                            <div className={styles.introducedetail}>{item.about}</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </ul>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
