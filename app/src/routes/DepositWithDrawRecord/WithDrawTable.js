@@ -98,7 +98,7 @@ class WithDrawTable extends Mixin {
                               { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
                               {
                                 name: () => <FormattedMessage id={'WithdrawAmount'} />,
-                                value: setBlankSpace(item.balanceShow, item.token),
+                                value: setBlankSpace(item.balanceShow, showAssetName(item.token)),
                               },
                             ],
                             callback: () => {
