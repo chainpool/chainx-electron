@@ -70,7 +70,7 @@ class LockListTable extends Mixin {
           dataIndex: 'balanceShow',
           render: (v, item) => (
             <span>
-              {item.type === 0 ? '+' : '-'}
+              {item.type === 0 ? '+ ' : '- '}
               {v}
             </span>
           ),

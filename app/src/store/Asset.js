@@ -389,7 +389,7 @@ export default class Asset extends ModelExtend {
             token: 'L-BTC',
             time: moment.formatHMS(item.lock_time),
             balanceShow: this.setPrecision(item.value, 'L-BTC'),
-            originChainTxId: item.lock_hash,
+            originChainTxId: item.hash,
           };
         });
         if (res && res.length >= 0) {
