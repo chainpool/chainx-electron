@@ -87,7 +87,7 @@ export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payl
 export const getWithdrawalListApi = payload => {
   const { accountId, chain, token } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/withdrawals?chain=${chain}&token=${token}`,
+    url: `${API}/account/${accountId}/withdrawals?chain=${chain}&token=${token}&page=0&page_size=100`,
     method: 'get',
     ...payload,
   });
@@ -96,7 +96,7 @@ export const getWithdrawalListApi = payload => {
 export const getDepositListApi = payload => {
   const { accountId, chain, token } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/deposits?chain=${chain}&token=${token}`,
+    url: `${API}/account/${accountId}/deposits?chain=${chain}&token=${token}&page=0&page_size=100`,
     method: 'get',
     ...payload,
   });
