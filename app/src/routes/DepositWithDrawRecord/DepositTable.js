@@ -24,7 +24,7 @@ class DepositTable extends Mixin {
 
   render() {
     const {
-      assetStore: { depositRecords = [] },
+      assetStore: { depositRecords = [], isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -40,7 +40,7 @@ class DepositTable extends Mixin {
           ellipse: true,
           width: 300,
           render: value => (
-            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+            <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
               {hexPrefix(value)}
             </RouterGo>
           ),

@@ -24,7 +24,7 @@ class LockListTable extends Mixin {
 
   render() {
     const {
-      model: { lockRecords },
+      model: { lockRecords, isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -59,7 +59,7 @@ class LockListTable extends Mixin {
           dataIndex: 'address',
           render: value => {
             return (
-              <RouterGo isOutSide go={{ pathname: blockChain.address(value) }}>
+              <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
                 {value}
               </RouterGo>
             );
@@ -75,15 +75,19 @@ class LockListTable extends Mixin {
             </span>
           ),
         },
-        // {
-        //   title: <FormattedMessage id={'Status'} />,
-        //   width: 100,
-        //   ellipse: 0,
-        //   dataIndex: 'originChainTxId',
-        //   render: (value, item = {}) => {
-        //     return item.unlock_hash ? '已解锁' : '锁定';
-        //   },
-        // },
+        {
+          title: <FormattedMessage id={'Status'} />,
+          width: 100,
+          ellipse: 0,
+          dataIndex: 'originChainTxId',
+          render: (value, item = {}) => {
+            return item.type === 0 ? (
+              <FormattedMessage id={'LockPosition'} />
+            ) : (
+              <FormattedMessage id={'UnLockPosition'} />
+            );
+          },
+        },
       ],
       dataSource: lockRecords,
     };

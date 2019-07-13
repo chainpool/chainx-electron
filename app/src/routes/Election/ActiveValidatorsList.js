@@ -29,17 +29,18 @@ class ActiveValidatorsList extends Component {
     let dataSourceResult = _.sortBy([...dataSources], ['name'], ['desc']);
 
     dataSourceResult.sort((a = {}, b = {}) => {
-      const aLength = _.get(a, 'isTrustee.length');
-      const bLength = _.get(b, 'isTrustee.length');
-      if (aLength || bLength) {
-        if (aLength && bLength) {
-          return b[sort['value']] - a[sort['value']];
-        } else {
-          return bLength - aLength;
-        }
-      } else {
-        return b[sort['value']] - a[sort['value']];
-      }
+      return b[sort['value']] - a[sort['value']];
+      // const aLength = _.get(a, 'isTrustee.length');
+      // const bLength = _.get(b, 'isTrustee.length');
+      // if (aLength || bLength) {
+      //   if (aLength && bLength) {
+      //     return b[sort['value']] - a[sort['value']];
+      //   } else {
+      //     return bLength - aLength;
+      //   }
+      // } else {
+      //   return b[sort['value']] - a[sort['value']];
+      // }
     });
 
     // const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {

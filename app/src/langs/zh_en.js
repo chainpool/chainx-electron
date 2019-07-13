@@ -38,7 +38,7 @@ const zh_en = {
 
   Complete: ['完成', 'Complete'],
   Asset: ['资产', 'Assets'],
-  ChainXAsset: ['ChainX资产', 'ChainX Asset'],
+  ChainXAsset: ['本链资产', 'ChainX Assets'],
   DepositsMining: ['跨链挖矿', 'Mining'],
   NominationsElections: ['投票选举', 'Staking'],
   DepositWithdrawalRecords: ['跨链记录', 'Cross-chain Records'],
@@ -114,6 +114,7 @@ const zh_en = {
   ChangeNominate: ['修改', 'Change'],
   LookUp: ['查看', 'Look'],
   LockPosition: ['锁仓', 'Lock'],
+  UnLockPosition: ['解锁', 'UnLock'],
   LockList: ['锁仓列表', 'Locks'],
   LockAddress: ['锁仓地址', 'Address'],
   LockTotalBalance: ['锁仓总额', 'Balance'],
