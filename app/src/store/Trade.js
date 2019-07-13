@@ -88,12 +88,15 @@ export default class Trade extends ModelExtend {
 
   getKline = async ({ interval, startTime, endTime }) => {
     const currentPair = this.currentPair;
-    let res = await getKlineApi({
-      pairid: currentPair.id,
-      type: interval,
-      start_date: startTime,
-      end_date: endTime,
-    });
+    let res = await this.isApiUseAble(
+      getKlineApi({
+        pairid: currentPair.id,
+        type: interval,
+        start_date: startTime,
+        end_date: endTime,
+      }),
+      []
+    );
     const show = value => {
       const filterPair = currentPair;
       const showUnit = this.showUnitPrecision(filterPair.precision, filterPair.unitPrecision);
@@ -124,7 +127,7 @@ export default class Trade extends ModelExtend {
 
   getLatestOrder = async () => {
     const currentPair = this.currentPair;
-    let res = await getLatestOrderApi({ pairId: currentPair.id, count: 100 });
+    let res = await this.isApiUseAble(getLatestOrderApi({ pairId: currentPair.id, count: 100 }), []);
     // console.log(res, '最新成交');
     res = (res || []).map((item = {}) => {
       const filterPair = currentPair;
@@ -227,13 +230,14 @@ export default class Trade extends ModelExtend {
     if (currentAccount.address) {
       this.changeModel('loading.getHistoryAccountOrder', true);
       return from(
-        this.isApiSwitch(
+        this.isApiUseAble(
           getOrdersApi({
             accountId: this.decodeAddressAccountId(currentAccount),
             page: this.historyAccountCurrentPage,
             status: '3',
             ...(this.showCurrent ? { pairid: currentPair.id } : {}),
-          })
+          }),
+          []
         )
       )
         .pipe(
@@ -349,11 +353,12 @@ export default class Trade extends ModelExtend {
         hasStarWith ? startWith({ buy: [], sell: [] }) : tap(res => res),
         combineLatest(
           from(
-            this.isApiSwitch(
+            this.isApiUseAble(
               getQuotationsApi({
                 pairId: currentPair.id,
                 count: count,
-              })
+              }),
+              []
             )
           ).pipe(
             catchError(err => {
