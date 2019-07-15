@@ -734,7 +734,7 @@ class L_BTC extends Mixin {
           <span className={styles.bold}>发起锁仓交易</span>
           <div>
             {
-              '使用支持OP_RETURN的钱包向锁仓地址转账（转账金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须 >= 0.01 BTC；单个BTC锁仓地址总额必须 <= 10 BTC；单个ChainX地址锁仓总额不限。'
+              '使用支持OP_RETURN的钱包向锁仓地址转账（转账金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须 >=0.01 BTC；单个BTC锁仓地址总额必须 <=10 BTC；单个ChainX地址锁仓总额不限。'
             }
           </div>
         </div>
