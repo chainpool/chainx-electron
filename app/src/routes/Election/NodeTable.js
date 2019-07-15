@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { _, observer } from '../../utils';
+import { _, classNames, observer } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
@@ -72,43 +72,82 @@ class NodeTable extends Component {
         {
           title: <FormattedMessage id={'Name'} />,
           ellipse: 10,
-          width: 100,
+          width: 152,
           dataIndex: 'name',
           render: (value, item) => (
-            <HoverTip tip={item.about}>
-              <div className={styles.overHidden}>
-                <RouterGo isOutSide go={{ pathname: item.url }}>
-                  {value}
-                </RouterGo>
-              </div>
-            </HoverTip>
+            <div className={styles.nametd}>
+              {item.isTrustee && item.isTrustee.length ? (
+                <div className={styles.trusteeImg}>
+                  {item.isTrustee && item.isTrustee.length ? (
+                    <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                      {msg => (
+                        <HoverTip tip={msg}>
+                          <LanguageContent
+                            zh={<img src={trustee_zh} alt="" height={14} />}
+                            en={<img src={trustee_en} alt="" height={14} />}
+                          />
+                        </HoverTip>
+                      )}
+                    </FormattedMessage>
+                  ) : null}
+                </div>
+              ) : (
+                <div
+                  className={classNames(
+                    styles.nodeType,
+                    !item.isActive
+                      ? styles.inActive
+                      : item.isTrustee && item.isTrustee.length
+                      ? styles.trustee
+                      : item.isValidator
+                      ? styles.validator
+                      : styles.backupValidators
+                  )}
+                />
+              )}
+              <HoverTip tip={item.about}>
+                <div className={styles.overHidden}>
+                  <RouterGo isOutSide go={{ pathname: item.url }}>
+                    {value}
+                  </RouterGo>
+                </div>
+              </HoverTip>
+            </div>
           ),
         },
         {
           title: <FormattedMessage id={'AccountAddress'} />,
           ellipse: 10,
-          width: 100,
+          width: 120,
           dataIndex: 'address',
           render: value => (value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : value),
         },
         {
           title: <FormattedMessage id={'IntentionSelfNominated'} />,
           ellipse: true,
+          width: 120,
           dataIndex: 'selfVote',
           render: value => setDefaultPrecision(value),
         },
         {
           title: <FormattedMessage id={'TotalNomination'} />,
           dataIndex: 'totalNomination',
+          width: 120,
           render: value => setDefaultPrecision(value),
         },
         {
           title: <FormattedMessage id={'JackpotBalance'} />,
           dataIndex: 'jackpot',
+          width: 120,
           render: value => setDefaultPrecision(value),
         },
         {
-          title: <FormattedMessage id={'MyNominations'} />,
+          title: (
+            <>
+              <FormattedMessage id={'MyNominations'} />/<FormattedMessage id={'UnfreezeReserved'} />
+            </>
+          ),
+          width: 240,
           dataIndex: 'myTotalVote',
           render: (value, item) => {
             const tip =
@@ -123,26 +162,32 @@ class NodeTable extends Component {
               ) : null;
 
             return (
-              <>
-                <Balance value={setDefaultPrecision(value)} />
-                {tip}
-              </>
+              <div className={styles.myTotalVoteAndmyRevocation}>
+                <div>
+                  <Balance value={setDefaultPrecision(value)} />
+                  {tip}
+                </div>
+                <div className={styles.seperate}>/</div>
+                <div>
+                  <Balance value={setDefaultPrecision(item.myRevocation)} />
+                </div>
+              </div>
             );
           },
         },
-        {
-          title: <FormattedMessage id={'UnfreezeReserved'} />,
-          dataIndex: 'myRevocation',
-          render: value => <Balance value={setDefaultPrecision(value)} />,
-        },
+        // {
+        //   title: <FormattedMessage id={'UnfreezeReserved'} />,
+        //   dataIndex: 'myRevocation',
+        //   render: value => <Balance value={setDefaultPrecision(value)} />,
+        // },
         {
           title: <FormattedMessage id={'UnclaimedDividend'} />,
           dataIndex: 'myInterest',
+          width: 120,
           render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
           title: '',
-          width: 150,
           dataIndex: '_action',
           render: (value, item) => (
             <ButtonGroup>
@@ -210,7 +255,7 @@ class NodeTable extends Component {
                       });
                     vote();
                   }}>
-                  <FormattedMessage id={'Nominate'} />
+                  {item.myTotalVote ? <FormattedMessage id={'ChangeNominate'} /> : <FormattedMessage id={'Nominate'} />}
                 </Button>
               ) : null}
             </ButtonGroup>

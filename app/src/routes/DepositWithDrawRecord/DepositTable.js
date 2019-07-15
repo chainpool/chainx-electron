@@ -24,7 +24,7 @@ class DepositTable extends Mixin {
 
   render() {
     const {
-      assetStore: { depositRecords = [] },
+      assetStore: { depositRecords = [], isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -38,8 +38,9 @@ class DepositTable extends Mixin {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
           dataIndex: 'txid',
           ellipse: true,
+          width: 300,
           render: value => (
-            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
+            <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
               {hexPrefix(value)}
             </RouterGo>
           ),
@@ -53,17 +54,18 @@ class DepositTable extends Mixin {
         {
           title: <FormattedMessage id={'Address'} />,
           ellipse: true,
+          width: 300,
           dataIndex: 'address',
         },
         {
           title: <FormattedMessage id={'Amount'} />,
           dataIndex: 'amount',
         },
-        {
-          title: <FormattedMessage id={'Memo'} />,
-          ellipse: true,
-          dataIndex: 'memo',
-        },
+        // {
+        //   title: <FormattedMessage id={'Memo'} />,
+        //   ellipse: true,
+        //   dataIndex: 'memo',
+        // },
         {
           title: <FormattedMessage id={'Status'} />,
           dataIndex: 'statusValue',
