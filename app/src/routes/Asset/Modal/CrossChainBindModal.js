@@ -661,7 +661,9 @@ class L_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'SecondStep'} />
           </span>
-          <span className={styles.bold}>生成OP_RETURN</span>
+          <span className={styles.bold}>
+            <LanguageContent zh={'生成OP_RETURN'} en={'Generate OP_RETURN'} />
+          </span>
           <div>
             <LanguageContent
               zh={'输入你创建的BTC锁仓地址。'}
