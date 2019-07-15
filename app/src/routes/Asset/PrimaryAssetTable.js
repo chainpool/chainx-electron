@@ -131,20 +131,23 @@ class PrimaryAssetTable extends Component {
                     <FormattedMessage id={'GetFreeCoin'} />
                   </Button>
                 )}
-                <Button
-                  type={item.free > 0 ? 'primary' : 'disabled'}
-                  onClick={() => {
-                    openModal({
-                      name: 'TransferModal',
-                      data: {
-                        token: item.name,
-                        freeShow: formatNumber.toPrecision(item.free, nativeAssetPrecision),
-                        free: item.free,
-                      },
-                    });
-                  }}>
-                  <FormattedMessage id={'Transfer'} />
-                </Button>
+
+                {_.get(item, 'limitProps.CanTransfer') && (
+                  <Button
+                    type={item.free > 0 ? 'primary' : 'disabled'}
+                    onClick={() => {
+                      openModal({
+                        name: 'TransferModal',
+                        data: {
+                          token: item.name,
+                          freeShow: formatNumber.toPrecision(item.free, nativeAssetPrecision),
+                          free: item.free,
+                        },
+                      });
+                    }}>
+                    <FormattedMessage id={'Transfer'} />
+                  </Button>
+                )}
               </ButtonGroup>
             ),
           },

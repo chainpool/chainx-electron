@@ -30,7 +30,7 @@ class LockPositionListModal extends Component {
         {
           title: (
             <span>
-              <FormattedMessage id={'LockTotalBalance'} /> ({showAssetName(token)})
+              <FormattedMessage id={'LockTotalBalance'} />
             </span>
           ),
           dataIndex: 'amountShow',
