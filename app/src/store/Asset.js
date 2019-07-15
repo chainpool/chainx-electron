@@ -362,12 +362,28 @@ export default class Asset extends ModelExtend {
           ...item,
           time: moment.formatHMS(item['block.time']),
         }));
+
         let data = [];
-        if (dataApi && dataApi.length) {
-          data = dataApi;
+        if (true) {
+          //组合数据
+          dataRpc.forEach(item => {
+            if (!data.find(one => one.txid === item.txid)) {
+              data.push(item);
+            }
+          });
+          dataApi.forEach(item => {
+            if (!data.find(one => one.txid === item.txid)) {
+              data.push(item);
+            }
+          });
         } else {
-          data = dataRpc;
+          if (dataApi && dataApi.length) {
+            data = dataApi;
+          } else {
+            data = dataRpc;
+          }
         }
+
         this.changeModel({
           depositRecords: data.map(item => ({
             ...item,

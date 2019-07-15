@@ -2,7 +2,7 @@ import React from 'react';
 import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { HoverTip } from '../components';
+import { HoverTip, Balance } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
@@ -20,7 +20,7 @@ class CrossChainAssetTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, crossChainAccountAssetsWithZero, accountLock },
+      model: { openModal, crossChainAccountAssetsWithZero, accountLock, setPrecision },
       widths,
     } = this.props;
 
@@ -64,12 +64,22 @@ class CrossChainAssetTable extends Mixin {
           {
             title: <FormattedMessage id={'WithdrawalReserved'} />,
             dataIndex: 'reservedWithdrawal',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) =>
+              item.name === 'L-BTC' || item.name === 'SDOT' ? (
+                <Balance value={setPrecision(value, item.name)} />
+              ) : (
+                <Asset value={value} precision={item.precision} />
+              ),
           },
           {
             title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) =>
+              item.name === 'L-BTC' ? (
+                <Balance value={setPrecision(value, item.name)} />
+              ) : (
+                <Asset value={value} precision={item.precision} />
+              ),
           },
           {
             title: <FormattedMessage id={'TotalBalance'} />,
