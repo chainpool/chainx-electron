@@ -24,6 +24,7 @@ const calls = {
   refresh: 'UpdateNode',
   remove_multi_sig_for: 'RemoveMultiSign',
   setup_bitcoin_trustee: 'SetupTrustee',
+  revoke_withdraw: 'CancelWithdrawal',
 };
 
 const argvs = {
@@ -58,6 +59,7 @@ const argvs = {
   multi_sig_addr: 'PublicMultiSigTrusteeAddress',
   proposal: 'Sign',
   multi_sig_id: 'SigTrusteeID',
+  id: 'ID',
 };
 
 const values = {
@@ -245,6 +247,10 @@ const translation = ({
         { name: 'addr', nameTrans: () => 'ReceiptAddress' },
         { name: 'ext' },
       ]);
+      break;
+    }
+    case 'Withdrawal|revoke_withdraw': {
+      info = merge(args, [{ name: 'id', dataTrans: v => v }]);
       break;
     }
     case 'XStaking|setup_trustee': {
