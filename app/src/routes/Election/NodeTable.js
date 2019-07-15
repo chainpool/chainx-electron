@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
 import { HoverTip, Balance } from '../components';
-import { _, observer } from '../../utils';
+import { _, classNames, observer } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import inactive_zh from '../../resource/inactive_zh.png';
@@ -72,16 +72,47 @@ class NodeTable extends Component {
         {
           title: <FormattedMessage id={'Name'} />,
           ellipse: 10,
-          width: 100,
+          width: 120,
           dataIndex: 'name',
           render: (value, item) => (
-            <HoverTip tip={item.about}>
-              <div className={styles.overHidden}>
-                <RouterGo isOutSide go={{ pathname: item.url }}>
-                  {value}
-                </RouterGo>
-              </div>
-            </HoverTip>
+            <div className={styles.nametd}>
+              {item.isTrustee && item.isTrustee.length ? (
+                <div className={styles.trusteeImg}>
+                  {item.isTrustee && item.isTrustee.length ? (
+                    <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                      {msg => (
+                        <HoverTip tip={msg}>
+                          <LanguageContent
+                            zh={<img src={trustee_zh} alt="" height={14} />}
+                            en={<img src={trustee_en} alt="" height={14} />}
+                          />
+                        </HoverTip>
+                      )}
+                    </FormattedMessage>
+                  ) : null}
+                </div>
+              ) : (
+                <div
+                  className={classNames(
+                    styles.nodeType,
+                    !item.isActive
+                      ? styles.inActive
+                      : item.isTrustee && item.isTrustee.length
+                      ? styles.trustee
+                      : item.isValidator
+                      ? styles.validator
+                      : styles.backupValidators
+                  )}
+                />
+              )}
+              <HoverTip tip={item.about}>
+                <div className={styles.overHidden}>
+                  <RouterGo isOutSide go={{ pathname: item.url }}>
+                    {value}
+                  </RouterGo>
+                </div>
+              </HoverTip>
+            </div>
           ),
         },
         {

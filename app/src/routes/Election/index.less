@@ -70,7 +70,7 @@
     margin-right: 24px;
     padding:0 14px;
     width:160px;
-    height:28px;
+    height:32px;
     background: #FFFFFF;
     border: 1px solid #DCE0E2;
     border-radius: 16px;
@@ -113,6 +113,23 @@
   &.myVote{
     // color:#D89601;
   }
+}
+.nametd{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  .nodeType,.trusteeImg{
+    margin-right: 4px;
+  }
+  .trusteeImg{
+    position: relative;
+    bottom: -2px;
+  }
+}
+
+.trusteeImg{
+  position: relative;
+  bottom: -1px;
 }
 
 
@@ -196,7 +213,7 @@
         .right{
           flex-grow: 1;
           .top+.down{
-            margin-top: 11px;
+            margin-top: 9px;
           }
           .top{
             height:20px;
@@ -207,10 +224,10 @@
               display: flex;
               align-items: center;
               .nodeType{
-                margin-right: 8px;
+                margin-right: 4px;
               }
               .trusteeImg{
-                margin-left: 8px;
+                margin-right: 4px;
               }
               .name{
                 font-weight: bold;
@@ -267,7 +284,7 @@
                   }
                 }
                 .longaddress{
-                  width:120px;
+                  width:150px;
                 }
               }
             }
@@ -306,6 +323,7 @@
                 }
               }
               .nodetype,.rank,.introducedetail{
+                line-height: 16px;
                 padding-left:17px;
                 display: flex;
                 flex-direction: row;
@@ -314,6 +332,7 @@
               }
 
               .longaddress{
+                line-height: 16px;
                 //line-height: 18px;
                 padding:0 0 0 17px;
                 display: block;

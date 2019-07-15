@@ -910,7 +910,7 @@ class S_DOT extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
-                        bitpie
+                        Bitpie
                       </RouterGo>
                     ),
                     style: { left: -100 },
@@ -920,7 +920,7 @@ class S_DOT extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://www.coinomi.com/' }}>
-                        coinomi
+                        Coinomi
                       </RouterGo>
                     ),
                     style: { left: -160 },
