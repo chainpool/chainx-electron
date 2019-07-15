@@ -170,7 +170,13 @@ class ActiveValidatorsList extends Component {
                       <ul>
                         {item.isActive ? (
                           <li>
-                            <div>{sort.value === 'selfVote' ? '抵押排名' : '得票排名'}</div>
+                            <div>
+                              {sort.value === 'selfVote' ? (
+                                <FormattedMessage id={'BondedRank'} />
+                              ) : (
+                                <FormattedMessage id={'VotingRank'} />
+                              )}
+                            </div>
                             <div>
                               <div className={styles.rank}>{item.rank}</div>
                             </div>
@@ -263,7 +269,9 @@ class ActiveValidatorsList extends Component {
                           </div>
                         </li>
                         <li>
-                          <div className={styles.introduceTitle}>节点简介</div>
+                          <div className={styles.introduceTitle}>
+                            <FormattedMessage id={'ValidatorBrief'} />
+                          </div>
                           <div className={styles.introduce}>
                             <div className={styles.introducedetail}>{item.about}</div>
                           </div>

@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Clipboard, Mixin, Modal, Input, Button, RouterGo, FormattedMessage, Icon } from '../../../components';
+import {
+  Clipboard,
+  Mixin,
+  Modal,
+  Input,
+  Button,
+  RouterGo,
+  FormattedMessage,
+  Icon,
+  LanguageContent,
+} from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
 import { classNames, Inject, Patterns, observer, showAssetName } from '../../../utils';
@@ -632,9 +642,18 @@ class L_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'FistStep'} />
           </span>
-          <span className={styles.bold}>创建锁仓地址</span>
+          <span className={styles.bold}>
+            <LanguageContent zh={'创建锁仓地址'} en={'Create Lock-up Address'} />
+          </span>
           <div>
-            使用任意BTC钱包创建1或3开头的BTC地址用于锁仓。但请注意使用该新钱包的任意转出操作都可能花费锁仓金额，而导致锁仓挖矿停止。
+            <LanguageContent
+              zh={
+                '使用任意BTC钱包创建1或3开头的BTC地址用于锁仓。但请注意使用该新钱包的任意转出操作都可能花费锁仓金额，而导致锁仓挖矿停止。'
+              }
+              en={
+                'Create a new BTC adress starting at 1 or 3 with any BTC wallet,which will be used to lock-up.However, please note that any arbitrary roll-out operation of the new wallet will results in the stopping of lock-up mining.'
+              }
+            />
           </div>
         </div>
 
@@ -644,19 +663,27 @@ class L_BTC extends Mixin {
           </span>
           <span className={styles.bold}>生成OP_RETURN</span>
           <div>
-            输入你创建的BTC锁仓地址。
+            <LanguageContent
+              zh={'输入你创建的BTC锁仓地址。'}
+              en={'Enter the BTC lock-up address you created in the previous step.'}
+            />
+
             <div className={styles.lockpositionaddress}>
-              <Input.Text
-                errMsg={lockLocationPositionErrMsg}
-                placeholder={'BTC锁仓地址'}
-                value={lockLocationPosition}
-                onChange={value => {
-                  this.setState({
-                    lockLocationPosition: value,
-                  });
-                }}
-                onBlur={this.checkAll.checkLockLocationPosition}
-              />
+              <FormattedMessage id={'BTCLockPosition'}>
+                {msg => (
+                  <Input.Text
+                    errMsg={lockLocationPositionErrMsg}
+                    placeholder={msg}
+                    value={lockLocationPosition}
+                    onChange={value => {
+                      this.setState({
+                        lockLocationPosition: value,
+                      });
+                    }}
+                    onBlur={this.checkAll.checkLockLocationPosition}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         </div>
@@ -700,7 +727,9 @@ class L_BTC extends Mixin {
                   {/*/>*/}
                 </>
               ) : (
-                <span className={styles.warnwritebtc}>请先输入BTC锁仓地址</span>
+                <span className={styles.warnwritebtc}>
+                  <LanguageContent zh={'请先输入BTC锁仓地址'} en={'Enter the BTC Lock-up address'} />
+                </span>
               )}
             </div>
             {chainxAddressHex && (
@@ -731,11 +760,18 @@ class L_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'ThirdStep'} />
           </span>
-          <span className={styles.bold}>发起锁仓交易</span>
+          <span className={styles.bold}>
+            <LanguageContent zh={'发起锁仓交易'} en={'Launching Lock-in Trading'} />
+          </span>
           <div>
-            {
-              '使用支持OP_RETURN的钱包向锁仓地址转账（转账金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须 >=0.01 BTC；单个BTC锁仓地址总额必须 <=10 BTC；单个ChainX地址锁仓总额不限。'
-            }
+            <LanguageContent
+              zh={
+                '使用支持OP_RETURN的钱包向锁仓地址转账（转账金额即锁仓金额），并输入OP_RETURN信息。注意：单笔BTC锁仓金额必须 >=0.01 BTC；单个BTC锁仓地址总额必须 <=10 BTC；单个ChainX地址锁仓总额不限。'
+              }
+              en={
+                'Transfer BTC to the lock-up address that supports OP_RETURN,( transfer amount is lockup amount),and enter OP_RETUREN information. Please note that the amount of single BTC lock-up must be >=0.01BTC,the total amount of single BTC lock-up must be<=10BTC, the amount of single ChainX lock-up is unlimited.'
+              }
+            />
           </div>
         </div>
       </>
@@ -746,7 +782,7 @@ class L_BTC extends Mixin {
         scroll={true}
         title={
           <>
-            {'跨链锁仓'}({token})
+            {<FormattedMessage id={'CrossChainLock'} />}({token})
           </>
         }
         isOverflow>
