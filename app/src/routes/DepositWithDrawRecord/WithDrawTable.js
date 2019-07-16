@@ -37,7 +37,7 @@ class WithDrawTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'originChainTxId',
           render: value =>
             value ? (
@@ -56,7 +56,7 @@ class WithDrawTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Address'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'address',
         },
         {

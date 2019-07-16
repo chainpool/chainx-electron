@@ -565,7 +565,7 @@ class L_BTC extends Mixin {
                 const links = [
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      <RouterGo isOutSide go={{ pathname: 'http://www.mathwallet.org/' }}>
                         MathWallet
                       </RouterGo>
                     ),
@@ -575,7 +575,7 @@ class L_BTC extends Mixin {
                   },
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      <RouterGo isOutSide go={{ pathname: 'https://wookong.nbltrust.com/' }}>
                         WOOKONG
                       </RouterGo>
                     ),

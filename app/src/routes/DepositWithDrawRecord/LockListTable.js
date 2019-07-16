@@ -36,7 +36,7 @@ class LockListTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
-          ellipse: true,
+          ellipse: 20,
           width: 300,
           dataIndex: 'originChainTxId',
           render: value =>
@@ -55,7 +55,7 @@ class LockListTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Address'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'address',
           render: value => {
             return (

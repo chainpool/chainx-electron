@@ -350,6 +350,7 @@ const zh_en = {
   BlockHeight: ['块高', 'Block Height'],
   HasExpired: ['已到期', 'Has expired'],
   SyncStatus: ['同步状态', 'Sync Status'],
+  Trustee: ['信托', 'Trustee'],
   ConnectedPeers: ['连接节点数', 'Connected Peers'],
   ApiAddress: ['Api地址', 'Api Address'],
   ProvideCoreAssetData: ['提供核心资产数据', 'Providing core asset data'],
