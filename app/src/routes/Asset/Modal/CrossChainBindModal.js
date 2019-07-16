@@ -805,7 +805,11 @@ class L_BTC extends Mixin {
                 <Icon name={'help'} />
                 <FormattedMessage id={'LockCourse'} />
               </RouterGo>
-              {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户锁仓</span>}
+              {isElectron() ? null : (
+                <span className={styles.warntitle}>
+                  <FormattedMessage id={'DoNotLockDemoAccount'} />
+                </span>
+              )}
             </div>
           </div>
         }
@@ -1185,7 +1189,11 @@ class S_DOT extends Mixin {
                 <Icon name={'help'} />
                 <FormattedMessage id={'MappingCourse'} />
               </RouterGo>
-              {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户映射</span>}
+              {isElectron() ? null : (
+                <span className={styles.warntitle}>
+                  <FormattedMessage id={'DoNotMapDemoAccount'} />
+                </span>
+              )}
             </div>
           </div>
         }

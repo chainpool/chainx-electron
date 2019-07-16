@@ -198,6 +198,8 @@ const zh_en = {
   Help: ['帮助', 'Help'],
   ResponseWithDraw: ['响应提现', 'Response Withdraw'],
   CrossChainWithdraw: ['跨链提现', 'Withdraw'],
+  DoNotLockDemoAccount: ['请勿向模拟账户锁仓', 'Do not lock  to the Demo Account'],
+  DoNotMapDemoAccount: ['请勿向模拟账户映射', 'Do not map  to the Demo Account'],
   WithdrawalProcessedWithin24H: [
     '提现申请会在24小时内处理',
     'The withdrawal application will be processed within 24 hours.',
