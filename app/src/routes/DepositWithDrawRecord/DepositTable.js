@@ -37,7 +37,7 @@ class DepositTable extends Mixin {
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
           dataIndex: 'txid',
-          ellipse: true,
+          ellipse: 20,
           width: 300,
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
@@ -53,7 +53,7 @@ class DepositTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'Address'} />,
-          ellipse: true,
+          ellipse: 20,
           width: 300,
           dataIndex: 'address',
         },
