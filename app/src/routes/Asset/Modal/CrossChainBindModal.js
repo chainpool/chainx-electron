@@ -803,7 +803,7 @@ class L_BTC extends Mixin {
                   pathname: 'https://chainx.org/help?title=%E5%A6%82%E4%BD%95%E8%B7%A8%E9%93%BE%E9%94%81%E4%BB%93BTC',
                 }}>
                 <Icon name={'help'} />
-                锁仓教程
+                <FormattedMessage id={'LockCourse'} />
               </RouterGo>
               {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户锁仓</span>}
             </div>
@@ -1183,7 +1183,7 @@ class S_DOT extends Mixin {
                   pathname: 'https://chainx.org/help?title=%E5%A6%82%E4%BD%95%E8%B7%A8%E9%93%BE%E6%98%A0%E5%B0%84SDOT',
                 }}>
                 <Icon name={'help'} />
-                映射教程
+                <FormattedMessage id={'MappingCourse'} />
               </RouterGo>
               {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户映射</span>}
             </div>
