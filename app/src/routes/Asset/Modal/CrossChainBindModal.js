@@ -12,7 +12,7 @@ import {
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, Patterns, observer, showAssetName } from '../../../utils';
+import { classNames, Inject, Patterns, observer, showAssetName, isElectron } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -785,6 +785,7 @@ class L_BTC extends Mixin {
         title={
           <>
             {<FormattedMessage id={'CrossChainLock'} />}({token})
+            {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户锁仓</span>}
           </>
         }
         isOverflow>
@@ -1123,26 +1124,27 @@ class S_DOT extends Mixin {
             }}
             onBlur={checkAll.checkTradeId}
           />
-
-          <Button
-            size="full"
-            type="confirm"
-            loading={loading.bindTxHashLoading}
-            onClick={() => {
-              if (checkAll.confirm()) {
-                const params = this.getTradeId();
-                dispatch({
-                  type: 'bindTxHash',
-                  payload: {
-                    params,
-                  },
-                }).then(res => {
-                  if (res) closeModal();
-                });
-              }
-            }}>
-            <FormattedMessage id={'Confirm'} />
-          </Button>
+          {isElectron() && (
+            <Button
+              size="full"
+              type="confirm"
+              loading={loading.bindTxHashLoading}
+              onClick={() => {
+                if (checkAll.confirm()) {
+                  const params = this.getTradeId();
+                  dispatch({
+                    type: 'bindTxHash',
+                    payload: {
+                      params,
+                    },
+                  }).then(res => {
+                    if (res) closeModal();
+                  });
+                }
+              }}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+          )}
         </div>
       </>
     );
@@ -1153,6 +1155,7 @@ class S_DOT extends Mixin {
         title={
           <>
             <FormattedMessage id={'CrossChainMapping'} />({showAssetName(token)})
+            {isElectron() ? null : <span className={styles.warntitle}>请勿向模拟账户映射</span>}
           </>
         }
         isOverflow>
