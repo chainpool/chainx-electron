@@ -342,6 +342,7 @@ const zh_en = {
   Type: ['类别', 'Type'],
   NetDelay: ['网络延迟', 'NetWork Delay'],
   BlockHeight: ['块高', 'Block Height'],
+  HasExpired: ['已到期', 'Has expired'],
   SyncStatus: ['同步状态', 'Sync Status'],
   ConnectedPeers: ['连接节点数', 'Connected Peers'],
   ApiAddress: ['Api地址', 'Api Address'],
