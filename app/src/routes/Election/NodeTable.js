@@ -72,7 +72,7 @@ class NodeTable extends Component {
         {
           title: <FormattedMessage id={'Name'} />,
           ellipse: 10,
-          width: 152,
+          width: 124,
           dataIndex: 'name',
           render: (value, item) => (
             <div className={styles.nametd}>
@@ -129,33 +129,33 @@ class NodeTable extends Component {
         },
         {
           title: <FormattedMessage id={'AccountAddress'} />,
-          ellipse: 10,
-          width: 120,
+          ellipse: 20,
+          width: 124,
           dataIndex: 'address',
           render: value => (value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : value),
         },
         {
           title: <FormattedMessage id={'IntentionSelfNominated'} />,
           ellipse: true,
-          width: 120,
+          width: 124,
           dataIndex: 'selfVote',
           render: value => setDefaultPrecision(value),
         },
         {
           title: <FormattedMessage id={'TotalNomination'} />,
           dataIndex: 'totalNomination',
-          width: 120,
+          width: 124,
           render: value => setDefaultPrecision(value),
         },
         {
           title: <FormattedMessage id={'JackpotBalance'} />,
           dataIndex: 'jackpot',
-          width: 128,
+          width: 124,
           render: value => setDefaultPrecision(value),
         },
         {
           title: <FormattedMessage id={'MyNominations'} />,
-          width: 120,
+          width: 124,
           dataIndex: 'myTotalVote',
           render: (value, item) => {
             const tip =
@@ -188,7 +188,7 @@ class NodeTable extends Component {
         {
           title: <FormattedMessage id={'UnclaimedDividend'} />,
           dataIndex: 'myInterest',
-          width: 120,
+          width: 124,
           render: value => <Balance value={setDefaultPrecision(value)} />,
         },
         {
