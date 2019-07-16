@@ -25,7 +25,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'AccountAddress'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'address',
           render: (value, item) => (
             <RouterGo isOutSide go={{ pathname: blockChain.accountId(item.accountId) }}>
@@ -41,7 +41,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'OriginalChainAddr'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'addr',
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
@@ -51,7 +51,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'BitcoinTxHash'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'txid',
           render: value =>
             value && (
@@ -67,7 +67,7 @@ class WithdrawTable extends Component {
         {
           title: <FormattedMessage id={'Memo'} />,
           dataIndex: 'memo',
-          ellipse: true,
+          ellipse: 20,
         },
         {
           title: <FormattedMessage id={'Status'} />,
