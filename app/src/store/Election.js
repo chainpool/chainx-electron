@@ -41,10 +41,16 @@ export default class Election extends ModelExtend {
 
       if (token === 'BTC' || token === 'L-BTC') {
         const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
-        discountResultShow = (
-          Number(price) /
-          (findAssetOne.averPrice * (Math.pow(10, this.getDefaultPrecision()) / Math.pow(10, findAssetOne.precision)))
-        ).toFixed(1);
+        const discount = intention.discount * Math.pow(10, -2);
+        // console.log(
+        //   (price / (((Math.pow(10, 9) * Math.pow(10, 8)) / findAssetOne.averPrice) * Math.pow(10, -8) * 0.1)) * 0.1,
+        //   '----'
+        // );
+        const secondDiscount =
+          ((Math.pow(10, findAssetOne.precision) * Math.pow(10, this.getDefaultPrecision())) / findAssetOne.averPrice) *
+          Math.pow(10, -this.getDefaultPrecision()) *
+          discount;
+        discountResultShow = Number((price / secondDiscount) * discount).toFixed(1);
       } else if (token === 'SDOT') {
         discountResultShow = Number(price).toFixed(1);
       }
