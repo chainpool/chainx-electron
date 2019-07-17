@@ -70,21 +70,22 @@ export default class Configure extends ModelExtend {
   @observable autoSwitchBestApi =
     localSave.get('autoSwitchBestApi') === undefined ? true : localSave.get('autoSwitchBestApi');
   @observable netWork = NetWork;
-  @observable currentNetWork = NetWork[0]; //localSave.get('currentNetWork') || NetWork[0];
+  @observable currentNetWork = localSave.get('currentNetWork') || NetWork[0];
+  @observable factNetWork = '';
 
   @observable testApi = this.resetApi(
     this.refreshLocalNodesOrApi('testApi')
       ? localSave.get('testApi')
       : this.concatNodeOrApi(
           [
-            {
-              type: 'SystemDefault',
-              name: 'api.chainx.org',
-              best: true,
-              address: 'https://api.chainx.org',
-              isSystem: true,
-              Version: ConfigureVersion,
-            },
+            // {
+            //   type: 'SystemDefault',
+            //   name: 'api.chainx.org',
+            //   best: true,
+            //   address: 'https://api.chainx.org',
+            //   isSystem: true,
+            //   Version: ConfigureVersion,
+            // },
           ],
           (localSave.get('testApi') || []).filter((item = {}) => !item.isSystem)
         )
@@ -137,32 +138,32 @@ export default class Configure extends ModelExtend {
       ? localSave.get('testNodes')
       : this.concatNodeOrApi(
           [
-            {
-              type: 'SystemDefault',
-              name: 'w1.org',
-              best: true,
-              isSystem: true,
-              Version: ConfigureVersion,
-              address: 'wss://w1.chainx.org/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'w2.org',
-              isSystem: true,
-              address: 'wss://w2.chainx.org/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'hashquark',
-              isSystem: true,
-              address: 'wss://chainx.hashquark.io',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'buildlinks',
-              isSystem: true,
-              address: 'wss://chainx.buildlinks.org',
-            },
+            // {
+            //   type: 'SystemDefault',
+            //   name: 'w1.org',
+            //   best: true,
+            //   isSystem: true,
+            //   Version: ConfigureVersion,
+            //   address: 'wss://w1.chainx.org/ws',
+            // },
+            // {
+            //   type: 'SystemDefault',
+            //   name: 'w2.org',
+            //   isSystem: true,
+            //   address: 'wss://w2.chainx.org/ws',
+            // },
+            // {
+            //   type: 'SystemDefault',
+            //   name: 'hashquark',
+            //   isSystem: true,
+            //   address: 'wss://chainx.hashquark.io',
+            // },
+            // {
+            //   type: 'SystemDefault',
+            //   name: 'buildlinks',
+            //   isSystem: true,
+            //   address: 'wss://chainx.buildlinks.org',
+            // },
           ],
           (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)
         )
