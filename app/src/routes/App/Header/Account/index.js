@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, Mixin, RouterGo, Scroller } from '../../../../components';
-import { classNames, Inject, isElectron, isSimulatedAccount } from '../../../../utils';
+import { classNames, Inject, isElectron, isInnerWebSite, isSimulatedAccount } from '../../../../utils';
 import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
 import { CloseFetures } from '../../../../constants';
 import ImportAccountModal from './Modal/ImportAccountModal';
@@ -83,31 +83,35 @@ class Account extends Mixin {
                             }}>
                             <FormattedMessage id={'ForgetAccount'} />
                           </li>
-                          <li
-                            onClick={e => {
-                              e.stopPropagation();
-                              openModal({
-                                name: 'EditLabelModal',
-                                data: {
-                                  address: item.address,
-                                },
-                              });
-                            }}>
-                            <FormattedMessage id={'ModifyLabel'} />
-                          </li>
-                          <li
-                            onClick={e => {
-                              e.stopPropagation();
-                              openModal({
-                                name: 'EditPasswordModal',
-                                data: {
-                                  encoded: item.encoded,
-                                  address: item.address,
-                                },
-                              });
-                            }}>
-                            <FormattedMessage id={'ChangePassword'} />
-                          </li>
+                          {isInnerWebSite() && (
+                            <>
+                              <li
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  openModal({
+                                    name: 'EditLabelModal',
+                                    data: {
+                                      address: item.address,
+                                    },
+                                  });
+                                }}>
+                                <FormattedMessage id={'ModifyLabel'} />
+                              </li>
+                              <li
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  openModal({
+                                    name: 'EditPasswordModal',
+                                    data: {
+                                      encoded: item.encoded,
+                                      address: item.address,
+                                    },
+                                  });
+                                }}>
+                                <FormattedMessage id={'ChangePassword'} />
+                              </li>
+                            </>
+                          )}
                           <li
                             onClick={e => {
                               e.stopPropagation();
@@ -166,7 +170,7 @@ class Account extends Mixin {
             </span>
             <div className={classNames(styles.accountlist)}>
               <div>
-                {!isElectron() && !CloseFetures.onlySimulate ? null : (
+                {!isElectron() && !CloseFetures.onlySimulate && !isInnerWebSite() ? null : (
                   <div className={styles.quickentry}>
                     <div>
                       <Button

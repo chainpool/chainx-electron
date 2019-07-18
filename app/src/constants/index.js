@@ -86,7 +86,7 @@ export const TrustNode = '47.111.89.46:18332';
 export const ShowLanguage = true;
 
 export const CloseFetures = {
-  onlySimulate: true,
+  onlySimulate: false,
 };
 
 export const DowloadWalletUrl = {
@@ -94,6 +94,8 @@ export const DowloadWalletUrl = {
   Mac: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.3/chainx-1.0.3.dmg',
   Linux: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.3/chainx-1.0.3-x86_64.AppImage',
 };
+
+export const InnerWebSite = ['weixiaoyi1.club'];
 
 export const SimulatedAccount = {
   tag: 'SimulateAccount',
