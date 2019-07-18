@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { Inject, Patterns, _ } from '../../../utils';
+import { Inject, Patterns, _, isInnerWebSite } from '../../../utils';
 import * as styles from './AddAddressModal.less';
 
 @Inject(({ globalStore }) => ({ globalStore }))
@@ -65,26 +65,28 @@ class AddAddressModal extends Component {
       <Modal
         title={<FormattedMessage id={'AddAddress'} />}
         button={
-          <Button
-            size="full"
-            type="confirm"
-            onClick={() => {
-              if (checkAll.confirm()) {
-                const target = assets.find(asset => asset.name === chain.value);
-                dispatch({
-                  type: 'addAddress',
-                  payload: {
-                    label: this.state.label.trim(),
-                    token: target.name,
-                    chain: target.chain,
-                    address: this.state.address,
-                  },
-                });
-                closeModal();
-              }
-            }}>
-            <FormattedMessage id={'Confirm'} />
-          </Button>
+          isInnerWebSite() && (
+            <Button
+              size="full"
+              type="confirm"
+              onClick={() => {
+                if (checkAll.confirm()) {
+                  const target = assets.find(asset => asset.name === chain.value);
+                  dispatch({
+                    type: 'addAddress',
+                    payload: {
+                      label: this.state.label.trim(),
+                      token: target.name,
+                      chain: target.chain,
+                      address: this.state.address,
+                    },
+                  });
+                  closeModal();
+                }
+              }}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+          )
         }>
         <div className={styles.addressmanage}>
           <InputHorizotalList
