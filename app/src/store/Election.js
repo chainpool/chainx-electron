@@ -181,7 +181,11 @@ export default class Election extends ModelExtend {
 
   // 我的投票
   @computed get validatorsWithMyNomination() {
-    return [...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0)];
+    return [
+      ...this.validatorsWithRecords.filter(
+        intention => intention.myTotalVote > 0 || intention.myRevocation > 0 || intention.myInterest > 0
+      ),
+    ];
   }
 
   // 信托节点

@@ -152,6 +152,8 @@ export default class ModelExtend {
 
   getCurrentNetWork = () => this.rootStore.configureStore.currentNetWork;
 
+  getFactNetWork = () => this.rootStore.configureStore.factNetWork;
+
   isTestNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'test';
 
   isMainNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'main';

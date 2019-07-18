@@ -136,6 +136,7 @@ export default class Store extends ModelExtend {
   addAccount({ tag, address, encoded, download = true }) {
     // address已经存在的不再重复加入
     const filterOne = this.accounts.filter(item => item.address === address)[0];
+    const factNetWork = this.getFactNetWork();
     const currentNetWork = this.getCurrentNetWork();
     if (filterOne) {
       Toast.warn(`重复导入账户提醒`, `该账户已经存在于系统中,标签名为${filterOne.tag},不能重复导入`);
@@ -143,6 +144,9 @@ export default class Store extends ModelExtend {
     }
     const user = { tag, address, encoded, net: currentNetWork.value };
     this.changeModel('accounts', [...this.accounts, user]);
+    if (currentNetWork.value !== factNetWork) {
+      Toast.warn(`您当前创建的账户类型是${currentNetWork.value === 'test' ? '测试网' : '主网'}账户`);
+    }
     if (download) {
       this.exportKeystore(user);
     }
