@@ -50,9 +50,12 @@ export default class Election extends ModelExtend {
           ((Math.pow(10, findAssetOne.precision) * Math.pow(10, this.getDefaultPrecision())) / findAssetOne.averPrice) *
           Math.pow(10, -this.getDefaultPrecision()) *
           discount;
-        discountResultShow = Number((price / secondDiscount) * discount).toFixed(1);
+        discountResultShow = formatNumber.toFixed(
+          Number((price / secondDiscount) * discount),
+          this.getPrecision(token)
+        );
       } else if (token === 'SDOT') {
-        discountResultShow = Number(price).toFixed(1);
+        discountResultShow = formatNumber.toFixed(Number(price), this.getPrecision('PCX'));
       }
 
       const result = {
