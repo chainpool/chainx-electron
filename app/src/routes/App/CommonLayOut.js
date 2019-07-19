@@ -14,12 +14,25 @@ class CommonLayOut extends Component {
   };
 
   async componentDidMount() {
+    const {
+      globalStore: { getCurrentNetWork },
+    } = this.props;
+    const currentNetWork = getCurrentNetWork();
+    this.setNet(currentNetWork.value);
     await this.ready();
   }
 
+  setNet = net => {
+    if (net === 'test') {
+      setNet('testnet');
+    } else if (net === 'main') {
+      setNet('mainnet');
+    }
+  };
+
   ready = async () => {
     const {
-      globalStore: { dispatch: dispatchGlobal },
+      globalStore: { dispatch: dispatchGlobal, getCurrentNetWork },
       accountStore: { dispatch: dispatchAccount },
       electionStore: { dispatch: dispatchElection },
       configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
@@ -49,14 +62,20 @@ class CommonLayOut extends Component {
       ]);
     wsPromise()
       .then(async () => {
-        const net = await dispatchChain({
+        const currentNetWork = getCurrentNetWork();
+        let net = await dispatchChain({
           type: 'getChainProperties',
         });
-        if (net === 'test') {
-          setNet('testnet');
-        } else {
-          setNet('mainnet');
+        if (currentNetWork.value !== net) {
+          alert(
+            `当前节点网络类型(${net})与当前所选择的网络类型(${
+              currentNetWork.value
+            })不匹配,请检查节点网络类型，默认设置为当前所选择的网络类型${currentNetWork.value}`
+          );
+          net = currentNetWork.value;
+          return false;
         }
+        this.setNet(net);
         await dispatchAccount({ type: 'updateAllAccounts' });
         await dispatchTrust({ type: 'updateAllTrust' });
         await dispatchAddressManage({ type: 'updateAllAddress' });

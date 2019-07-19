@@ -105,7 +105,7 @@ export const getDepositListApi = payload => {
 export const getLockListApi = payload => {
   const { accountId } = payload;
   return fetchFromHttp({
-    url: `${API}/btc/lock/records?accountid=${accountId}&page_zise=100&page=0`,
+    url: `${API}/btc/lock/records?accountid=${accountId}&page_size=100&page=0`,
     method: 'get',
     ...payload,
   });

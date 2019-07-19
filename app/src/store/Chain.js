@@ -51,20 +51,23 @@ class Chain extends ModelExtend {
       } else if (bitcoin_type === 'testnet') {
         this.changeModel('bitCoinNetWork', 'test');
       }
-      return this.getNetType(res) || 'test';
+      return this.getNetType(res);
     }
   };
 
   getNetType = data => {
     const { address_type, network_type } = data;
     console.log(data, '-----网络类型');
+    let net = '';
     if (address_type === 44 && network_type === 'mainnet') {
-      return 'main';
+      net = 'main';
     } else if (address_type === 42 && network_type === 'testnet') {
-      return 'test';
+      net = 'test';
     } else if (address_type === 44 && network_type === 'testnet') {
-      return 'premain';
+      net = 'premain';
     }
+    this.changeModel('rootStore.configureStore.factNetWork', net);
+    return net;
   };
 }
 
