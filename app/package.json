@@ -19,7 +19,7 @@
     "bitcoinjs-lib": "4.0.2",
     "bitcore-lib": "^8.3.4",
     "buffer-reverse": "^1.0.1",
-    "chainx.js": "2.15.0",
+    "chainx.js": "2.16.0",
     "classnames": "^2.2.6",
     "clipboard": "^2.0.4",
     "current-device": "^0.7.8",

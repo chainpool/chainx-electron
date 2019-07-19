@@ -88,39 +88,27 @@ class ActiveValidatorsList extends Component {
                     <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
-                          {item.isTrustee && item.isTrustee.length ? (
-                            <div className={styles.trusteeImg}>
-                              {item.isTrustee && item.isTrustee.length ? (
-                                <FormattedMessage id={'ManageUserOutsidechainAssets'}>
-                                  {msg => (
-                                    <HoverTip tip={msg}>
-                                      <LanguageContent
-                                        zh={<img src={trustee_zh} alt="" height={14} />}
-                                        en={<img src={trustee_en} alt="" height={14} />}
-                                      />
-                                    </HoverTip>
-                                  )}
-                                </FormattedMessage>
-                              ) : null}
-                            </div>
-                          ) : (
-                            <div
-                              className={classNames(
-                                styles.nodeType,
-                                !item.isActive
-                                  ? styles.inActive
-                                  : item.isTrustee && item.isTrustee.length
-                                  ? styles.trustee
-                                  : item.isValidator
-                                  ? styles.validator
-                                  : styles.backupValidators
-                              )}
-                            />
-                          )}
+                          <div
+                            className={classNames(
+                              styles.nodeType,
+                              !item.isActive
+                                ? styles.inActive
+                                : item.isTrustee && item.isTrustee.length
+                                ? styles.trustee
+                                : item.isValidator
+                                ? styles.validator
+                                : styles.backupValidators
+                            )}
+                          />
 
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                               <span className={styles.name}> {item.name}</span>
+                              {item.isTrustee && item.isTrustee.length ? (
+                                <span className={styles.trusteeMark}>
+                                  (<FormattedMessage id={'Trustee'} />)
+                                </span>
+                              ) : null}
                             </div>
                           </div>
                         </div>

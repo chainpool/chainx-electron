@@ -25,7 +25,7 @@ class TradeTable extends Mixin {
         {
           title: <FormattedMessage id={'CurrentChainID'} />,
           width: 200,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'id',
           render: value => (
             <RouterGo isOutSide go={{ pathname: `https://scan.chainx.org/txs/${value}` }}>

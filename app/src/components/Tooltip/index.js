@@ -20,6 +20,7 @@ export default class Tooltip extends PureComponent {
       tip = 'tooltip提示',
       className,
       width,
+      multiline = true,
     } = this.props;
 
     function strLength(str) {
@@ -61,7 +62,7 @@ export default class Tooltip extends PureComponent {
       return Array.from(new Set(array));
     }
 
-    const multiTip = fixedLengthFormatString(tip, 48);
+    const multiTip = multiline ? fixedLengthFormatString(tip, 48) : tip;
 
     return (
       <>

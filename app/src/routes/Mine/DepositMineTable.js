@@ -60,6 +60,7 @@ class DepositMineTable extends Mixin {
             return (
               <span>
                 <HoverTip
+                  multiline={false}
                   tip={
                     item.id === 'SDOT'
                       ? `${item.discountResultShow}（跨链挖矿折扣）`

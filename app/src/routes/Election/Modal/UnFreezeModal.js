@@ -44,9 +44,9 @@ class UnFreezeModal extends Component {
           render: (v, item) => {
             return (
               <span>
-                块高 {item.revocationHeight}
+                <FormattedMessage id={'BlockHeight'} /> {item.revocationHeight}
                 <span className={classNames(styles.blockHeight, item.canUnFreeze ? styles.unLock : null)}>
-                  ({item.canUnFreeze ? '已到期' : moment_helper.formatHMS(v)} )
+                  ({item.canUnFreeze ? <FormattedMessage id={'HasExpired'} /> : moment_helper.formatHMS(v)} )
                 </span>
               </span>
             );

@@ -21,6 +21,7 @@ import Jaxx from '../../../resource/Jaxx.png';
 import myCrypto from '../../../resource/myCrypto.png';
 import trust from '../../../resource/trust.png';
 import bitpie from '../../../resource/bitpie.png';
+import bitpieOpreturn from '../../../resource/bitPie_Opreturn.png';
 import coinomi from '../../../resource/coinomi.png';
 import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
@@ -565,7 +566,17 @@ class L_BTC extends Mixin {
                 const links = [
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                        Bitpie
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: bitpieOpreturn,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'http://www.mathwallet.org/' }}>
                         MathWallet
                       </RouterGo>
                     ),
@@ -575,7 +586,7 @@ class L_BTC extends Mixin {
                   },
                   {
                     content: (
-                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                      <RouterGo isOutSide go={{ pathname: 'https://wookong.nbltrust.com/' }}>
                         WOOKONG
                       </RouterGo>
                     ),
@@ -619,7 +630,7 @@ class L_BTC extends Mixin {
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
-                    {index === 4 ? null : '、'}
+                    {index === 5 ? null : '、'}
                   </span>
                 ));
                 const msgs = msg.split('OP_RETURN_replace');
@@ -783,9 +794,19 @@ class L_BTC extends Mixin {
       <Modal
         scroll={true}
         title={
-          <>
+          <div className={styles.title}>
             {<FormattedMessage id={'CrossChainLock'} />}({token})
-          </>
+            <div className={styles.lock}>
+              <RouterGo
+                isOutSide
+                go={{
+                  pathname: 'https://chainx.org/help?title=%E5%A6%82%E4%BD%95%E8%B7%A8%E9%93%BE%E9%94%81%E4%BB%93BTC',
+                }}>
+                <Icon name={'help'} />
+                <FormattedMessage id={'LockCourse'} />
+              </RouterGo>
+            </div>
+          </div>
         }
         isOverflow>
         <div className={styles.crossChainBind}>
@@ -1151,9 +1172,19 @@ class S_DOT extends Mixin {
       <Modal
         scroll={true}
         title={
-          <>
+          <div className={styles.title}>
             <FormattedMessage id={'CrossChainMapping'} />({showAssetName(token)})
-          </>
+            <div className={styles.sdotmap}>
+              <RouterGo
+                isOutSide
+                go={{
+                  pathname: 'https://chainx.org/help?title=%E5%A6%82%E4%BD%95%E8%B7%A8%E9%93%BE%E6%98%A0%E5%B0%84SDOT',
+                }}>
+                <Icon name={'help'} />
+                <FormattedMessage id={'MappingCourse'} />
+              </RouterGo>
+            </div>
+          </div>
         }
         isOverflow>
         <div className={styles.crossChainBind}>
