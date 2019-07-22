@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
 import { Button, ButtonGroup, Input, Slider, FormattedMessage } from '../../components';
-import { _, Patterns, formatNumber, classNames, setBlankSpace, observer } from '../../utils';
+import { _, Patterns, formatNumber, classNames, setBlankSpace, observer, showAssetName } from '../../utils';
 import * as styles from './PutOrder.less';
 
 @observer
@@ -212,7 +212,7 @@ class PutOrder extends SwitchPair {
             {action === 'buy'
               ? setPrecision(currentCurrencyAssetFree, currentPair.currency) || '-'
               : setPrecision(currentAssetsAssetFree, currentPair.assets) || '-'}{' '}
-            <span>{action === 'buy' ? currentPair.currency : currentPair.assets}</span>
+            <span>{action === 'buy' ? showAssetName(currentPair.currency) : showAssetName(currentPair.assets)}</span>
           </span>
         </div>
         <div className={styles.userprice}>
@@ -232,7 +232,7 @@ class PutOrder extends SwitchPair {
                   checkAll.checkTotal(action);
                 });
               }}
-              suffix={currentPair.currency}
+              suffix={showAssetName(currentPair.currency)}
             />
           </div>
         </div>
@@ -253,7 +253,7 @@ class PutOrder extends SwitchPair {
                   checkAll.checkTotal(action);
                 });
               }}
-              suffix={currentPair.assets}
+              suffix={showAssetName(currentPair.assets)}
             />
           </div>
         </div>
@@ -261,17 +261,18 @@ class PutOrder extends SwitchPair {
           <Slider {...sliderProps} />
           <div>
             <span>
-              0<span>{currentPair.assets}</span>
+              0<span>{showAssetName(currentPair.assets)}</span>
             </span>
             <span>
               {max}
-              <span>{currentPair.assets}</span>
+              <span>{showAssetName(currentPair.assets)}</span>
             </span>
           </div>
         </div>
         <div className={styles.totalPrice}>
           <FormattedMessage id={'TradingVolume'} /> {formatNumber.toFixed(price * amount, this.getMaxTradePrecision())}{' '}
-          {currentPair.currency} {tradeErrMsg ? <div className={styles.tradeErrMsg}>{tradeErrMsg}</div> : null}
+          {showAssetName(currentPair.currency)}{' '}
+          {tradeErrMsg ? <div className={styles.tradeErrMsg}>{tradeErrMsg}</div> : null}
         </div>
         {isLogin() ? (
           <div className={styles.submit}>
@@ -287,7 +288,7 @@ class PutOrder extends SwitchPair {
                         { name: 'operation', value: () => <FormattedMessage id={'PlaceOrder'} /> },
                         {
                           name: () => <FormattedMessage id={'TradingPair'} />,
-                          value: `${currentPair.assets}/${currentPair.currency}`,
+                          value: `${showAssetName(currentPair.assets)}/${showAssetName(currentPair.currency)}`,
                         },
                         {
                           name: () => <FormattedMessage id={'Direction'} />,
@@ -295,11 +296,11 @@ class PutOrder extends SwitchPair {
                         },
                         {
                           name: () => <FormattedMessage id={'Offer'} />,
-                          value: setBlankSpace(price, currentPair.currency),
+                          value: setBlankSpace(price, showAssetName(currentPair.currency)),
                         },
                         {
                           name: () => <FormattedMessage id={'Amount'} />,
-                          value: setBlankSpace(amount, currentPair.assets),
+                          value: setBlankSpace(amount, showAssetName(currentPair.assets)),
                         },
                         {
                           name: () => <FormattedMessage id={'Account'} />,
@@ -334,7 +335,7 @@ class PutOrder extends SwitchPair {
                   });
                 }
               }}>
-              <FormattedMessage id={actionUpper} /> {currentPair.assets}
+              <FormattedMessage id={actionUpper} /> {showAssetName(currentPair.assets)}
             </Button>
           </div>
         ) : null}

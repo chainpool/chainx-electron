@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchPair from '../Mixin/SwitchPair';
-import { _, observer, setBlankSpace, setColumnsWidth } from '../../../utils';
+import { _, observer, setBlankSpace, setColumnsWidth, showAssetName } from '../../../utils';
 
 import * as styles from './index.less';
 import { FormattedMessage, Icon, Table } from '../../../components';
@@ -90,7 +90,8 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: <FormattedMessage id={'TradingPair'} />,
             dataIndex: 'index',
-            render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
+            render: (value, item) =>
+              `${showAssetName(item.filterPair.assets)}/${showAssetName(item.filterPair.currency)}`,
           },
           {
             title: <FormattedMessage id={'Direction'} />,
@@ -109,12 +110,12 @@ class HistoryOrderTable extends SwitchPair {
           {
             title: <FormattedMessage id={'OrderPrice'} />,
             dataIndex: 'priceShow',
-            render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+            render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.currency)),
           },
           {
             title: <FormattedMessage id={'OrderAmount'} />,
             dataIndex: 'amountShow',
-            render: (value, item) => setBlankSpace(value, item.filterPair.assets),
+            render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.assets)),
           },
           {
             title: (
@@ -124,17 +125,22 @@ class HistoryOrderTable extends SwitchPair {
             ),
             dataIndex: 'hasfillAmountShow',
             render: (value, item) =>
-              setBlankSpace(setBlankSpace(value, item.filterPair.assets), `(${item.hasfillAmountPercent})`),
+              setBlankSpace(
+                setBlankSpace(value, showAssetName(item.filterPair.assets)),
+                `(${item.hasfillAmountPercent})`
+              ),
           },
           {
             title: <FormattedMessage id={'FilledAverage'} />,
             dataIndex: 'averagePriceShow',
-            render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
+            render: (value, item) =>
+              item.hasfillAmount === 0 ? '--' : setBlankSpace(value, showAssetName(item.filterPair.currency)),
           },
           {
             title: <FormattedMessage id={'FilledTotal'} />,
             dataIndex: 'sumShow',
-            render: (value, item) => (item.hasfillAmount === 0 ? '--' : setBlankSpace(value, item.filterPair.currency)),
+            render: (value, item) =>
+              item.hasfillAmount === 0 ? '--' : setBlankSpace(value, showAssetName(item.filterPair.currency)),
           },
           {
             title: '',
@@ -211,17 +217,20 @@ class HistoryOrderTable extends SwitchPair {
                 title: '成交量',
                 dataIndex: 'amountShow',
                 render: (value, item) =>
-                  setBlankSpace(setBlankSpace(value, item.filterPair.assets), `(${item.hasfillAmountPercent})`),
+                  setBlankSpace(
+                    setBlankSpace(value, showAssetName(item.filterPair.assets)),
+                    `(${item.hasfillAmountPercent})`
+                  ),
               },
               {
                 title: '成交均价',
                 dataIndex: 'priceShow',
-                render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+                render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.currency)),
               },
               {
                 title: '成交总额',
                 dataIndex: 'totalShow',
-                render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+                render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.currency)),
               },
               {
                 title: '',

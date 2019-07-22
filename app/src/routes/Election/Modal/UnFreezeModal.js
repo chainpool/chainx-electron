@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Modal, Table, FormattedMessage } from '../../../components';
 import * as styles from './UnFreezeModal.less';
-import { formatNumber, Inject, moment_helper } from '../../../utils';
+import { formatNumber, Inject, moment_helper, classNames } from '../../../utils';
 
 @Inject(({ chainStore }) => ({ chainStore }))
 class UnFreezeModal extends Component {
@@ -44,9 +44,9 @@ class UnFreezeModal extends Component {
           render: (v, item) => {
             return (
               <span>
-                {item.canUnFreeze ? '已到期' : moment_helper.formatHMS(v)}{' '}
-                <span className={styles.blockHeight}>
-                  (块高<span style={{ marginLeft: 5 }}>{item.revocationHeight}</span>)
+                <FormattedMessage id={'BlockHeight'} /> {item.revocationHeight}
+                <span className={classNames(styles.blockHeight, item.canUnFreeze ? styles.unLock : null)}>
+                  ({item.canUnFreeze ? <FormattedMessage id={'HasExpired'} /> : moment_helper.formatHMS(v)} )
                 </span>
               </span>
             );

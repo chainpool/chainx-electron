@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, RouterGo, Table } from '../../components';
-import { _, observer, toJS } from '../../utils';
+import { _, observer, toJS, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
 @observer
@@ -25,7 +25,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'AccountAddress'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'address',
           render: (value, item) => (
             <RouterGo isOutSide go={{ pathname: blockChain.accountId(item.accountId) }}>
@@ -37,10 +37,11 @@ class WithdrawTable extends Component {
           title: <FormattedMessage id={'Asset'} />,
           dataIndex: 'token',
           width: 80,
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'OriginalChainAddr'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'addr',
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
@@ -50,7 +51,7 @@ class WithdrawTable extends Component {
         },
         {
           title: <FormattedMessage id={'BitcoinTxHash'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'txid',
           render: value =>
             value && (
@@ -66,7 +67,7 @@ class WithdrawTable extends Component {
         {
           title: <FormattedMessage id={'Memo'} />,
           dataIndex: 'memo',
-          ellipse: true,
+          ellipse: 20,
         },
         {
           title: <FormattedMessage id={'Status'} />,
@@ -78,10 +79,10 @@ class WithdrawTable extends Component {
             if (statusValue && statusValue.toUpperCase && statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  <FormattedMessage id={value} />
                   {_.get(item.status, 'confirm') && (
                     <span>({`${_.get(item.status, 'confirm')}/${_.get(item.status, 'totalConfirm')}`})</span>
                   )}
+                  <FormattedMessage id={value} />
                 </>
               );
             }

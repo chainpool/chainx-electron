@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, FormattedMessage, Table } from '../../../components';
 import SwitchPair from '../Mixin/SwitchPair';
 import * as styles from './index.less';
-import { observer, setBlankSpace } from '../../../utils';
+import { observer, setBlankSpace, showAssetName } from '../../../utils';
 
 @observer
 class CurrentOrderTable extends SwitchPair {
@@ -51,7 +51,8 @@ class CurrentOrderTable extends SwitchPair {
           title: <FormattedMessage id={'TradingPair'} />,
           width: 100,
           dataIndex: 'createTimeShow',
-          render: (value, item) => `${item.filterPair.assets}/${item.filterPair.currency}`,
+          render: (value, item) =>
+            `${showAssetName(item.filterPair.assets)}/${showAssetName(item.filterPair.currency)}`,
         },
         {
           title: <FormattedMessage id={'Direction'} />,
@@ -71,18 +72,20 @@ class CurrentOrderTable extends SwitchPair {
         {
           title: <FormattedMessage id={'OrderPrice'} />,
           dataIndex: 'priceShow',
-          render: (value, item) => setBlankSpace(value, item.filterPair.currency),
+          render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.currency)),
         },
         {
           title: <FormattedMessage id={'OrderAmount'} />,
           dataIndex: 'amountShow',
-          render: (value, item) => setBlankSpace(value, item.filterPair.assets),
+          render: (value, item) => setBlankSpace(value, showAssetName(item.filterPair.assets)),
         },
         {
           title: <FormattedMessage id={'FreezeBalance'} />,
           dataIndex: 'reserveLastShow',
           render: (value, item) =>
-            `${value}${' '}${item.direction === 'Buy' ? item.filterPair.currency : item.filterPair.assets}`,
+            `${value}${' '}${
+              item.direction === 'Buy' ? showAssetName(item.filterPair.currency) : showAssetName(item.filterPair.assets)
+            }`,
         },
         {
           title: (
@@ -109,7 +112,7 @@ class CurrentOrderTable extends SwitchPair {
                       { name: () => <FormattedMessage id={'OrderNumber'} />, value: item.index },
                       {
                         name: () => <FormattedMessage id={'TradingPair'} />,
-                        value: `${item.filterPair.assets}/${item.filterPair.currency}`,
+                        value: `${showAssetName(item.filterPair.assets)}/${showAssetName(item.filterPair.currency)}`,
                       },
                       {
                         name: () => <FormattedMessage id={'Direction'} />,
@@ -117,11 +120,11 @@ class CurrentOrderTable extends SwitchPair {
                       },
                       {
                         name: () => <FormattedMessage id={'OrderPrice'} />,
-                        value: setBlankSpace(item.priceShow, item.filterPair.currency),
+                        value: setBlankSpace(item.priceShow, showAssetName(item.filterPair.currency)),
                       },
                       {
                         name: () => <FormattedMessage id={'OrderAmount'} />,
-                        value: setBlankSpace(item.amountShow, item.filterPair.assets),
+                        value: setBlankSpace(item.amountShow, showAssetName(item.filterPair.assets)),
                       },
                     ],
                     ...(item.direction === 'Sell'

@@ -1,9 +1,9 @@
 export const PATH = {
   default: '/election',
-  mine: '/depositMine',
+  mine: '/mine',
   asset: '/asset',
   election: '/election',
-  depositWithdrawRecord: '/asset/depositWithdrawRecord',
+  depositWithdrawRecord: '/asset/crossChainRecord',
   tradeRecord: '/tradeRecord',
   addressManage: '/asset/addressManage',
   trade: '/trade',
@@ -22,18 +22,18 @@ export const PlaceHolder = (() => {
 })();
 
 export const NetWork = [
-  // {
-  //   name: 'TestNet',
-  //   value: 'test',
-  // },
-  // {
-  //   name: '主网预发布',
-  //   value: 'premain',
-  // },
   {
     name: 'MainnetPrepair',
     value: 'main',
   },
+  {
+    name: 'TestNet',
+    value: 'test',
+  },
+  // {
+  //   name: '主网预发布',
+  //   value: 'premain',
+  // },
 ];
 
 export const Chain = {
@@ -55,7 +55,7 @@ export const SCRYPT_PARAMS = {
 
 export const AjaxCallTime = 5000;
 
-export const ConfigureVersion = 36;
+export const ConfigureVersion = 40;
 
 export const blockChain = {
   // tx: v => `https://www.blockchain.com/btc/tx/${v}`,

@@ -16,6 +16,7 @@ import {
   voteClaim,
   renominate,
   getIntentionsByAccount,
+  getIntentionImages,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -30,18 +31,40 @@ export default class Election extends ModelExtend {
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
-
+    const orderPairs = this.rootStore.tradeStore.orderPairs;
     return this.originPseduIntentions.map((intention = {}) => {
+      let discountResultShow = '';
       const token = intention.id;
       // 折合投票数
       const discountVote = (intention.power * intention.circulation) / Math.pow(10, precisionMap[token]);
+      const price = formatNumber.toPrecision(intention.power, nativeAssetPrecision);
+
+      if (token === 'BTC' || token === 'L-BTC') {
+        const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
+        const discount = intention.discount * Math.pow(10, -2);
+        // console.log(
+        //   (price / (((Math.pow(10, 9) * Math.pow(10, 8)) / findAssetOne.averPrice) * Math.pow(10, -8) * 0.1)) * 0.1,
+        //   '----'
+        // );
+        const secondDiscount =
+          ((Math.pow(10, findAssetOne.precision) * Math.pow(10, this.getDefaultPrecision())) / findAssetOne.averPrice) *
+          Math.pow(10, -this.getDefaultPrecision()) *
+          discount;
+        discountResultShow = formatNumber.toFixed(
+          Number((price / secondDiscount) * discount),
+          this.getPrecision(token)
+        );
+      } else if (token === 'SDOT') {
+        discountResultShow = formatNumber.toFixed(Number(price), this.getPrecision('PCX'));
+      }
 
       const result = {
         ...intention,
         discountVote: formatNumber.toPrecision(discountVote, nativeAssetPrecision),
         circulation: this.setPrecision(intention.circulation, token),
-        price: formatNumber.toPrecision(intention.power, nativeAssetPrecision),
+        price,
         jackpot: this.setPrecision(intention.jackpot, nativeAssetPrecision),
+        discountResultShow,
       };
 
       const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
@@ -161,7 +184,11 @@ export default class Election extends ModelExtend {
 
   // 我的投票
   @computed get validatorsWithMyNomination() {
-    return [...this.validatorsWithRecords.filter(intention => intention.myTotalVote > 0 || intention.myRevocation > 0)];
+    return [
+      ...this.validatorsWithRecords.filter(
+        intention => intention.myTotalVote > 0 || intention.myRevocation > 0 || intention.myInterest > 0
+      ),
+    ];
   }
 
   // 信托节点
@@ -190,8 +217,44 @@ export default class Election extends ModelExtend {
 
   getIntentions = async () => {
     const [intentions, records] = await Promise.all([getIntentions(), this.getNominationRecords()]);
-    this.changeModel('originIntentions', intentions);
+    this.changeModel(
+      'originIntentions',
+      intentions.map(item => {
+        const findOne = this.originIntentions.find(one => one.account === item.account);
+        if (findOne) {
+          return {
+            ...findOne,
+            ...item,
+          };
+        }
+        return item;
+      })
+    );
     this.changeModel('originNominationRecords', records);
+  };
+
+  getIntentionImages = async () => {
+    let res = await getIntentionImages().catch(() => []);
+    res = res.map(item => {
+      const key = Object.keys(item)[0];
+      const value = Object.values(item)[0];
+      return {
+        name: key,
+        imageUrl: value,
+      };
+    });
+
+    const intentions = this.originIntentions.map(item => {
+      const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
+      if (findOne) {
+        return {
+          ...item,
+          imageUrl: findOne.imageUrl,
+        };
+      }
+      return item;
+    });
+    this.changeModel('originIntentions', intentions);
   };
 
   getNominationRecords = async () => {

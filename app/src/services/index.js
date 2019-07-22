@@ -87,7 +87,7 @@ export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payl
 export const getWithdrawalListApi = payload => {
   const { accountId, chain, token } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/withdrawals?chain=${chain}&token=${token}`,
+    url: `${API}/account/${accountId}/withdrawals?chain=${chain}&token=${token}&page=0&page_size=100`,
     method: 'get',
     ...payload,
   });
@@ -96,7 +96,16 @@ export const getWithdrawalListApi = payload => {
 export const getDepositListApi = payload => {
   const { accountId, chain, token } = payload;
   return fetchFromHttp({
-    url: `${API}/account/${accountId}/deposits?chain=${chain}&token=${token}`,
+    url: `${API}/account/${accountId}/deposits?chain=${chain}&token=${token}&page=0&page_size=100`,
+    method: 'get',
+    ...payload,
+  });
+};
+
+export const getLockListApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `${API}/btc/lock/records?accountid=${accountId}&page_size=100&page=0`,
     method: 'get',
     ...payload,
   });
@@ -210,6 +219,21 @@ export const getTradeDetailApi = payload => {
     url: `${API}/tx/${txhash}`,
     method: 'get',
     ...payload,
+  });
+};
+
+export const getAccountTotalLockPositionApi = payload => {
+  const { accountId } = payload;
+  return fetchFromHttp({
+    url: `${API}/account/${accountId}/btc/lock/balances`,
+    method: 'get',
+  });
+};
+
+export const getIntentionImages = () => {
+  return fetchFromHttp({
+    url: `${API}/intention_logos`,
+    method: 'get',
   });
 };
 

@@ -152,6 +152,8 @@ export default class ModelExtend {
 
   getCurrentNetWork = () => this.rootStore.configureStore.currentNetWork;
 
+  getFactNetWork = () => this.rootStore.configureStore.factNetWork;
+
   isTestNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'test';
 
   isMainNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'main';
@@ -159,4 +161,12 @@ export default class ModelExtend {
   isPreMainNetWork = () => this.rootStore.configureStore.currentNetWork.value === 'premain';
 
   isTestBitCoinNetWork = () => this.rootStore.chainStore.bitCoinNetWork === 'test';
+
+  isApiUseAble = (promise, defaultValue) => {
+    if (true) {
+      return promise;
+    } else {
+      return defaultValue;
+    }
+  };
 }

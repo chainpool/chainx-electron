@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { Inject, Patterns } from '../../../utils';
+import { Inject, Patterns, _ } from '../../../utils';
 import * as styles from './AddAddressModal.less';
 
 @Inject(({ globalStore }) => ({ globalStore }))
@@ -59,7 +59,7 @@ class AddAddressModal extends Component {
       globalStore: { assets = [] },
     } = this.props;
 
-    const options = assets.map(asset => ({ label: asset.chain, value: asset.name }));
+    const options = _.uniqBy(assets.map(asset => ({ label: asset.chain, value: asset.name })), 'label');
 
     return (
       <Modal

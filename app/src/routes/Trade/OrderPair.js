@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './OrderPair.less';
 import { FormattedMessage, Table } from '../../components';
 import { Tab } from '../components';
-import { _, observer, parseQueryString } from '../../utils';
+import { _, observer, parseQueryString, showAssetName } from '../../utils';
 
 @observer
 class OrderPair extends SwitchPair {
@@ -50,6 +50,7 @@ class OrderPair extends SwitchPair {
           width: '40%',
           title: <FormattedMessage id={'Token'} />,
           dataIndex: 'assets',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Price'} />,
@@ -63,6 +64,7 @@ class OrderPair extends SwitchPair {
       <div className={styles.orderPair}>
         <div className={styles.title}>
           <Tab
+            renderItem={item => showAssetName(item)}
             tabs={_.keys(groupPairs)}
             className={styles.tab}
             activeIndex={Math.max(_.keys(groupPairs).findIndex(value => value === currentPair.currency), 0)}

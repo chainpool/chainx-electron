@@ -1,23 +1,31 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
-import { observer, _, setBlankSpace } from '../../utils';
+import { observer, _, setBlankSpace, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
 
 @observer
 class WithDrawTable extends Mixin {
   startInit() {
+    this.getWithdrawalListByAccount();
+  }
+
+  getWithdrawalListByAccount = async () => {
     const {
       model: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getWithdrawalListByAccount' });
-  }
+    this.subscribeWithdrawalList = await dispatch({ type: 'getWithdrawalListByAccount' });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeWithdrawalList && this.subscribeWithdrawalList.unsubscribe();
+  };
 
   render() {
     const {
-      model: { onChainAccountWithdrawList, dispatch, openModal },
+      model: { onChainAccountWithdrawList, dispatch, openModal, isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -29,12 +37,12 @@ class WithDrawTable extends Mixin {
         },
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'originChainTxId',
           render: value =>
             value ? (
-              <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-                {value}
+              <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
+                {hexPrefix(value)}
               </RouterGo>
             ) : (
               '-'
@@ -44,10 +52,11 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Address'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'address',
         },
         {
@@ -66,7 +75,10 @@ class WithDrawTable extends Mixin {
             if (statusValue.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
+                  {_.get(item.value, 'confirm')
+                    ? `(${_.get(item.value, 'confirm')} / ${_.get(item.value, 'totalConfirm')}) `
+                    : null}
+                  {<FormattedMessage id={value} />}
                 </>
               );
             }
@@ -86,7 +98,7 @@ class WithDrawTable extends Mixin {
                               { name: 'operation', value: () => <FormattedMessage id={'CancelWithdrawal'} /> },
                               {
                                 name: () => <FormattedMessage id={'WithdrawAmount'} />,
-                                value: setBlankSpace(item.balanceShow, item.token),
+                                value: setBlankSpace(item.balanceShow, showAssetName(item.token)),
                               },
                             ],
                             callback: () => {

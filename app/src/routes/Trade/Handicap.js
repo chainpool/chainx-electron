@@ -4,7 +4,7 @@ import SwitchPair from './Mixin/SwitchPair';
 import * as styles from './Handicap.less';
 import { Table, FormattedMessage } from '../../components';
 import { ColorProgress } from '../components';
-import { classNames, observer } from '../../utils';
+import { classNames, observer, showAssetName } from '../../utils';
 
 @observer
 class Handicap extends SwitchPair {
@@ -70,7 +70,7 @@ class Handicap extends SwitchPair {
           className: color,
           title: (
             <>
-              <FormattedMessage id={'Price'} />({currentPair.currency})
+              <FormattedMessage id={'Price'} />({showAssetName(currentPair.currency)})
             </>
           ),
           dataIndex: 'priceShow',
@@ -79,7 +79,7 @@ class Handicap extends SwitchPair {
         {
           title: (
             <>
-              <FormattedMessage id={'Amount'} />({currentPair.assets})
+              <FormattedMessage id={'Amount'} />({showAssetName(currentPair.assets)})
             </>
           ),
           dataIndex: 'amountShow',
@@ -88,7 +88,7 @@ class Handicap extends SwitchPair {
         {
           title: (
             <>
-              <FormattedMessage id={'Total'} />({currentPair.assets})
+              <FormattedMessage id={'Total'} />({showAssetName(currentPair.assets)})
             </>
           ),
           dataIndex: 'totalAmountShow',

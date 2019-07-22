@@ -1,22 +1,30 @@
 import React from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
-import { _, Inject } from '../../utils';
+import { _, Inject, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class DepositTable extends Mixin {
   startInit() {
+    this.getDepositRecords();
+  }
+
+  getDepositRecords = async () => {
     const {
       assetStore: { dispatch },
     } = this.props;
 
-    dispatch({ type: 'getDepositRecords' });
-  }
+    this.subscribeDepositRecords = await dispatch({ type: 'getDepositRecords' });
+  };
+
+  componentWillUnsubscribe = () => {
+    this.subscribeDepositRecords && this.subscribeDepositRecords.unsubscribe();
+  };
 
   render() {
     const {
-      assetStore: { depositRecords = [] },
+      assetStore: { depositRecords = [], isTestBitCoinNetWork },
     } = this.props;
 
     const tableProps = {
@@ -29,10 +37,11 @@ class DepositTable extends Mixin {
         {
           title: <FormattedMessage id={'OriginalChainTradeID'} />,
           dataIndex: 'txid',
-          ellipse: true,
+          ellipse: 20,
+          width: 300,
           render: value => (
-            <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-              {value}
+            <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
+              {hexPrefix(value)}
             </RouterGo>
           ),
         },
@@ -40,21 +49,23 @@ class DepositTable extends Mixin {
           title: <FormattedMessage id={'Token'} />,
           width: 100,
           dataIndex: 'token',
+          render: v => showAssetName(v),
         },
         {
           title: <FormattedMessage id={'Address'} />,
-          ellipse: true,
+          ellipse: 20,
+          width: 300,
           dataIndex: 'address',
         },
         {
           title: <FormattedMessage id={'Amount'} />,
           dataIndex: 'amount',
         },
-        {
-          title: <FormattedMessage id={'Memo'} />,
-          ellipse: true,
-          dataIndex: 'memo',
-        },
+        // {
+        //   title: <FormattedMessage id={'Memo'} />,
+        //   ellipse: true,
+        //   dataIndex: 'memo',
+        // },
         {
           title: <FormattedMessage id={'Status'} />,
           dataIndex: 'statusValue',
@@ -62,7 +73,10 @@ class DepositTable extends Mixin {
             if (value.toUpperCase() === 'CONFIRMING') {
               return (
                 <>
-                  ({_.get(item.value, 'confirm') / _.get(item.value, 'totalConfirm')}) {<FormattedMessage id={value} />}
+                  {_.get(item.value, 'confirm')
+                    ? `(${_.get(item.value, 'confirm')}/${_.get(item.value, 'totalConfirm')}) `
+                    : null}
+                  {<FormattedMessage id={value} />}
                 </>
               );
             }
@@ -72,7 +86,28 @@ class DepositTable extends Mixin {
       ],
       dataSource: depositRecords,
     };
-    return <Table {...tableProps} />;
+    return (
+      <>
+        <Table {...tableProps} />
+        <div className={styles.notgetdeposit}>
+          <strong>
+            <FormattedMessage id={'DepositNotReceived'}>
+              {msg => {
+                const msgs = msg.split('deposit_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    <RouterGo isOutSide go={{ pathname: 'https://scan.chainx.org/crossblocks/bitcoin/claim' }}>
+                      {msgs[1]}
+                    </RouterGo>
+                  </>
+                );
+              }}
+            </FormattedMessage>
+          </strong>
+        </div>
+      </>
+    );
   }
 }
 

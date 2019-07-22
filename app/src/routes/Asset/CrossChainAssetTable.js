@@ -1,14 +1,15 @@
 import React from 'react';
-import { _, formatNumber, Inject, setColumnsWidth } from '../../utils';
+import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { HoverTip } from '../components';
+import { HoverTip, Balance } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
+import LBTCIcon from '../../resource/LBTC.png';
 import Asset from './components/Asset';
 
-@Inject(({ configureStore }) => ({ configureStore }))
+@observer
 class CrossChainAssetTable extends Mixin {
   startInit = () => {
     const {
@@ -19,12 +20,9 @@ class CrossChainAssetTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, crossChainAccountAssetsWithZero, btcAddresses },
-      configureStore: { isTestNet },
+      model: { openModal, crossChainAccountAssetsWithZero, accountLock, setPrecision },
       widths,
     } = this.props;
-
-    const hasBindAddress = btcAddresses.length > 0;
 
     const tableProps = {
       className: styles.tableContainer,
@@ -35,11 +33,22 @@ class CrossChainAssetTable extends Mixin {
             dataIndex: 'tokenName',
             render: (value, item) => (
               <div className={styles.miniLogo}>
-                <img src={item.name === 'BTC' ? btcIcon : item.name === 'SDOT' ? sdotLogo : miniLogo} alt="miniLogo" />
+                <img
+                  src={
+                    item.name === 'BTC'
+                      ? btcIcon
+                      : item.name === 'SDOT'
+                      ? sdotLogo
+                      : item.name === 'L-BTC'
+                      ? LBTCIcon
+                      : miniLogo
+                  }
+                  alt="miniLogo"
+                />
                 <span>
                   <HoverTip tip={item.desc}> {value}</HoverTip>
                 </span>
-                <span className={styles.shortName}>({item.name})</span>
+                <span className={styles.shortName}>({showAssetName(item.name)})</span>
               </div>
             ),
           },
@@ -55,12 +64,22 @@ class CrossChainAssetTable extends Mixin {
           {
             title: <FormattedMessage id={'WithdrawalReserved'} />,
             dataIndex: 'reservedWithdrawal',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) =>
+              item.name === 'L-BTC' || item.name === 'SDOT' ? (
+                <Balance value={setPrecision(value, item.name)} />
+              ) : (
+                <Asset value={value} precision={item.precision} />
+              ),
           },
           {
             title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) =>
+              item.name === 'L-BTC' ? (
+                <Balance value={setPrecision(value, item.name)} />
+              ) : (
+                <Asset value={value} precision={item.precision} />
+              ),
           },
           {
             title: <FormattedMessage id={'TotalBalance'} />,
@@ -73,53 +92,84 @@ class CrossChainAssetTable extends Mixin {
             render: (value, item) => {
               const isSDOT = item.name === 'SDOT';
               const isBTC = item.name === 'BTC';
+              const isLBTC = item.name === 'L-BTC';
               return (
                 <ButtonGroup>
-                  {isTestNet && false && isBTC ? (
+                  {/*BTC充值*/}
+                  {isBTC && _.get(item, 'limitProps.CanDeposit') && (
                     <Button
-                      type="warn"
                       onClick={() => {
+                        // openModal({
+                        //   name: 'CrossChainBindModal',
+                        //   data: {
+                        //     token: item.name,
+                        //     trusteeAddr: item.trusteeAddr,
+                        //   },
+                        // });
                         openModal({
-                          name: 'GetCollarModal',
-                          // name: isSDOT ? 'GetCollarModalSDOT' : 'GetCollarModal',
+                          name: 'StopDepositModal',
                         });
                       }}>
-                      <FormattedMessage id={'GetFreeCoin'} />
+                      <FormattedMessage id={'SuspensionDeposit'}>
+                        {msg => (
+                          <HoverTip tip={msg}>
+                            <Icon name="icon-jinggao" className={styles.jinggaoicon} />
+                          </HoverTip>
+                        )}
+                      </FormattedMessage>
+                      <FormattedMessage id={'Deposit'} />
+                    </Button>
+                  )}
+
+                  {/*SDOT映射 */}
+                  {isSDOT && (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
+                        });
+                      }}>
+                      <FormattedMessage id={'Mapping'} />
+                    </Button>
+                  )}
+
+                  {/*LBTC锁仓 */}
+                  {isLBTC && (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
+                        });
+                      }}>
+                      <FormattedMessage id={'LockPosition'} />
+                    </Button>
+                  )}
+
+                  {/*LBTC锁仓列表 */}
+                  {isLBTC && accountLock && accountLock.length > 0 ? (
+                    <Button
+                      onClick={() => {
+                        openModal({
+                          name: 'LockPositionListModal',
+                          data: {
+                            token: item.name,
+                          },
+                        });
+                      }}>
+                      <FormattedMessage id={'LookUp'} />
                     </Button>
                   ) : null}
 
-                  <Button
-                    //{...(isBTC ? { canClick: false } : {})}
-                    onClick={() => {
-                      isBTC
-                        ? openModal({
-                            name: 'StopDepositModal',
-                          })
-                        : openModal({
-                            name: 'CrossChainBindModal',
-                            data: {
-                              token: item.name,
-                              trusteeAddr: item.trusteeAddr,
-                            },
-                          });
-                    }}>
-                    {isBTC ? (
-                      <>
-                        <FormattedMessage id={'SuspensionDeposit'}>
-                          {msg => (
-                            <HoverTip tip={msg}>
-                              <Icon name="icon-jinggao" className={styles.jinggaoicon} />
-                            </HoverTip>
-                          )}
-                        </FormattedMessage>
-
-                        <FormattedMessage id={'Deposit'} />
-                      </>
-                    ) : (
-                      <FormattedMessage id={'Mapping'} />
-                    )}
-                  </Button>
-                  {!isSDOT ? (
+                  {/*BTC提现*/}
+                  {isBTC && _.get(item, 'limitProps.CanWithdraw') && (
                     <Button
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
@@ -142,22 +192,24 @@ class CrossChainAssetTable extends Mixin {
                       }}>
                       <FormattedMessage id={'Withdraw'} />
                     </Button>
-                  ) : null}
-
-                  <Button
-                    type={item.free > 0 ? 'primary' : 'disabled'}
-                    onClick={() => {
-                      openModal({
-                        name: 'TransferModal',
-                        data: {
-                          token: item.name,
-                          freeShow: formatNumber.toPrecision(item.free, item.precision),
-                          free: item.free,
-                        },
-                      });
-                    }}>
-                    <FormattedMessage id={'Transfer'} />
-                  </Button>
+                  )}
+                  {/*BTC和SDOT转账*/}
+                  {(isSDOT || isBTC) && _.get(item, 'limitProps.CanTransfer') && (
+                    <Button
+                      type={item.free > 0 ? 'primary' : 'disabled'}
+                      onClick={() => {
+                        openModal({
+                          name: 'TransferModal',
+                          data: {
+                            token: item.name,
+                            freeShow: formatNumber.toPrecision(item.free, item.precision),
+                            free: item.free,
+                          },
+                        });
+                      }}>
+                      <FormattedMessage id={'Transfer'} />
+                    </Button>
+                  )}
                 </ButtonGroup>
               );
             },
@@ -165,7 +217,7 @@ class CrossChainAssetTable extends Mixin {
         ],
         widths
       ),
-      dataSource: _.orderBy(crossChainAccountAssetsWithZero, 'chain'),
+      dataSource: _.orderBy(crossChainAccountAssetsWithZero, 'tokenName'),
     };
     return <Table {...tableProps} />;
   }
