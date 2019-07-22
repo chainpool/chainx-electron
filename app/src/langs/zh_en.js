@@ -347,6 +347,7 @@ const zh_en = {
   SyncStatus: ['同步状态', 'Sync Status'],
   Trustee: ['信托', 'Trustee'],
   LockCourse: ['锁仓教程', 'Lock Course'],
+  DepositCourse: ['充值教程', 'Deposit Course'],
   ConnectedPeers: ['连接节点数', 'Connected Peers'],
   ApiAddress: ['Api地址', 'Api Address'],
   ProvideCoreAssetData: ['提供核心资产数据', 'Providing core asset data'],
