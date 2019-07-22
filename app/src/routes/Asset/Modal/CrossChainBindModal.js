@@ -112,7 +112,7 @@ class X_BTC extends Mixin {
     const findOne = {
       desc1: '',
       value1: chainxAddressHex,
-      desc2: <FormattedMessage id={'PublicMultiSigTrusteeAddress'} />,
+      desc2: '信托热多签地址',
       value2: btcTrusteeAddress,
       warn: (
         <Warn>
@@ -281,7 +281,8 @@ class X_BTC extends Mixin {
           </span>
           <span className={styles.bold}>发起跨链充值</span>
           <div>
-            使用支持OP_RETURN的钱包向信托热多签地址充值，并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+            使用支持OP_RETURN的钱包向信托热多签地址充值（充值金额必须 >=0.001
+            BTC）并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
           </div>
         </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
@@ -465,15 +466,26 @@ class X_BTC extends Mixin {
     return (
       <Modal
         title={
-          <>
+          <div className={styles.title}>
             {step === -1 ? (
               <FormattedMessage id={'UserInstructions'} />
             ) : (
               <>
                 {<FormattedMessage id={'CrossChainDeposit'} />}({showAssetName(token)})
+                <div className={styles.lock}>
+                  <RouterGo
+                    isOutSide
+                    go={{
+                      pathname:
+                        'https://chainx.org/help?title=%E5%A6%82%E4%BD%95%E8%B7%A8%E9%93%BE%E5%85%85%E5%80%BCBTC',
+                    }}>
+                    <Icon name={'help'} />
+                    <FormattedMessage id={'DepositCourse'} />
+                  </RouterGo>
+                </div>
               </>
             )}
-          </>
+          </div>
         }
         isOverflow>
         <div className={styles.crossChainBind}>
