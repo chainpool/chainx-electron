@@ -6,6 +6,7 @@ const utils = require("./utils");
 const { session } = require("electron");
 
 function requestUpdateInfo() {
+  if (process.env.NODE_ENV === "development") return;
   const currentVersion = app.getVersion();
   return new Promise((resolve, reject) => {
     https

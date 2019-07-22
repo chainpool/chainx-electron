@@ -1,4 +1,68 @@
 @import '~@styles/index.less';
 .trusteeGovern{
   padding:24px;
+  .trusteeList{
+    display: flex;
+    flex-wrap: wrap;
+    li+li{
+
+    }
+    li{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width:205px;
+      height:56px;
+      background: #FCFDFD;
+      border: 1px solid #DCE0E2;
+    }
+  }
+  .hotAndCold{
+    ul{
+      display: flex;
+      li{
+        padding-left: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height:88px;
+        width:50%;
+        background: #FCFDFD;
+        border: 1px solid #DCE0E2;
+        >div+div{
+          margin-top: 16px;
+        }
+      }
+
+    }
+  }
+
+  .CurrentProposal{
+    margin-top: 32px;
+    .title{
+      display: flex;
+      align-items: center;
+      height:56px;
+      padding:0 16px;
+      border: 1px solid #DCE0E2;
+      border-radius: 2px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #3F3F3F;
+    }
+    ul{
+      display: flex;
+      li{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width:25%;
+        height:56px;
+        border: 1px solid #DCE0E2;
+      }
+    }
+    .ProposalSwitchTrustee{
+
+    }
+  }
 }

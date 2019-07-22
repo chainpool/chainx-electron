@@ -30,21 +30,24 @@ class Node extends Component {
         bestNode.syncStatus !== '--'
       ) {
         this.isFirst = true;
-        Toast.warn('', '', {
-          position: 'top-left',
-          autoClose: 3000,
-          closeButton: true,
-          newContent: (
-            <div className={styles.toast}>
-              <div className={styles.title}>
-                <FormattedMessage id={'NodeIncompleteSync'} />
+        if (!/localhost/.test(window.location.href)) {
+          console.log(window.location.href);
+          Toast.warn('', '', {
+            position: 'top-left',
+            autoClose: 3000,
+            closeButton: true,
+            newContent: (
+              <div className={styles.toast}>
+                <div className={styles.title}>
+                  <FormattedMessage id={'NodeIncompleteSync'} />
+                </div>
+                <Warn>
+                  <FormattedMessage id={'NodeIncompleteSyncDesc'} />
+                </Warn>
               </div>
-              <Warn>
-                <FormattedMessage id={'NodeIncompleteSyncDesc'} />
-              </Warn>
-            </div>
-          ),
-        });
+            ),
+          });
+        }
       }
     }
   }
