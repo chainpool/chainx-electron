@@ -9,6 +9,7 @@ export const PATH = {
   trade: '/trade',
   configure: '/configure',
   trust: '/trust',
+  trustGovern: '/trust/govern',
 };
 
 export const PlaceHolder = (() => {

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, FormattedMessage } from '../../components';
+import { Mixin, ButtonGroup, Button, Icon, FormattedMessage, RouterGo } from '../../components';
 import { TableTitle, HoverTip } from '../components';
+import { PATH } from '../../constants';
 import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
@@ -124,6 +125,13 @@ class Trust extends Mixin {
                     <FormattedMessage id={'SetupTrustee'} />
                   </span>
                 </Button>
+                <Button>
+                  <RouterGo type="blank" go={{ pathname: PATH.trustGovern }}>
+                    <Icon name="icon-shezhixintuo" />
+                    <span>信托治理</span>
+                  </RouterGo>
+                </Button>
+
                 <div className={styles.utils}>
                   <span className={classNames(styles.trustutils)}>
                     <Icon name="xintuogongju" />

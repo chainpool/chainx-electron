@@ -7,6 +7,7 @@ import DepositWithDrawRecord from '../DepositWithDrawRecord';
 import TradeRecord from '../TradeRecord';
 import AddressManage from '../AddressManage';
 import Trust from '../Trust';
+import TrustGovern from '../TrustGovern';
 import Trade from '../Trade';
 
 export default [
@@ -51,7 +52,12 @@ export default [
     title: 'AssetTrustee',
     path: PATH.trust,
     component: Trust,
-    // authority: [1],
+  },
+  {
+    title: 'TrustGovern',
+    show: false,
+    path: PATH.trustGovern,
+    component: TrustGovern,
   },
   {
     title: 'DEX',
