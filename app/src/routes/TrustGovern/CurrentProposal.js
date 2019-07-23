@@ -11,13 +11,21 @@ class CurrentProposal extends Mixin {
   render() {
     const { active } = this.state;
     const {
-      model: { name },
+      model: { name, openModal },
     } = this.props;
     return (
       <div className={styles.CurrentProposal}>
         <div className={styles.title}>
           当前提议
-          <Button type="confirm">发起提议</Button>
+          <Button
+            type="confirm"
+            onClick={() => {
+              openModal({
+                name: 'startProposalModal',
+              });
+            }}>
+            发起提议
+          </Button>
         </div>
         <ul>
           {[

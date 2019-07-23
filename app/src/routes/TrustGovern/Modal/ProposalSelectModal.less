@@ -1,0 +1,31 @@
+@import '~@styles/index.less';
+.ProposalSelectModal{
+  ul{
+    li+li{
+      margin-top: 16px;
+    }
+    li{
+      &.disabeld{
+        color: #e0e2e4;
+        &.active{
+          border: 1px solid #DCE0E2;
+        }
+      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #DCE0E2;
+      border-radius: 1px;
+      height:70px;
+      &.active{
+        border: 1px solid #F6C94A;
+        border-radius: 1px;
+      }
+      i{
+        font-size: 28px;
+      }
+      span{
+      }
+    }
+  }
+}
