@@ -23,7 +23,9 @@ class ProposalSelectModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              closeModal();
+              openModal({
+                name: 'SelectNodeModal',
+              });
             }}>
             <FormattedMessage id={'Confirm'} />
           </Button>

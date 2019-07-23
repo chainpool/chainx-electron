@@ -5,10 +5,20 @@ import { Mixin } from '../../components';
 import CurrentTrustee from './CurrentTrustee';
 import CurrentProposal from './CurrentProposal';
 import ProposalSelectModal from './Modal/ProposalSelectModal';
+import SelectNodeModal from './Modal/SelectNodeModal';
+import TrusteeSwitchModal from './Modal/TrusteeSwitchModal';
 import * as styles from './index.less';
 
 @Inject(({ trustGovernStore: model, globalStore }) => ({ model, globalStore }))
 class TrustGovern extends Mixin {
+  startInit = () => {
+    const {
+      model: { openModal },
+    } = this.props;
+    openModal({
+      name: 'TrusteeSwitchModal',
+    });
+  };
   render() {
     const {
       model: {},
@@ -16,7 +26,6 @@ class TrustGovern extends Mixin {
         modal: { name },
       },
     } = this.props;
-    console.log(name, this.props.globalStore);
     return (
       <div className={styles.trusteeGovern}>
         <BreadCrumb />
@@ -24,6 +33,8 @@ class TrustGovern extends Mixin {
         <CurrentTrustee {...this.props} />
         <CurrentProposal {...this.props} />
         {name === 'startProposalModal' && <ProposalSelectModal {...this.props} />}
+        {name === 'SelectNodeModal' && <SelectNodeModal {...this.props} />}
+        {name === 'TrusteeSwitchModal' && <TrusteeSwitchModal {...this.props} />}
       </div>
     );
   }

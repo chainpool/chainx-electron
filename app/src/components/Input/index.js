@@ -140,6 +140,7 @@ class InputSelect extends React.Component {
           className={classNames(
             styles.input,
             styles.selectinput,
+            multi ? styles.multi : null,
             styles[size],
             styles[type],
             disabled ? styles.disabled : null

@@ -1,0 +1,55 @@
+@import '~@styles/index.less';
+
+.TrusteeSwitchModal{
+  .top,.down{
+    padding:12px;
+    background: #F5F5F5;
+    border: 1px solid #DCE0E2;
+  }
+  .top+.down{
+    margin-top: 10px;
+  }
+  .top{
+    height:268px;
+    .mixin_scroll();
+  }
+  .down{
+    height:180px;
+    .mixin_scroll();
+    padding:0;
+    ul{
+      display: flex;
+      flex-direction: column;
+      li+li{
+        border-top:1px solid  #DCE0E2;
+      }
+      li{
+        line-height: 14px;
+        padding:12px;
+        height:110px;
+        >div+div{
+          margin-top: 10px;
+        }
+        >div{
+          &.name{
+            font-weight: bold;
+          }
+          display: flex;
+          span{
+            display: block;
+            width:62px;
+          }
+        }
+      }
+    }
+  }
+  .address,.redescript{
+    margin: 8px 0;
+  }
+
+  .redescript{
+    line-height: 20px;
+    word-wrap: break-word;
+    word-break: normal;
+  }
+}
