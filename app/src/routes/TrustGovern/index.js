@@ -15,9 +15,6 @@ class TrustGovern extends Mixin {
     const {
       model: { openModal },
     } = this.props;
-    openModal({
-      name: 'TrusteeSwitchModal',
-    });
   };
   render() {
     const {

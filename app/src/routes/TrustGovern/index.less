@@ -64,7 +64,7 @@
         font-size: 14px;
       }
     }
-    ul{
+    ul.operation{
       display: flex;
       li+li{
         border-left: unset;
@@ -86,8 +86,150 @@
       .signList{
         height:68px;
       }
+      .signStatus{
+        .reslist{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .statusList{
+            :global{
+
+              .__react_component_tooltip.type-dark{
+                background-color:white;
+                font-size: 14px;
+                color: #3F3F3F;
+                box-shadow: 0 4px 10px 0 rgba(0,0,0,0.20);
+                &.place-top:after{
+                  border-top-color:white;
+                  font-size: 14px;
+                  color: #3F3F3F;
+                }
+              }
+
+            }
+            display:flex;
+            >li+li{
+              margin-left: 25px;
+            }
+            li{
+              &.notdealwith{
+                padding-right:30px;
+                border-right:1px solid #C2C2C2;
+              }
+              i{
+                margin-right: 8px;
+              }
+              .count{
+                margin-left: 5px;
+                .account{
+                  display: flex;
+                  li+li{
+                    margin-left: 16px;
+                  }
+                }
+              }
+            }
+          }
+        }
+        position:relative;
+        // background: #F5F5F5;
+        border: 1px solid #DCE0E2;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 2px;
+        // border:1px solid @yellow;
+        padding:20px;
+        .completeSign{
+          display: flex;
+          //flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          .resok{
+            //margin:12px 0 16px;
+          }
+          .hash{
+            margin-left: 8px;
+            display: flex;
+            text-align: center;
+            .hashvalue{
+              margin-right: 5px;
+
+            }
+          }
+          i{
+            font-size: 30px;
+            color:@yellow;
+          }
+        }
+        .signButton,.refuseButton{
+          color:white;
+          &.disabeld{
+            background: #c7c8c9;
+            color:unset;
+            pointer-events: none;
+          }
+          &.gray{
+            color: #3F3F3F;
+            background: #DEDEDE !important;
+          }
+        }
+        .signButton{
+          background: @green;
+        }
+        .refuseButton{
+          background: @red;
+        }
+        >ul{
+          >li+li{
+            margin-top: 10px;
+          }
+          li{
+            i{
+              &.success{
+                color:@yellow;
+              }
+            }
+            display: flex;
+            align-items: center;
+            span{
+              margin-left: 8px;
+              margin-right: 20px;
+            }
+            ul{
+              display: flex;
+              li+li{
+                margin-left: 10px;
+              }
+              li{
+                font-size: 12px;
+                padding:6px 12px;
+                background: #F5F5F5;
+                border: 1px solid #E3E3E3;
+                border-radius: 14px;
+              }
+            }
+          }
+        }
+
+      }
       .tableContainer {
         .mixin_tableContainer();
+        :global{
+          .thead{
+            .tr{
+              padding:0 16px;
+              border: 1px solid #DCE0E2;
+              ///border-bottom:none;
+            }
+          }
+          .tbody{
+            .tr{
+              padding:0 16px;
+              border: 1px solid #DCE0E2;
+              border-top:none;
+            }
+          }
+        }
       }
 
     }

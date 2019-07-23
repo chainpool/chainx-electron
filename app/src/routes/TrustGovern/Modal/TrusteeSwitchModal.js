@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormattedMessage, Modal, Scroller } from '../../../components';
+import { Button, FormattedMessage, Modal } from '../../../components';
 import * as styles from './TrusteeSwitchModal.less';
 
 class TrusteeSwitchModal extends Component {

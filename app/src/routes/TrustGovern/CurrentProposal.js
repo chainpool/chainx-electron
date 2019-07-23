@@ -27,7 +27,7 @@ class CurrentProposal extends Mixin {
             发起提议
           </Button>
         </div>
-        <ul>
+        <ul className={styles.operation}>
           {[
             { name: '信托换届', value: 'switch' },
             { name: '手续费调整' },
