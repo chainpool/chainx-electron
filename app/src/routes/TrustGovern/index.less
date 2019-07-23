@@ -1,25 +1,33 @@
 @import '~@styles/index.less';
 .trusteeGovern{
   padding:24px;
-  .trusteeList{
-    display: flex;
-    flex-wrap: wrap;
-    li+li{
-
+  table.trusteeList{
+    width:100%;
+    border-collapse:collapse;
+    tbody{
+      width:100%;
     }
-    li{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width:205px;
-      height:56px;
-      background: #FCFDFD;
-      border: 1px solid #DCE0E2;
+    tr{
+      td{
+        width:205px;
+        height:56px;
+        border: 1px solid #DCE0E2;
+        div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
     }
   }
+
   .hotAndCold{
+    margin-top: -1px;
     ul{
       display: flex;
+      li+li{
+        border-left: unset;
+      }
       li{
         padding-left: 16px;
         display: flex;
@@ -30,6 +38,7 @@
         background: #FCFDFD;
         border: 1px solid #DCE0E2;
         >div+div{
+
           margin-top: 16px;
         }
       }
@@ -42,26 +51,44 @@
     .title{
       display: flex;
       align-items: center;
+      justify-content: space-between;
       height:56px;
       padding:0 16px;
       border: 1px solid #DCE0E2;
+      border-bottom: unset;
       border-radius: 2px;
       font-weight: bold;
       font-size: 16px;
       color: #3F3F3F;
+      button{
+        font-size: 14px;
+      }
     }
     ul{
       display: flex;
+      li+li{
+        border-left: unset;
+      }
       li{
+        font-weight: bold;
         display: flex;
         align-items: center;
         justify-content: center;
         width:25%;
         height:56px;
         border: 1px solid #DCE0E2;
+        &.active{
+          border: 1px solid #F6C94A;
+        }
       }
     }
     .ProposalSwitchTrustee{
+      .signList{
+        height:68px;
+      }
+      .tableContainer {
+        .mixin_tableContainer();
+      }
 
     }
   }

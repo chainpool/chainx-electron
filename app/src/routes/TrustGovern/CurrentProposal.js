@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Mixin } from '../../components';
+import { Mixin, Button } from '../../components';
 import ProposalSwitchTrustee from './ProposalSwitchTrustee';
 import { classNames } from '../../utils';
 
@@ -15,7 +15,10 @@ class CurrentProposal extends Mixin {
     } = this.props;
     return (
       <div className={styles.CurrentProposal}>
-        <div className={styles.title}>当前提议</div>
+        <div className={styles.title}>
+          当前提议
+          <Button type="confirm">发起提议</Button>
+        </div>
         <ul>
           {[
             { name: '信托换届', value: 'switch' },
@@ -28,7 +31,7 @@ class CurrentProposal extends Mixin {
             </li>
           ))}
         </ul>
-        <ProposalSwitchTrustee />
+        {active === 'switch' && <ProposalSwitchTrustee {...this.props} />}
       </div>
     );
   }

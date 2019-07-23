@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { groupArrayByCount } from '../../utils';
 import * as styles from './index.less';
 
 class CurrentTrustee extends Component {
@@ -6,13 +7,22 @@ class CurrentTrustee extends Component {
     const {
       model: { name },
     } = this.props;
+    const trusteeList = new Array(16).fill({ name: 'build' });
     return (
       <div>
-        <div className={styles.trusteeList}>
-          {new Array(16).fill({ name: 'build' }).map((item, index) => (
-            <li key={index}>{item.name}</li>
-          ))}
-        </div>
+        <table className={styles.trusteeList}>
+          <tbody>
+            {groupArrayByCount(trusteeList, 6).map((one, ins) => (
+              <tr key={ins}>
+                {one.map((item, index) => (
+                  <td key={index}>
+                    <div>{item.name}</div>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <div className={styles.hotAndCold}>
           <ul>
             {[
