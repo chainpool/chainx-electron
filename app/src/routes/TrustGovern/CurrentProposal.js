@@ -8,6 +8,21 @@ class CurrentProposal extends Mixin {
   state = {
     active: 'switch',
   };
+
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    dispatch({
+      type: 'getParticularAccounts',
+    });
+    dispatch({
+      type: 'getMultiSigAddrInfo',
+    });
+    dispatch({
+      type: 'getPendingListFor',
+    });
+  };
   render() {
     const { active } = this.state;
     const {

@@ -127,11 +127,7 @@ class CommonLayOut extends Component {
       <div className={styles.layout}>
         <Header {...this.props} className={styles.header} />
         <Content {...this.props} className={classNames(styles.content, !ready ? styles.nocontent : null)}>
-          {ready || pathname === PATH.configure || pathname === PATH.trustGovern ? (
-            children
-          ) : (
-            <div className={styles.loadingcontent}>{loading}</div>
-          )}
+          {ready || pathname === PATH.configure ? children : <div className={styles.loadingcontent}>{loading}</div>}
         </Content>
         <Footer {...this.props} className={styles.footer} ready={ready} />
       </div>

@@ -71,7 +71,7 @@ export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...pa
 
 export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
 
-export const getTrusteeInfoByAccount = (...payload) => trustee.getTrusteeInfoByAccount(...payload);
+export const getTrusteeInfoByAccount = (...payload) => checkLogin(() => trustee.getTrusteeInfoByAccount(...payload));
 
 export const setupBitcoinTrustee = (...payload) => trustee.setupBitcoinTrustee(...payload);
 
@@ -272,3 +272,9 @@ export const getTxsFromTxidList = payload => {
     },
   });
 };
+
+export const particularAccounts = () => chain.particularAccounts();
+
+export const getMultiSigAddrInfo = payload => trustee.getMultiSigAddrInfo(payload);
+
+export const getPendingListFor = payload => trustee.getPendingListFor(payload);

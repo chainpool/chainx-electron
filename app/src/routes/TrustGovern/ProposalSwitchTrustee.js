@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, FormattedMessage, Icon, Mixin, Table } from '../../components';
 import { HoverTip } from '../components';
-import { classNames } from '../../utils';
+import { classNames, observer } from '../../utils';
 
+@observer
 class ProposalSwitchTrustee extends Mixin {
   render() {
     const {
-      model: { name },
+      model: { proposalTrusteeList, proposalTotalSignCount, proposalMaxSignCount, trusteeProposal = {} },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -39,10 +40,10 @@ class ProposalSwitchTrustee extends Mixin {
       ],
     };
 
-    const notResponseList = [];
-    const totalSignCount = 4;
-    const haveSignList = [];
-    const maxSignCount = 4;
+    const notResponseList = proposalTrusteeList.filter(item => !item.trusteeSign);
+    const totalSignCount = proposalTotalSignCount;
+    const haveSignList = proposalTrusteeList.filter(item => item.trusteeSign);
+    const maxSignCount = proposalMaxSignCount;
 
     const renderSignLi = (one, index) => {
       return (
@@ -62,42 +63,47 @@ class ProposalSwitchTrustee extends Mixin {
         <div className={styles.signList}>
           <div className={styles.signStatus}>
             <div className={styles.reslist}>
-              <ul className={styles.statusList}>
-                <li className={styles.notdealwith}>
-                  <Icon name="weixiangying" className={'yellow'} />
-                  <span>
-                    <FormattedMessage id={'NoResponseSign'} />
-                  </span>
-                  <span className={styles.count}>
-                    <HoverTip
-                      width={550}
-                      className={styles.hoverTrusteeList}
-                      tip={
-                        <ul className={styles.account}>
-                          {notResponseList.map((one, index) => renderSignLi(one, index))}
-                        </ul>
-                      }>
-                      {notResponseList.length}/{totalSignCount}
-                    </HoverTip>
-                  </span>
-                </li>
-                <li>
-                  <Icon name="icon-wancheng" className={'green'} />
-                  <span>
-                    <FormattedMessage id={'HaveSigned'} />
-                  </span>
-                  <span className={styles.count}>
-                    <HoverTip
-                      width={550}
-                      className={styles.hoverTrusteeList}
-                      tip={
-                        <ul className={styles.account}>{haveSignList.map((one, index) => renderSignLi(one, index))}</ul>
-                      }>
-                      {`${haveSignList.length}/${maxSignCount}`}
-                    </HoverTip>
-                  </span>
-                </li>
-              </ul>
+              <div className={styles.left}>
+                <ul className={styles.statusList}>
+                  <li className={styles.notdealwith}>
+                    <Icon name="weixiangying" className={'yellow'} />
+                    <span>
+                      <FormattedMessage id={'NoResponseSign'} />
+                    </span>
+                    <span className={styles.count}>
+                      <HoverTip
+                        width={550}
+                        className={styles.hoverTrusteeList}
+                        tip={
+                          <ul className={styles.account}>
+                            {notResponseList.map((one, index) => renderSignLi(one, index))}
+                          </ul>
+                        }>
+                        {notResponseList.length}/{totalSignCount}
+                      </HoverTip>
+                    </span>
+                  </li>
+                  <li>
+                    <Icon name="icon-wancheng" className={'green'} />
+                    <span>
+                      <FormattedMessage id={'HaveSigned'} />
+                    </span>
+                    <span className={styles.count}>
+                      <HoverTip
+                        width={550}
+                        className={styles.hoverTrusteeList}
+                        tip={
+                          <ul className={styles.account}>
+                            {haveSignList.map((one, index) => renderSignLi(one, index))}
+                          </ul>
+                        }>
+                        {`${haveSignList.length}/${maxSignCount}`}
+                      </HoverTip>
+                    </span>
+                  </li>
+                </ul>
+                <div className={styles.proposalId}>Proposal ID：{trusteeProposal.proposalId}</div>
+              </div>
               <ButtonGroup>
                 <Button className={classNames(styles.signButton)} onClick={() => {}}>
                   签名
