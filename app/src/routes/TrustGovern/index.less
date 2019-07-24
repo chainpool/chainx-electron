@@ -2,7 +2,6 @@
 .trusteeGovern{
   padding:24px;
   table.trusteeList{
-    width:100%;
     border-collapse:collapse;
     tbody{
       width:100%;
@@ -29,17 +28,26 @@
         border-left: unset;
       }
       li{
-        padding-left: 16px;
+        padding: 0 16px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         height:88px;
-        width:50%;
+        width:616px;
         background: #FCFDFD;
         border: 1px solid #DCE0E2;
-        >div+div{
 
+        >div+div{
           margin-top: 16px;
+        }
+        >div{
+          white-space: nowrap;
+
+          display: flex;
+          .redeemScript{
+            .mixin_ellipse()
+
+          }
         }
       }
 

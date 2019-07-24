@@ -72,6 +72,8 @@ export default class Trust extends ModelExtend {
   @observable txOutputList = [];
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
+  @observable hotEntity = {}; // 普通交易本届信托的热多签，包含热多签地址和热多签赎回脚本
+  @observable coldEntity = {}; // 普通交易本届信托的l冷多签，包含冷多签地址和冷多签赎回脚本
 
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
@@ -560,7 +562,8 @@ export default class Trust extends ModelExtend {
         this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
+      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList, hotEntity, coldEntity } =
+        resRede || {};
       this.changeModel({
         tx,
         redeemScript,
@@ -568,6 +571,8 @@ export default class Trust extends ModelExtend {
         totalSignCount,
         maxSignCount,
         chainConfigTrusteeList,
+        hotEntity,
+        coldEntity,
       });
       this.getInputsAndOutputsFromTx({
         tx,
@@ -647,12 +652,16 @@ export default class Trust extends ModelExtend {
       hotEntity: { redeemScript } = {},
       trusteeList: chainConfigTrusteeList = [],
       counts: { total, required },
+      hotEntity,
+      coldEntity,
     } = res || {};
     return {
       redeemScript,
       totalSignCount: total,
       maxSignCount: required,
       chainConfigTrusteeList,
+      hotEntity,
+      coldEntity,
     };
   };
 
