@@ -107,7 +107,7 @@ class Trust extends Mixin {
             <TableTitle title={<FormattedMessage id={'TrusteeSettings'} />} className={styles.title}>
               <span className={styles.nodeStyle}>
                 (<FormattedMessage id={'YouAre'} />：
-                {isTrustee ? (
+                {_isTrustee ? (
                   <FormattedMessage id={'TrusteeNode'} />
                 ) : isActiveValidator ? (
                   <FormattedMessage id={'ValidatorNode'} />
@@ -204,7 +204,7 @@ class Trust extends Mixin {
                   <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
               ) : null}
-              {isValidator ? (
+              {_isValidator ? (
                 <Button
                   type="blank"
                   onClick={() => {
