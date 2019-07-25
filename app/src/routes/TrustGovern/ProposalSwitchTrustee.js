@@ -8,7 +8,7 @@ import { classNames, observer } from '../../utils';
 class ProposalSwitchTrustee extends Mixin {
   render() {
     const {
-      model: { proposalTrusteeList, proposalTotalSignCount, proposalMaxSignCount, trusteeProposal = {} },
+      model: { proposalTrusteeList, proposalTotalSignCount, proposalMaxSignCount, normalizedTrusteeProposal = {} },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -34,7 +34,7 @@ class ProposalSwitchTrustee extends Mixin {
           ellipse: 0,
         },
       ],
-      dataSource: trusteeProposal.newTrustees,
+      dataSource: normalizedTrusteeProposal.newTrustees,
     };
 
     const notResponseList = proposalTrusteeList.filter(item => !item.trusteeSign);
@@ -99,7 +99,7 @@ class ProposalSwitchTrustee extends Mixin {
                     </span>
                   </li>
                 </ul>
-                <div className={styles.proposalId}>Proposal ID：{trusteeProposal.proposalId}</div>
+                <div className={styles.proposalId}>Proposal ID：{normalizedTrusteeProposal.proposalId}</div>
               </div>
               <ButtonGroup>
                 <Button className={classNames(styles.signButton)} onClick={() => {}}>

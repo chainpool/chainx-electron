@@ -14,6 +14,25 @@ export default class TrustGovern extends ModelExtend {
   @observable proposalMaxSignCount = '';
   @observable trusteeProposal = '';
 
+  @computed get normalizedTrusteeProposal() {
+    if (!this.trusteeProposal) return '';
+    return {
+      ...this.trusteeProposal,
+      newTrustees: this.trusteeProposal.newTrustees.map(item => {
+        const findOne = this.rootStore.electionStore.trustIntentions.find(
+          one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
+        );
+        if (findOne) {
+          return {
+            ...item,
+            name: findOne.name,
+          };
+        }
+        return item;
+      }),
+    };
+  }
+
   @computed get proposalTrusteeList() {
     let ownerList = this.ownerList.map(item => ({
       addr: item[0],
@@ -94,11 +113,12 @@ export default class TrustGovern extends ModelExtend {
         addr: item,
         chain,
       }));
+
       this.changeModel('trusteeProposal', {
         ownersDone,
         proposalId,
-        newTrustees,
         ownersDoneShow: Number(trusteeProposal.ownersDone).toString('2'),
+        newTrustees,
       });
       const trusteeInfos = newTrustees.map(item => getTrusteeInfoByAccount(item.addr));
       let infos = await Promise.all(trusteeInfos);
@@ -106,20 +126,10 @@ export default class TrustGovern extends ModelExtend {
         this.changeModel('trusteeProposal', {
           ...this.trusteeProposal,
           newTrustees: this.trusteeProposal.newTrustees.map((item, index) => {
-            const findOne = this.rootStore.electionStore.trustIntentions.find(
-              one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
-            );
-            const newItem = {
+            return {
               ...item,
               ...infos[index][item.chain],
-              name: findOne.name,
             };
-            if (findOne) {
-              return {
-                ...newItem,
-              };
-            }
-            return newItem;
           }),
         });
       }

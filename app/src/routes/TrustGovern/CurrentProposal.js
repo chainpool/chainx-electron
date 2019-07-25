@@ -26,7 +26,7 @@ class CurrentProposal extends Mixin {
   render() {
     const { active } = this.state;
     const {
-      model: { name, openModal },
+      model: { openModal, trusteeProposal },
     } = this.props;
     return (
       <div className={styles.CurrentProposal}>
@@ -44,12 +44,21 @@ class CurrentProposal extends Mixin {
         </div>
         <ul className={styles.operation}>
           {[
-            { name: '信托换届', value: 'switch' },
-            { name: '手续费调整' },
-            { name: '移除未认领' },
-            { name: '撤销用户提现' },
+            { name: '信托换届', value: 'switch', disabled: !trusteeProposal },
+            { name: '手续费调整', value: 'fee', disabled: true },
+            { name: '移除未认领', value: 'removeUnclaimed', disabled: true },
+            { name: '撤销用户提现', value: 'cancelWithdraw', disabled: true },
           ].map((item, index) => (
-            <li key={index} className={classNames(active === item.value ? styles.active : null)}>
+            <li
+              key={index}
+              className={classNames(active === item.value ? styles.active : null)}
+              onClick={() => {
+                if (!item.disabled) {
+                  this.setState({
+                    active: item.value,
+                  });
+                }
+              }}>
               {item.name}
             </li>
           ))}
