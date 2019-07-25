@@ -13,6 +13,7 @@ import {
   getMNFromRedeemScript,
   getAllPubsFromRedeemScript,
 } from '../utils';
+import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
 import {
   getWithdrawalList,
@@ -553,7 +554,9 @@ export default class Trust extends ModelExtend {
   };
 
   getWithdrawTx = async () => {
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
+    const findOne = ForceTrustee
+      ? { chain: 'Bitcoin' }
+      : this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
     if (findOne && findOne.chain) {
       const [resTx = {}, resRede = {}] = await Promise.all([
         getWithdrawTx(findOne.chain),
