@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
-import { Input, FormattedMessage, Modal, Clipboard } from '../../../components';
+import { Input, FormattedMessage, Modal, Clipboard, Icon } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { formatNumber, Inject, Patterns, _ } from '../../../utils';
+import { formatNumber, Inject, Patterns, _, classNames, isEmpty } from '../../../utils';
 import * as styles from './ConstructSpecialTradeModal.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class ConstructSpecialTradeModal extends Component {
   state = {
-    sender: '2N4CX91SRPQWVb1nPe43e88rLmGrq3VHPYS',
+    sender: '',
     senderErrMsg: '',
-    receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT',
-    receivers: [
-      { receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT', balance: '' },
-      { receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT', balance: '' },
-    ],
+    receiver: '',
     receiverErrMsg: '',
-    redeemScript:
-      '5421034575d9ef1baf0d85fb2700cea894eb07cd1f5f54a35d0b5dfe9ea1432f2a67d7210227e11054e41c9bcc2d2e9953281de93711727fb75a5e1e9bdfe3a80685e1f4e02102b88736301733df21ea4513bc4ab48b543e4d57d3874845711e77dd77f110389d210284c57fddf6fd20f1a255909fdffc9e5f0eb76be4191d31433b5f1bc990d989812103f11ee283a4e9a8f5e2e68c8b24652a5603a4f50ac9e26a614d9396f7482ff6d22102ef635b7ddea5a26c76aecf4194bfef0e2b22a217d7a0e8eaadce0506d1ed7b2756ae',
+    receivers: [{ receiver: '', receiverErrMsg: '', balance: '', balanceErrMsg: '' }],
+    redeemScript: '',
     redeemScriptErrMsg: '',
     balance: '',
     balanceErrMsg: '',
@@ -47,16 +43,37 @@ class ConstructSpecialTradeModal extends Component {
       const {
         model: { isTestBitCoinNetWork },
       } = this.props;
-      const { receiver } = this.state;
-      const errMsg =
-        Patterns.check('required')(receiver) || Patterns.check('isBTCAddress')(receiver, isTestBitCoinNetWork());
-      this.setState({ receiverErrMsg: errMsg });
+      const { receivers } = this.state;
+      let errMsg = '';
+      for (let index = 0; index < receivers.length; index++) {
+        const item = receivers[index];
+        const err =
+          Patterns.check('required')(item.receiver) ||
+          Patterns.check('isBTCAddress')(item.receiver, isTestBitCoinNetWork());
+        if ((!isEmpty(item.receiver) || !isEmpty(item.balance)) && err) {
+          this.changeReceivers({ receiverErrMsg: err, index });
+          errMsg = err;
+          break;
+        } else {
+          this.changeReceivers({ receiverErrMsg: '', index });
+        }
+      }
       return errMsg;
     },
     checkBalance: () => {
-      const { balance } = this.state;
-      const errMsg = Patterns.check('required')(balance) || Patterns.check('smaller')(0, balance, '必须大于0');
-      this.setState({ balanceErrMsg: errMsg });
+      let errMsg = '';
+      for (let index = 0; index < this.state.receivers.length; index++) {
+        const { receivers } = this.state;
+        const item = receivers[index];
+        const err = Patterns.check('smaller')(0, item.balance, '必须大于0');
+        if ((!isEmpty(item.receiver) || !isEmpty(item.balance)) && err) {
+          this.changeReceivers({ balanceErrMsg: err, index });
+          errMsg = err;
+          break;
+        } else {
+          this.changeReceivers({ balanceErrMsg: '', index });
+        }
+      }
       return errMsg;
     },
     checkFee: () => {
@@ -66,7 +83,9 @@ class ConstructSpecialTradeModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      return ['checkSender', 'checkRedeemScript', 'checkFee'].every(item => !this.checkAll[item]());
+      return ['checkSender', 'checkRedeemScript', 'checkReceiver', 'checkBalance', 'checkFee'].every(
+        item => !this.checkAll[item]()
+      );
     },
   };
 
@@ -83,10 +102,12 @@ class ConstructSpecialTradeModal extends Component {
       dispatch({
         type: 'sign',
         payload: {
-          withdrawList: receivers.map(item => ({
-            amount: formatNumber.toPrecision(item.balance, 8, true),
-            addr: item.receiver,
-          })),
+          withdrawList: receivers
+            .filter(item => item.receiver && item.balance)
+            .map(item => ({
+              amount: formatNumber.toPrecision(item.balance, 8, true),
+              addr: item.receiver,
+            })),
           userInputbitFee: feeRate,
           url: sender,
           redeemScript,
@@ -112,14 +133,16 @@ class ConstructSpecialTradeModal extends Component {
     }
   };
 
-  changeReceivers = ({ receiver, balance, index }, callback) => {
+  changeReceivers = ({ receiver, balance, receiverErrMsg, balanceErrMsg, index }, callback) => {
     const { receivers } = this.state;
-    const newReceivers = receivers.map((item, ins) => {
+    const newReceivers = _.cloneDeep(receivers).map((item, ins) => {
       if (ins === index) {
         return {
           ...item,
-          ...(receiver ? { receiver } : {}),
-          ...(balance ? { balance } : {}),
+          ...(!_.isUndefined(receiver) ? { receiver } : {}),
+          ...(!_.isUndefined(balance) ? { balance } : {}),
+          ...(receiverErrMsg ? { receiverErrMsg } : { receiverErrMsg: '' }),
+          ...(balanceErrMsg ? { balanceErrMsg } : { balanceErrMsg: '' }),
         };
       }
       return item;
@@ -128,7 +151,9 @@ class ConstructSpecialTradeModal extends Component {
       {
         receivers: newReceivers,
       },
-      _.isFunction(callback) && callback()
+      () => {
+        _.isFunction(callback) && callback();
+      }
     );
   };
 
@@ -138,12 +163,8 @@ class ConstructSpecialTradeModal extends Component {
       sender,
       senderErrMsg,
       receivers,
-      receiver,
-      receiverErrMsg,
       redeemScript,
       redeemScriptErrMsg,
-      balance,
-      balanceErrMsg,
       feeRate,
       feeRateErrMsg,
       tx,
@@ -187,47 +208,72 @@ class ConstructSpecialTradeModal extends Component {
             }}
           />
           {receivers.map((item, index) => (
-            <InputHorizotalList
-              key={index}
-              left={
-                <Input.Text
-                  isOutSide
-                  errMsg={receiverErrMsg}
-                  showMatchOption={false}
-                  label={'接收方地址'}
-                  value={item.receiver}
-                  options={[{ label: '1', value: 1 }]}
-                  onChange={value => {
-                    changeReceivers(
-                      {
-                        receiver: value,
-                        index,
-                      },
-                      constructSpecialTrade
-                    );
-                  }}
-                />
-              }
-              right={
-                <Input.Text
-                  isOutSide
-                  errMsg={balanceErrMsg}
-                  isDecimal="decimal"
-                  label="金额"
-                  value={item.balance}
-                  suffix="BTC"
-                  onChange={value => {
-                    changeReceivers(
-                      {
-                        balance: value,
-                        index,
-                      },
-                      constructSpecialTrade
-                    );
-                  }}
-                />
-              }
-            />
+            <div key={index} className={styles.receiverrow}>
+              <InputHorizotalList
+                left={
+                  <Input.Text
+                    errMsgIsOutside
+                    errMsg={item.receiverErrMsg}
+                    showMatchOption={false}
+                    label={'接收方地址'}
+                    value={item.receiver}
+                    options={[{ label: '1', value: 1 }]}
+                    onChange={value => {
+                      changeReceivers(
+                        {
+                          receiver: value,
+                          index,
+                        },
+                        constructSpecialTrade
+                      );
+                    }}
+                  />
+                }
+                right={
+                  <Input.Text
+                    errMsgIsOutside
+                    errMsg={item.balanceErrMsg}
+                    isDecimal="decimal"
+                    label={`金额`}
+                    value={item.balance}
+                    suffix="BTC"
+                    onChange={value => {
+                      this.changeReceivers(
+                        {
+                          balance: value,
+                          index,
+                        },
+                        constructSpecialTrade
+                      );
+                    }}
+                  />
+                }
+              />
+              <Icon
+                onClick={() => {
+                  const copy = _.cloneDeep(receivers);
+                  console.log(index);
+                  if (index === 0) {
+                    copy.splice(receivers.length, 0, {
+                      receiver: '',
+                      receiverErrMsg: '',
+                      balance: '',
+                      balanceErrMsg: '',
+                    });
+                  } else {
+                    copy.splice(index, 1);
+                  }
+                  this.setState(
+                    {
+                      receivers: copy,
+                    },
+                    constructSpecialTrade
+                  );
+                }}
+                className={classNames(styles.receiverrowIcon, index === 0 ? styles.add : styles.remove)}
+                name={index === 0 ? 'tianjiahang' : 'shanchuhang'}
+              />
+            </div>
           ))}
 
           <Input.Text

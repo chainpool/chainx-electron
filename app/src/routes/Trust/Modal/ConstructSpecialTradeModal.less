@@ -1,5 +1,22 @@
 @import '~@styles/index.less';
 .ConstructSpecialTradeModal{
+  .receiverrow{
+    display: flex;
+    align-items: center;
+    .receiverrowIcon{
+      margin-left: 16px;
+      font-size: 20px;
+      position:relative;
+      top:10px;
+      &.add{
+        color:@green;
+      }
+      &.remove{
+        color:@red;
+      }
+    }
+
+  }
   .errMsg{
     margin-left: 15px;
     display: flex;
