@@ -1,5 +1,11 @@
 import { observable, autorun, toJS, _ } from '../utils';
-import { particularAccounts, getMultiSigAddrInfo, getPendingListFor, getTrusteeInfoByAccount } from '../services';
+import {
+  particularAccounts,
+  getMultiSigAddrInfo,
+  getPendingListFor,
+  getTrusteeInfoByAccount,
+  trusteeGovenSign,
+} from '../services';
 import ModelExtend from './ModelExtend';
 
 import { computed } from 'mobx';
@@ -118,7 +124,16 @@ export default class TrustGovern extends ModelExtend {
         ownersDone,
         proposalId,
         ownersDoneShow: Number(trusteeProposal.ownersDone).toString('2'),
-        newTrustees,
+        newTrustees: newTrustees.map(item => {
+          const findOne = (this.trusteeProposal.newTrustees || []).find(one => one.addr === item.addr);
+          if (findOne) {
+            return {
+              ...item,
+              ...findOne,
+            };
+          }
+          return item;
+        }),
       });
       const trusteeInfos = newTrustees.map(item => getTrusteeInfoByAccount(item.addr));
       let infos = await Promise.all(trusteeInfos);
@@ -134,5 +149,10 @@ export default class TrustGovern extends ModelExtend {
         });
       }
     }
+  };
+
+  trusteeGovenSign = async () => {
+    const getParticularAccounts = await this.getParticularAccounts();
+    console.log(getParticularAccounts);
   };
 }

@@ -8,7 +8,13 @@ import { classNames, observer } from '../../utils';
 class ProposalSwitchTrustee extends Mixin {
   render() {
     const {
-      model: { proposalTrusteeList, proposalTotalSignCount, proposalMaxSignCount, normalizedTrusteeProposal = {} },
+      model: {
+        proposalTrusteeList,
+        proposalTotalSignCount,
+        proposalMaxSignCount,
+        normalizedTrusteeProposal = {},
+        dispatch,
+      },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -102,7 +108,13 @@ class ProposalSwitchTrustee extends Mixin {
                 <div className={styles.proposalId}>Proposal ID：{normalizedTrusteeProposal.proposalId}</div>
               </div>
               <ButtonGroup>
-                <Button className={classNames(styles.signButton)} onClick={() => {}}>
+                <Button
+                  className={classNames(styles.signButton)}
+                  onClick={() => {
+                    dispatch({
+                      type: 'trusteeGovenSign',
+                    });
+                  }}>
                   签名
                 </Button>
                 <Button className={classNames(styles.refuseButton)}>删除</Button>

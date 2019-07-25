@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Mixin, Button } from '../../components';
 import ProposalSwitchTrustee from './ProposalSwitchTrustee';
-import { classNames } from '../../utils';
+import { classNames, observer } from '../../utils';
 
+@observer
 class CurrentProposal extends Mixin {
   state = {
-    active: 'switch',
+    active: '',
   };
 
   startInit = () => {
@@ -16,18 +17,23 @@ class CurrentProposal extends Mixin {
     dispatch({
       type: 'getParticularAccounts',
     });
-    dispatch({
-      type: 'getMultiSigAddrInfo',
-    });
-    dispatch({
-      type: 'getPendingListFor',
-    });
+    this.fetchPoll(() =>
+      dispatch({
+        type: 'getMultiSigAddrInfo',
+      })
+    );
+    this.fetchPoll(() =>
+      dispatch({
+        type: 'getPendingListFor',
+      })
+    );
   };
   render() {
     const { active } = this.state;
     const {
       model: { openModal, trusteeProposal },
     } = this.props;
+
     return (
       <div className={styles.CurrentProposal}>
         <div className={styles.title}>

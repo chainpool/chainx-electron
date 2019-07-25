@@ -278,3 +278,5 @@ export const particularAccounts = () => chain.particularAccounts();
 export const getMultiSigAddrInfo = payload => trustee.getMultiSigAddrInfo(payload);
 
 export const getPendingListFor = payload => trustee.getPendingListFor(payload);
+
+export const trusteeGovenSign = payload => trustee.confirm(payload);
