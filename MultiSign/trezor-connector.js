@@ -119,7 +119,8 @@ function constructInputs(tx, redeemScript, devicePubKey, deviceXpub, network = "
       script_type: "SPENDMULTISIG",
       prev_index: input.index,
       prev_hash: reverse(input.hash).toString("hex"),
-      multisig: multisigArr[index]
+      multisig: multisigArr[index],
+      sequence: 0
     };
   });
 }
@@ -245,7 +246,8 @@ class TrezorConnector extends EventEmitter {
         inputs,
         outputs,
         txs,
-        network === "mainnet" ? "bitcoin" : "testnet"
+        network === "mainnet" ? "bitcoin" : "testnet",
+        0
       );
     });
 

@@ -492,7 +492,7 @@ export default class Trust extends ModelExtend {
 
       const txb = new bitcoin.TransactionBuilder(network);
       txb.setVersion(1);
-      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
       let feeSum = 0;
       withdrawList.forEach(withdraw => {
         const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
@@ -513,6 +513,7 @@ export default class Trust extends ModelExtend {
       if (change > 10000) {
         txb.addOutput(multisigAddress, change);
       }
+      txb.setLockTime(0);
 
       rawTransaction = txb.buildIncomplete().toHex();
       //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
