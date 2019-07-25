@@ -16,28 +16,25 @@ class ProposalSwitchTrustee extends Mixin {
         {
           title: '节点名',
           dataIndex: 'name',
+          width: 100,
         },
         {
           title: '节点地址',
-          dataIndex: 'address',
+          dataIndex: 'addr',
+          ellipse: 20,
         },
         {
           title: '热公钥',
           dataIndex: 'hotEntity',
+          ellipse: 20,
         },
         {
           title: '冷公钥',
           dataIndex: 'coldEntity',
+          ellipse: 0,
         },
       ],
-      dataSource: [
-        {
-          name: 'buildlinks',
-          address: 'wweeeeeeee',
-          hotEntity: '123333',
-          coldEntity: '12244fggyyy',
-        },
-      ],
+      dataSource: trusteeProposal.newTrustees,
     };
 
     const notResponseList = proposalTrusteeList.filter(item => !item.trusteeSign);
