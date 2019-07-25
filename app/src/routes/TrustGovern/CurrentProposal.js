@@ -51,7 +51,10 @@ class CurrentProposal extends Mixin {
           ].map((item, index) => (
             <li
               key={index}
-              className={classNames(active === item.value ? styles.active : null)}
+              className={classNames(
+                active === item.value ? styles.active : null,
+                item.disabled ? styles.disabled : null
+              )}
               onClick={() => {
                 if (!item.disabled) {
                   this.setState({
