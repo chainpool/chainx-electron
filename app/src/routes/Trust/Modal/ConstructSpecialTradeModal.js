@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import { Input, FormattedMessage, Modal, Clipboard } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { formatNumber, Inject, Patterns } from '../../../utils';
+import { formatNumber, Inject, Patterns, _ } from '../../../utils';
 import * as styles from './ConstructSpecialTradeModal.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
 class ConstructSpecialTradeModal extends Component {
   state = {
-    sender: '',
+    sender: '2N4CX91SRPQWVb1nPe43e88rLmGrq3VHPYS',
     senderErrMsg: '',
-    receiver: '',
+    receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT',
+    receivers: [
+      { receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT', balance: '' },
+      { receiver: '2NA67fZ6ZmAioyo3dcGk3JeiFEaHNueGhtT', balance: '' },
+    ],
     receiverErrMsg: '',
-    redeemScript: '',
+    redeemScript:
+      '5421034575d9ef1baf0d85fb2700cea894eb07cd1f5f54a35d0b5dfe9ea1432f2a67d7210227e11054e41c9bcc2d2e9953281de93711727fb75a5e1e9bdfe3a80685e1f4e02102b88736301733df21ea4513bc4ab48b543e4d57d3874845711e77dd77f110389d210284c57fddf6fd20f1a255909fdffc9e5f0eb76be4191d31433b5f1bc990d989812103f11ee283a4e9a8f5e2e68c8b24652a5603a4f50ac9e26a614d9396f7482ff6d22102ef635b7ddea5a26c76aecf4194bfef0e2b22a217d7a0e8eaadce0506d1ed7b2756ae',
     redeemScriptErrMsg: '',
     balance: '',
     balanceErrMsg: '',
@@ -61,14 +66,12 @@ class ConstructSpecialTradeModal extends Component {
       return errMsg;
     },
     confirm: () => {
-      return ['checkSender', 'checkRedeemScript', 'checkReceiver', 'checkBalance', 'checkFee'].every(
-        item => !this.checkAll[item]()
-      );
+      return ['checkSender', 'checkRedeemScript', 'checkFee'].every(item => !this.checkAll[item]());
     },
   };
 
   constructSpecialTrade = () => {
-    const { sender, balance, receiver, redeemScript, feeRate } = this.state;
+    const { sender, balance, receivers, redeemScript, feeRate } = this.state;
     if (this.checkAll.confirm()) {
       const {
         model: { dispatch },
@@ -80,12 +83,10 @@ class ConstructSpecialTradeModal extends Component {
       dispatch({
         type: 'sign',
         payload: {
-          withdrawList: [
-            {
-              amount: formatNumber.toPrecision(balance, 8, true),
-              addr: receiver,
-            },
-          ],
+          withdrawList: receivers.map(item => ({
+            amount: formatNumber.toPrecision(item.balance, 8, true),
+            addr: item.receiver,
+          })),
           userInputbitFee: feeRate,
           url: sender,
           redeemScript,
@@ -111,11 +112,32 @@ class ConstructSpecialTradeModal extends Component {
     }
   };
 
+  changeReceivers = ({ receiver, balance, index }, callback) => {
+    const { receivers } = this.state;
+    const newReceivers = receivers.map((item, ins) => {
+      if (ins === index) {
+        return {
+          ...item,
+          ...(receiver ? { receiver } : {}),
+          ...(balance ? { balance } : {}),
+        };
+      }
+      return item;
+    });
+    this.setState(
+      {
+        receivers: newReceivers,
+      },
+      _.isFunction(callback) && callback()
+    );
+  };
+
   render() {
-    const { constructSpecialTrade } = this;
+    const { constructSpecialTrade, changeReceivers } = this;
     const {
       sender,
       senderErrMsg,
+      receivers,
       receiver,
       receiverErrMsg,
       redeemScript,
@@ -164,59 +186,65 @@ class ConstructSpecialTradeModal extends Component {
               );
             }}
           />
+          {receivers.map((item, index) => (
+            <InputHorizotalList
+              key={index}
+              left={
+                <Input.Text
+                  isOutSide
+                  errMsg={receiverErrMsg}
+                  showMatchOption={false}
+                  label={'接收方地址'}
+                  value={item.receiver}
+                  options={[{ label: '1', value: 1 }]}
+                  onChange={value => {
+                    changeReceivers(
+                      {
+                        receiver: value,
+                        index,
+                      },
+                      constructSpecialTrade
+                    );
+                  }}
+                />
+              }
+              right={
+                <Input.Text
+                  isOutSide
+                  errMsg={balanceErrMsg}
+                  isDecimal="decimal"
+                  label="金额"
+                  value={item.balance}
+                  suffix="BTC"
+                  onChange={value => {
+                    changeReceivers(
+                      {
+                        balance: value,
+                        index,
+                      },
+                      constructSpecialTrade
+                    );
+                  }}
+                />
+              }
+            />
+          ))}
+
           <Input.Text
             isOutSide
-            errMsg={receiverErrMsg}
-            showMatchOption={false}
-            label={'接收方地址'}
-            value={receiver}
-            options={[{ label: '1', value: 1 }]}
+            errMsg={feeRateErrMsg}
+            isDecimal="decimal"
+            label="手续费率"
+            value={feeRate}
+            suffix="Satoshis/byte"
             onChange={value => {
               this.setState(
                 {
-                  receiver: value,
+                  feeRate: value,
                 },
                 constructSpecialTrade
               );
             }}
-          />
-          <InputHorizotalList
-            left={
-              <Input.Text
-                isOutSide
-                errMsg={balanceErrMsg}
-                isDecimal="decimal"
-                label="金额"
-                value={balance}
-                suffix="BTC"
-                onChange={value => {
-                  this.setState(
-                    {
-                      balance: value,
-                    },
-                    constructSpecialTrade
-                  );
-                }}
-              />
-            }
-            right={
-              <Input.Text
-                isOutSide
-                errMsg={feeRateErrMsg}
-                isDecimal="decimal"
-                label="手续费率"
-                value={feeRate}
-                suffix="Satoshis/byte"
-                onChange={value => {
-                  this.setState(
-                    {
-                      feeRate: value,
-                    },
-                    constructSpecialTrade
-                  );
-                }}
-              />
-            }
           />
           <Input.Text
             label={
