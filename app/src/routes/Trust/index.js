@@ -106,15 +106,15 @@ class Trust extends Mixin {
           <div className={styles.setting}>
             <TableTitle title={<FormattedMessage id={'TrusteeSettings'} />} className={styles.title}>
               <span className={styles.nodeStyle}>
-                (<FormattedMessage id={'YouAre'} />：
-                {_isTrustee ? (
-                  <FormattedMessage id={'TrusteeNode'} />
-                ) : isActiveValidator ? (
-                  <FormattedMessage id={'ValidatorNode'} />
-                ) : (
-                  <FormattedMessage id={'StandbyNode'} />
-                )}
-                )
+                {/*(<FormattedMessage id={'YouAre'} />：*/}
+                {/*{_isTrustee ? (*/}
+                {/*<FormattedMessage id={'TrusteeNode'} />*/}
+                {/*) : isActiveValidator ? (*/}
+                {/*<FormattedMessage id={'ValidatorNode'} />*/}
+                {/*) : (*/}
+                {/*<FormattedMessage id={'StandbyNode'} />*/}
+                {/*)}*/}
+                {/*)*/}
               </span>
               <div className={styles.setListbutton}>
                 <Button

@@ -266,7 +266,7 @@ export const getTxsFromTxidList = payload => {
   const { ids, isTest } = payload;
   return fetchFromHttp({
     method: 'post',
-    url: `https://api.chainx.org/chainx_trustee/${isTest ? 'testnet' : 'mainnet'}/txs`,
+    url: `https://api.chainx.org/chainx_trustee/${false ? 'testnet' : 'mainnet'}/txs`,
     body: {
       ids,
     },

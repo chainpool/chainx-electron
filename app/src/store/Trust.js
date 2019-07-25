@@ -623,7 +623,10 @@ export default class Trust extends ModelExtend {
     });
     // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
-    const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    const nodeUrl = findOne.apiNode;
+    const result = await this.fetchNodeTxsFromTxidList(nodeUrl, ids);
+    // const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
       const insTXs = ins.map(item => {
         const findOne = result.find(one => one.txid === item.hash);
@@ -768,6 +771,35 @@ export default class Trust extends ModelExtend {
     });
     if (res && res.result) {
       return res.result.feerate / 1024;
+    }
+  };
+
+  fetchNodeTxsFromTxidList = async (url, ids) => {
+    let Authorization;
+    if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
+      url = url.split('@')[1];
+    }
+    const fetchAction = id =>
+      fetchFromHttp({
+        url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'getrawtransaction',
+        method: 'POST',
+        timeOut: 3500,
+        params: [id],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      });
+    const actions = ids.map(item => fetchAction(item));
+    const res = await Promise.all(actions);
+    if (res && res.length) {
+      return res.map((item, index) => ({
+        txid: ids[index],
+        raw: item.result,
+      }));
     }
   };
 
