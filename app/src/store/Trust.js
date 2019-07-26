@@ -1,37 +1,35 @@
 import {
   _,
-  ChainX,
-  observable,
-  formatNumber,
-  localSave,
   autorun,
-  fetchFromHttp,
-  moment_helper,
-  hexPrefix,
-  toJS,
+  ChainX,
   convertAddressChecksumAll,
-  getMNFromRedeemScript,
+  fetchFromHttp,
+  formatNumber,
   getAllPubsFromRedeemScript,
+  getMNFromRedeemScript,
+  hexPrefix,
+  localSave,
+  moment_helper,
+  observable,
+  toJS,
 } from '../utils';
 import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
 import {
-  getWithdrawalList,
   createWithdrawTx,
-  getWithdrawTx,
-  signWithdrawTx,
-  getTrusteeInfoByAccount,
-  setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeInfoByAccount,
   getTrusteeSessionInfo,
-  getUnspent,
-  getTxsFromTxidList,
+  getWithdrawalList,
+  getWithdrawTx,
+  setupBitcoinTrustee,
+  signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
 
@@ -335,7 +333,6 @@ export default class Trust extends ModelExtend {
   };
 
   pickNeedUtxos = (unSpents, withdrawals, n, m, feeRate, chainxFee) => {
-    console.log(unSpents, withdrawals, n, m, feeRate, chainxFee);
     function getSize(inputLength, outputLength, n, m) {
       return inputLength * (48 + 73 * n + 34 * m) + 34 * (outputLength + 1) + 14;
     }
@@ -428,13 +425,6 @@ export default class Trust extends ModelExtend {
           })
           .catch(() => Promise.reject('超时'));
 
-      // const getUnspents = address =>
-      //   getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
-      //     .then((res = {}) => {
-      //       return res.result;
-      //     })
-      //     .catch(() => Promise.reject('超时'));
-
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
         return result + Number(withdraw.amount);
       }, 0);
@@ -469,16 +459,14 @@ export default class Trust extends ModelExtend {
       }
 
       const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
-
-      const getTargetUtxoAndMinerFee = () => {
-        return this.pickNeedUtxos(utxos, withdrawList, m, n, Number(userInputbitFee), BitCoinFee);
-      };
-
-      const targetUtxoAndMinerFee = getTargetUtxoAndMinerFee();
-
-      const targetUtxos = targetUtxoAndMinerFee.targetInputs;
-
-      const calculateUserInputbitFee = targetUtxoAndMinerFee.minerFee;
+      const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
+        utxos,
+        withdrawList,
+        m,
+        n,
+        Number(userInputbitFee),
+        BitCoinFee
+      );
 
       if (targetUtxos.length <= 0) {
         throw new Error({
