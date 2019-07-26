@@ -99,15 +99,18 @@ class ConstructSpecialTradeModal extends Component {
         errMsg: '',
         tx: '',
       });
+
+      const withdrawList = receivers
+        .filter(item => item.receiver && item.balance)
+        .map(item => ({
+          amount: Number(formatNumber.toPrecision(item.balance, 8, true)),
+          addr: item.receiver,
+        }));
+
       dispatch({
         type: 'sign',
         payload: {
-          withdrawList: receivers
-            .filter(item => item.receiver && item.balance)
-            .map(item => ({
-              amount: formatNumber.toPrecision(item.balance, 8, true),
-              addr: item.receiver,
-            })),
+          withdrawList,
           userInputbitFee: feeRate,
           url: sender,
           redeemScript,
