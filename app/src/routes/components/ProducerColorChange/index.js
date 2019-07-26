@@ -33,8 +33,8 @@ class ProducerColorChange extends Component {
 
   render() {
     const { colorChange } = this.state;
-    const { className } = this.props;
-    return <div className={classNames(colorChange ? styles.colorChange : null, className)}>{this.props.children}</div>;
+    const { className, Ele = 'div' } = this.props;
+    return <Ele className={classNames(colorChange ? styles.colorChange : null, className)}>{this.props.children}</Ele>;
   }
 }
 

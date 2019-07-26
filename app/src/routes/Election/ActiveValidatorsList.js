@@ -80,51 +80,39 @@ class ActiveValidatorsList extends Component {
               )}>
               <ul>
                 {one.map((item, index) => (
-                  <li key={index}>
-                    <ProducerColorChange
-                      item={item}
-                      currentChainProducer={currentChainProducer}
-                      account={encodeAddressAccountId(item.account)}
-                      {...this.props}>
-                      <div className={styles.left}>
-                        {item.imageUrl ? (
-                          <img src={item.imageUrl} width={40} height={40} />
-                        ) : (
-                          <div>{item.name[0].toUpperCase()}</div>
-                        )}
-                      </div>
-                    </ProducerColorChange>
+                  <ProducerColorChange
+                    Ele={'li'}
+                    key={index}
+                    item={item}
+                    currentChainProducer={currentChainProducer}
+                    account={encodeAddressAccountId(item.account)}
+                    {...this.props}>
+                    <div className={styles.left}>
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} width={40} height={40} />
+                      ) : (
+                        <div>{item.name[0].toUpperCase()}</div>
+                      )}
+                    </div>
 
                     <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
-                          <ProducerColorChange
-                            item={item}
-                            currentChainProducer={currentChainProducer}
-                            account={encodeAddressAccountId(item.account)}
-                            {...this.props}>
-                            <div
-                              className={classNames(
-                                styles.nodeType,
-                                !item.isActive
-                                  ? styles.inActive
-                                  : item.isTrustee && item.isTrustee.length
-                                  ? styles.trustee
-                                  : item.isValidator
-                                  ? styles.validator
-                                  : styles.backupValidators
-                              )}
-                            />
-                          </ProducerColorChange>
+                          <div
+                            className={classNames(
+                              styles.nodeType,
+                              !item.isActive
+                                ? styles.inActive
+                                : item.isTrustee && item.isTrustee.length
+                                ? styles.trustee
+                                : item.isValidator
+                                ? styles.validator
+                                : styles.backupValidators
+                            )}
+                          />
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
-                              <ProducerColorChange
-                                item={item}
-                                currentChainProducer={currentChainProducer}
-                                account={encodeAddressAccountId(item.account)}
-                                {...this.props}>
-                                <span className={styles.name}> {item.name}</span>
-                              </ProducerColorChange>
+                              <span className={styles.name}> {item.name}</span>
 
                               {item.isTrustee && item.isTrustee.length ? (
                                 <span className={styles.trusteeMark}>
@@ -288,7 +276,7 @@ class ActiveValidatorsList extends Component {
                         </li>
                       </ul>
                     </div>
-                  </li>
+                  </ProducerColorChange>
                 ))}
               </ul>
             </li>
