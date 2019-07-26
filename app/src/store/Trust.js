@@ -436,7 +436,7 @@ export default class Trust extends ModelExtend {
       //     .catch(() => Promise.reject('超时'));
 
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
-        return result + withdraw.amount;
+        return result + Number(withdraw.amount);
       }, 0);
 
       if (totalWithdrawAmount <= 0) {
@@ -452,6 +452,7 @@ export default class Trust extends ModelExtend {
           toString: () => 'OverTime',
         });
       });
+
       utxos = utxos.map(item => ({
         ...item,
         amount: new BigNumber(10)
