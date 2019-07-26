@@ -1,40 +1,38 @@
 import {
   _,
-  ChainX,
-  observable,
-  formatNumber,
-  localSave,
   autorun,
-  fetchFromHttp,
-  moment_helper,
-  hexPrefix,
-  toJS,
+  ChainX,
   convertAddressChecksumAll,
-  getMNFromRedeemScript,
+  fetchFromHttp,
+  formatNumber,
   getAllPubsFromRedeemScript,
+  getMNFromRedeemScript,
+  hexPrefix,
+  localSave,
+  moment_helper,
+  observable,
+  toJS,
 } from '../utils';
 import memoize from 'memoizee';
 import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
 import {
-  getWithdrawalList,
   createWithdrawTx,
-  getWithdrawTx,
-  signWithdrawTx,
-  getTrusteeInfoByAccount,
-  setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeInfoByAccount,
   getTrusteeSessionInfo,
-  getUnspent,
-  getTxsFromTxidList,
+  getWithdrawalList,
+  getWithdrawTx,
+  setupBitcoinTrustee,
+  signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
-import { default as bitcoin } from 'bitcoinjs-lib';
-import { default as BigNumber } from 'bignumber.js';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import bitcoin from 'bitcoinjs-lib';
+import BigNumber from 'bignumber.js';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
-import { default as reverse } from 'buffer-reverse';
+import reverse from 'buffer-reverse';
 
 const fromTransaction = memoize(bitcoin.TransactionBuilder.fromTransaction, {
   normalizer: function(args) {
@@ -342,7 +340,6 @@ export default class Trust extends ModelExtend {
   };
 
   pickNeedUtxos = (unSpents, withdrawals, n, m, feeRate, chainxFee) => {
-    console.log(unSpents, withdrawals, n, m, feeRate, chainxFee);
     function getSize(inputLength, outputLength, n, m) {
       return inputLength * (48 + 73 * n + 34 * m) + 34 * (outputLength + 1) + 14;
     }
@@ -389,7 +386,7 @@ export default class Trust extends ModelExtend {
     return prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee);
   };
 
-  sign = async ({ withdrawList, userInputbitFee = 0, url, redeemScript }) => {
+  sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
@@ -397,12 +394,11 @@ export default class Trust extends ModelExtend {
       const nodeUrl = findOne.apiNode;
       let multisigAddress = await this.getBitcoinTrusteeAddress();
       let redeemScriptMatch;
-      if (url) {
+      if (fromAddress) {
         //特殊交易
-        multisigAddress = url;
+        multisigAddress = fromAddress;
         redeemScriptMatch = redeemScript;
       } else {
-        multisigAddress = await this.getBitcoinTrusteeAddress();
         redeemScriptMatch = this.redeemScript;
       }
 
@@ -421,7 +417,7 @@ export default class Trust extends ModelExtend {
       }
 
       const BitCoinFee = this.BitCoinFee;
-      if (!url && !BitCoinFee) {
+      if (!fromAddress && !BitCoinFee) {
         throw new Error({
           info: '未获取到提现手续费',
           toString: () => 'NotFindTrusteeFee',
@@ -434,13 +430,6 @@ export default class Trust extends ModelExtend {
             return res.result;
           })
           .catch(() => Promise.reject('超时'));
-
-      // const getUnspents = address =>
-      //   getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
-      //     .then((res = {}) => {
-      //       return res.result;
-      //     })
-      //     .catch(() => Promise.reject('超时'));
 
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
         return result + Number(withdraw.amount);
@@ -476,16 +465,14 @@ export default class Trust extends ModelExtend {
       }
 
       const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
-
-      const getTargetUtxoAndMinerFee = () => {
-        return this.pickNeedUtxos(utxos, withdrawList, m, n, Number(userInputbitFee), BitCoinFee);
-      };
-
-      const targetUtxoAndMinerFee = getTargetUtxoAndMinerFee();
-
-      const targetUtxos = targetUtxoAndMinerFee.targetInputs;
-
-      const calculateUserInputbitFee = targetUtxoAndMinerFee.minerFee;
+      const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
+        utxos,
+        withdrawList,
+        m,
+        n,
+        Number(userInputbitFee),
+        BitCoinFee
+      );
 
       if (targetUtxos.length <= 0) {
         throw new Error({
@@ -503,7 +490,7 @@ export default class Trust extends ModelExtend {
       targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
       let feeSum = 0;
       withdrawList.forEach(withdraw => {
-        const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+        const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
         txb.addOutput(withdraw.addr, fee);
         feeSum += fee;
       });

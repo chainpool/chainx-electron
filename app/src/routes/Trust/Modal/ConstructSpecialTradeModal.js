@@ -112,7 +112,7 @@ class ConstructSpecialTradeModal extends Component {
         payload: {
           withdrawList,
           userInputbitFee: feeRate,
-          url: sender,
+          fromAddress: sender,
           redeemScript,
         },
       })
