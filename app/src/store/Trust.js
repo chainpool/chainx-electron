@@ -550,29 +550,9 @@ export default class Trust extends ModelExtend {
   };
 
   getWithdrawTx = async () => {
-    const findOne = ForceTrustee
-      ? { chain: 'Bitcoin' }
-      : this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-    if (findOne && findOne.chain) {
-      const [resTx = {}, resRede = {}] = await Promise.all([
-        getWithdrawTx(findOne.chain),
-        this.getTrusteeSessionInfo(findOne.chain),
-      ]);
-      const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
-      this.changeModel({
-        tx,
-        redeemScript,
-        trusteeList,
-        totalSignCount,
-        maxSignCount,
-        chainConfigTrusteeList,
-      });
-      this.getInputsAndOutputsFromTx({
-        tx,
-        isSpecialMode: false,
-      });
-    } else {
+    const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
+
+    if (!findOne || !findOne.chain) {
       this.changeModel({
         tx: '',
         redeemScript: '',
@@ -581,6 +561,30 @@ export default class Trust extends ModelExtend {
         maxSignCount: '',
       });
     }
+
+    const [resTx = {}, resRede = {}] = await Promise.all([
+      getWithdrawTx(findOne.chain),
+      this.getTrusteeSessionInfo(findOne.chain),
+    ]);
+    const { tx, trusteeList = [] } = resTx || {};
+    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
+    if (this.tx === tx && this.redeemScript === redeemScript) {
+      return;
+    }
+
+    this.changeModel({
+      tx,
+      redeemScript,
+      trusteeList,
+      totalSignCount,
+      maxSignCount,
+      chainConfigTrusteeList,
+    });
+
+    this.getInputsAndOutputsFromTx({
+      tx,
+      isSpecialMode: false,
+    });
   };
 
   getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
