@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
+import { ProducerColorChange } from '../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames, hexPrefix } from '../../utils';
+import { _, observer, groupArrayByCount, classNames, hexPrefix, Inject } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 
-@observer
+@Inject(({ chainStore }) => ({ chainStore }))
 class ActiveValidatorsList extends Component {
   render() {
     const {
@@ -20,9 +21,11 @@ class ActiveValidatorsList extends Component {
         allInActiveValidator = [],
         setDefaultPrecision,
         decodeAddressAccountId,
+        encodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName, language },
+      chainStore: { currentChainProducer },
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
@@ -78,32 +81,51 @@ class ActiveValidatorsList extends Component {
               <ul>
                 {one.map((item, index) => (
                   <li key={index}>
-                    <div className={styles.left}>
-                      {item.imageUrl ? (
-                        <img src={item.imageUrl} width={40} height={40} />
-                      ) : (
-                        <div>{item.name[0].toUpperCase()}</div>
-                      )}
-                    </div>
+                    <ProducerColorChange
+                      item={item}
+                      currentChainProducer={currentChainProducer}
+                      account={encodeAddressAccountId(item.account)}
+                      {...this.props}>
+                      <div className={styles.left}>
+                        {item.imageUrl ? (
+                          <img src={item.imageUrl} width={40} height={40} />
+                        ) : (
+                          <div>{item.name[0].toUpperCase()}</div>
+                        )}
+                      </div>
+                    </ProducerColorChange>
+
                     <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
-                          <div
-                            className={classNames(
-                              styles.nodeType,
-                              !item.isActive
-                                ? styles.inActive
-                                : item.isTrustee && item.isTrustee.length
-                                ? styles.trustee
-                                : item.isValidator
-                                ? styles.validator
-                                : styles.backupValidators
-                            )}
-                          />
-
+                          <ProducerColorChange
+                            item={item}
+                            currentChainProducer={currentChainProducer}
+                            account={encodeAddressAccountId(item.account)}
+                            {...this.props}>
+                            <div
+                              className={classNames(
+                                styles.nodeType,
+                                !item.isActive
+                                  ? styles.inActive
+                                  : item.isTrustee && item.isTrustee.length
+                                  ? styles.trustee
+                                  : item.isValidator
+                                  ? styles.validator
+                                  : styles.backupValidators
+                              )}
+                            />
+                          </ProducerColorChange>
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
-                              <span className={styles.name}> {item.name}</span>
+                              <ProducerColorChange
+                                item={item}
+                                currentChainProducer={currentChainProducer}
+                                account={encodeAddressAccountId(item.account)}
+                                {...this.props}>
+                                <span className={styles.name}> {item.name}</span>
+                              </ProducerColorChange>
+
                               {item.isTrustee && item.isTrustee.length ? (
                                 <span className={styles.trusteeMark}>
                                   (<FormattedMessage id={'Trustee'} />)
