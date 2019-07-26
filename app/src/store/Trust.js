@@ -12,6 +12,7 @@ import {
   moment_helper,
   observable,
   toJS,
+  add0x,
 } from '../utils';
 import memoize from 'memoizee';
 import { ForceTrustee } from '../constants';
@@ -707,14 +708,8 @@ export default class Trust extends ModelExtend {
     return res;
   };
 
-  signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
-    let tx_trans = null;
-    if (tx) {
-      tx = tx.replace(/^0x/, '');
-      //redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey })
-    }
-    const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
+  signWithdrawTx = async ({ tx }) => {
+    const extrinsic = signWithdrawTx(tx ? add0x(tx) : null);
     return {
       extrinsic,
       success: this.reload,
