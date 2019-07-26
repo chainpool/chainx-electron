@@ -13,6 +13,7 @@ import {
   getMNFromRedeemScript,
   getAllPubsFromRedeemScript,
 } from '../utils';
+import memoize from 'memoizee';
 import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
 import {
@@ -34,6 +35,12 @@ import { from, of, combineLatest as combine } from 'rxjs';
 import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
+
+const fromTransaction = memoize(bitcoin.TransactionBuilder.fromTransaction, {
+  normalizer: function(args) {
+    return JSON.stringify(args[0]) + JSON.stringify(args[1]);
+  },
+});
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -233,7 +240,7 @@ export default class Trust extends ModelExtend {
     if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (_.get(inputs, 'signatures.length')) {
         pubKeyInfos = inputs.signatures.map((item, index) =>
@@ -297,7 +304,7 @@ export default class Trust extends ModelExtend {
     } else if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (inputs && inputs.redeemScript) {
         redeemScriptSpecial = inputs.redeemScript;
@@ -313,7 +320,7 @@ export default class Trust extends ModelExtend {
     } else if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (inputs && inputs.redeemScript) {
         redeemScriptSpecial = inputs.redeemScript;
@@ -605,7 +612,7 @@ export default class Trust extends ModelExtend {
     }
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
-    const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const txbRAW = fromTransaction(transactionRaw, network);
     const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
       const address = getAddressFromScript(item.script, network);
       return {
@@ -632,7 +639,7 @@ export default class Trust extends ModelExtend {
       const insTXs = ins.map(item => {
         const findOne = result.find(one => one.txid === item.hash);
         const transaction = bitcoin.Transaction.fromHex(findOne.raw);
-        const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+        const txb = fromTransaction(transaction, network);
         const findOutputOne = txb.__tx.outs[item.index];
         const address = getAddressFromScript(findOutputOne.script, network);
         return {
