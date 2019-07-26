@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, FormattedMessage, Modal, Clipboard, Icon } from '../../../components';
 import { InputHorizotalList } from '../../components';
-import { formatNumber, Inject, Patterns, _, classNames, isEmpty } from '../../../utils';
+import { formatNumber, Inject, Patterns, _, classNames, isEmpty, showAssetName } from '../../../utils';
 import * as styles from './ConstructSpecialTradeModal.less';
 
 @Inject(({ assetStore }) => ({ assetStore }))
@@ -170,6 +170,9 @@ class ConstructSpecialTradeModal extends Component {
       tx,
       errMsg,
     } = this.state;
+    const {
+      model: { getPrecision },
+    } = this.props;
 
     return (
       <Modal title={'构造特殊交易'} button={null}>
@@ -231,6 +234,7 @@ class ConstructSpecialTradeModal extends Component {
                 }
                 right={
                   <Input.Text
+                    precision={Number(getPrecision('BTC'))}
                     errMsgIsOutside
                     errMsg={item.balanceErrMsg}
                     isDecimal="decimal"
