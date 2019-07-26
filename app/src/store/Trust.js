@@ -26,12 +26,12 @@ import {
   signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
-import { default as bitcoin } from 'bitcoinjs-lib';
-import { default as BigNumber } from 'bignumber.js';
+import bitcoin from 'bitcoinjs-lib';
+import BigNumber from 'bignumber.js';
 import { combineLatest as combine, from, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
-import { default as reverse } from 'buffer-reverse';
+import reverse from 'buffer-reverse';
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -379,7 +379,7 @@ export default class Trust extends ModelExtend {
     return prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee);
   };
 
-  sign = async ({ withdrawList, userInputbitFee = 0, url, redeemScript }) => {
+  sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
@@ -387,12 +387,11 @@ export default class Trust extends ModelExtend {
       const nodeUrl = findOne.apiNode;
       let multisigAddress = await this.getBitcoinTrusteeAddress();
       let redeemScriptMatch;
-      if (url) {
+      if (fromAddress) {
         //特殊交易
-        multisigAddress = url;
+        multisigAddress = fromAddress;
         redeemScriptMatch = redeemScript;
       } else {
-        multisigAddress = await this.getBitcoinTrusteeAddress();
         redeemScriptMatch = this.redeemScript;
       }
 
@@ -411,7 +410,7 @@ export default class Trust extends ModelExtend {
       }
 
       const BitCoinFee = this.BitCoinFee;
-      if (!url && !BitCoinFee) {
+      if (!fromAddress && !BitCoinFee) {
         throw new Error({
           info: '未获取到提现手续费',
           toString: () => 'NotFindTrusteeFee',
@@ -484,7 +483,7 @@ export default class Trust extends ModelExtend {
       targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
       let feeSum = 0;
       withdrawList.forEach(withdraw => {
-        const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+        const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
         txb.addOutput(withdraw.addr, fee);
         feeSum += fee;
       });
