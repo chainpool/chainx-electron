@@ -16,6 +16,7 @@ import {
 import memoize from 'memoizee';
 import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
+import { Toast } from '../components';
 import {
   createWithdrawTx,
   getBlockTime,
@@ -619,7 +620,9 @@ export default class Trust extends ModelExtend {
     // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
     const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    if (!findOne) return Toast.warn('请设置全节点');
     const nodeUrl = findOne.apiNode;
+
     const result = await this.fetchNodeTxsFromTxidList(nodeUrl, ids);
     // const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
