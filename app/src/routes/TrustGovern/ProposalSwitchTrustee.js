@@ -112,7 +112,7 @@ class ProposalSwitchTrustee extends Mixin {
                   className={classNames(styles.signButton)}
                   onClick={() => {
                     dispatch({
-                      type: 'trusteeGovenSign',
+                      type: 'trusteeGovernSign',
                     });
                   }}>
                   签名

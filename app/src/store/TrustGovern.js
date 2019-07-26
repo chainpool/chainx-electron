@@ -4,7 +4,7 @@ import {
   getMultiSigAddrInfo,
   getPendingListFor,
   getTrusteeInfoByAccount,
-  trusteeGovenSign,
+  trusteeGovernSign,
 } from '../services';
 import ModelExtend from './ModelExtend';
 
@@ -106,7 +106,8 @@ export default class TrustGovern extends ModelExtend {
   getPendingListFor = async () => {
     const particularBTCTrusteeAccount = await this.getParticularAccounts();
     const res = await getPendingListFor(particularBTCTrusteeAccount);
-    const trusteeProposal = res.find(item => item.proposal.methodName === 'xBridgeFeatures|transitionTrusteeSession');
+    console.log(res, '----pendinglist');
+    const trusteeProposal = res.find(item => item.proposal.methodName === 'xBridgeFeatures::transitionTrusteeSession');
     if (trusteeProposal) {
       const {
         ownersDone,
@@ -151,8 +152,10 @@ export default class TrustGovern extends ModelExtend {
     }
   };
 
-  trusteeGovenSign = async () => {
-    const getParticularAccounts = await this.getParticularAccounts();
-    console.log(getParticularAccounts);
+  trusteeGovernSign = async () => {
+    // trusteeGovernSign
+    const getParticularAccounts = this.particularBTCTrusteeAccount;
+    const proposalId = this.trusteeProposal.proposalId;
+    const res = await trusteeGovernSign(getParticularAccounts, proposalId);
   };
 }

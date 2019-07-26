@@ -279,4 +279,4 @@ export const getMultiSigAddrInfo = payload => trustee.getMultiSigAddrInfo(payloa
 
 export const getPendingListFor = payload => trustee.getPendingListFor(payload);
 
-export const trusteeGovenSign = payload => trustee.confirm(payload);
+export const trusteeGovernSign = (...payload) => trustee.confirm(...payload);
