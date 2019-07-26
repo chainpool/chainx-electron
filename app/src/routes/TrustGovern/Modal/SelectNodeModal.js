@@ -13,7 +13,7 @@ class SelectNodeModal extends Component {
     const { selectNode } = this.state;
     const {
       electionStore: { originIntentions = [] },
-      model: { openModal },
+      model: { openModal, dispatch, encodeAddressAccountId },
     } = this.props;
 
     const nodesOptions = originIntentions.map((item = {}) => ({
@@ -32,8 +32,22 @@ class SelectNodeModal extends Component {
             type="confirm"
             onClick={() => {
               openModal({
-                name: 'TrusteeSwitchModal',
+                name: 'SignModal',
+                data: {
+                  description: [{ name: 'operation', value: '发起提议' }],
+                  callback: () => {
+                    return dispatch({
+                      type: 'trusteeGovernExecute',
+                      payload: {
+                        addrs: selectNode.map(item => encodeAddressAccountId(item.value)),
+                      },
+                    });
+                  },
+                },
               });
+              // openModal({
+              //   name: 'TrusteeSwitchModal',
+              // });
             }}>
             <FormattedMessage id={'Confirm'} />
           </Button>

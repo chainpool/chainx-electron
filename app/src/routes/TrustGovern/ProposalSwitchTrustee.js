@@ -14,6 +14,7 @@ class ProposalSwitchTrustee extends Mixin {
         proposalMaxSignCount,
         normalizedTrusteeProposal = {},
         dispatch,
+        openModal,
       },
     } = this.props;
     const tableProps = {
@@ -111,8 +112,16 @@ class ProposalSwitchTrustee extends Mixin {
                 <Button
                   className={classNames(styles.signButton)}
                   onClick={() => {
-                    dispatch({
-                      type: 'trusteeGovernSign',
+                    openModal({
+                      name: 'SignModal',
+                      data: {
+                        description: [{ name: 'operation', value: '签名 ' }],
+                        callback: () => {
+                          return dispatch({
+                            type: 'trusteeGovernSign',
+                          });
+                        },
+                      },
                     });
                   }}>
                   签名

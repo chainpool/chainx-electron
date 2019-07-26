@@ -25,7 +25,7 @@ const getBestApi = () => {
   return api.filter((item = {}) => item.best)[0] || {};
 };
 
-const { stake, asset, chain, trade, trustee } = ChainX;
+const { stake, asset, chain, trade, trustee, api } = ChainX;
 
 const API = getBestApi().address;
 
@@ -280,3 +280,8 @@ export const getMultiSigAddrInfo = payload => trustee.getMultiSigAddrInfo(payloa
 export const getPendingListFor = payload => trustee.getPendingListFor(payload);
 
 export const trusteeGovernSign = (...payload) => trustee.confirm(...payload);
+
+export const trusteeGovernExecute = payload => {
+  const { account, addrs } = payload;
+  return trustee.execute(account, api.tx.xBridgeFeatures.transitionTrusteeSession('Bitcoin', addrs));
+};

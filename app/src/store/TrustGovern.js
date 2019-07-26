@@ -79,6 +79,11 @@ export default class TrustGovern extends ModelExtend {
     return this.proposalTrusteeList.length;
   }
 
+  reload = () => {
+    this.getMultiSigAddrInfo();
+    this.getPendingListFor();
+  };
+
   getParticularAccounts = async () => {
     if (this.particularBTCTrusteeAccount) {
       return this.particularBTCTrusteeAccount;
@@ -156,6 +161,22 @@ export default class TrustGovern extends ModelExtend {
     // trusteeGovernSign
     const getParticularAccounts = this.particularBTCTrusteeAccount;
     const proposalId = this.trusteeProposal.proposalId;
-    const res = await trusteeGovernSign(getParticularAccounts, proposalId);
+    const extrinsic = await trusteeGovernSign(getParticularAccounts, proposalId);
+    return {
+      extrinsic,
+      success: this.reload,
+    };
+  };
+
+  trusteeGovernExecute = async ({ addrs }) => {
+    const getParticularAccounts = this.particularBTCTrusteeAccount;
+    console.log(getParticularAccounts, addrs, '---getParticularAccounts, addrs');
+    const extrinsic = await trusteeGovernSign(getParticularAccounts, addrs);
+    return {
+      extrinsic,
+      success: res => {
+        console.log(res, '----res');
+      },
+    };
   };
 }
