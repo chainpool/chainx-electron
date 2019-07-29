@@ -292,7 +292,6 @@ class ResponseList extends Component {
                               type: 'signWithdrawTx',
                               payload: {
                                 tx: null,
-                                redeemScript,
                               },
                             });
                           },

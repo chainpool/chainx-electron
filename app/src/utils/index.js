@@ -534,3 +534,19 @@ export const showAssetName = asset => {
       return '未知资产';
   }
 };
+
+export const add0x = str => {
+  if (typeof str !== 'string') {
+    return str;
+  }
+
+  return `0x${str.replace(/^0x/i, '')}`;
+};
+
+export const remove0x = str => {
+  if (typeof str !== 'string') {
+    return str;
+  }
+
+  return str.replace(/^0x/i, '');
+};
