@@ -272,3 +272,10 @@ export const getTxsFromTxidList = payload => {
     },
   });
 };
+
+export const getElectionMembersAPI = () => {
+  return fetchFromHttp({
+    url: `${API}/congress/members`,
+    method: 'get',
+  });
+};

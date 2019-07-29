@@ -23,6 +23,9 @@ class Election extends Mixin {
 
     this.fetchPoll(() => dispatch({ type: 'getIntentions' }));
     dispatch({
+      type: 'getElectionMembers',
+    });
+    dispatch({
       type: 'getIntentionImages',
     });
   };
