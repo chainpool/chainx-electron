@@ -81,6 +81,7 @@ class ActiveValidatorsList extends Component {
               <ul>
                 {one.map((item, index) => (
                   <ProducerColorChange
+                    showChange={item.isActive}
                     Ele={'li'}
                     key={index}
                     item={item}

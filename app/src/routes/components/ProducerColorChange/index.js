@@ -15,10 +15,10 @@ class ProducerColorChange extends Component {
 
   componentDidUpdate(prevProps) {
     const { currentChainProducer: currentChainProducer_prev } = prevProps;
-    const { currentChainProducer } = this.props;
+    const { currentChainProducer, showChange } = this.props;
     const { currentNode, colorChange } = this.state;
 
-    if (currentChainProducer && currentChainProducer !== currentChainProducer_prev) {
+    if (showChange && currentChainProducer && currentChainProducer !== currentChainProducer_prev) {
       if (currentChainProducer === currentNode && !colorChange) {
         this.setState({
           colorChange: true,
@@ -33,8 +33,12 @@ class ProducerColorChange extends Component {
 
   render() {
     const { colorChange } = this.state;
-    const { className, Ele = 'div' } = this.props;
-    return <Ele className={classNames(colorChange ? styles.colorChange : null, className)}>{this.props.children}</Ele>;
+    const { className, Ele = 'div', showChange } = this.props;
+    return (
+      <Ele className={classNames(colorChange && showChange ? styles.colorChange : null, className)}>
+        {this.props.children}
+      </Ele>
+    );
   }
 }
 
