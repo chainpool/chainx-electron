@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
+import { ProducerColorChange } from '../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames, hexPrefix } from '../../utils';
+import { _, observer, groupArrayByCount, classNames, hexPrefix, Inject } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 
-@observer
+@Inject(({ chainStore }) => ({ chainStore }))
 class ActiveValidatorsList extends Component {
   render() {
     const {
@@ -20,9 +21,11 @@ class ActiveValidatorsList extends Component {
         allInActiveValidator = [],
         setDefaultPrecision,
         decodeAddressAccountId,
+        encodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName, language },
+      chainStore: { currentChainProducer },
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
@@ -77,7 +80,14 @@ class ActiveValidatorsList extends Component {
               )}>
               <ul>
                 {one.map((item, index) => (
-                  <li key={index}>
+                  <ProducerColorChange
+                    showChange={item.isActive}
+                    Ele={'li'}
+                    key={index}
+                    item={item}
+                    currentChainProducer={currentChainProducer}
+                    account={encodeAddressAccountId(item.account)}
+                    {...this.props}>
                     <div className={styles.left}>
                       {item.imageUrl ? (
                         <img src={item.imageUrl} width={40} height={40} />
@@ -85,6 +95,7 @@ class ActiveValidatorsList extends Component {
                         <div>{item.name[0].toUpperCase()}</div>
                       )}
                     </div>
+
                     <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
@@ -100,10 +111,10 @@ class ActiveValidatorsList extends Component {
                                 : styles.backupValidators
                             )}
                           />
-
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                               <span className={styles.name}> {item.name}</span>
+
                               {item.isTrustee && item.isTrustee.length ? (
                                 <span className={styles.trusteeMark}>
                                   (<FormattedMessage id={'Trustee'} />)
@@ -266,7 +277,7 @@ class ActiveValidatorsList extends Component {
                         </li>
                       </ul>
                     </div>
-                  </li>
+                  </ProducerColorChange>
                 ))}
               </ul>
             </li>

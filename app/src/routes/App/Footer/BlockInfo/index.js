@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Inject, moment_helper } from '../../../../utils';
 import * as styles from './index.less';
 import { FormattedMessage } from '../../../../components';
-@Inject(({ chainStore }) => ({ chainStore }))
+@Inject(({ chainStore, electionStore }) => ({ chainStore, electionStore }))
 class BlockInfo extends Component {
   constructor(props) {
     super(props);
@@ -26,16 +26,21 @@ class BlockInfo extends Component {
 
   render() {
     const {
-      chainStore: { normalizedBlockNumber, blockTime },
+      chainStore: { normalizedBlockNumber, blockTime, currentChainProducer },
+      electionStore: { validatorsWithRecords, encodeAddressAccountId },
     } = this.props;
+
+    const findNode =
+      validatorsWithRecords.find(one => encodeAddressAccountId(one.account) === currentChainProducer) || {};
 
     return (
       <div className={styles.blockinfo}>
         <span>
-          <FormattedMessage id={'LatestHeightBlock'} />:<span>{normalizedBlockNumber}</span>
+          <FormattedMessage id={'BlockTime'} />:<span>{moment_helper.formatHMS(blockTime, 'YYYY/MM/DD HH:mm:ss')}</span>
         </span>
         <span>
-          <FormattedMessage id={'BlockTime'} />:<span>{moment_helper.formatHMS(blockTime, 'YYYY/MM/DD HH:mm:ss')}</span>
+          <FormattedMessage id={'LatestHeightBlock'} />:<span>{normalizedBlockNumber}</span>
+          {findNode.name && <span className={styles.producer}>({findNode.name})</span>}
         </span>
       </div>
     );
