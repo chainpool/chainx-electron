@@ -81,11 +81,11 @@ class ActiveValidatorsList extends Component {
                 groupDataSources.length > 3 && ins > 2 && ins >= groupDataSources.length - 4 ? styles.up : null
               )}>
               <ul>
-                {one.map((item, index) => (
+                {one.map(item => (
                   <ProducerColorChange
                     showChange={item.isActive}
                     Ele={'li'}
-                    key={index}
+                    key={item.name}
                     item={item}
                     currentChainProducer={currentChainProducer}
                     account={encodeAddressAccountId(item.account)}
@@ -106,13 +106,23 @@ class ActiveValidatorsList extends Component {
                               styles.nodeType,
                               !item.isActive
                                 ? styles.inActive
-                                : item.isTrustee && item.isTrustee.length
-                                ? styles.trustee
                                 : item.isValidator
                                 ? styles.validator
                                 : styles.backupValidators
                             )}
                           />
+                          {/*<div*/}
+                          {/*className={classNames(*/}
+                          {/*styles.nodeType,*/}
+                          {/*!item.isActive*/}
+                          {/*? styles.inActive*/}
+                          {/*: item.isTrustee && item.isTrustee.length*/}
+                          {/*? styles.trustee*/}
+                          {/*: item.isValidator*/}
+                          {/*? styles.validator*/}
+                          {/*: styles.backupValidators*/}
+                          {/*)}*/}
+                          {/*/>*/}
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                               <span className={styles.name}> {item.name}</span>
@@ -162,7 +172,7 @@ class ActiveValidatorsList extends Component {
                               className={classNames(
                                 language === 'en' ? styles.en : null,
                                 styles.votebutton,
-                                item.myTotalVote ? styles.show : styles.hidden
+                                item.myTotalVote ? styles.hidden : styles.hidden
                               )}
                               onClick={() => {
                                 const vote = () =>
