@@ -95,7 +95,7 @@ export const DowloadWalletUrl = {
   Linux: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.4/chainx-1.0.4-x86_64.AppImage',
 };
 
-export const InnerWebSite = ['weixiaoyi1.club'];
+export const InnerWebSite = [];
 
 export const SimulatedAccount = {
   tag: 'SimulateAccount',
