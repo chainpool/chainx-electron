@@ -99,24 +99,24 @@ class CrossChainAssetTable extends Mixin {
                   {isBTC && _.get(item, 'limitProps.CanDeposit') && (
                     <Button
                       onClick={() => {
-                        // openModal({
-                        //   name: 'CrossChainBindModal',
-                        //   data: {
-                        //     token: item.name,
-                        //     trusteeAddr: item.trusteeAddr,
-                        //   },
-                        // });
                         openModal({
-                          name: 'StopDepositModal',
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
                         });
+                        // openModal({
+                        //   name: 'StopDepositModal',
+                        // });
                       }}>
-                      <FormattedMessage id={'SuspensionDeposit'}>
-                        {msg => (
-                          <HoverTip tip={msg}>
-                            <Icon name="icon-jinggao" className={styles.jinggaoicon} />
-                          </HoverTip>
-                        )}
-                      </FormattedMessage>
+                      {/*<FormattedMessage id={'SuspensionDeposit'}>*/}
+                      {/*{msg => (*/}
+                      {/*<HoverTip tip={msg}>*/}
+                      {/*<Icon name="icon-jinggao" className={styles.jinggaoicon} />*/}
+                      {/*</HoverTip>*/}
+                      {/*)}*/}
+                      {/*</FormattedMessage>*/}
                       <FormattedMessage id={'Deposit'} />
                     </Button>
                   )}
