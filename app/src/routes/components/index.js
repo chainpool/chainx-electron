@@ -11,5 +11,6 @@ export { default as ColorProgress } from './ColorProgress';
 export { default as Balance } from './Balance';
 export { default as LowerPCXWarn } from './LowerPCXWarn';
 export { default as DownloadWalletWarnModal } from './DownloadWalletWarnModal';
+export { default as ProducerColorChange } from './ProducerColorChange';
 export { default as DownLoadWallet } from './DownLoadWallet';
 // export { default as IncreaseTime } from './IncreaseTime';

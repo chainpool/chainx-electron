@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
+import { ProducerColorChange } from '../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames, hexPrefix } from '../../utils';
+import { _, observer, groupArrayByCount, classNames, hexPrefix, Inject } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
+import officialMember_zh from '../../resource/officialMember_zh.png';
+import officialMember_en from '../../resource/officialMember_en.png';
 
-@observer
+@Inject(({ chainStore }) => ({ chainStore }))
 class ActiveValidatorsList extends Component {
   render() {
     const {
@@ -20,9 +23,11 @@ class ActiveValidatorsList extends Component {
         allInActiveValidator = [],
         setDefaultPrecision,
         decodeAddressAccountId,
+        encodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName, language },
+      chainStore: { currentChainProducer },
     } = this.props;
 
     const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
@@ -77,7 +82,14 @@ class ActiveValidatorsList extends Component {
               )}>
               <ul>
                 {one.map((item, index) => (
-                  <li key={index}>
+                  <ProducerColorChange
+                    showChange={item.isActive}
+                    Ele={'li'}
+                    key={index}
+                    item={item}
+                    currentChainProducer={currentChainProducer}
+                    account={encodeAddressAccountId(item.account)}
+                    {...this.props}>
                     <div className={styles.left}>
                       {item.imageUrl ? (
                         <img src={item.imageUrl} width={40} height={40} />
@@ -85,6 +97,7 @@ class ActiveValidatorsList extends Component {
                         <div>{item.name[0].toUpperCase()}</div>
                       )}
                     </div>
+
                     <div className={styles.right}>
                       <div className={styles.top}>
                         <div className={styles.nameContainer}>
@@ -100,15 +113,45 @@ class ActiveValidatorsList extends Component {
                                 : styles.backupValidators
                             )}
                           />
-
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                               <span className={styles.name}> {item.name}</span>
-                              {item.isTrustee && item.isTrustee.length ? (
-                                <span className={styles.trusteeMark}>
-                                  (<FormattedMessage id={'Trustee'} />)
-                                </span>
-                              ) : null}
+                              {item.isTrustee && item.isTrustee.length > 0 && (
+                                <div className={styles.trusteeImg}>
+                                  {item.isTrustee && item.isTrustee.length ? (
+                                    <FormattedMessage id={'ManageUserOutsidechainAssets'}>
+                                      {msg => (
+                                        <HoverTip tip={msg}>
+                                          <LanguageContent
+                                            zh={<img src={trustee_zh} alt="" height={14} />}
+                                            en={<img src={trustee_en} alt="" height={14} />}
+                                          />
+                                        </HoverTip>
+                                      )}
+                                    </FormattedMessage>
+                                  ) : null}
+                                </div>
+                              )}
+                              {item.isOfficialMember && (
+                                <div className={styles.isOfficialMember}>
+                                  <FormattedMessage id={'ManagePreVoteReferendum'}>
+                                    {msg => (
+                                      <HoverTip tip={msg}>
+                                        <LanguageContent
+                                          zh={<img src={officialMember_zh} alt="" height={14} />}
+                                          en={<img src={officialMember_en} alt="" height={14} />}
+                                        />
+                                      </HoverTip>
+                                    )}
+                                  </FormattedMessage>
+                                </div>
+                              )}
+
+                              {/*{item.isTrustee && item.isTrustee.length ? (*/}
+                              {/*<span className={styles.trusteeMark}>*/}
+                              {/*(<FormattedMessage id={'Trustee'} />)*/}
+                              {/*</span>*/}
+                              {/*) : null}*/}
                             </div>
                           </div>
                         </div>
@@ -177,31 +220,38 @@ class ActiveValidatorsList extends Component {
                           </div>
                           <div>
                             <div className={styles.nodetype}>
-                              {/*<div*/}
-                              {/*className={classNames(*/}
-                              {/*styles.nodeType,*/}
-                              {/*!item.isActive*/}
-                              {/*? styles.inActive*/}
-                              {/*: item.isTrustee && item.isTrustee.length*/}
-                              {/*? styles.trustee*/}
-                              {/*: item.isValidator*/}
-                              {/*? styles.validator*/}
-                              {/*: styles.backupValidators*/}
-                              {/*)}*/}
-                              {/*/>*/}
-
-                              {item.isTrustee && item.isTrustee.length ? (
-                                <FormattedMessage id={'TrusteeNode'} />
-                              ) : !item.isActive ? (
+                              {!item.isActive ? (
                                 <FormattedMessage id={'DropOut'} />
                               ) : item.isValidator ? (
                                 <FormattedMessage id={'ValidatorNode'} />
                               ) : (
                                 <FormattedMessage id={'StandbyNode'} />
                               )}
+                              {/*{item.isTrustee && item.isTrustee.length ? (*/}
+                              {/*<FormattedMessage id={'TrusteeNode'} />*/}
+                              {/*) : !item.isActive ? (*/}
+                              {/*<FormattedMessage id={'DropOut'} />*/}
+                              {/*) : item.isValidator ? (*/}
+                              {/*<FormattedMessage id={'ValidatorNode'} />*/}
+                              {/*) : (*/}
+                              {/*<FormattedMessage id={'StandbyNode'} />*/}
+                              {/*)}*/}
                             </div>
                           </div>
                         </li>
+                        {(item.isTrustee && item.isTrustee.length > 0) || item.isOfficialMember ? (
+                          <li>
+                            <div>节点职务</div>
+                            <div>
+                              <div className={styles.longaddress}>
+                                {item.isTrustee && item.isTrustee.length > 0 && <span>信托</span>}
+                                {item.isTrustee && item.isTrustee.length > 0 && item.isOfficialMember && '，'}
+                                {item.isOfficialMember && <span>议员</span>}
+                              </div>
+                            </div>
+                          </li>
+                        ) : null}
+
                         <li>
                           <div>
                             <FormattedMessage id={'NodeWebsite'} />
@@ -266,7 +316,7 @@ class ActiveValidatorsList extends Component {
                         </li>
                       </ul>
                     </div>
-                  </li>
+                  </ProducerColorChange>
                 ))}
               </ul>
             </li>
