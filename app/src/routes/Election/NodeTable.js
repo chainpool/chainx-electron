@@ -79,13 +79,7 @@ class NodeTable extends Component {
               <div
                 className={classNames(
                   styles.nodeType,
-                  !item.isActive
-                    ? styles.inActive
-                    : item.isTrustee && item.isTrustee.length
-                    ? styles.trustee
-                    : item.isValidator
-                    ? styles.validator
-                    : styles.backupValidators
+                  !item.isActive ? styles.inActive : item.isValidator ? styles.validator : styles.backupValidators
                 )}
               />
               {/*{item.isTrustee && item.isTrustee.length ? (*/}
