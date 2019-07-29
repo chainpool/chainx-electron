@@ -241,12 +241,22 @@ class ActiveValidatorsList extends Component {
                         </li>
                         {(item.isTrustee && item.isTrustee.length > 0) || item.isOfficialMember ? (
                           <li>
-                            <div>节点职务</div>
+                            <div>
+                              <FormattedMessage id={'NodeDuty'} />
+                            </div>
                             <div>
                               <div className={styles.longaddress}>
-                                {item.isTrustee && item.isTrustee.length > 0 && <span>信托</span>}
+                                {item.isTrustee && item.isTrustee.length > 0 && (
+                                  <span>
+                                    <FormattedMessage id={'Trustee'} />
+                                  </span>
+                                )}
                                 {item.isTrustee && item.isTrustee.length > 0 && item.isOfficialMember && '，'}
-                                {item.isOfficialMember && <span>议员</span>}
+                                {item.isOfficialMember && (
+                                  <span>
+                                    <FormattedMessage id={'Member'} />
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </li>
