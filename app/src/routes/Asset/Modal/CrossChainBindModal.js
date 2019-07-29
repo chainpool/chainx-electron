@@ -145,7 +145,7 @@ class X_BTC extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
-                        bitportal
+                        Bitportal
                       </RouterGo>
                     ),
                     src: bitportal,
@@ -198,7 +198,7 @@ class X_BTC extends Mixin {
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
-                    {index === 5 ? null : '、'}
+                    {index === 6 ? null : ', '}
                   </span>
                 ));
                 const msgs = msg.split('OP_RETURN_replace');
@@ -630,7 +630,7 @@ class L_BTC extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
-                        bitportal
+                        Bitportal
                       </RouterGo>
                     ),
                     src: bitportal,
@@ -683,7 +683,7 @@ class L_BTC extends Mixin {
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
-                    {index === 5 ? null : '、'}
+                    {index === 6 ? null : ', '}
                   </span>
                 ));
                 const msgs = msg.split('OP_RETURN_replace');
@@ -1044,7 +1044,7 @@ class S_DOT extends Mixin {
                     <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
-                    {index === 7 ? null : '、'}
+                    {index === 7 ? null : ', '}
                   </span>
                 ));
                 const msgs = msg.split('SDOT_replace');
