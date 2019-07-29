@@ -114,7 +114,7 @@ class X_BTC extends Mixin {
     const findOne = {
       desc1: '',
       value1: chainxAddressHex,
-      desc2: '信托热多签地址',
+      desc2: <FormattedMessage id="TrustHotMultiSignatureAddress" />,
       value2: btcTrusteeAddress,
       warn: (
         <Warn>
@@ -145,7 +145,7 @@ class X_BTC extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
-                        Bitportal
+                        BitPortal
                       </RouterGo>
                     ),
                     src: bitportal,
@@ -223,8 +223,15 @@ class X_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'FistStep'} />
           </span>
-          <span className={styles.bold}>获取OP_RETURN</span>
-          <div>获取含有16进制ChainX地址的OP_RETURN信息。</div>
+          <span className={styles.bold}>
+            <LanguageContent zh={'获取OP_RETURN'} en={'Get OP_RETURN'} />
+          </span>
+          <div>
+            <LanguageContent
+              zh={'获取含有16进制ChainX地址的OP_RETURN信息。'}
+              en={'Get OP_RETURN information with a hexadecimal ChainX address'}
+            />
+          </div>
         </div>
 
         {btcAddresses.length > 0 ? null : (
@@ -302,11 +309,27 @@ class X_BTC extends Mixin {
           <span className={styles.step}>
             <FormattedMessage id={'SecondStep'} />
           </span>
-          <span className={styles.bold}>发起跨链充值</span>
+          <span className={styles.bold}>
+            <LanguageContent zh={'发起跨链充值'} en={'Initiate cross-chain recharge'} />
+          </span>
           <div>
-            使用支持OP_RETURN的钱包向信托热多签地址充值
-            <span className={styles.depositCount}>（充值金额必须 >=0.001 BTC）</span>
-            并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+            <LanguageContent
+              zh={
+                <span>
+                  使用支持OP_RETURN的钱包向信托热多签地址充值
+                  <span className={styles.depositCount}>（充值金额必须 >=0.001 BTC）</span>
+                  并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+                </span>
+              }
+              en={
+                <span>
+                  Use a wallet that supports OP_RETURN to recharge the hot multi-signature address of the trust{' '}
+                  <span className={styles.depositCount}>(the amount of recharge must be >= 0.001 BTC)</span> and enter
+                  OP_RETURN information. Note: Memo similar to imToken wallet is not OP_RETURN; at present, it only
+                  supports cross-chain recharge initiated by BTC addresses at the beginning of 1 and 3.
+                </span>
+              }
+            />
           </div>
         </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
@@ -630,7 +653,7 @@ class L_BTC extends Mixin {
                   {
                     content: (
                       <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
-                        Bitportal
+                        BitPortal
                       </RouterGo>
                     ),
                     src: bitportal,
