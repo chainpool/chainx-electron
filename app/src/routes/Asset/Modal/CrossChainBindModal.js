@@ -292,8 +292,9 @@ class X_BTC extends Mixin {
           </span>
           <span className={styles.bold}>发起跨链充值</span>
           <div>
-            使用支持OP_RETURN的钱包向信托热多签地址充值（充值金额必须 >=0.001
-            BTC）并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+            使用支持OP_RETURN的钱包向信托热多签地址充值
+            <span className={styles.depositCount}>（充值金额必须 >=0.001 BTC）</span>
+            并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
           </div>
         </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
