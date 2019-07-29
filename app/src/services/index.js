@@ -245,3 +245,10 @@ export const bindTxHash = payload => {
     params: [params],
   });
 };
+
+export const getElectionMembersAPI = () => {
+  return fetchFromHttp({
+    url: `${API}/congress/members`,
+    method: 'get',
+  });
+};

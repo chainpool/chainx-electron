@@ -120,7 +120,7 @@
   display: flex;
   align-items: center;
   align-content: center;
-  .nodeType,.trusteeImg{
+  .nodeType{
     margin-right: 4px;
   }
   .trusteeImg{
@@ -243,8 +243,16 @@
               .nodeType{
                 margin-right: 4px;
               }
+              .trusteeImg+.isOfficialMember{
+                margin-left: 2px;
+              }
               .trusteeImg{
-                margin-right: 4px;
+                margin-left: 4px;
+              }
+              .isOfficialMember{
+                position:relative;
+                bottom:-1px;
+                margin-left: 4px;
               }
               .name{
                 font-weight: bold;

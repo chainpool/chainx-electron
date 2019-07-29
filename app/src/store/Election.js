@@ -17,6 +17,7 @@ import {
   renominate,
   getIntentionsByAccount,
   getIntentionImages,
+  getElectionMembersAPI,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -233,6 +234,24 @@ export default class Election extends ModelExtend {
     this.changeModel('originNominationRecords', records);
   };
 
+  getElectionMembers = async () => {
+    let res = await getElectionMembersAPI();
+    res = res.map(item => ({
+      name: item,
+    }));
+    const intentions = this.originIntentions.map(item => {
+      const findOne = res.find(one => one.name === item.name);
+      if (findOne) {
+        return {
+          ...item,
+          isOfficialMember: true,
+        };
+      }
+      return item;
+    });
+    this.changeModel('originIntentions', intentions);
+  };
+
   getIntentionImages = async () => {
     let res = await getIntentionImages().catch(() => []);
     res = res.map(item => {
@@ -245,7 +264,8 @@ export default class Election extends ModelExtend {
     });
 
     const intentions = this.originIntentions.map(item => {
-      const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
+      const findOne = res.find(one => one.name === item.name);
+      // const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
       if (findOne) {
         return {
           ...item,
