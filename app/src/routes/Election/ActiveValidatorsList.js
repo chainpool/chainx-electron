@@ -134,10 +134,16 @@ class ActiveValidatorsList extends Component {
                               )}
                               {item.isOfficialMember && (
                                 <div className={styles.isOfficialMember}>
-                                  <LanguageContent
-                                    zh={<img src={officialMember_zh} alt="" height={14} />}
-                                    en={<img src={officialMember_en} alt="" height={14} />}
-                                  />
+                                  <FormattedMessage id={'ManagePreVoteReferendum'}>
+                                    {msg => (
+                                      <HoverTip tip={msg}>
+                                        <LanguageContent
+                                          zh={<img src={officialMember_zh} alt="" height={14} />}
+                                          en={<img src={officialMember_en} alt="" height={14} />}
+                                        />
+                                      </HoverTip>
+                                    )}
+                                  </FormattedMessage>
                                 </div>
                               )}
 
@@ -208,26 +214,31 @@ class ActiveValidatorsList extends Component {
                           </li>
                         ) : null}
 
-                        {item.isTrustee && item.isTrustee.length ? null : (
-                          <li>
-                            <div>
-                              <FormattedMessage id={'NodeType'} />
+                        <li>
+                          <div>
+                            <FormattedMessage id={'NodeType'} />
+                          </div>
+                          <div>
+                            <div className={styles.nodetype}>
+                              {!item.isActive ? (
+                                <FormattedMessage id={'DropOut'} />
+                              ) : item.isValidator ? (
+                                <FormattedMessage id={'ValidatorNode'} />
+                              ) : (
+                                <FormattedMessage id={'StandbyNode'} />
+                              )}
+                              {/*{item.isTrustee && item.isTrustee.length ? (*/}
+                              {/*<FormattedMessage id={'TrusteeNode'} />*/}
+                              {/*) : !item.isActive ? (*/}
+                              {/*<FormattedMessage id={'DropOut'} />*/}
+                              {/*) : item.isValidator ? (*/}
+                              {/*<FormattedMessage id={'ValidatorNode'} />*/}
+                              {/*) : (*/}
+                              {/*<FormattedMessage id={'StandbyNode'} />*/}
+                              {/*)}*/}
                             </div>
-                            <div>
-                              <div className={styles.nodetype}>
-                                {item.isTrustee && item.isTrustee.length ? (
-                                  <FormattedMessage id={'TrusteeNode'} />
-                                ) : !item.isActive ? (
-                                  <FormattedMessage id={'DropOut'} />
-                                ) : item.isValidator ? (
-                                  <FormattedMessage id={'ValidatorNode'} />
-                                ) : (
-                                  <FormattedMessage id={'StandbyNode'} />
-                                )}
-                              </div>
-                            </div>
-                          </li>
-                        )}
+                          </div>
+                        </li>
                         {(item.isTrustee && item.isTrustee.length > 0) || item.isOfficialMember ? (
                           <li>
                             <div>节点职务</div>

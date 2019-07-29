@@ -466,6 +466,10 @@ const zh_en = {
     'The interest to be paid is calculated by the proportion of the inter-chain assets in real time, so fluctuations are natural. It is recommended to claim your interest regularly.',
   ],
   ManageUserOutsidechainAssets: ['负责联合托管⽤户的链外资产', 'Manage users’ outside-the-chain assets collectively'],
+  ManagePreVoteReferendum: [
+    '负责社区议案初步表决并发起公投',
+    'Manage the pre-vote of communitity’s proposal and open referendum',
+  ],
   ElectionValidatorUnableParticipate: [
     '无法参与验证节点的选举，并且没有任何收益',
     'Unable to participate in the election of validator nodes, and with no income.',

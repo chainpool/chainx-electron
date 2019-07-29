@@ -264,8 +264,8 @@ export default class Election extends ModelExtend {
     });
 
     const intentions = this.originIntentions.map(item => {
-      const findOne = res.find(one => one.name === item.name);
-      // const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
+      // const findOne = res.find(one => one.name === item.name);
+      const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
       if (findOne) {
         return {
           ...item,

@@ -27,6 +27,7 @@ import trezor from '../../../resource/trezor.png';
 import coinbin from '../../../resource/coinbin.png';
 import BitX from '../../../resource/BitX.png';
 import MathWallet from '../../../resource/MathWallet.png';
+import bitportal from '../../../resource/bitportal.io.png';
 import WOOKONG from '../../../resource/WOOKONG.png';
 import QRious from 'qrious';
 
@@ -68,7 +69,7 @@ class X_BTC extends Mixin {
   constructor(props) {
     super(props);
     this.state = {
-      step: -1,
+      step: 1,
       isAddChanel: '',
       recommendChannelSelect: '',
       tradeIdErrMsg: '',
@@ -100,6 +101,7 @@ class X_BTC extends Mixin {
       accountStore: { currentAddress },
       assetStore: { btcAddresses = [], btcTrusteeAddress },
       globalStore: {
+        closeModal,
         modal: {
           data: { token },
         },
@@ -137,6 +139,16 @@ class X_BTC extends Mixin {
                       </RouterGo>
                     ),
                     src: MathWallet,
+                    imgWidth: 244,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
+                        bitportal
+                      </RouterGo>
+                    ),
+                    src: bitportal,
                     imgWidth: 244,
                     show: true,
                   },
@@ -504,6 +516,14 @@ class X_BTC extends Mixin {
           {step === 1 && (
             <div className={styles.btccontent}>
               {BTC}
+              <Button
+                size="full"
+                type="confirm"
+                onClick={() => {
+                  closeModal();
+                }}>
+                <FormattedMessage id={'Confirm'} />
+              </Button>
               <div className={styles.warn}>{findOne.warn}</div>
             </div>
           )}
@@ -604,6 +624,16 @@ class L_BTC extends Mixin {
                       </RouterGo>
                     ),
                     src: MathWallet,
+                    imgWidth: 244,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://www.bitportal.io/zh/' }}>
+                        bitportal
+                      </RouterGo>
+                    ),
+                    src: bitportal,
                     imgWidth: 244,
                     show: true,
                   },
