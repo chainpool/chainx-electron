@@ -162,7 +162,7 @@ class ActiveValidatorsList extends Component {
                               className={classNames(
                                 language === 'en' ? styles.en : null,
                                 styles.votebutton,
-                                item.myTotalVote ? styles.show : styles.hidden
+                                item.myTotalVote ? styles.hidden : styles.hidden
                               )}
                               onClick={() => {
                                 const vote = () =>
