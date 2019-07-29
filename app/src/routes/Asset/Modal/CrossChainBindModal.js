@@ -117,76 +117,87 @@ class X_BTC extends Mixin {
       warn: (
         <Warn>
           <div className={styles.hoverImg}>
-            <span>
-              {
-                <FormattedMessage id={'BTCWarn'}>
-                  {msg => {
-                    const link = (
-                      <span>
-                        {[
-                          {
-                            content: (
-                              <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
-                                BitX
-                              </RouterGo>
-                            ),
-                            style: { left: -100 },
-                            imgWidth: 244,
-                            show: true,
-                          },
-                          {
-                            content: (
-                              <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
-                                Trezor
-                              </RouterGo>
-                            ),
-                            style: { left: -160 },
-                            src: trezor,
-                            imgWidth: 352,
-                          },
-                          {
-                            content: (
-                              <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
-                                Coinb.in
-                              </RouterGo>
-                            ),
-                            style: { left: -160 },
-                            src: coinbin,
-                            imgWidth: 352,
-                          },
-                        ]
-                          .filter(item => item.show)
-                          .map((item, index) => (
-                            <span key={index} className={styles.anchor}>
-                              <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
-                                {item.content}
-                              </HoverTip>
-                            </span>
-                          ))}
-                      </span>
-                    );
-                    const msgs = msg.split('BitX_replace');
-
-                    return (
-                      <span>
-                        {msgs[0]}
-                        {msgs[1]}
-                        <strong>{msgs[2]}</strong>
-                        {msgs[3]}
-                      </span>
-                    );
-                  }}
-                </FormattedMessage>
-              }
-              <RouterGo
-                isOutSide
-                go={{
-                  pathname:
-                    'https://github.com/chainx-org/ChainX/wiki/%E5%85%85%E5%80%BC%E6%8C%96%E7%9F%BF#%E5%85%85%E5%80%BC%E5%A5%96%E5%8A%B1',
-                }}>
-                查看充值奖励规则
-              </RouterGo>
-            </span>
+            <FormattedMessage id={'WalletOpreturnSupport'}>
+              {msg => {
+                const links = [
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://bitpie.com/' }}>
+                        Bitpie
+                      </RouterGo>
+                    ),
+                    style: { left: -100 },
+                    src: bitpieOpreturn,
+                    imgWidth: 244,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'http://www.mathwallet.org/' }}>
+                        MathWallet
+                      </RouterGo>
+                    ),
+                    src: MathWallet,
+                    imgWidth: 244,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://wookong.nbltrust.com/' }}>
+                        WOOKONG
+                      </RouterGo>
+                    ),
+                    src: WOOKONG,
+                    imgWidth: 506,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/BitX/releases' }}>
+                        BitX
+                      </RouterGo>
+                    ),
+                    src: BitX,
+                    imgWidth: 244,
+                    show: true,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://trezor.io/' }}>
+                        Trezor
+                      </RouterGo>
+                    ),
+                    src: trezor,
+                    imgWidth: 352,
+                  },
+                  {
+                    content: (
+                      <RouterGo isOutSide go={{ pathname: 'https://coinb.in/#newTransaction' }}>
+                        Coinb.in
+                      </RouterGo>
+                    ),
+                    src: coinbin,
+                    imgWidth: 650,
+                  },
+                ].map((item, index) => (
+                  <span key={index} className={styles.anchor}>
+                    <HoverTip
+                      width={item.imgWidth}
+                      tip={<img src={item.src} width={item.imgWidth} />}
+                      className={styles.imgtip}>
+                      {item.content}
+                    </HoverTip>
+                    {index === 5 ? null : '、'}
+                  </span>
+                ));
+                const msgs = msg.split('OP_RETURN_replace');
+                return (
+                  <>
+                    {msgs[0]}
+                    {links} {msgs[1]}
+                  </>
+                );
+              }}
+            </FormattedMessage>
           </div>
         </Warn>
       ),
@@ -287,19 +298,16 @@ class X_BTC extends Mixin {
         </div>
         <div className={classNames(styles.grayblock, styles.depositaddress)}>
           <div className={styles.depositaddresstitle}>
-            <span className={styles.label}>
-              {findOne.desc2}
-              <span>（向该地址充值）</span>
-            </span>
-            <Clipboard
-              id="copy2"
-              dataText={findOne.value2}
-              outInner={
-                <span className={styles.desc}>
-                  <FormattedMessage id={'CopyMessage'} />
-                </span>
-              }
-            />
+            <span className={styles.label}>{findOne.desc2}</span>
+            {/*<Clipboard*/}
+            {/*id="copy2"*/}
+            {/*dataText={findOne.value2}*/}
+            {/*outInner={*/}
+            {/*<span className={styles.desc}>*/}
+            {/*<FormattedMessage id={'CopyMessage'} />*/}
+            {/*</span>*/}
+            {/*}*/}
+            {/*/>*/}
             {/*<Button type={'outline'}>*/}
             {/*<Popover body={<img src={qr} />}>*/}
             {/*<span>*/}
@@ -309,7 +317,9 @@ class X_BTC extends Mixin {
             {/*</Popover>*/}
             {/*</Button>*/}
           </div>
-          <span className={styles.depositaddressvalue}>{findOne.value2}</span>
+          <span className={styles.depositaddressvalue}>
+            <Clipboard>{findOne.value2}</Clipboard>
+          </span>
         </div>
         {btcAddresses.length > 0 && (
           <div className={classNames(styles.grayblock, styles.bitcoinlinks)}>
