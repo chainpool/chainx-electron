@@ -106,13 +106,23 @@ class ActiveValidatorsList extends Component {
                               styles.nodeType,
                               !item.isActive
                                 ? styles.inActive
-                                : item.isTrustee && item.isTrustee.length
-                                ? styles.trustee
                                 : item.isValidator
                                 ? styles.validator
                                 : styles.backupValidators
                             )}
                           />
+                          {/*<div*/}
+                          {/*className={classNames(*/}
+                          {/*styles.nodeType,*/}
+                          {/*!item.isActive*/}
+                          {/*? styles.inActive*/}
+                          {/*: item.isTrustee && item.isTrustee.length*/}
+                          {/*? styles.trustee*/}
+                          {/*: item.isValidator*/}
+                          {/*? styles.validator*/}
+                          {/*: styles.backupValidators*/}
+                          {/*)}*/}
+                          {/*/>*/}
                           <div>
                             <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                               <span className={styles.name}> {item.name}</span>
