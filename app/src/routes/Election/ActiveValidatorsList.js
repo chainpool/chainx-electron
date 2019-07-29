@@ -81,11 +81,11 @@ class ActiveValidatorsList extends Component {
                 groupDataSources.length > 3 && ins > 2 && ins >= groupDataSources.length - 4 ? styles.up : null
               )}>
               <ul>
-                {one.map((item, index) => (
+                {one.map(item => (
                   <ProducerColorChange
                     showChange={item.isActive}
                     Ele={'li'}
-                    key={index}
+                    key={item.name}
                     item={item}
                     currentChainProducer={currentChainProducer}
                     account={encodeAddressAccountId(item.account)}
