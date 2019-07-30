@@ -77,10 +77,12 @@ class VoteModal extends Mixin {
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
-        modal: { data: { target, myTotalVote = 0, isCurrentAccount, isActive } = {} },
+        modal: {
+          data: { target, myTotalVote = 0, isCurrentAccount, isActive, nextRenominate, selfVote, totalNomination } = {},
+        },
         nativeAssetName: token,
       },
-      chainStore: { blockDuration },
+      chainStore: { blockDuration, blockNumber },
       electionStore: { bondingDuration, intentionBondingDuration },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
       accountStore: { isValidator },
@@ -111,13 +113,26 @@ class VoteModal extends Mixin {
       isActive: item.isActive,
     }));
 
+    const isCanSwitch = nextRenominate <= blockNumber;
+
+    const isCanAdd = totalNomination <= selfVote * 10;
+
+    const getButtonStatus = () => {
+      if (action === 'switch') {
+        return !isCanSwitch ? 'disabled' : 'confirm';
+      } else if (action === 'add') {
+        return !isCanAdd ? 'disabled' : 'confirm';
+      }
+      return 'confirm';
+    };
+
     return (
       <Modal
         title={myTotalVote ? <FormattedMessage id={'ChangeNominate'} /> : <FormattedMessage id={'Nominate'} />}
         button={
           <Button
             size="full"
-            type="confirm"
+            type={getButtonStatus()}
             onClick={() => {
               if (checkAll.confirm()) {
                 const signModal = () =>
@@ -271,6 +286,14 @@ class VoteModal extends Mixin {
           {action === 'cancel' && (
             <div className={styles.lockweek}>
               <FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />
+            </div>
+          )}
+          {action === 'add' && !isCanAdd && (
+            <div className={styles.isCanAdd}>节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押</div>
+          )}
+          {action === 'switch' && !isCanSwitch && (
+            <div className={styles.canSwitchHeight}>
+              下次可切换高度：{nextRenominate}（预估 {nextRenominate}）
             </div>
           )}
         </div>
