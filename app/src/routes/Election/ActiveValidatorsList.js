@@ -183,6 +183,9 @@ class ActiveValidatorsList extends Component {
                                       target: item.account,
                                       myTotalVote: item.myTotalVote,
                                       isCurrentAccount: item.address === currentAccount.address,
+                                      nextRenominate: item.nextRenominate,
+                                      selfVote: setDefaultPrecision(item.selfVote),
+                                      totalNomination: setDefaultPrecision(item.totalNomination),
                                     },
                                   });
                                 vote();

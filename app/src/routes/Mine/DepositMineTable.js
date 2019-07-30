@@ -1,14 +1,14 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { observer, _, showAssetName } from '../../utils';
+import { observer, _, showAssetName, Inject, formatNumber } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
 import miniLogo from '../../resource/miniLogo.png';
 import LBTCIcon from '../../resource/LBTC.png';
 
-@observer
+@Inject(({ chainStore }) => ({ chainStore }))
 class DepositMineTable extends Mixin {
   startInit = async () => {
     const {
@@ -24,7 +24,8 @@ class DepositMineTable extends Mixin {
 
   render() {
     const {
-      model: { openModal, dispatch, normalizedPseduIntentions = [] },
+      chainStore: { blockNumber },
+      model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
     } = this.props;
     const tableProps = {
       className: styles.tableContainer,
@@ -85,7 +86,7 @@ class DepositMineTable extends Mixin {
         {
           title: <FormattedMessage id={'MyTotalBalance'} />,
           dataIndex: 'balance',
-          render: value => <Balance value={value} />,
+          render: value => <Balance keepShowValue value={value} />,
         },
         {
           title: (
@@ -102,40 +103,54 @@ class DepositMineTable extends Mixin {
             </>
           ),
           dataIndex: 'interest',
-          render: value => <Balance value={value} />,
+          render: value => <Balance keepShowValue value={value} />,
         },
         {
           title: '',
           dataIndex: '_action',
-          render: (value, item) => (
-            <ButtonGroup>
-              {item.interest > 0 ? (
+          render: (value, item) => {
+            const targetNominateAmount = formatNumber.toFixed(item.interest * 10, getDefaultPrecision());
+            const isWarn = item.interest > 0;
+            const isCanClaim =
+              item.interest > 0 && item.balance > targetNominateAmount && item.nextClaim <= blockNumber;
+            return (
+              <ButtonGroup>
                 <Button
+                  type={isCanClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
                   onClick={() => {
-                    openModal({
-                      name: 'SignModal',
-                      data: {
-                        description: [
-                          { name: 'operation', value: () => <FormattedMessage id={'ClaimDividend'} /> },
-                          { name: () => <FormattedMessage id={'AssetType'} />, value: showAssetName(item.id) },
-                        ],
-                        callback: () => {
-                          return dispatch({
-                            type: 'depositClaim',
-                            payload: {
-                              token: item.id,
-                              // target: item.account,
-                            },
-                          });
+                    if (isCanClaim) {
+                      openModal({
+                        name: 'SignModal',
+                        data: {
+                          description: [
+                            { name: 'operation', value: () => <FormattedMessage id={'ClaimDividend'} /> },
+                            { name: () => <FormattedMessage id={'AssetType'} />, value: showAssetName(item.id) },
+                          ],
+                          callback: () => {
+                            return dispatch({
+                              type: 'depositClaim',
+                              payload: {
+                                token: item.id,
+                              },
+                            });
+                          },
                         },
-                      },
-                    });
+                      });
+                    } else if (isWarn) {
+                      openModal({
+                        name: 'ClaimConditionModal',
+                        data: {
+                          claimHeight: item.nextClaim,
+                          targetNominateAmount,
+                        },
+                      });
+                    }
                   }}>
                   <FormattedMessage id={'ClaimDividend'} />
                 </Button>
-              ) : null}
-            </ButtonGroup>
-          ),
+              </ButtonGroup>
+            );
+          },
         },
       ],
       dataSource: _.sortBy(normalizedPseduIntentions, ['id']),
