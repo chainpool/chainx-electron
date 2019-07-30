@@ -46,7 +46,8 @@
         word-break:break-all;
         word-wrap:break-word;
       }
-      padding: 16px 32px 32px;
+      padding:24px 0;
+      // padding: 16px 32px 32px;
       color: #95989a;
       width: 480px;
       .downloadicon {
@@ -54,7 +55,10 @@
         color: @yellow;
       }
       .appname {
-        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+
         color: #3F3F3F;
       }
       .desc {
@@ -62,22 +66,35 @@
         margin-top: 12px;
       }
       ul {
+        padding:0 60px;
         margin-top: 24px;
         display: flex;
-        justify-content: center;
-        ///justify-content: space-between;
+        flex-wrap: wrap;
+        justify-content: space-between;
         li+li{
           margin-left: 16px;
         }
         li {
-          width: 128px;
-          height: 152px;
-          border: 1px solid #dce0e2;
+          &:nth-child(4n){
+            margin-left: 0;
+          }
+          //width: 128px;
+          //min-width: 128px;
+          //max-width: 128px;
+          // height: 152px;
+          // border: 1px solid #dce0e2;
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: space-between;
-          padding: 8px 0 16px;
+          // justify-content: space-between;
+          .linkUrl{
+            color: #3F3F3F;
+          }
+          .name{
+            color: #3F3F3F;
+            margin-top: 8px;
+            margin-bottom: 16px;
+          }
           img {
             width: 60px;
           }
