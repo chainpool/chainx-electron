@@ -115,6 +115,7 @@ class APINodeSettingModal extends Component {
                 <FormattedMessage id={'NodeAddress'} />
                 <span>
                   <FormattedMessage id={'Example'} />: name:password@btc-node.chainx.org.cn/mainnet
+                  (强制https://访问节点)
                 </span>
               </div>
             }
