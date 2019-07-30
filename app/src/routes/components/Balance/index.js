@@ -10,9 +10,13 @@ const zeroStyle = {
 
 class Balance extends Component {
   render() {
-    const { value } = this.props;
+    const { value, keepShowValue = false } = this.props;
 
-    return <span style={parseFloat(value) > 0 ? nonZeroStyle : zeroStyle}>{parseFloat(value) > 0 ? value : '-'}</span>;
+    return (
+      <span style={parseFloat(value) > 0 ? nonZeroStyle : zeroStyle}>
+        {parseFloat(value) > 0 ? value : keepShowValue ? value : '-'}
+      </span>
+    );
   }
 }
 
