@@ -1,13 +1,31 @@
 @import '~@styles/index.less';
 .ConstructSpecialTradeModal{
+  .receivers{
+    margin:16px 0;
+  }
   .receiverrow{
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
+    &:first-child{
+      .receiverrowIcon{
+        margin-top: 29px;
+      }
+    }
+    .inputlist{
+      margin:0;
+      li{
+        &:first-child{
+          width:90%;
+        }
+      }
+
+    }
     .receiverrowIcon{
       margin-left: 16px;
       font-size: 20px;
       position:relative;
-      top:10px;
+     /// top:5px;
       &.add{
         color:@green;
       }

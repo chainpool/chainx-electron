@@ -213,75 +213,78 @@ class ConstructSpecialTradeModal extends Component {
               );
             }}
           />
-          {receivers.map((item, index) => (
-            <div key={index} className={styles.receiverrow}>
-              <InputHorizotalList
-                left={
-                  <Input.Text
-                    errMsgIsOutside
-                    errMsg={item.receiverErrMsg}
-                    showMatchOption={false}
-                    label={'接收方地址'}
-                    value={item.receiver}
-                    options={[{ label: '1', value: 1 }]}
-                    onChange={value => {
-                      changeReceivers(
-                        {
-                          receiver: value,
-                          index,
-                        },
-                        constructSpecialTrade
-                      );
-                    }}
-                  />
-                }
-                right={
-                  <Input.Text
-                    precision={Number(getPrecision('BTC'))}
-                    errMsgIsOutside
-                    errMsg={item.balanceErrMsg}
-                    isDecimal="decimal"
-                    label={`金额`}
-                    value={item.balance}
-                    suffix="BTC"
-                    onChange={value => {
-                      this.changeReceivers(
-                        {
-                          balance: value,
-                          index,
-                        },
-                        constructSpecialTrade
-                      );
-                    }}
-                  />
-                }
-              />
-              <Icon
-                onClick={() => {
-                  const copy = _.cloneDeep(receivers);
-                  console.log(index);
-                  if (index === 0) {
-                    copy.splice(receivers.length, 0, {
-                      receiver: '',
-                      receiverErrMsg: '',
-                      balance: '',
-                      balanceErrMsg: '',
-                    });
-                  } else {
-                    copy.splice(index, 1);
+          <div className={styles.receivers}>
+            {receivers.map((item, index) => (
+              <div key={index} className={styles.receiverrow}>
+                <InputHorizotalList
+                  className={classNames(styles.inputlist, index === 0 ? styles.first : null)}
+                  left={
+                    <Input.Text
+                      errMsgIsOutside
+                      errMsg={item.receiverErrMsg}
+                      showMatchOption={false}
+                      label={index === 0 ? '接收方地址' : null}
+                      value={item.receiver}
+                      options={[{ label: '1', value: 1 }]}
+                      onChange={value => {
+                        changeReceivers(
+                          {
+                            receiver: value,
+                            index,
+                          },
+                          constructSpecialTrade
+                        );
+                      }}
+                    />
                   }
-                  this.setState(
-                    {
-                      receivers: copy,
-                    },
-                    constructSpecialTrade
-                  );
-                }}
-                className={classNames(styles.receiverrowIcon, index === 0 ? styles.add : styles.remove)}
-                name={index === 0 ? 'tianjiahang' : 'shanchuhang'}
-              />
-            </div>
-          ))}
+                  right={
+                    <Input.Text
+                      precision={Number(getPrecision('BTC'))}
+                      errMsgIsOutside
+                      errMsg={item.balanceErrMsg}
+                      isDecimal="decimal"
+                      label={index === 0 ? `金额` : null}
+                      value={item.balance}
+                      suffix="BTC"
+                      onChange={value => {
+                        this.changeReceivers(
+                          {
+                            balance: value,
+                            index,
+                          },
+                          constructSpecialTrade
+                        );
+                      }}
+                    />
+                  }
+                />
+                <Icon
+                  onClick={() => {
+                    const copy = _.cloneDeep(receivers);
+                    console.log(index);
+                    if (index === 0) {
+                      copy.splice(receivers.length, 0, {
+                        receiver: '',
+                        receiverErrMsg: '',
+                        balance: '',
+                        balanceErrMsg: '',
+                      });
+                    } else {
+                      copy.splice(index, 1);
+                    }
+                    this.setState(
+                      {
+                        receivers: copy,
+                      },
+                      constructSpecialTrade
+                    );
+                  }}
+                  className={classNames(styles.receiverrowIcon, index === 0 ? styles.add : styles.remove)}
+                  name={index === 0 ? 'tianjiahang' : 'shanchuhang'}
+                />
+              </div>
+            ))}
+          </div>
 
           <Input.Text
             isOutSide
