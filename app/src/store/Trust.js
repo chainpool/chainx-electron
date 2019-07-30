@@ -729,15 +729,16 @@ export default class Trust extends ModelExtend {
       Authorization = Base64.encode(str);
       url = url.split('@')[1];
     }
-    return fetchFromHttp({
-      // url: `/getTrustNodeStatus?url=http://${url}`,
-      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
-      methodAlias: 'listunspent',
-      method: 'POST',
-      timeOut: Authorization ? 6500 : 3500,
-      params: [0, 9999, [trusteeAddress]],
-      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
-    })
+    return window
+      .fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'listunspent',
+        method: 'POST',
+        timeOut: Authorization ? 6500 : 3500,
+        params: [0, 9999, [trusteeAddress]],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      })
       .then(res => {
         if (res && !res.error) {
           return res;
@@ -782,8 +783,9 @@ export default class Trust extends ModelExtend {
       url = url.split('@')[1];
     }
     const fetchAction = id =>
-      fetchFromHttp({
-        url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+      window.fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
         methodAlias: 'getrawtransaction',
         method: 'POST',
         timeOut: 3500,
@@ -834,14 +836,17 @@ export default class Trust extends ModelExtend {
       Authorization = Base64.encode(str);
       url = url.split('@')[1];
     }
-    const res = await fetchFromHttp({
-      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
-      methodAlias: 'getblockchaininfo',
-      method: 'POST',
-      timeOut: 3500,
-      params: [],
-      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
-    }).catch(err => Promise.reject(err));
+    const res = await window
+      .fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'getblockchaininfo',
+        method: 'POST',
+        timeOut: 3500,
+        params: [],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      })
+      .catch(err => Promise.reject(err));
     if (res && res.result) {
       return res.result;
     }

@@ -53,7 +53,7 @@ class APINodeSettingModal extends Component {
       const { node } = this.state;
       const errMsg =
         Patterns.check('required')(node) ||
-        (RegEx.checkAuthorization.test(node) ? '' : <FormattedMessage id={'NotMathTheFormat'} />);
+        (RegEx.checkAuthorizationHttps.test(node) ? '' : <FormattedMessage id={'NotMathTheFormat'} />);
       this.setState({ nodeErrMsg: errMsg });
       return errMsg;
     },
@@ -114,12 +114,12 @@ class APINodeSettingModal extends Component {
               <div className={styles.nodeexample}>
                 <FormattedMessage id={'NodeAddress'} />
                 <span>
-                  <FormattedMessage id={'Example'} />: name:password@127.1.1.1:8000
+                  <FormattedMessage id={'Example'} />: name:password@btc-node.chainx.org.cn/mainnet
                 </span>
               </div>
             }
             value={node}
-            placeholder={`API接口: [name:password@]127.1.1.1:8000`}
+            placeholder={`API接口: name:password@hostname/[?path]`}
             errMsg={nodeErrMsg}
             onChange={value => {
               this.setState({ node: value });

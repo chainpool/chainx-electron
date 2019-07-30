@@ -345,6 +345,7 @@ export const RegEx = {
   checkDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
   checkIsIP: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
   checkAuthorization: /^(\w+:.+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$)/,
+  checkAuthorizationHttps: /^(\w+:.+@)?([\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$)/,
   checkUpperAndCase: /(?=.*[a-z])(?=.*[A-Z])/,
 };
 
@@ -386,6 +387,8 @@ export const setBlankSpace = (value, unit) => {
 };
 
 export const fetchFromWs = window.fetchFromWs;
+
+export const fetchFromNodeHttp = window.fetchFromNodeHttp;
 
 export const fetchFromHttp = ({
   url,
