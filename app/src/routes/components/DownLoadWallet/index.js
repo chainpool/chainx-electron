@@ -67,6 +67,7 @@ class DownLoadWallet extends Component {
                 </li>
               ))}
             </ul>
+            <div className={styles.shequ}>社区钱包</div>
             <ul>
               {[
                 {

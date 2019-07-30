@@ -33,7 +33,7 @@ const zh_en = {
     '去中心化轻钱包，不依赖中心化交易所',
     'Decentralized Full Client wallet, Independent on Centrailzed Exchanges',
   ],
-  DesktopEndSecurityWallet: ['桌面端安全钱包', 'Desktop end security wallet'],
+  DesktopEndSecurityWallet: ['桌面端钱包', 'Desktop end  wallet'],
   SetupAccount: ['请先设置账户', 'Setup Account'],
 
   Complete: ['完成', 'Complete'],
