@@ -88,6 +88,7 @@ export default class Election extends ModelExtend {
         Object.assign(result, {
           interest: this.setPrecision(interest, nativeAssetPrecision),
           balance: this.setPrecision(record.balance, token),
+          nextClaim: record.nextClaim,
         });
       }
 
