@@ -142,6 +142,7 @@ class DepositMineTable extends Mixin {
                         data: {
                           claimHeight: item.nextClaim,
                           targetNominateAmount,
+                          blockNumber,
                         },
                       });
                     }

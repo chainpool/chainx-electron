@@ -18,6 +18,7 @@ import {
   unfreeze,
   unnominate,
   voteClaim,
+  getNextRenominateByAccount,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -28,6 +29,7 @@ export default class Election extends ModelExtend {
   @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
+  @observable nextRenominateHeight = null;
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
@@ -360,6 +362,14 @@ export default class Election extends ModelExtend {
       extrinsic,
       success: () => this.reload(),
     };
+  };
+
+  getNextRenominateByAccount = async () => {
+    const currentAccount = this.getCurrentAccount();
+    if (currentAccount.address) {
+      const result = await getNextRenominateByAccount(currentAccount.address);
+      this.changeModel('nextRenominateHeight', result);
+    }
   };
 
   depositClaim = ({ token }) => {
