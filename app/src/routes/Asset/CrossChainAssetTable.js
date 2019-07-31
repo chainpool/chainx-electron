@@ -174,19 +174,12 @@ class CrossChainAssetTable extends Mixin {
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
                         openModal({
-                          name: 'WithdrawWarnModal',
+                          name: 'WithdrawModal',
                           data: {
-                            callback: () => {
-                              openModal({
-                                name: 'WithdrawModal',
-                                data: {
-                                  token: item.name,
-                                  freeShow: formatNumber.toPrecision(item.free, item.precision),
-                                  free: item.free,
-                                  chain: item.chain,
-                                },
-                              });
-                            },
+                            token: item.name,
+                            freeShow: formatNumber.toPrecision(item.free, item.precision),
+                            free: item.free,
+                            chain: item.chain,
                           },
                         });
                       }}>

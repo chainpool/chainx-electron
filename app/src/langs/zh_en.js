@@ -481,10 +481,6 @@ const zh_en = {
     '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
     'The jackpot of inactive nodes will not increase, and your voting income may be very low or even zero.',
   ],
-  RecommendedUseBindedAddress: [
-    ' ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)',
-    'It\'s highly recommended to use the binded address for the withdrawal in large amounts. Using a new address will lengthen the review time (the withdrawal can be cancelled on the "Recharge record" page)',
-  ],
   SuspensionDeposit: [
     '暂停充值，详情请查看公告',
     'Suspension of deposit. Please check the announcement for more details.',
