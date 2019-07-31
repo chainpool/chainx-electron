@@ -113,14 +113,13 @@ class VoteModal extends Mixin {
     }));
 
     const canSwitch = nextRenominateHeight === null || nextRenominateHeight <= blockNumber;
-
-    const isCanAdd = totalNomination <= selfVote * 10;
+    const canAdd = totalNomination < selfVote * 10 || isCurrentAccount;
 
     const getButtonStatus = () => {
       if (action === 'switch') {
         return !canSwitch ? 'disabled' : 'confirm';
       } else if (action === 'add') {
-        return !isCanAdd ? 'disabled' : 'confirm';
+        return !canAdd ? 'disabled' : 'confirm';
       }
       return 'confirm';
     };
@@ -287,7 +286,7 @@ class VoteModal extends Mixin {
               <FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />
             </div>
           )}
-          {action === 'add' && !isCanAdd && (
+          {action === 'add' && !canAdd && (
             <div className={styles.isCanAdd}>节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押</div>
           )}
           {action === 'switch' && !canSwitch ? (

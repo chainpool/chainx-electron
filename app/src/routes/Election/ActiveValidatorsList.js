@@ -25,7 +25,7 @@ class ActiveValidatorsList extends Component {
         encodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
-      globalStore: { nativeAssetName, language },
+      globalStore: { language },
       chainStore: { currentChainProducer },
     } = this.props;
 
