@@ -8,7 +8,7 @@ import sdotLogo from '../../resource/xdot.png';
 import miniLogo from '../../resource/miniLogo.png';
 import LBTCIcon from '../../resource/LBTC.png';
 
-@Inject(({ chainStore }) => ({ chainStore }))
+@Inject(({ chainStore, assetStore }) => ({ chainStore, assetStore }))
 class DepositMineTable extends Mixin {
   startInit = async () => {
     const {
@@ -24,9 +24,11 @@ class DepositMineTable extends Mixin {
 
   render() {
     const {
+      assetStore: { nativeAccountAssets: [{ reservedStaking }] = [] },
       chainStore: { blockNumber },
       model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
     } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -111,14 +113,16 @@ class DepositMineTable extends Mixin {
           render: (value, item) => {
             const targetNominateAmount = formatNumber.toFixed(item.interest * 10, getDefaultPrecision());
             const isWarn = item.interest > 0;
-            const isCanClaim =
-              item.interest > 0 && item.balance > targetNominateAmount && item.nextClaim <= blockNumber;
+            const canClaim =
+              item.interest > 0 &&
+              reservedStaking / Math.pow(10, 8) > Number(targetNominateAmount) &&
+              item.nextClaim <= blockNumber;
             return (
               <ButtonGroup>
                 <Button
-                  type={isCanClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
+                  type={canClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
                   onClick={() => {
-                    if (isCanClaim) {
+                    if (canClaim) {
                       openModal({
                         name: 'SignModal',
                         data: {
@@ -143,6 +147,7 @@ class DepositMineTable extends Mixin {
                           claimHeight: item.nextClaim,
                           targetNominateAmount,
                           blockNumber,
+                          reserved: reservedStaking / Math.pow(10, 8),
                         },
                       });
                     }
