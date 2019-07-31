@@ -1,23 +1,23 @@
-import { ChainX, formatNumber, observable, computed, toJS } from '../utils';
+import { ChainX, computed, formatNumber, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
   getBondingDuration,
+  getElectionMembersAPI,
   getIntentionBondingDuration,
+  getIntentionImages,
   getIntentions,
+  getIntentionsByAccount,
   getNominationRecords,
   getPseduIntentions,
   getPseduNominationRecords,
   nominate,
   refresh,
   register,
+  renominate,
   unfreeze,
   unnominate,
   voteClaim,
-  renominate,
-  getIntentionsByAccount,
-  getIntentionImages,
-  getElectionMembersAPI,
 } from '../services';
 
 export default class Election extends ModelExtend {

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { observer, _, showAssetName, Inject, formatNumber } from '../../utils';
+import { Button, ButtonGroup, FormattedMessage, Icon, Mixin, Table } from '../../components';
+import { _, formatNumber, Inject, showAssetName } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
