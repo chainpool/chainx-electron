@@ -8,7 +8,7 @@ class ClaimConditionModal extends Component {
     const {
       globalStore: {
         modal: {
-          data: { claimHeight, targetNominateAmount, blockNumber, reserved },
+          data: { claimHeight, targetNominateAmount, blockNumber, reserved, intention },
         },
       },
       chainStore: { blockTime, blockDuration },
@@ -33,7 +33,9 @@ class ClaimConditionModal extends Component {
             </div>
           ) : null}
           {need > 0 ? (
-            <div className={styles.pcxlock}>预估需要增加投票冻结：{formatNumber.toFixed(need, 8)} PCX</div>
+            <div className={styles.pcxlock}>
+              预估需要增加投票冻结：{formatNumber.toFixed(intention.need / Math.pow(10, 8), 8)} PCX
+            </div>
           ) : null}
         </div>
       </Modal>

@@ -117,6 +117,7 @@ class DepositMineTable extends Mixin {
               item.interest > 0 &&
               reservedStaking / Math.pow(10, 8) > Number(targetNominateAmount) &&
               item.nextClaim <= blockNumber;
+
             return (
               <ButtonGroup>
                 <Button
@@ -148,6 +149,7 @@ class DepositMineTable extends Mixin {
                           targetNominateAmount,
                           blockNumber,
                           reserved: reservedStaking / Math.pow(10, 8),
+                          intention: item,
                         },
                       });
                     }
