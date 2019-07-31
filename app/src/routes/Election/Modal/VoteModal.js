@@ -292,7 +292,7 @@ class VoteModal extends Mixin {
           )}
           {action === 'switch' && !canSwitch ? (
             <div className={styles.canSwitchHeight}>
-              下次可切换高度：{nextRenominateHeight}（预估{' '}
+              下次可切换时间：{nextRenominateHeight}（预估{' '}
               {moment_helper.formatHMS(
                 blockTime.getTime() + (nextRenominateHeight - blockNumber) * blockDuration,
                 'YYYY/MM/DD HH:mm:ss'
