@@ -23,7 +23,7 @@ class Asset extends Mixin {
 
   startInit = () => {
     const {
-      model: { dispatch, openModal },
+      model: { dispatch },
     } = this.props;
     this.fetchPoll(() =>
       dispatch({

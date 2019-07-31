@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Mixin, Tabs, FormattedMessage, Dropdown } from '../../components';
+import { Dropdown, FormattedMessage, Mixin, Tabs } from '../../components';
 import * as styles from './index.less';
 import NodeTable from './NodeTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';
@@ -9,7 +9,6 @@ import RegisterNodeModal from './Modal/RegisterNodeModal';
 import InactiveVoteConfirmModal from './Modal/InactiveVoteConfirmModal';
 import ActiveValidatorsList from './ActiveValidatorsList';
 import { Inject } from '../../utils';
-import { HoverTip } from '../components';
 import { dropdownIcon } from '../../resource';
 
 @Inject(({ electionStore: model }) => ({ model }))
