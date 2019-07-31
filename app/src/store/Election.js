@@ -158,7 +158,6 @@ export default class Election extends ModelExtend {
         myRevocation,
         myInterest,
         myRevocations,
-        nextRenominate: intention.nextRenominate,
       };
     };
 
