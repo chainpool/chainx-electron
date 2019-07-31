@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Input, Mixin, Modal, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
-import { Inject, Patterns, setBlankSpace, classNames } from '../../../utils';
+import { Inject, Patterns, setBlankSpace, classNames, moment_helper } from '../../../utils';
 import * as styles from './VoteModal.less';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
@@ -81,7 +81,7 @@ class VoteModal extends Mixin {
         modal: { data: { target, myTotalVote = 0, isCurrentAccount, isActive, selfVote, totalNomination } = {} },
         nativeAssetName: token,
       },
-      chainStore: { blockDuration, blockNumber },
+      chainStore: { blockDuration, blockNumber, blockTime },
       electionStore: { bondingDuration, intentionBondingDuration, nextRenominateHeight },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
       accountStore: { isValidator },
@@ -292,7 +292,12 @@ class VoteModal extends Mixin {
           )}
           {action === 'switch' && !canSwitch ? (
             <div className={styles.canSwitchHeight}>
-              下次可切换高度：{nextRenominateHeight}（预估 {nextRenominateHeight}）
+              下次可切换高度：{nextRenominateHeight}（预估{' '}
+              {moment_helper.formatHMS(
+                blockTime.getTime() + (nextRenominateHeight - blockNumber) * blockDuration,
+                'YYYY/MM/DD HH:mm:ss'
+              )}
+              ）
             </div>
           ) : null}
         </div>
