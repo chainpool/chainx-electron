@@ -1,8 +1,8 @@
 import React from 'react';
 import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { HoverTip, Balance } from '../components';
+import { Button, ButtonGroup, FormattedMessage, Mixin, Table } from '../../components';
+import { Balance, HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
