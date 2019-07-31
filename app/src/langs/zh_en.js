@@ -388,7 +388,7 @@ const zh_en = {
     'Make sure your nodes are properly deployed, or you will be punished.',
   ],
   NoRewardsAfterWithdrawal: ['退选后不会再有奖惩和惩罚', 'There will be no more rewards, penalties after withdrawal'],
-  NotSupport: ['暂不支持bc1开头的隔离见证地址', 'SegWit address starting with bc1 is unsupported'],
+  NotSupport: ['仅支持1和3开头的BTC地址', 'Only support BTC addresses begin with 1 or 3'],
   SystemDefault: ['系统默认', 'System Default'],
   UserDefined: ['自定义', 'User-defined'],
   ThisMachine: ['本机', 'This Machine'],
@@ -489,10 +489,6 @@ const zh_en = {
   InactiveJackpotNotIncrease: [
     '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
     'The jackpot of inactive nodes will not increase, and your voting income may be very low or even zero.',
-  ],
-  RecommendedUseBindedAddress: [
-    ' ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)',
-    'It\'s highly recommended to use the binded address for the withdrawal in large amounts. Using a new address will lengthen the review time (the withdrawal can be cancelled on the "Recharge record" page)',
   ],
   SuspensionDeposit: [
     '暂停充值，详情请查看公告',
