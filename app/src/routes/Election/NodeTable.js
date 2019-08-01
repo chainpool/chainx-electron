@@ -39,8 +39,6 @@ class NodeTable extends Component {
       }),
     ];
 
-    console.log(dataSources);
-
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -257,19 +255,17 @@ class NodeTable extends Component {
               {currentAddress ? (
                 <Button
                   onClick={() => {
-                    const vote = () =>
-                      openModal({
-                        name: 'VoteModal',
-                        data: {
-                          isActive: item.isActive,
-                          target: item.account,
-                          myTotalVote: item.myTotalVote,
-                          isCurrentAccount: item.address === currentAccount.address,
-                          selfVote: setDefaultPrecision(item.selfVote),
-                          totalNomination: setDefaultPrecision(item.totalNomination),
-                        },
-                      });
-                    vote();
+                    openModal({
+                      name: 'VoteModal',
+                      data: {
+                        isActive: item.isActive,
+                        target: item.account,
+                        myTotalVote: item.myTotalVote,
+                        isCurrentAccount: item.address === currentAccount.address,
+                        selfVote: setDefaultPrecision(item.selfVote),
+                        totalNomination: setDefaultPrecision(item.totalNomination),
+                      },
+                    });
                   }}>
                   {item.myTotalVote ? <FormattedMessage id={'ChangeNominate'} /> : <FormattedMessage id={'Nominate'} />}
                 </Button>
