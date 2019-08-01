@@ -113,17 +113,13 @@ class DepositMineTable extends Mixin {
           render: (value, item) => {
             const requiredStakingContribution = Number(formatNumber.toFixed(item.interest * 10, getDefaultPrecision()));
             const isWarn = item.interest > 0;
-            const canClaim =
-              item.interest > 0 &&
-              reservedStaking >= requiredStakingContribution * Math.pow(10, 8) &&
-              blockNumber > item.nextClaim;
 
             return (
               <ButtonGroup>
                 <Button
-                  type={canClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
+                  type={item.canClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
                   onClick={() => {
-                    if (canClaim) {
+                    if (item.canClaim) {
                       openModal({
                         name: 'SignModal',
                         data: {
