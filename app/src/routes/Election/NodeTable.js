@@ -39,8 +39,6 @@ class NodeTable extends Component {
       }),
     ];
 
-    console.log(dataSources);
-
     const tableProps = {
       className: styles.tableContainer,
       columns: [
