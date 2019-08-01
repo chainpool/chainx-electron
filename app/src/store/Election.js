@@ -219,6 +219,13 @@ export default class Election extends ModelExtend {
     ];
   }
 
+  @computed get myRevocationCount() {
+    return (this.validatorsWithMyNomination || []).reduce(
+      (result, validator) => result + (validator.myRevocations || []).length,
+      0
+    );
+  }
+
   // 信托节点
   @computed get trustIntentions() {
     return [...this.validatorsWithRecords].filter(validator => validator.isTrustee && validator.isTrustee.length);

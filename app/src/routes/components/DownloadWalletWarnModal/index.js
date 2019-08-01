@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, RouterGo, LanguageContent } from '../../../components';
+import { Button, LanguageContent, Modal } from '../../../components';
 import * as styles from './index.less';
 
 class DownloadWalletWarnModal extends Component {
