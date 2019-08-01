@@ -111,12 +111,12 @@ class DepositMineTable extends Mixin {
           title: '',
           dataIndex: '_action',
           render: (value, item) => {
-            const targetNominateAmount = formatNumber.toFixed(item.interest * 10, getDefaultPrecision());
+            const requiredStakingContribution = Number(formatNumber.toFixed(item.interest * 10, getDefaultPrecision()));
             const isWarn = item.interest > 0;
             const canClaim =
               item.interest > 0 &&
-              reservedStaking / Math.pow(10, 8) > Number(targetNominateAmount) &&
-              item.nextClaim <= blockNumber;
+              reservedStaking >= requiredStakingContribution * Math.pow(10, 8) &&
+              blockNumber > item.nextClaim;
 
             return (
               <ButtonGroup>
@@ -146,7 +146,7 @@ class DepositMineTable extends Mixin {
                         name: 'ClaimConditionModal',
                         data: {
                           claimHeight: item.nextClaim,
-                          targetNominateAmount,
+                          requiredStakingContribution,
                           blockNumber,
                           reserved: reservedStaking / Math.pow(10, 8),
                           intention: item,

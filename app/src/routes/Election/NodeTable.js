@@ -23,9 +23,23 @@ class NodeTable extends Component {
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName },
+      chainStore: { blockNumber },
     } = this.props;
 
-    const dataSources = [validators, backupValidators, validatorsWithMyNomination];
+    const dataSources = [
+      validators,
+      backupValidators,
+      validatorsWithMyNomination.map(validator => {
+        const canUnfreeze = !!validator.myRevocations.find(revocation => blockNumber > revocation.revocationHeight);
+
+        return {
+          ...validator,
+          canUnfreeze,
+        };
+      }),
+    ];
+
+    console.log(dataSources);
 
     const tableProps = {
       className: styles.tableContainer,
@@ -192,6 +206,7 @@ class NodeTable extends Component {
             <ButtonGroup>
               {item.myRevocation ? (
                 <Button
+                  type={item.canUnfreeze ? 'highlight' : 'primary'}
                   onClick={() => {
                     openModal({
                       name: 'UnFreezeModal',
