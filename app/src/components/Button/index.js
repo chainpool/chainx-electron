@@ -16,6 +16,7 @@ export class Button extends PureComponent {
       Ele = 'button',
       canClick = true,
     } = this.props;
+
     return (
       <Ele
         style={style}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
 import { FormattedMessage, RouterGo, Table } from '../../components';
-import { _, observer, toJS, showAssetName } from '../../utils';
+import { _, observer, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
 @observer

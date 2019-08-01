@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, RouterGo, Dropdown, FormattedMessage, LanguageContent } from '../../components';
-import { ProducerColorChange } from '../components';
-import { HoverTip } from '../components';
+import { Button, FormattedMessage, LanguageContent, RouterGo } from '../../components';
+import { HoverTip, ProducerColorChange } from '../components';
 import { blockChain } from '../../constants';
-import { _, observer, groupArrayByCount, classNames, hexPrefix, Inject } from '../../utils';
+import { _, classNames, groupArrayByCount, hexPrefix, Inject } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import officialMember_zh from '../../resource/officialMember_zh.png';
@@ -26,7 +25,7 @@ class ActiveValidatorsList extends Component {
         encodeAddressAccountId,
       },
       accountStore: { currentAccount = {}, currentAddress },
-      globalStore: { nativeAssetName, language },
+      globalStore: { language },
       chainStore: { currentChainProducer },
     } = this.props;
 
@@ -183,7 +182,6 @@ class ActiveValidatorsList extends Component {
                                       target: item.account,
                                       myTotalVote: item.myTotalVote,
                                       isCurrentAccount: item.address === currentAccount.address,
-                                      nextRenominate: item.nextRenominate,
                                       selfVote: setDefaultPrecision(item.selfVote),
                                       totalNomination: setDefaultPrecision(item.totalNomination),
                                     },

@@ -195,6 +195,10 @@ export const getIntentionBondingDuration = (...payload) => stake.getIntentionBon
 
 export const getTokenDiscount = (...payload) => stake.getTokenDiscount(...payload);
 
+export const getNextRenominateByAccount = accountId => {
+  return stake.getNextRenominateByAccount(accountId);
+};
+
 export const getBlockTime = payload => {
   const { height } = payload;
   return fetchFromHttp({

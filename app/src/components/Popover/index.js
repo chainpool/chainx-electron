@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { default as Pop } from 'react-popover';
-import { classNames } from '../../utils';
 import * as styles from './index.less';
 
 export default class Popover extends PureComponent {
