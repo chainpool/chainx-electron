@@ -82,7 +82,7 @@ class VoteModal extends Mixin {
         nativeAssetName: token,
       },
       chainStore: { blockDuration, blockNumber, blockTime },
-      electionStore: { bondingDuration, intentionBondingDuration, nextRenominateHeight },
+      electionStore: { bondingDuration, intentionBondingDuration, nextRenominateHeight, myRevocationCount },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
       accountStore: { isValidator },
     } = this.props;
@@ -120,6 +120,8 @@ class VoteModal extends Mixin {
         return !canSwitch ? 'disabled' : 'confirm';
       } else if (action === 'add') {
         return !canAdd ? 'disabled' : 'confirm';
+      } else if (action === 'cancel') {
+        return myRevocationCount >= 10 ? 'disabled' : 'confirm';
       }
       return 'confirm';
     };
@@ -281,11 +283,14 @@ class VoteModal extends Mixin {
               />
             )}
           </FormattedMessage>
-          {action === 'cancel' && (
+          {action === 'cancel' ? (
             <div className={styles.lockweek}>
               <FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />
             </div>
-          )}
+          ) : null}
+          {action === 'cancel' && myRevocationCount >= 7 ? (
+            <div className={styles.lockweek}>同时赎回不能超过10笔(当前{myRevocationCount}笔)</div>
+          ) : null}
           {action === 'add' && !canAdd && (
             <div className={styles.isCanAdd}>节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押</div>
           )}
