@@ -113,7 +113,7 @@ class VoteModal extends Mixin {
     }));
 
     const canSwitch = nextRenominateHeight === null || nextRenominateHeight <= blockNumber;
-    const canAdd = totalNomination < selfVote * 10 || isCurrentAccount;
+    const canAdd = Number(amount) + Number(totalNomination) <= selfVote * 10 || isCurrentAccount;
 
     const getButtonStatus = () => {
       if (action === 'switch') {
