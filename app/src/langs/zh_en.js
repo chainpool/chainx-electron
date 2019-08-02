@@ -345,6 +345,7 @@ const zh_en = {
   TrustHotMultiSignatureAddress: ['信托热多签地址', 'Trust hot multi-signature address'],
   NetDelay: ['网络延迟', 'NetWork Delay'],
   BlockHeight: ['块高', 'Block Height'],
+  Block: ['块高', 'Block'],
   HasExpired: ['已到期', 'Has expired'],
   SyncStatus: ['同步状态', 'Sync Status'],
   Trustee: ['信托', 'Trustee'],
