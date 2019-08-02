@@ -544,6 +544,7 @@ const zh_en = {
     '2. The time interval for each interest claim shall not be less than 7 days.',
   ],
   Satisfied: ['已完成', 'Satisfied'],
+  SwitchInterval: ['每3天可切换一次', 'Switch by 3 days intervals'],
 };
 
 export const zh_CN = {};
