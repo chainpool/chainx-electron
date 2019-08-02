@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as styles from './index.less';
-import { Table, Mixin, RouterGo, FormattedMessage } from '../../components';
+import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
 import { observer } from '../../utils';
 
 @observer

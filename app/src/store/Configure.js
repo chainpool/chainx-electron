@@ -1,6 +1,6 @@
-import { observable, computed, autorun, localSave, _, fetchFromWs, fetchFromHttp, toJS } from '../utils';
+import { _, autorun, computed, fetchFromHttp, fetchFromWs, localSave, observable } from '../utils';
 import ModelExtend from './ModelExtend';
-import { NetWork, ConfigureVersion } from '../constants';
+import { ConfigureVersion, NetWork } from '../constants';
 
 export default class Configure extends ModelExtend {
   constructor(rootStore) {
