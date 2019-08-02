@@ -1,18 +1,18 @@
-import React, { Suspense, Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Route, Switch, Redirect } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import zh from 'react-intl/locale-data/zh';
 import en from 'react-intl/locale-data/en';
-import { zh_CN, en_US } from '../../langs/zh_en.js';
+import { en_US, zh_CN } from '../../langs/zh_en.js';
 
 import CommonLayOut from './CommonLayOut';
-import { SignModal, LowerPCXWarn, DownloadWalletWarnModal } from '../components';
+import { DownloadWalletWarnModal, LowerPCXWarn, SignModal } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
-import { Inject, toJS, isElectron } from '../../utils';
+import { Inject, toJS } from '../../utils';
 import * as styles from './index.less';
 
 addLocaleData([...zh, ...en]);
@@ -45,16 +45,6 @@ console.log = (...payload) => {
   })
 )
 class Main extends Component {
-  componentDidMount = () => {
-    const {
-      globalStore: { openModal },
-    } = this.props;
-    if (!isElectron() && !/mywallet.com/.test(window.location.href)) {
-      openModal({
-        name: 'DownloadWalletWarnModal',
-      });
-    }
-  };
   render() {
     const {
       globalStore: {
