@@ -346,6 +346,7 @@ const zh_en = {
   TrustHotMultiSignatureAddress: ['信托热多签地址', 'Trust hot multi-signature address'],
   NetDelay: ['网络延迟', 'NetWork Delay'],
   BlockHeight: ['块高', 'Block Height'],
+  Block: ['块高', 'Block'],
   HasExpired: ['已到期', 'Has expired'],
   SyncStatus: ['同步状态', 'Sync Status'],
   Trustee: ['信托', 'Trustee'],
@@ -535,16 +536,16 @@ const zh_en = {
   CrossChainClaimRequirements: ['提息条件', 'Requirements'],
   CrossChainNextClaimTime: ['下次可提息时间', 'Next claim time'],
   CrossChainEstimatedAddBonded: ['预估需要增加投票冻结', 'Estimated votes to add'],
-  CrossChainNextClaimDetail: ['块高 {claimHeight}(预估 {claimTime})', 'Block {claimHeight}(Estimated {claimTime})'],
+  CrossChainNextClaimDetail: ['块高 {claimHeight} (预估 {claimTime})', 'Block {claimHeight} (Estimated {claimTime})'],
   CrossChainClaimRequirement1: [
-    '1. 你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
-    '1. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
+    '1. 每次提息时间间隔不少于7天.',
+    '1. The time interval for each interest claim shall not be less than 7 days.',
   ],
   CrossChainClaimRequirement2: [
-    '2. 每次提息时间间隔不少于7天.',
-    '2. The time interval for each interest claim shall not be less than 7 days.',
+    '2. 你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
+    '2. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
   ],
-  Satisfied: ['已完成', 'Satisfied'],
+  Satisfied: ['已满足', 'Satisfied'],
   SwitchInterval: ['每3天可切换一次', 'Switch by 3 days intervals'],
 };
 
