@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { observer, parseQueryString, setColumnsWidth } from '../../utils';
 import * as styles from './index.less';
-import { Table, Button, ButtonGroup, Mixin, FormattedMessage } from '../../components';
+import { Button, ButtonGroup, FormattedMessage, Mixin, Table } from '../../components';
 
 @observer
 class ApiManageTable extends Mixin {
