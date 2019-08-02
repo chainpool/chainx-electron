@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node config/scripts/start.js",
-    "build": "CI=false && yarn && node config/scripts/build.js",
+    "build": "cross-env CI=false && yarn && node config/scripts/build.js",
     "test": "node config/scripts/test.js"
   },
   "dependencies": {
@@ -22,6 +22,7 @@
     "chainx.js": "2.17.0-y.4",
     "classnames": "^2.2.6",
     "clipboard": "^2.0.4",
+    "cross-env": "^5.2.0",
     "current-device": "^0.7.8",
     "downloadjs": "^1.4.7",
     "js-base64": "^2.5.1",
