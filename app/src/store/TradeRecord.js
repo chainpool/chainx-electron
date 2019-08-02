@@ -6,10 +6,6 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { moment_helper, translation } from '../utils';
 
 export default class TradeRecord extends ModelExtend {
-  constructor(...args) {
-    super(...args);
-  }
-
   @observable tradeRecordsPageTotal = 1;
   @observable tradeRecords = [];
   @observable loading = {
