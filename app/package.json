@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node config/scripts/start.js",
-    "build": "cross-env CI=false && yarn && node config/scripts/build.js",
+    "build": "cross-env CI=false yarn && node config/scripts/build.js",
     "test": "node config/scripts/test.js"
   },
   "dependencies": {
