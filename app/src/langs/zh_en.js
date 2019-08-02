@@ -536,11 +536,11 @@ const zh_en = {
   CrossChainEstimatedAddBonded: ['预估需要增加投票冻结', 'Estimated votes to add'],
   CrossChainNextClaimDetail: ['块高 {claimHeight}(预估 {claimTime})', 'Block {claimHeight}(Estimated {claimTime})'],
   CrossChainClaimRequirement1: [
-    '1，你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
+    '1. 你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
     '1. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
   ],
   CrossChainClaimRequirement2: [
-    '2，每次提息时间间隔不少于7天.',
+    '2. 每次提息时间间隔不少于7天.',
     '2. The time interval for each interest claim shall not be less than 7 days.',
   ],
   Satisfied: ['已完成', 'Satisfied'],
