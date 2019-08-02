@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mixin, Tabs, FormattedMessage, RouterGo } from '../../components';
+import { FormattedMessage, Mixin, Tabs } from '../../components';
 import { BreadCrumb } from '../components';
 import DepositTable from './DepositTable';
 import WithDrawTable from './WithDrawTable';

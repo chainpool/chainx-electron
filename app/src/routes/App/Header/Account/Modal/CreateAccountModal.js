@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, ButtonGroup, FormattedMessage } from '../../../../../components';
-import { _, Patterns, ChainX, classNames } from '../../../../../utils';
-import { ErrMsg } from '../../../../../constants';
+import { Button, ButtonGroup, FormattedMessage, Input, Modal } from '../../../../../components';
+import { _, ChainX, classNames, Patterns } from '../../../../../utils';
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {

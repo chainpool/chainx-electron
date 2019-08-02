@@ -77,10 +77,10 @@ class Main extends Component {
 
     const getMessages = () => {
       switch (language) {
-        case 'zh':
-          return zh_CN;
         case 'en':
           return en_US;
+        default:
+          return zh_CN;
       }
     };
 

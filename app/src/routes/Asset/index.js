@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Mixin, RouterGo, FormattedMessage } from '../../components';
+import { Button, FormattedMessage, Icon, Mixin, RouterGo } from '../../components';
 import { TableTitle } from '../components';
 import { PATH } from '../../constants';
 import PrimaryAssetTable from './PrimaryAssetTable';
@@ -10,7 +10,6 @@ import TransferModal from './Modal/TransferModal';
 import CrossChainBindModal from './Modal/CrossChainBindModal';
 import GetCollarModal from './Modal/GetCollarModal';
 import GetCollarModalSDOT from './Modal/GetCollarModalSDOT';
-import BtcBindModal from './Modal/BtcBindModal';
 import StopDepositModal from './Modal/StopDepositModal';
 import WithdrawWarnModal from './Modal/WithdrawWarnModal';
 import LockPositionListModal from './Modal/LockPositionListModal';
@@ -85,7 +84,6 @@ class Asset extends Mixin {
         {name === 'CrossChainBindModal' ? <CrossChainBindModal {...this.props} /> : null}
         {name === 'GetCollarModal' ? <GetCollarModal {...this.props} /> : null}
         {name === 'GetCollarModalSDOT' ? <GetCollarModalSDOT {...this.props} /> : null}
-        {name === 'BtcBindModal' ? <BtcBindModal {...this.props} /> : null}
         {name === 'StopDepositModal' ? <StopDepositModal {...this.props} /> : null}
         {name === 'WithdrawWarnModal' ? <WithdrawWarnModal {...this.props} /> : null}
         {name === 'LockPositionListModal' ? <LockPositionListModal {...this.props} /> : null}
