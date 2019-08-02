@@ -33,7 +33,7 @@ class ClaimConditionModal extends Component {
               <div>下次可提息时间</div>
               {showClaimHeight ? nextClaim : ok}
             </section>
-            <section className={styles.estimatedLockedPcx}>
+            <section>
               <div>预估需要增加投票冻结</div>
               {typeof intention.need === 'number' && intention.need > 0 ? estimatedLock : ok}
             </section>
