@@ -1,35 +1,32 @@
 import {
   _,
-  ChainX,
-  observable,
-  formatNumber,
-  localSave,
   autorun,
-  fetchFromHttp,
-  moment_helper,
-  hexPrefix,
-  toJS,
+  ChainX,
   convertAddressChecksumAll,
-  getMNFromRedeemScript,
+  fetchFromHttp,
+  formatNumber,
+  hexPrefix,
+  localSave,
+  moment_helper,
+  observable,
+  toJS,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  getWithdrawalList,
   createWithdrawTx,
-  getWithdrawTx,
-  signWithdrawTx,
-  getTrusteeInfoByAccount,
-  setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeInfoByAccount,
   getTrusteeSessionInfo,
-  getUnspent,
-  getTxsFromTxidList,
+  getWithdrawalList,
+  getWithdrawTx,
+  setupBitcoinTrustee,
+  signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
 
@@ -58,24 +55,16 @@ export default class Trust extends ModelExtend {
 
   @observable _trusts = localSave.get('trusts') || [];
   @observable tx = '';
-  @observable txSpecial = '';
   @observable signStatus = '';
   @observable redeemScript = '';
-  @observable redeemScriptSpecial = '';
-  @observable trusteeList = []; //已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
-  @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
-  @observable commentFee = ''; // 推荐手续费
+  @observable trusteeList = []; //已签名的节点列表
+  @observable commentFee = '';
   @observable totalSignCount = '';
-  @observable maxSignCount = '';
   @observable lastPredictTradeLength = '';
-  @observable BitCoinFee = '';
-  @observable txInputList = [];
-  @observable txOutputList = [];
-  @observable txSpecialInputList = [];
-  @observable txSpecialOutputList = [];
 
-  @computed get BitCoinFeeShow() {
-    return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
+  @computed
+  get maxSignCount() {
+    return Math.ceil((this.totalSignCount * 2) / 3);
   }
 
   @computed
@@ -91,19 +80,6 @@ export default class Trust extends ModelExtend {
 
   set trusts(value) {
     this._trusts = value;
-  }
-
-  @computed get allColdOrHotPubKey() {
-    const [coldEntity, hotEntity] = [[], []];
-    this.chainConfigTrusteeList.forEach(item => {
-      if (_.get(item, 'props.coldEntity')) {
-        coldEntity.push(_.get(item, 'props.coldEntity'));
-      }
-      if (_.get(item, 'props.hotEntity')) {
-        hotEntity.push(_.get(item, 'props.hotEntity'));
-      }
-    });
-    return { coldEntity, hotEntity };
   }
 
   @computed get normalizedOnChainAllWithdrawList() {
@@ -184,7 +160,6 @@ export default class Trust extends ModelExtend {
   }
 
   @computed get signTrusteeList() {
-    if (!this.tx) return [];
     const currentAccount = this.getCurrentAccount();
     return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
       const newItem = {
@@ -206,54 +181,6 @@ export default class Trust extends ModelExtend {
     });
   }
 
-  @computed get txSpecialSignTrusteeList() {
-    if (!this.txSpecial) return [];
-    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-    const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-    const inputs = txb.__inputs[0];
-    if (!inputs.signatures) return [];
-    const signList = inputs.signatures.map((item, index) => {
-      const pubKey = inputs.pubkeys[index].toString('hex');
-      const filterOne =
-        this.chainConfigTrusteeList.filter(one => one.props.hotEntity.replace(/^0x/, '') === pubKey)[0] ||
-        this.chainConfigTrusteeList.filter(one => one.props.coldEntity.replace(/^0x/, '') === pubKey)[0] ||
-        {};
-      return {
-        trusteeSign: _.isUndefined(item) ? item : !!item,
-        pubKey,
-        accountId: filterOne.accountId,
-      };
-    });
-    const currentAccount = this.getCurrentAccount();
-    const mergeSignList = signList.map(item => {
-      const isColdOrHotEntity = this.isColdOrHotEntity(`0x${item.pubKey}`);
-      if (item.accountId) {
-        const findOne = this.rootStore.electionStore.trustIntentions.filter(
-          one => `0x${this.decodeAddressAccountId(item.accountId)}` === one.account
-        )[0];
-
-        if (findOne) {
-          return {
-            ...findOne,
-            ...item,
-            isColdEntity: isColdOrHotEntity.isColdEntity,
-            isHotEntity: isColdOrHotEntity.isHotEntity,
-            isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === findOne.account,
-          };
-        }
-      } else {
-        return {
-          ...item,
-          isColdEntity: isColdOrHotEntity.isColdEntity,
-          isHotEntity: isColdOrHotEntity.isHotEntity,
-          name: `${item.pubKey.slice(0, 5)}...${item.pubKey.slice(-5)}`,
-        };
-      }
-    });
-    return mergeSignList;
-  }
-
   @computed get signHash() {
     if (this.tx && this.signTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCount) {
       const tx = bitcoin.Transaction.fromHex(this.tx.replace(/^0x/, ''));
@@ -261,50 +188,6 @@ export default class Trust extends ModelExtend {
       return reverse(hash).toString('hex');
     }
     return '';
-  }
-
-  @computed get signHashSpecial() {
-    if (
-      this.txSpecial &&
-      this.txSpecialSignTrusteeList.filter((item = {}) => item.trusteeSign).length >= this.maxSignCountSpecial
-    ) {
-      const tx = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const hash = tx.getHash();
-      return reverse(hash).toString('hex');
-    }
-    return '';
-  }
-
-  @computed get maxSignCountSpecial() {
-    let redeemScriptSpecial = this.redeemScriptSpecial;
-    if (redeemScriptSpecial) {
-      return getMNFromRedeemScript(this.redeemScriptSpecial).m;
-    } else if (this.txSpecial) {
-      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-      const inputs = txb.__inputs[0];
-      if (inputs && inputs.redeemScript) {
-        redeemScriptSpecial = inputs.redeemScript;
-        return getMNFromRedeemScript(redeemScriptSpecial).m;
-      }
-    }
-  }
-
-  @computed get totalSignCountSpecial() {
-    let redeemScriptSpecial = this.redeemScriptSpecial;
-    if (redeemScriptSpecial) {
-      return getMNFromRedeemScript(this.redeemScriptSpecial).n;
-    } else if (this.txSpecial) {
-      const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-      const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-      const inputs = txb.__inputs[0];
-      if (inputs && inputs.redeemScript) {
-        redeemScriptSpecial = inputs.redeemScript;
-        return getMNFromRedeemScript(redeemScriptSpecial).n;
-      }
-    }
   }
 
   reload = () => {
@@ -319,40 +202,41 @@ export default class Trust extends ModelExtend {
     this.changeModel('trusts', convertAddressChecksumAll(trusts));
   };
 
-  sign = async ({ withdrawList, tx, redeemScript, privateKey, userInputbitFee = 0, url }) => {
+  sign = async ({ withdrawList, tx, redeemScript, privateKey, bitFee = 0 }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
       if (withdrawList) {
         const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-        let multisigAddress = await this.getBitcoinTrusteeAddress();
-        if (url) {
-          //特殊交易
-          multisigAddress = url;
-        } else {
-          multisigAddress = await this.getBitcoinTrusteeAddress();
+        if (!findOne || (findOne && !findOne.node)) {
+          throw new Error({
+            info: '未设置节点',
+            toString: () => 'NotSetNode',
+          });
         }
+        if (!findOne.connected) {
+          throw new Error({
+            info: '节点未连接',
+            toString: () => 'NodeNotLink',
+          });
+        }
+        const multisigAddress = await this.getBitcoinTrusteeAddress();
         if (!multisigAddress) {
           throw new Error({
             info: '未获取到信托地址',
             toString: () => 'NotFindTrusteeAddress',
           });
         }
-
         const nodeUrl = findOne.node;
-        const BitCoinFee = this.BitCoinFee;
-        if (!url && !BitCoinFee) {
+        const minerFee = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
+        if (!minerFee) {
           throw new Error({
             info: '未获取到提现手续费',
             toString: () => 'NotFindTrusteeFee',
           });
         }
 
-        const getUnspents = address =>
-          getUnspent({ address, isTest: this.isTestBitCoinNetWork() }).then((res = {}) => {
-            return res.result;
-          });
-
+        const getUnspents = async url => this.fetchNodeStatus(url).then((res = {}) => res.result);
         const filterUnspentsByAmount = (unspents = [], amount) => {
           const nonZeroUnspents = unspents.filter(utxo => new BigNumber(utxo.amount) > 0);
           nonZeroUnspents.sort((a, b) => Number(b.amount) - Number(a.amount));
@@ -369,15 +253,6 @@ export default class Trust extends ModelExtend {
           }
           return sum.isLessThan(amount) ? [] : result;
         };
-
-        const caculateCommentFeeFromSatoshiKB = async (satoshiKB, inputLength, withdrawalLength) => {
-          const fee = satoshiKB;
-          const res = await this.getTrusteeSessionInfo('Bitcoin');
-          const { maxSignCount: n, totalSignCount: m } = res;
-          const bytes = inputLength * (48 + 73 * n + 34 * m) + 34 * (withdrawalLength + 1) + 14;
-          return formatNumber.toFixed((bytes / 1024) * fee, 8);
-        };
-
         const caculateCommentFee = async (url, inputLength, withdrawalLength) => {
           const fee = await this.fetchNodeFeeRate(url);
           const res = await this.getTrusteeSessionInfo('Bitcoin');
@@ -400,18 +275,16 @@ export default class Trust extends ModelExtend {
           }
         };
 
-        const utxos = await getUnspents(multisigAddress);
-        if (!(utxos && utxos.length)) {
+        const utxos = await getUnspents(nodeUrl);
+        if (!utxos.length) {
           throw new Error({
             info: '当前节点无任何utxo',
             toString: () => 'NodeHasNoUTXO',
           });
         }
-
         const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
           return result + withdraw.amount;
         }, 0);
-
         if (totalWithdrawAmount <= 0) {
           throw new Error({
             info: '提现总额应大于0',
@@ -420,11 +293,9 @@ export default class Trust extends ModelExtend {
         }
         const targetUtxos = filterUnspentsByAmount(utxos, totalWithdrawAmount);
         if (targetUtxos.length <= 0) {
-          throw new Error({
-            info: '构造失败，账户余额不足',
-            toString: () => 'ConstructionFailedBalanceInnsufficient',
-          });
+          throw new Error('构造失败，账户余额不足');
         }
+
         const totalInputAmount = targetUtxos.reduce((result, utxo) => {
           return new BigNumber(10)
             .exponentiatedBy(8)
@@ -437,14 +308,12 @@ export default class Trust extends ModelExtend {
         targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
         let feeSum = 0;
         withdrawList.forEach(withdraw => {
-          const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+          const fee = withdraw.amount - minerFee.fee;
           txb.addOutput(withdraw.addr, fee);
           feeSum += fee;
         });
-        //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
         // const change = totalInputAmount - totalWithdrawAmount - minerFee;
-        const change = totalInputAmount - feeSum - userInputbitFee;
-
+        const change = totalInputAmount - feeSum - bitFee;
         if (change < 0) {
           throw new Error({
             info: 'utxo总额不够支付手续费',
@@ -456,7 +325,7 @@ export default class Trust extends ModelExtend {
         }
 
         rawTransaction = txb.buildIncomplete().toHex();
-        //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
+        caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       } else {
         redeemScript = Buffer.from(redeemScript, 'hex');
         const privateKeys = [privateKey];
@@ -519,19 +388,13 @@ export default class Trust extends ModelExtend {
         this.getTrusteeSessionInfo(findOne.chain),
       ]);
       const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
+      const { redeemScript, totalSignCount } = resRede || {};
       this.changeModel({
         tx,
         signStatus,
         redeemScript,
         trusteeList,
         totalSignCount,
-        maxSignCount,
-        chainConfigTrusteeList,
-      });
-      this.getInputsAndOutputsFromTx({
-        tx,
-        isSpecialMode: false,
       });
     } else {
       this.changeModel({
@@ -540,123 +403,35 @@ export default class Trust extends ModelExtend {
         redeemScript: '',
         trusteeList: [],
         totalSignCount: '',
-        maxSignCount: '',
       });
-    }
-  };
-
-  getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
-    const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
-    const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
-    if (!tx) return;
-    if (isSpecialModel) {
-      this.changeModel('txSpecial', tx);
-    }
-    const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
-    const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
-    const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
-      const address = bitcoin.address.fromOutputScript(item.script, network);
-      return {
-        address,
-        value: this.setPrecision(item.value, 8),
-        satoshi: item.value,
-      };
-    });
-    this.changeModel(txOutputList, resultOutputs);
-    const ins = txbRAW.__tx.ins.map(item => {
-      return {
-        ...item,
-        hash: item.hash.reverse().toString('hex'),
-      };
-    });
-    // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
-    const ids = ins.map(item => item.hash);
-    const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
-    if (result && result.length) {
-      const insTXs = result.map(item => {
-        const transaction = bitcoin.Transaction.fromHex(item.raw);
-        const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
-        const filterOne = ins.filter((one = {}) => one.hash === item.txid)[0];
-        const findOne = txb.__tx.outs[filterOne.index];
-        const address = bitcoin.address.fromOutputScript(findOne.script, network);
-        return {
-          index: filterOne.index,
-          raw: item.raw,
-          address,
-          hash: item.txid,
-          value: this.setPrecision(findOne.value, 8),
-          satoshi: findOne.value,
-        };
-      });
-      this.changeModel(txInputList, insTXs);
     }
   };
 
   getTrusteeSessionInfo = async chain => {
-    const res = await getTrusteeSessionInfo(chain);
-    const {
-      hotEntity: { redeemScript } = {},
-      trusteeList: chainConfigTrusteeList = [],
-      counts: { total, required },
-    } = res || {};
-    return {
-      redeemScript,
-      totalSignCount: total,
-      maxSignCount: required,
-      chainConfigTrusteeList,
-    };
-  };
-
-  signWithHardware = async ({ desc, isSpecialModel, redeemScript, signCallback }) => {
-    const network = this.isTestBitCoinNetWork() ? 'testnet' : 'mainnet';
-    let res;
-    if (desc === 'Ledger') {
-      if (isSpecialModel) {
-        //console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
-        res = await window.LedgerInterface.sign(
-          this.txSpecial.replace(/^0x/, ''),
-          this.txSpecialInputList,
-          redeemScript ? redeemScript.replace(/^0x/, '') : null,
-          network
-        ).catch(err => Promise.reject(err));
-      } else {
-        //console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
-        res = await window.LedgerInterface.sign(
-          this.tx.replace(/^0x/, ''),
-          this.txInputList,
-          this.redeemScript.replace(/^0x/, ''),
-          network
-        ).catch(err => Promise.reject(err));
-      }
-    } else if (desc === 'Trezor') {
-      if (isSpecialModel) {
-        res = await signCallback(
-          this.txSpecial.replace(/^0x/, ''),
-          this.txSpecialInputList,
-          redeemScript ? redeemScript.replace(/^0x/, '') : null,
-          network
-        ).catch(err => Promise.reject(err));
-      } else {
-        res = await signCallback(
-          this.tx.replace(/^0x/, ''),
-          this.txInputList,
-          this.redeemScript.replace(/^0x/, ''),
-          network
-        ).catch(err => Promise.reject(err));
-      }
+    if (this.redeemScript) {
+      return {
+        redeemScript: this.redeemScript,
+        maxSignCount: this.maxSignCount,
+        totalSignCount: this.totalSignCount,
+      };
+    } else {
+      const res = await getTrusteeSessionInfo(chain);
+      const { hotEntity: { redeemScript } = {}, trusteeList = [] } = res || {};
+      return {
+        redeemScript,
+        totalSignCount: trusteeList.length,
+      };
     }
-
-    return res;
   };
 
   signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
     let tx_trans = null;
     if (tx) {
       tx = tx.replace(/^0x/, '');
-      //redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey })
+      redeemScript = redeemScript.replace(/^0x/, '');
+      tx_trans = await this.sign({ tx, redeemScript, privateKey });
     }
+
     const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
     return {
       extrinsic,
@@ -841,29 +616,5 @@ export default class Trust extends ModelExtend {
 
   getBitcoinTrusteeAddress = async () => {
     return await this.rootStore.assetStore.getTrusteeAddress({ chain: 'Bitcoin' });
-  };
-
-  getMinimalWithdrawalValueByToken = async () => {
-    const res = await this.rootStore.assetStore.getMinimalWithdrawalValueByToken({ token: 'BTC' });
-    if (res && res.fee) {
-      this.changeModel('BitCoinFee', res.fee);
-    }
-  };
-
-  isColdOrHotEntity = pubkey => {
-    const allColds = this.allColdOrHotPubKey.coldEntity;
-    const allHots = this.allColdOrHotPubKey.hotEntity;
-    return {
-      isColdEntity: allColds.includes(pubkey),
-      isHotEntity: allHots.includes(pubkey),
-    };
-  };
-
-  updateTxSpecial = ({ txSpecial }) => {
-    this.changeModel('txSpecial', txSpecial);
-  };
-
-  updateRedeemScriptSpecial = ({ redeemScriptSpecial }) => {
-    this.changeModel('redeemScriptSpecial', redeemScriptSpecial);
   };
 }

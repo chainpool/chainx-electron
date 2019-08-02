@@ -520,6 +520,30 @@ const zh_en = {
   MaxPrice: ['最高', 'Max'],
   MinPrice: ['最低', 'Min'],
   TradingVolumeTooSmall: ['交易额太小', 'too small'],
+  NextClaimTime: [
+    '下次可切换时间：块高 {nextRenominateHeight}（预估 {claimTime}',
+    'Next switch time: Block {nextRenominateHeight}（Estimated {claimTime}',
+  ],
+  MeanwhileRevocations: [
+    '同时赎回不能超过10笔(当前{myRevocationCount}笔)',
+    'Meanwhile at most 10 revocations (now {myRevocationCount})',
+  ],
+  IntentionBondedLimitation: [
+    '节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押',
+    'A node can only receive up to 10 times the votes it bonded, please contact the node to increase the bonded votes',
+  ],
+  CrossChainClaimRequirements: ['提息条件', 'Requirements'],
+  CrossChainNextClaimTime: ['下次可提息时间', 'Next claim time'],
+  CrossChainEstimatedAddBonded: ['预估需要增加投票冻结', 'Estimated votes to add'],
+  CrossChainNextClaimDetail: ['块高 {claimHeight}(预估 {claimTime})', 'Block {claimHeight}(Estimated {claimTime})'],
+  CrossChainClaimRequirement1: [
+    '1，你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
+    '1. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
+  ],
+  CrossChainClaimRequirement2: [
+    '2，每次提息时间间隔不少于7天.',
+    '2. The time interval for each interest claim shall not be less than 7 days.',
+  ],
 };
 
 export const zh_CN = {};

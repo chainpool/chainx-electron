@@ -112,8 +112,11 @@ class VoteModal extends Mixin {
       isActive: item.isActive,
     }));
 
-    const canSwitch = nextRenominateHeight === null || nextRenominateHeight <= blockNumber;
-    const canAdd = Number(amount) + Number(totalNomination) <= selfVote * 10 || isCurrentAccount;
+    const overNodeLimit = Number(amount) + Number(totalNomination) > selfVote * 10;
+    const canRenominate = nextRenominateHeight === null || blockNumber > nextRenominateHeight;
+
+    const canSwitch = (isCurrentAccount && canRenominate) || (!isCurrentAccount && !overNodeLimit && canRenominate);
+    const canAdd = !overNodeLimit || isCurrentAccount;
 
     const getButtonStatus = () => {
       if (action === 'switch') {
@@ -289,18 +292,27 @@ class VoteModal extends Mixin {
             </div>
           ) : null}
           {action === 'cancel' && myRevocationCount >= 7 ? (
-            <div className={styles.lockweek}>同时赎回不能超过10笔(当前{myRevocationCount}笔)</div>
+            <div className={styles.lockweek}>
+              <FormattedMessage id={'MeanwhileRevocations'} values={{ myRevocationCount }} />
+            </div>
           ) : null}
           {action === 'add' && !canAdd && (
-            <div className={styles.isCanAdd}>节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押</div>
+            <div className={styles.isCanAdd}>
+              <FormattedMessage id={'IntentionBondedLimitation'} />
+            </div>
           )}
           {action === 'switch' && !canSwitch ? (
             <div className={styles.canSwitchHeight}>
-              下次可切换时间：{nextRenominateHeight}（预估{' '}
-              {moment_helper.formatHMS(
-                blockTime.getTime() + (nextRenominateHeight - blockNumber) * blockDuration,
-                'YYYY/MM/DD HH:mm:ss'
-              )}
+              <FormattedMessage
+                id={'NextClaimTime'}
+                values={{
+                  nextRenominateHeight,
+                  claimTime: moment_helper.formatHMS(
+                    blockTime.getTime() + (nextRenominateHeight - blockNumber) * blockDuration,
+                    'YYYY/MM/DD HH:mm:ss'
+                  ),
+                }}
+              />
               ）
             </div>
           ) : null}

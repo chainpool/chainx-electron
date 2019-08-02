@@ -1,10 +1,9 @@
-import React from 'react';
 import { localSave, lodash_helper, moment_helper } from './helper';
 import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
-import { observer as observerable, inject } from 'mobx-react';
+import { inject, observer as observerable } from 'mobx-react';
 import device from 'current-device';
-import { ErrMsg, SCRYPT_PARAMS } from '../constants';
+import { SCRYPT_PARAMS } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';

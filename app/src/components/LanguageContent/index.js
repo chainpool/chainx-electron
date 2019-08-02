@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Inject } from '../../utils';
 
 @Inject(({ globalStore: model }) => ({ model }))
