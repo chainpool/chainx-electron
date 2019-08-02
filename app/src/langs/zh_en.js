@@ -534,7 +534,7 @@ const zh_en = {
   CrossChainClaimRequirements: ['提息条件', 'Requirements'],
   CrossChainNextClaimTime: ['下次可提息时间', 'Next claim time'],
   CrossChainEstimatedAddBonded: ['预估需要增加投票冻结', 'Estimated votes to add'],
-  CrossChainNextClaimDetail: ['块高 {claimHeight}(预估 {claimTime})', 'Block {claimHeight}(Estimated {claimTime})'],
+  CrossChainNextClaimDetail: ['块高 {claimHeight} (预估 {claimTime})', 'Block {claimHeight} (Estimated {claimTime})'],
   CrossChainClaimRequirement1: [
     '1. 每次提息时间间隔不少于7天.',
     '1. The time interval for each interest claim shall not be less than 7 days.',
