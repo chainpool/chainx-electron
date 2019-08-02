@@ -543,6 +543,7 @@ const zh_en = {
     '2，每次提息时间间隔不少于7天.',
     '2. The time interval for each interest claim shall not be less than 7 days.',
   ],
+  Satisfied: ['已完成', 'Satisfied'],
 };
 
 export const zh_CN = {};
