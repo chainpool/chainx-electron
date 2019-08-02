@@ -73,6 +73,12 @@ class VoteModal extends Mixin {
   };
 
   render() {
+    const switchInfo = (
+      <div className={styles.info}>
+        <FormattedMessage id={'SwitchInterval'} />
+      </div>
+    );
+
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action, selectNode, selectNodeErrMsg } = this.state;
     const {
@@ -301,6 +307,7 @@ class VoteModal extends Mixin {
               <FormattedMessage id={'IntentionBondedLimitation'} />
             </div>
           )}
+          {action === 'switch' && canSwitch ? switchInfo : null}
           {action === 'switch' && !canSwitch ? (
             <div className={styles.canSwitchHeight}>
               <FormattedMessage
