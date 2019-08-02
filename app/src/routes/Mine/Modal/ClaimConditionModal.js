@@ -33,7 +33,7 @@ function ClaimConditionModal(props) {
     </p>
   );
 
-  const estimatedLock = <p>预估需要增加投票冻结：{formatNumber.toFixed(intention.need / Math.pow(10, 8), 8)} PCX</p>;
+  const estimatedLock = <p>{formatNumber.toFixed(intention.need / Math.pow(10, 8), 8)} PCX</p>;
 
   return (
     <Modal title={<FormattedMessage id={'CrossChainClaimRequirements'} />}>
