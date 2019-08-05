@@ -66,7 +66,7 @@ function requestUpdateInfo() {
     .catch(error => {});
 }
 
-requestUpdateInfo();
+// requestUpdateInfo();
 
 app.utils = utils;
 

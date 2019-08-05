@@ -3,6 +3,7 @@ import { Mixin, ButtonGroup, Button, Icon, FormattedMessage, RouterGo } from '..
 import { TableTitle, HoverTip } from '../components';
 import { PATH } from '../../constants';
 import { classNames, Inject } from '../../utils';
+import { ForceTrustee } from '../../constants';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
@@ -78,8 +79,8 @@ class Trust extends Mixin {
   render() {
     const {
       accountStore: {
-        isValidator,
-        isTrustee,
+        isValidator: _isValidator,
+        isTrustee: _isTrustee,
         isActiveValidator,
         openModal,
         currentAccount: { address },
@@ -89,6 +90,8 @@ class Trust extends Mixin {
       },
       model: { trusts = [], tx },
     } = this.props;
+    const isTrustee = ForceTrustee ? true : _isValidator;
+    const isValidator = ForceTrustee ? true : _isTrustee;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
     const props = {
@@ -104,15 +107,15 @@ class Trust extends Mixin {
           <div className={styles.setting}>
             <TableTitle title={<FormattedMessage id={'TrusteeSettings'} />} className={styles.title}>
               <span className={styles.nodeStyle}>
-                (<FormattedMessage id={'YouAre'} />：
-                {isTrustee ? (
-                  <FormattedMessage id={'TrusteeNode'} />
-                ) : isActiveValidator ? (
-                  <FormattedMessage id={'ValidatorNode'} />
-                ) : (
-                  <FormattedMessage id={'StandbyNode'} />
-                )}
-                )
+                {/*(<FormattedMessage id={'YouAre'} />：*/}
+                {/*{_isTrustee ? (*/}
+                {/*<FormattedMessage id={'TrusteeNode'} />*/}
+                {/*) : isActiveValidator ? (*/}
+                {/*<FormattedMessage id={'ValidatorNode'} />*/}
+                {/*) : (*/}
+                {/*<FormattedMessage id={'StandbyNode'} />*/}
+                {/*)}*/}
+                {/*)*/}
               </span>
               <div className={styles.setListbutton}>
                 <Button
@@ -155,7 +158,7 @@ class Trust extends Mixin {
                           <span>设置跨链节点</span>
                         </li>
 
-                        {currentTrustNode.apiNode ? (
+                        {currentTrustNode.apiNode || ForceTrustee ? (
                           <>
                             <li
                               type="blank"
@@ -209,7 +212,7 @@ class Trust extends Mixin {
                   <FormattedMessage id={'BuildMultiSigWithdrawal'} />
                 </Button>
               ) : null}
-              {isValidator ? (
+              {_isValidator ? (
                 <Button
                   type="blank"
                   onClick={() => {

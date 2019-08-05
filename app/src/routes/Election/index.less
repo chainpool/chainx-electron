@@ -109,6 +109,8 @@
   margin-left: 5px;
 }
 .overHidden{
+  display: flex;
+  align-items: center;
   //.mixin_ellipse()
   &.myVote{
     // color:#D89601;
@@ -118,7 +120,7 @@
   display: flex;
   align-items: center;
   align-content: center;
-  .nodeType,.trusteeImg{
+  .nodeType{
     margin-right: 4px;
   }
   .trusteeImg{
@@ -219,7 +221,7 @@
             height:40px;
             background: #F2F3F4;
             border-radius: 40px;
-            font-family: Arial-BoldMT;
+            // font-family: Arial-BoldMT;
             font-size: 30px;
             color: #C2C2C2;
           }
@@ -241,8 +243,16 @@
               .nodeType{
                 margin-right: 4px;
               }
+              .trusteeImg+.isOfficialMember{
+                margin-left: 2px;
+              }
               .trusteeImg{
-                margin-right: 4px;
+                margin-left: 4px;
+              }
+              .isOfficialMember{
+                position:relative;
+                bottom:-1px;
+                margin-left: 4px;
               }
               .name{
                 font-weight: bold;
@@ -285,7 +295,7 @@
           left:-1px;
           top:100%;
           right:-1px;
-          background: #F2F3F4;
+          background: #F2F3F4 !important;
           border: 1px solid #DCE0E2;
           position: absolute;
           &.en{
@@ -315,6 +325,7 @@
                 margin-top: 10px;
               }
               display: flex;
+              align-items: center;
               background:transparent;
               >div{
                 &:hover{

@@ -102,8 +102,6 @@ class WithdrawSignModal extends Component {
                           type: 'signWithdrawTx',
                           payload: {
                             tx: !activeIndex ? tx : null,
-                            redeemScript,
-                            privateKey,
                           },
                         });
                       },

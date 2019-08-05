@@ -47,7 +47,7 @@ class SettingTable extends Component {
         // },
         {
           title: <FormattedMessage id={'HotEntity'} />,
-          ellipse: true,
+          ellipse: 20,
           dataIndex: 'hotPubKey',
         },
         {

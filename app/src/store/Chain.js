@@ -9,6 +9,7 @@ class Chain extends ModelExtend {
   @observable blockTime;
   @observable blockDuration = 2000; // 出块时间
   @observable bitCoinNetWork = 'test';
+  @observable currentChainProducer = '';
 
   @computed get normalizedBlockNumber() {
     return this.blockNumber && this.blockNumber.toLocaleString();
@@ -23,6 +24,7 @@ class Chain extends ModelExtend {
       const blockTime = new Date(head.now * 1000);
       this.setBlockNumber(head.number);
       this.changeModel('blockTime', blockTime);
+      this.changeModel('currentChainProducer', head.producer);
       _.isFunction(callback) && callback(blockTime);
     });
   }

@@ -195,6 +195,10 @@ export const getIntentionBondingDuration = (...payload) => stake.getIntentionBon
 
 export const getTokenDiscount = (...payload) => stake.getTokenDiscount(...payload);
 
+export const getNextRenominateByAccount = accountId => {
+  return stake.getNextRenominateByAccount(accountId);
+};
+
 export const getBlockTime = payload => {
   const { height } = payload;
   return fetchFromHttp({
@@ -266,10 +270,17 @@ export const getTxsFromTxidList = payload => {
   const { ids, isTest } = payload;
   return fetchFromHttp({
     method: 'post',
-    url: `https://api.chainx.org/chainx_trustee/${isTest ? 'testnet' : 'mainnet'}/txs`,
+    url: `https://api.chainx.org/chainx_trustee/${false ? 'testnet' : 'mainnet'}/txs`,
     body: {
       ids,
     },
+  });
+};
+
+export const getElectionMembersAPI = () => {
+  return fetchFromHttp({
+    url: `${API}/congress/members`,
+    method: 'get',
   });
 };
 

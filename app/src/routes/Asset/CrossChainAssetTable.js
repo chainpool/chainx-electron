@@ -1,8 +1,8 @@
 import React from 'react';
 import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { HoverTip, Balance } from '../components';
+import { Button, ButtonGroup, FormattedMessage, Mixin, Table } from '../../components';
+import { Balance, HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
@@ -99,24 +99,24 @@ class CrossChainAssetTable extends Mixin {
                   {isBTC && _.get(item, 'limitProps.CanDeposit') && (
                     <Button
                       onClick={() => {
-                        // openModal({
-                        //   name: 'CrossChainBindModal',
-                        //   data: {
-                        //     token: item.name,
-                        //     trusteeAddr: item.trusteeAddr,
-                        //   },
-                        // });
                         openModal({
-                          name: 'StopDepositModal',
+                          name: 'CrossChainBindModal',
+                          data: {
+                            token: item.name,
+                            trusteeAddr: item.trusteeAddr,
+                          },
                         });
+                        // openModal({
+                        //   name: 'StopDepositModal',
+                        // });
                       }}>
-                      <FormattedMessage id={'SuspensionDeposit'}>
-                        {msg => (
-                          <HoverTip tip={msg}>
-                            <Icon name="icon-jinggao" className={styles.jinggaoicon} />
-                          </HoverTip>
-                        )}
-                      </FormattedMessage>
+                      {/*<FormattedMessage id={'SuspensionDeposit'}>*/}
+                      {/*{msg => (*/}
+                      {/*<HoverTip tip={msg}>*/}
+                      {/*<Icon name="icon-jinggao" className={styles.jinggaoicon} />*/}
+                      {/*</HoverTip>*/}
+                      {/*)}*/}
+                      {/*</FormattedMessage>*/}
                       <FormattedMessage id={'Deposit'} />
                     </Button>
                   )}
@@ -174,19 +174,12 @@ class CrossChainAssetTable extends Mixin {
                       type={item.free > 0 ? 'primary' : 'disabled'}
                       onClick={() => {
                         openModal({
-                          name: 'WithdrawWarnModal',
+                          name: 'WithdrawModal',
                           data: {
-                            callback: () => {
-                              openModal({
-                                name: 'WithdrawModal',
-                                data: {
-                                  token: item.name,
-                                  freeShow: formatNumber.toPrecision(item.free, item.precision),
-                                  free: item.free,
-                                  chain: item.chain,
-                                },
-                              });
-                            },
+                            token: item.name,
+                            freeShow: formatNumber.toPrecision(item.free, item.precision),
+                            free: item.free,
+                            chain: item.chain,
                           },
                         });
                       }}>

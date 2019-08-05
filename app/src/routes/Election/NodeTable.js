@@ -23,9 +23,21 @@ class NodeTable extends Component {
       },
       accountStore: { currentAccount = {}, currentAddress },
       globalStore: { nativeAssetName },
+      chainStore: { blockNumber },
     } = this.props;
 
-    const dataSources = [validators, backupValidators, validatorsWithMyNomination];
+    const dataSources = [
+      validators,
+      backupValidators,
+      validatorsWithMyNomination.map(validator => {
+        const canUnfreeze = !!validator.myRevocations.find(revocation => blockNumber > revocation.revocationHeight);
+
+        return {
+          ...validator,
+          canUnfreeze,
+        };
+      }),
+    ];
 
     const tableProps = {
       className: styles.tableContainer,
@@ -79,13 +91,7 @@ class NodeTable extends Component {
               <div
                 className={classNames(
                   styles.nodeType,
-                  !item.isActive
-                    ? styles.inActive
-                    : item.isTrustee && item.isTrustee.length
-                    ? styles.trustee
-                    : item.isValidator
-                    ? styles.validator
-                    : styles.backupValidators
+                  !item.isActive ? styles.inActive : item.isValidator ? styles.validator : styles.backupValidators
                 )}
               />
               {/*{item.isTrustee && item.isTrustee.length ? (*/}
@@ -198,6 +204,7 @@ class NodeTable extends Component {
             <ButtonGroup>
               {item.myRevocation ? (
                 <Button
+                  type={item.canUnfreeze ? 'highlight' : 'primary'}
                   onClick={() => {
                     openModal({
                       name: 'UnFreezeModal',
@@ -248,17 +255,17 @@ class NodeTable extends Component {
               {currentAddress ? (
                 <Button
                   onClick={() => {
-                    const vote = () =>
-                      openModal({
-                        name: 'VoteModal',
-                        data: {
-                          isActive: item.isActive,
-                          target: item.account,
-                          myTotalVote: item.myTotalVote,
-                          isCurrentAccount: item.address === currentAccount.address,
-                        },
-                      });
-                    vote();
+                    openModal({
+                      name: 'VoteModal',
+                      data: {
+                        isActive: item.isActive,
+                        target: item.account,
+                        myTotalVote: item.myTotalVote,
+                        isCurrentAccount: item.address === currentAccount.address,
+                        selfVote: setDefaultPrecision(item.selfVote),
+                        totalNomination: setDefaultPrecision(item.totalNomination),
+                      },
+                    });
                   }}>
                   {item.myTotalVote ? <FormattedMessage id={'ChangeNominate'} /> : <FormattedMessage id={'Nominate'} />}
                 </Button>

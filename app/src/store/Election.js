@@ -1,22 +1,24 @@
-import { ChainX, formatNumber, observable, computed, toJS } from '../utils';
+import { ChainX, computed, formatNumber, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
   getBondingDuration,
+  getElectionMembersAPI,
   getIntentionBondingDuration,
+  getIntentionImages,
   getIntentions,
+  getIntentionsByAccount,
   getNominationRecords,
   getPseduIntentions,
   getPseduNominationRecords,
   nominate,
   refresh,
   register,
+  renominate,
   unfreeze,
   unnominate,
   voteClaim,
-  renominate,
-  getIntentionsByAccount,
-  getIntentionImages,
+  getNextRenominateByAccount,
 } from '../services';
 
 export default class Election extends ModelExtend {
@@ -27,11 +29,13 @@ export default class Election extends ModelExtend {
   @observable intentionBondingDuration = 0; // 节点赎回自投票锁定块数
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
+  @observable nextRenominateHeight = null;
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
     const orderPairs = this.rootStore.tradeStore.orderPairs;
+
     return this.originPseduIntentions.map((intention = {}) => {
       let discountResultShow = '';
       const token = intention.id;
@@ -42,10 +46,6 @@ export default class Election extends ModelExtend {
       if (token === 'BTC' || token === 'L-BTC') {
         const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
         const discount = intention.discount * Math.pow(10, -2);
-        // console.log(
-        //   (price / (((Math.pow(10, 9) * Math.pow(10, 8)) / findAssetOne.averPrice) * Math.pow(10, -8) * 0.1)) * 0.1,
-        //   '----'
-        // );
         const secondDiscount =
           ((Math.pow(10, findAssetOne.precision) * Math.pow(10, this.getDefaultPrecision())) / findAssetOne.averPrice) *
           Math.pow(10, -this.getDefaultPrecision()) *
@@ -84,10 +84,22 @@ export default class Election extends ModelExtend {
             ? 0
             : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
 
+        const canClaim = interest > 0 && this.reservedPCX > (interest * 100) / 9 && this.blockNumber > record.nextClaim;
+
         Object.assign(result, {
+          originInterest: interest,
           interest: this.setPrecision(interest, nativeAssetPrecision),
           balance: this.setPrecision(record.balance, token),
+          nextClaim: record.nextClaim,
+          canClaim,
         });
+
+        if (!canClaim) {
+          Object.assign(result, {
+            need: (interest * 100) / 9 - this.reservedPCX,
+            nextClaimTimestamp: this.blockTimestamp + this.blockDuration * (record.nextClaim - this.blockNumber),
+          });
+        }
       }
 
       return result;
@@ -103,8 +115,24 @@ export default class Election extends ModelExtend {
     });
   }
 
+  @computed get reservedPCX() {
+    return this.rootStore.assetStore.nativeAccountAssets[0].reservedStaking;
+  }
+
   @computed get blockNumber() {
     return this.rootStore.chainStore.blockNumber;
+  }
+
+  @computed get blockTimestamp() {
+    if (this.rootStore.chainStore.blockTime) {
+      return this.rootStore.chainStore.blockTime.getTime();
+    }
+
+    return 0;
+  }
+
+  @computed get blockDuration() {
+    return this.rootStore.chainStore.blockDuration;
   }
 
   // 当前账户节点
@@ -191,6 +219,13 @@ export default class Election extends ModelExtend {
     ];
   }
 
+  @computed get myRevocationCount() {
+    return (this.validatorsWithMyNomination || []).reduce(
+      (result, validator) => result + (validator.myRevocations || []).length,
+      0
+    );
+  }
+
   // 信托节点
   @computed get trustIntentions() {
     return [...this.validatorsWithRecords].filter(validator => validator.isTrustee && validator.isTrustee.length);
@@ -233,6 +268,24 @@ export default class Election extends ModelExtend {
     this.changeModel('originNominationRecords', records);
   };
 
+  getElectionMembers = async () => {
+    let res = await getElectionMembersAPI();
+    res = res.map(item => ({
+      name: item,
+    }));
+    const intentions = this.originIntentions.map(item => {
+      const findOne = res.find(one => one.name === item.name);
+      if (findOne) {
+        return {
+          ...item,
+          isOfficialMember: true,
+        };
+      }
+      return item;
+    });
+    this.changeModel('originIntentions', intentions);
+  };
+
   getIntentionImages = async () => {
     let res = await getIntentionImages().catch(() => []);
     res = res.map(item => {
@@ -245,6 +298,7 @@ export default class Election extends ModelExtend {
     });
 
     const intentions = this.originIntentions.map(item => {
+      // const findOne = res.find(one => one.name === item.name);
       const findOne = res.find(one => one.name.toUpperCase() === item.name.toUpperCase());
       if (findOne) {
         return {
@@ -338,6 +392,14 @@ export default class Election extends ModelExtend {
       extrinsic,
       success: () => this.reload(),
     };
+  };
+
+  getNextRenominateByAccount = async () => {
+    const currentAccount = this.getCurrentAccount();
+    if (currentAccount.address) {
+      const result = await getNextRenominateByAccount(currentAccount.address);
+      this.changeModel('nextRenominateHeight', result);
+    }
   };
 
   depositClaim = ({ token }) => {

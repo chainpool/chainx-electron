@@ -1,38 +1,46 @@
 import {
   _,
-  ChainX,
-  observable,
-  formatNumber,
-  localSave,
   autorun,
-  fetchFromHttp,
-  moment_helper,
-  hexPrefix,
-  toJS,
+  ChainX,
   convertAddressChecksumAll,
-  getMNFromRedeemScript,
+  fetchFromHttp,
+  formatNumber,
   getAllPubsFromRedeemScript,
+  getMNFromRedeemScript,
+  hexPrefix,
+  localSave,
+  moment_helper,
+  observable,
+  toJS,
+  add0x,
 } from '../utils';
+import memoize from 'memoizee';
+import { ForceTrustee } from '../constants';
 import ModelExtend from './ModelExtend';
+import { Toast } from '../components';
 import {
-  getWithdrawalList,
   createWithdrawTx,
-  getWithdrawTx,
-  signWithdrawTx,
-  getTrusteeInfoByAccount,
-  setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeInfoByAccount,
   getTrusteeSessionInfo,
-  getUnspent,
-  getTxsFromTxidList,
+  getWithdrawalList,
+  getWithdrawTx,
+  setupBitcoinTrustee,
+  signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
-import { default as bitcoin } from 'bitcoinjs-lib';
-import { default as BigNumber } from 'bignumber.js';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import bitcoin from 'bitcoinjs-lib';
+import BigNumber from 'bignumber.js';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
-import { default as reverse } from 'buffer-reverse';
+import reverse from 'buffer-reverse';
+
+const fromTransaction = memoize(bitcoin.TransactionBuilder.fromTransaction, {
+  normalizer: function(args) {
+    return JSON.stringify(args[0]) + JSON.stringify(args[1]);
+  },
+});
 
 export default class Trust extends ModelExtend {
   constructor(props) {
@@ -73,7 +81,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
   @observable hotEntity = {}; // 普通交易本届信托的热多签，包含热多签地址和热多签赎回脚本
-  @observable coldEntity = {}; // 普通交易本届信托的l冷多签，包含冷多签地址和冷多签赎回脚本
+  @observable coldEntity = {};
 
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
@@ -234,7 +242,7 @@ export default class Trust extends ModelExtend {
     if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (_.get(inputs, 'signatures.length')) {
         pubKeyInfos = inputs.signatures.map((item, index) =>
@@ -298,7 +306,7 @@ export default class Trust extends ModelExtend {
     } else if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (inputs && inputs.redeemScript) {
         redeemScriptSpecial = inputs.redeemScript;
@@ -314,7 +322,7 @@ export default class Trust extends ModelExtend {
     } else if (this.txSpecial) {
       const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
       const transactionRaw = bitcoin.Transaction.fromHex(this.txSpecial.replace(/^0x/, ''));
-      const txb = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+      const txb = fromTransaction(transactionRaw, network);
       const inputs = txb.__inputs[0];
       if (inputs && inputs.redeemScript) {
         redeemScriptSpecial = inputs.redeemScript;
@@ -336,7 +344,6 @@ export default class Trust extends ModelExtend {
   };
 
   pickNeedUtxos = (unSpents, withdrawals, n, m, feeRate, chainxFee) => {
-    console.log(unSpents, withdrawals, n, m, feeRate, chainxFee);
     function getSize(inputLength, outputLength, n, m) {
       return inputLength * (48 + 73 * n + 34 * m) + 34 * (outputLength + 1) + 14;
     }
@@ -383,7 +390,7 @@ export default class Trust extends ModelExtend {
     return prckUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee);
   };
 
-  sign = async ({ withdrawList, userInputbitFee = 0, url, redeemScript }) => {
+  sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const compose = async () => {
       let rawTransaction;
@@ -391,12 +398,11 @@ export default class Trust extends ModelExtend {
       const nodeUrl = findOne.apiNode;
       let multisigAddress = await this.getBitcoinTrusteeAddress();
       let redeemScriptMatch;
-      if (url) {
+      if (fromAddress) {
         //特殊交易
-        multisigAddress = url;
+        multisigAddress = fromAddress;
         redeemScriptMatch = redeemScript;
       } else {
-        multisigAddress = await this.getBitcoinTrusteeAddress();
         redeemScriptMatch = this.redeemScript;
       }
 
@@ -415,7 +421,7 @@ export default class Trust extends ModelExtend {
       }
 
       const BitCoinFee = this.BitCoinFee;
-      if (!url && !BitCoinFee) {
+      if (!fromAddress && !BitCoinFee) {
         throw new Error({
           info: '未获取到提现手续费',
           toString: () => 'NotFindTrusteeFee',
@@ -429,15 +435,8 @@ export default class Trust extends ModelExtend {
           })
           .catch(() => Promise.reject('超时'));
 
-      // const getUnspents = address =>
-      //   getUnspent({ address, isTest: this.isTestBitCoinNetWork() })
-      //     .then((res = {}) => {
-      //       return res.result;
-      //     })
-      //     .catch(() => Promise.reject('超时'));
-
       const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
-        return result + withdraw.amount;
+        return result + Number(withdraw.amount);
       }, 0);
 
       if (totalWithdrawAmount <= 0) {
@@ -453,6 +452,7 @@ export default class Trust extends ModelExtend {
           toString: () => 'OverTime',
         });
       });
+
       utxos = utxos.map(item => ({
         ...item,
         amount: new BigNumber(10)
@@ -469,16 +469,14 @@ export default class Trust extends ModelExtend {
       }
 
       const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
-
-      const getTargetUtxoAndMinerFee = () => {
-        return this.pickNeedUtxos(utxos, withdrawList, m, n, Number(userInputbitFee), BitCoinFee);
-      };
-
-      const targetUtxoAndMinerFee = getTargetUtxoAndMinerFee();
-
-      const targetUtxos = targetUtxoAndMinerFee.targetInputs;
-
-      const calculateUserInputbitFee = targetUtxoAndMinerFee.minerFee;
+      const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
+        utxos,
+        withdrawList,
+        m,
+        n,
+        Number(userInputbitFee),
+        BitCoinFee
+      );
 
       if (targetUtxos.length <= 0) {
         throw new Error({
@@ -493,10 +491,10 @@ export default class Trust extends ModelExtend {
 
       const txb = new bitcoin.TransactionBuilder(network);
       txb.setVersion(1);
-      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
+      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
       let feeSum = 0;
       withdrawList.forEach(withdraw => {
-        const fee = url ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+        const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
         txb.addOutput(withdraw.addr, fee);
         feeSum += fee;
       });
@@ -514,6 +512,7 @@ export default class Trust extends ModelExtend {
       if (change > 10000) {
         txb.addOutput(multisigAddress, change);
       }
+      txb.setLockTime(0);
 
       rawTransaction = txb.buildIncomplete().toHex();
       //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
@@ -555,30 +554,9 @@ export default class Trust extends ModelExtend {
   };
 
   getWithdrawTx = async () => {
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0] || {};
-    if (findOne && findOne.chain) {
-      const [resTx = {}, resRede = {}] = await Promise.all([
-        getWithdrawTx(findOne.chain),
-        this.getTrusteeSessionInfo(findOne.chain),
-      ]);
-      const { tx, signStatus, trusteeList = [] } = resTx || {};
-      const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList, hotEntity, coldEntity } =
-        resRede || {};
-      this.changeModel({
-        tx,
-        redeemScript,
-        trusteeList,
-        totalSignCount,
-        maxSignCount,
-        chainConfigTrusteeList,
-        hotEntity,
-        coldEntity,
-      });
-      this.getInputsAndOutputsFromTx({
-        tx,
-        isSpecialMode: false,
-      });
-    } else {
+    const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
+
+    if (!findOne || !findOne.chain) {
       this.changeModel({
         tx: '',
         redeemScript: '',
@@ -587,6 +565,32 @@ export default class Trust extends ModelExtend {
         maxSignCount: '',
       });
     }
+
+    const [resTx = {}, resRede = {}] = await Promise.all([
+      getWithdrawTx(findOne.chain),
+      this.getTrusteeSessionInfo(findOne.chain),
+    ]);
+    const { tx, trusteeList = [] } = resTx || {};
+    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList, hotEntity, coldEntity } = resRede || {};
+    if (this.tx === tx && this.redeemScript === redeemScript) {
+      return;
+    }
+
+    this.changeModel({
+      tx,
+      redeemScript,
+      trusteeList,
+      totalSignCount,
+      maxSignCount,
+      chainConfigTrusteeList,
+      hotEntity,
+      coldEntity,
+    });
+
+    this.getInputsAndOutputsFromTx({
+      tx,
+      isSpecialMode: false,
+    });
   };
 
   getInputsAndOutputsFromTx = async ({ tx, isSpecialModel }) => {
@@ -605,7 +609,7 @@ export default class Trust extends ModelExtend {
     }
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     const transactionRaw = bitcoin.Transaction.fromHex(tx.replace(/^0x/, ''));
-    const txbRAW = bitcoin.TransactionBuilder.fromTransaction(transactionRaw, network);
+    const txbRAW = fromTransaction(transactionRaw, network);
     const resultOutputs = txbRAW.__tx.outs.map((item = {}) => {
       const address = getAddressFromScript(item.script, network);
       return {
@@ -624,12 +628,17 @@ export default class Trust extends ModelExtend {
     });
     // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
     const ids = ins.map(item => item.hash);
-    const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    if (!findOne) return Toast.warn('请设置全节点');
+    const nodeUrl = findOne.apiNode;
+
+    const result = await this.fetchNodeTxsFromTxidList(nodeUrl, ids);
+    // const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
       const insTXs = ins.map(item => {
         const findOne = result.find(one => one.txid === item.hash);
         const transaction = bitcoin.Transaction.fromHex(findOne.raw);
-        const txb = bitcoin.TransactionBuilder.fromTransaction(transaction, network);
+        const txb = fromTransaction(transaction, network);
         const findOutputOne = txb.__tx.outs[item.index];
         const address = getAddressFromScript(findOutputOne.script, network);
         return {
@@ -707,14 +716,8 @@ export default class Trust extends ModelExtend {
     return res;
   };
 
-  signWithdrawTx = async ({ tx, redeemScript, privateKey }) => {
-    let tx_trans = null;
-    if (tx) {
-      tx = tx.replace(/^0x/, '');
-      //redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = tx; //await this.sign({ tx, redeemScript, privateKey })
-    }
-    const extrinsic = signWithdrawTx(tx_trans ? `0x${tx_trans}` : null);
+  signWithdrawTx = async ({ tx }) => {
+    const extrinsic = signWithdrawTx(tx ? add0x(tx) : null);
     return {
       extrinsic,
       success: this.reload,
@@ -734,15 +737,16 @@ export default class Trust extends ModelExtend {
       Authorization = Base64.encode(str);
       url = url.split('@')[1];
     }
-    return fetchFromHttp({
-      // url: `/getTrustNodeStatus?url=http://${url}`,
-      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
-      methodAlias: 'listunspent',
-      method: 'POST',
-      timeOut: Authorization ? 6500 : 3500,
-      params: [0, 9999, [trusteeAddress]],
-      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
-    })
+    return window
+      .fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'listunspent',
+        method: 'POST',
+        timeOut: Authorization ? 6500 : 3500,
+        params: [0, 9999, [trusteeAddress]],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      })
       .then(res => {
         if (res && !res.error) {
           return res;
@@ -773,6 +777,36 @@ export default class Trust extends ModelExtend {
     });
     if (res && res.result) {
       return res.result.feerate / 1024;
+    }
+  };
+
+  fetchNodeTxsFromTxidList = async (url, ids) => {
+    let Authorization;
+    if (/@/.test(url)) {
+      const str = url
+        .split('@')[0]
+        .replace('[', '')
+        .replace(']', '');
+      Authorization = Base64.encode(str);
+      url = url.split('@')[1];
+    }
+    const fetchAction = id =>
+      window.fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'getrawtransaction',
+        method: 'POST',
+        timeOut: 3500,
+        params: [id],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      });
+    const actions = ids.map(item => fetchAction(item));
+    const res = await Promise.all(actions);
+    if (res && res.length) {
+      return res.map((item, index) => ({
+        txid: ids[index],
+        raw: item.result,
+      }));
     }
   };
 
@@ -810,14 +844,17 @@ export default class Trust extends ModelExtend {
       Authorization = Base64.encode(str);
       url = url.split('@')[1];
     }
-    const res = await fetchFromHttp({
-      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
-      methodAlias: 'getblockchaininfo',
-      method: 'POST',
-      timeOut: 3500,
-      params: [],
-      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
-    }).catch(err => Promise.reject(err));
+    const res = await window
+      .fetchFromNodeHttp({
+        url: `https://${url}`,
+        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
+        methodAlias: 'getblockchaininfo',
+        method: 'POST',
+        timeOut: 3500,
+        params: [],
+        header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
+      })
+      .catch(err => Promise.reject(err));
     if (res && res.result) {
       return res.result;
     }

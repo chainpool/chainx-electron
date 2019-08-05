@@ -212,6 +212,7 @@ const zh_en = {
     '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
     'The amount of the prize pool of the withdrawing node will not increase, and your voting income may be very small or even zero.',
   ],
+  NodeDuty: ['节点职务', 'Node Duty'],
   GetWithdrawFee: ['手续费', 'Fee'],
   MinWithdrawValue: ['最小提现额', 'Min Value'],
   BindedAddress: ['已绑定地址', 'Binded Address'],
@@ -342,13 +343,17 @@ const zh_en = {
   ChangeNode: ['修改节点', 'Change Node'],
   AddApi: ['添加Api', 'Add Api'],
   Type: ['类别', 'Type'],
+  TrustHotMultiSignatureAddress: ['信托热多签地址', 'Trust hot multi-signature address'],
   NetDelay: ['网络延迟', 'NetWork Delay'],
   BlockHeight: ['块高', 'Block Height'],
+  Block: ['块高', 'Block'],
   HasExpired: ['已到期', 'Has expired'],
   SyncStatus: ['同步状态', 'Sync Status'],
   Trustee: ['信托', 'Trustee'],
+  Member: ['议员', 'Member'],
   TrustGovern: ['信托治理', 'Trustee Govern'],
   LockCourse: ['锁仓教程', 'Lock Course'],
+  DepositCourse: ['充值教程', 'Deposit Course'],
   ConnectedPeers: ['连接节点数', 'Connected Peers'],
   ApiAddress: ['Api地址', 'Api Address'],
   ProvideCoreAssetData: ['提供核心资产数据', 'Providing core asset data'],
@@ -377,7 +382,7 @@ const zh_en = {
     'Make sure your nodes are properly deployed, or you will be punished.',
   ],
   NoRewardsAfterWithdrawal: ['退选后不会再有奖惩和惩罚', 'There will be no more rewards, penalties after withdrawal'],
-  NotSupport: ['暂不支持bc1开头的隔离见证地址', 'SegWit address starting with bc1 is unsupported'],
+  NotSupport: ['仅支持1和3开头的BTC地址', 'Only support BTC addresses begin with 1 or 3'],
   SystemDefault: ['系统默认', 'System Default'],
   UserDefined: ['自定义', 'User-defined'],
   ThisMachine: ['本机', 'This Machine'],
@@ -467,6 +472,10 @@ const zh_en = {
     'The interest to be paid is calculated by the proportion of the inter-chain assets in real time, so fluctuations are natural. It is recommended to claim your interest regularly.',
   ],
   ManageUserOutsidechainAssets: ['负责联合托管⽤户的链外资产', 'Manage users’ outside-the-chain assets collectively'],
+  ManagePreVoteReferendum: [
+    '负责社区议案初步表决并发起公投',
+    'Manage the pre-vote of communitity’s proposal and open referendum',
+  ],
   ElectionValidatorUnableParticipate: [
     '无法参与验证节点的选举，并且没有任何收益',
     'Unable to participate in the election of validator nodes, and with no income.',
@@ -474,10 +483,6 @@ const zh_en = {
   InactiveJackpotNotIncrease: [
     '退选节点的奖池金额不会增加，您的投票收益可能很少甚至为0',
     'The jackpot of inactive nodes will not increase, and your voting income may be very low or even zero.',
-  ],
-  RecommendedUseBindedAddress: [
-    ' ChainX建议大额提现使用已绑定地址提现,使用新地址提现会加长审查时间(可至"充提记录"页面取消这笔提现)',
-    'It\'s highly recommended to use the binded address for the withdrawal in large amounts. Using a new address will lengthen the review time (the withdrawal can be cancelled on the "Recharge record" page)',
   ],
   SuspensionDeposit: [
     '暂停充值，详情请查看公告',
@@ -517,6 +522,32 @@ const zh_en = {
   MaxPrice: ['最高', 'Max'],
   MinPrice: ['最低', 'Min'],
   TradingVolumeTooSmall: ['交易额太小', 'too small'],
+  NextClaimTime: [
+    '下次可切换时间：块高 {nextRenominateHeight}（预估 {claimTime}',
+    'Next switch time: Block {nextRenominateHeight}（Estimated {claimTime}',
+  ],
+  MeanwhileRevocations: [
+    '同时赎回不能超过10笔(当前{myRevocationCount}笔)',
+    'Meanwhile at most 10 revocations (now {myRevocationCount})',
+  ],
+  IntentionBondedLimitation: [
+    '节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押',
+    'A node can only receive up to 10 times the votes it bonded, please contact the node to increase the bonded votes',
+  ],
+  CrossChainClaimRequirements: ['提息条件', 'Requirements'],
+  CrossChainNextClaimTime: ['下次可提息时间', 'Next claim time'],
+  CrossChainEstimatedAddBonded: ['预估需要增加投票冻结', 'Estimated votes to add'],
+  CrossChainNextClaimDetail: ['块高 {claimHeight} (预估 {claimTime})', 'Block {claimHeight} (Estimated {claimTime})'],
+  CrossChainClaimRequirement1: [
+    '1. 每次提息时间间隔不少于7天.',
+    '1. The time interval for each interest claim shall not be less than 7 days.',
+  ],
+  CrossChainClaimRequirement2: [
+    '2. 你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
+    '2. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
+  ],
+  Satisfied: ['已满足', 'Satisfied'],
+  SwitchInterval: ['每3天可切换一次', 'Switch by 3 days intervals'],
 };
 
 export const zh_CN = {};

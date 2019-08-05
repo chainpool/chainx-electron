@@ -5,10 +5,10 @@ import { ToastContainer } from 'react-toastify';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import zh from 'react-intl/locale-data/zh';
 import en from 'react-intl/locale-data/en';
-import { zh_CN, en_US } from '../../langs/zh_en.js';
+import { en_US, zh_CN } from '../../langs/zh_en.js';
 
 import CommonLayOut from './CommonLayOut';
-import { SignModal, LowerPCXWarn, DownloadWalletWarnModal } from '../components';
+import { DownloadWalletWarnModal, LowerPCXWarn, SignModal } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
 import { AuthorityRoute, Loading } from '../../components';
 import routers from './routers';
@@ -73,10 +73,10 @@ class Main extends Component {
 
     const getMessages = () => {
       switch (language) {
-        case 'zh':
-          return zh_CN;
         case 'en':
           return en_US;
+        default:
+          return zh_CN;
       }
     };
 

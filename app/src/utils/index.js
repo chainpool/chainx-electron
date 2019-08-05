@@ -1,10 +1,9 @@
-import React from 'react';
 import { localSave, lodash_helper, moment_helper } from './helper';
 import { BigNumber } from 'bignumber.js';
 import { default as queryString } from 'query-string';
-import { observer as observerable, inject } from 'mobx-react';
+import { inject, observer as observerable } from 'mobx-react';
 import device from 'current-device';
-import { ErrMsg, SCRYPT_PARAMS } from '../constants';
+import { SCRYPT_PARAMS } from '../constants';
 import { default as Chainx } from 'chainx.js';
 import wif from 'wif';
 import bip38 from 'bip38';
@@ -345,6 +344,7 @@ export const RegEx = {
   checkDecimalNumber: precision => new RegExp('^[0-9]+([.|。]{1}[0-9]{0,' + precision + '}){0,1}$'),
   checkIsIP: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
   checkAuthorization: /^(\w+:.+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$)/,
+  checkAuthorizationHttps: /^(\w+:.+@)?([\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$)/,
   checkUpperAndCase: /(?=.*[a-z])(?=.*[A-Z])/,
 };
 
@@ -386,6 +386,8 @@ export const setBlankSpace = (value, unit) => {
 };
 
 export const fetchFromWs = window.fetchFromWs;
+
+export const fetchFromNodeHttp = window.fetchFromNodeHttp;
 
 export const fetchFromHttp = ({
   url,
@@ -533,4 +535,20 @@ export const showAssetName = asset => {
     default:
       return '未知资产';
   }
+};
+
+export const add0x = str => {
+  if (typeof str !== 'string') {
+    return str;
+  }
+
+  return `0x${str.replace(/^0x/i, '')}`;
+};
+
+export const remove0x = str => {
+  if (typeof str !== 'string') {
+    return str;
+  }
+
+  return str.replace(/^0x/i, '');
 };

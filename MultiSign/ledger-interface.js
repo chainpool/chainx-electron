@@ -61,6 +61,7 @@ function constructTxObj(raw, inputArr, redeemScript, network = "mainnet") {
     txObj.to(address.toString(), output.satoshis);
   }
   applyAlreadyExistedSig(txObj, raw, network);
+  txObj.enableRBF();
 
   return txObj;
 }

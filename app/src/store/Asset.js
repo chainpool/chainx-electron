@@ -1,27 +1,27 @@
 import ModelExtend from './ModelExtend';
 import {
+  bindTxHash,
+  getAccountTotalLockPositionApi,
   getAddressByAccount,
   getAsset,
+  getBlockTime,
   getDepositList,
   getDepositListApi,
+  getLockListApi,
+  getMinimalWithdrawalValueByToken,
   getTrusteeSessionInfo,
   getWithdrawalList,
   getWithdrawalListApi,
+  revokeWithdraw,
   transfer,
   verifyAddressValidity,
   withdraw,
-  bindTxHash,
-  getMinimalWithdrawalValueByToken,
-  getBlockTime,
-  revokeWithdraw,
-  getAccountTotalLockPositionApi,
-  getLockListApi,
 } from '../services';
 import { computed } from 'mobx';
-import { moment, formatNumber, _, observable } from '../utils/index';
+import { _, formatNumber, moment, observable } from '../utils/index';
 import { Chain } from '../constants';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter } from 'rxjs/operators';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, combineLatest, map, mergeMap } from 'rxjs/operators';
 import { Toast } from '../components';
 
 function getAssetWithZeroBalance(info) {

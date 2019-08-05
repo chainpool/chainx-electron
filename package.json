@@ -1,7 +1,7 @@
 {
   "name": "chainx",
-  "productName": "ChainX",
-  "version": "1.0.1",
+  "productName": "ChainX Wallet for Trustee",
+  "version": "1.0.2",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
@@ -22,8 +22,8 @@
     "rimraf": "^2.6.3"
   },
   "build": {
-    "productName": "ChainX Wallet",
-    "appId": "org.chainx.wallet",
+    "productName": "ChainX Wallet for Trustee",
+    "appId": "org.chainx.wallet-trustee",
     "files": [
       "preload.js",
       "main.js",
@@ -81,6 +81,7 @@
     "cross-env": "^5.2.0",
     "electron-store": "^3.2.0",
     "electron-updater": "^4.0.6",
+    "node-fetch": "^2.6.0",
     "semver": "^6.1.1",
     "trezor.js": "git+https://github.com/chainpool/trezor.js.git#electron",
     "ws": "^7.0.0"

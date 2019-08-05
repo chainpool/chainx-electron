@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ButtonGroup, Button, Icon, Clipboard, FormattedMessage, RouterGo } from '../../components';
 import { HoverTip } from '../components';
 import { classNames, observer, setBlankSpace, formatNumber } from '../../utils';
+import { ForceTrustee } from '../../constants';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import { blockChain } from '../../constants';
 import * as styles from './index.less';
@@ -11,7 +12,7 @@ class ResponseList extends Component {
   render() {
     const {
       accountStore: {
-        isTrustee,
+        isTrustee: _isTrustee,
         openModal,
         currentAccount: { address },
       },
@@ -40,6 +41,7 @@ class ResponseList extends Component {
       },
       isSpecialModel,
     } = this.props;
+    const isTrustee = ForceTrustee ? true : _isTrustee;
     const inputList = isSpecialModel ? txSpecialInputList : txInputList;
     const outputList = isSpecialModel ? txSpecialOutputList : txOutputList;
     const txMatchOne = isSpecialModel ? txSpecial : tx;
@@ -290,7 +292,6 @@ class ResponseList extends Component {
                               type: 'signWithdrawTx',
                               payload: {
                                 tx: null,
-                                redeemScript,
                               },
                             });
                           },
