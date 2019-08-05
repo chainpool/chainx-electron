@@ -1,15 +1,11 @@
-import { observable, autorun } from 'mobx';
+import { observable } from 'mobx';
 import ModelExtend from './ModelExtend';
-import { getTradeRecordApi, getTradeDetailApi } from '../services';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
-import { translation, moment_helper } from '../utils';
+import { getTradeDetailApi, getTradeRecordApi } from '../services';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { moment_helper, translation } from '../utils';
 
 export default class TradeRecord extends ModelExtend {
-  constructor(...args) {
-    super(...args);
-  }
-
   @observable tradeRecordsPageTotal = 1;
   @observable tradeRecords = [];
   @observable loading = {

@@ -32,8 +32,7 @@ class Election extends Mixin {
   render() {
     const { sort, searchName } = this.state;
     const {
-      model: { openModal },
-      accountStore: { isValidator, currentAddress },
+      accountStore: { currentAddress },
     } = this.props;
     const {
       globalStore: {
@@ -100,43 +99,6 @@ class Election extends Mixin {
             </Dropdown>
           </div>
         )}
-        {/*<ul>*/}
-        {/*{isValidator ? (*/}
-        {/*<li>*/}
-        {/*<Button*/}
-        {/*type="blank"*/}
-        {/*onClick={() => {*/}
-        {/*openModal({*/}
-        {/*name: 'UpdateNodeModal',*/}
-        {/*});*/}
-        {/*}}>*/}
-        {/*<Icon name="icon-xiugaipeizhi" />*/}
-        {/*<FormattedMessage id={'UpdateNodeTip'}>*/}
-        {/*{msg => (*/}
-        {/*<HoverTip tip={msg}>*/}
-        {/*<FormattedMessage id={'UpdateNode'} />*/}
-        {/*</HoverTip>*/}
-        {/*)}*/}
-        {/*</FormattedMessage>*/}
-        {/*</Button>*/}
-        {/*</li>*/}
-        {/*) : (*/}
-        {/*<li>*/}
-        {/*<Button*/}
-        {/*type="blank"*/}
-        {/*onClick={() => {*/}
-        {/*openModal({*/}
-        {/*name: 'RegisterNodeModal',*/}
-        {/*});*/}
-        {/*}}>*/}
-        {/*<Icon name="icon-xiugaipeizhi" />*/}
-        {/*<HoverTip tip="注册并成功部署后，即可参与验证节点选举">*/}
-        {/*<FormattedMessage id={'RegisterNode'} />*/}
-        {/*</HoverTip>*/}
-        {/*</Button>*/}
-        {/*</li>*/}
-        {/*)}*/}
-        {/*</ul>*/}
       </div>
     );
 

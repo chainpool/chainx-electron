@@ -84,7 +84,7 @@ export default class Election extends ModelExtend {
             ? 0
             : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
 
-        const canClaim = interest > 0 && this.reservedPCX > interest * 10 && this.blockNumber > record.nextClaim;
+        const canClaim = interest > 0 && this.reservedPCX > (interest * 100) / 9 && this.blockNumber > record.nextClaim;
 
         Object.assign(result, {
           originInterest: interest,
@@ -96,7 +96,7 @@ export default class Election extends ModelExtend {
 
         if (!canClaim) {
           Object.assign(result, {
-            need: interest * 10 - this.reservedPCX,
+            need: (interest * 100) / 9 - this.reservedPCX,
             nextClaimTimestamp: this.blockTimestamp + this.blockDuration * (record.nextClaim - this.blockNumber),
           });
         }
