@@ -84,21 +84,18 @@ export default class TrustGovern extends ModelExtend {
   }
 
   reload = () => {
+    this.getParticularAccounts();
     this.getMultiSigAddrInfo();
     this.getPendingListFor();
     this.getHotColdEntity();
   };
 
   getParticularAccounts = async () => {
-    if (this.particularBTCTrusteeAccount) {
-      return this.particularBTCTrusteeAccount;
-    } else {
-      const res = await particularAccounts();
-      if (res && res.trusteesAccount) {
-        const value = res.trusteesAccount.Bitcoin;
-        this.changeModel('particularBTCTrusteeAccount', value);
-        return value;
-      }
+    const res = await particularAccounts();
+    if (res && res.trusteesAccount) {
+      const value = res.trusteesAccount.Bitcoin;
+      this.changeModel('particularBTCTrusteeAccount', value);
+      return value;
     }
   };
 
@@ -116,7 +113,6 @@ export default class TrustGovern extends ModelExtend {
   getPendingListFor = async () => {
     const particularBTCTrusteeAccount = await this.getParticularAccounts();
     const res = await getPendingListFor(particularBTCTrusteeAccount);
-    console.log(res, '----pendinglist');
     const trusteeProposal = res.find(item => item.proposal.methodName === 'xBridgeFeatures::transitionTrusteeSession');
     if (res && !res.length) {
       this.changeModel('trusteeProposal', '');

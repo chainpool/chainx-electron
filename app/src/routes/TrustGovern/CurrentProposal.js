@@ -31,15 +31,22 @@ class CurrentProposal extends Mixin {
   render() {
     const { active } = this.state;
     const {
-      model: { openModal, trusteeProposal },
+      model: { openModal, trusteeProposal, getCurrentAccount },
+      electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
+    const trustIntentions = trustIntentions_prev.slice();
+
+    const canStartProposal = () => {
+      const currentAccount = getCurrentAccount();
+      return trustIntentions.find(item => item.address === currentAccount.address);
+    };
 
     return (
       <div className={styles.CurrentProposal}>
         <div className={styles.title}>
           当前提议
           <Button
-            type="confirm"
+            type={canStartProposal() ? 'confirm' : 'disabled'}
             onClick={() => {
               openModal({
                 name: 'startProposalModal',

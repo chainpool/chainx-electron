@@ -6,7 +6,17 @@ import * as styles from './index.less';
 @Inject(({ electionStore }) => ({ electionStore }))
 class CurrentTrustee extends Mixin {
   startInit = () => {
+    this.fetchPoll(this.getIntentions);
     this.fetchPoll(this.getHotColdEntity);
+  };
+
+  getIntentions = () => {
+    const {
+      electionStore: { dispatch },
+    } = this.props;
+    return dispatch({
+      type: 'getIntentions',
+    });
   };
 
   getHotColdEntity = () => {

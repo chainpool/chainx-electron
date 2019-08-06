@@ -15,8 +15,11 @@ class ProposalSwitchTrustee extends Mixin {
         normalizedTrusteeProposal = {},
         dispatch,
         openModal,
+        getCurrentAccount,
       },
+      electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
+    const trustIntentions = trustIntentions_prev.slice();
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -48,6 +51,14 @@ class ProposalSwitchTrustee extends Mixin {
     const totalSignCount = proposalTotalSignCount;
     const haveSignList = proposalTrusteeList.filter(item => item.trusteeSign);
     const maxSignCount = proposalMaxSignCount;
+
+    const canSign = () => {
+      const currentAccount = getCurrentAccount();
+      return (
+        !haveSignList.find(item => item.isSelf && item.trusteeSign) &&
+        trustIntentions.find(item => item.address === currentAccount.address)
+      );
+    };
 
     const renderSignLi = (one, index) => {
       return (
@@ -109,23 +120,28 @@ class ProposalSwitchTrustee extends Mixin {
                 <div className={styles.proposalId}>Proposal ID：{normalizedTrusteeProposal.proposalId}</div>
               </div>
               <ButtonGroup>
-                <Button
-                  className={classNames(styles.signButton)}
-                  onClick={() => {
-                    openModal({
-                      name: 'SignModal',
-                      data: {
-                        description: [{ name: 'operation', value: '签名 ' }],
-                        callback: () => {
-                          return dispatch({
-                            type: 'trusteeGovernSign',
-                          });
+                {canSign() ? (
+                  <Button
+                    className={classNames(styles.signButton)}
+                    onClick={() => {
+                      openModal({
+                        name: 'SignModal',
+                        data: {
+                          description: [{ name: 'operation', value: '签名 ' }],
+                          callback: () => {
+                            return dispatch({
+                              type: 'trusteeGovernSign',
+                            });
+                          },
                         },
-                      },
-                    });
-                  }}>
-                  签名
-                </Button>
+                      });
+                    }}>
+                    签名
+                  </Button>
+                ) : (
+                  <Button type={'disabled'}>签名</Button>
+                )}
+
                 <Button
                   className={classNames(styles.refuseButton)}
                   onClick={() => {
