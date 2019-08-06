@@ -72,7 +72,7 @@ class CurrentProposal extends Mixin {
             </li>
           ))}
         </ul>
-        {active === 'switch' && <ProposalSwitchTrustee {...this.props} />}
+        {active === 'switch' && trusteeProposal && <ProposalSwitchTrustee {...this.props} />}
       </div>
     );
   }

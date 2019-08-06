@@ -126,7 +126,23 @@ class ProposalSwitchTrustee extends Mixin {
                   }}>
                   签名
                 </Button>
-                <Button className={classNames(styles.refuseButton)}>删除</Button>
+                <Button
+                  className={classNames(styles.refuseButton)}
+                  onClick={() => {
+                    openModal({
+                      name: 'SignModal',
+                      data: {
+                        description: [{ name: 'operation', value: '删除 ' }],
+                        callback: () => {
+                          return dispatch({
+                            type: 'removeMultiSign',
+                          });
+                        },
+                      },
+                    });
+                  }}>
+                  删除
+                </Button>
               </ButtonGroup>
             </div>
           </div>

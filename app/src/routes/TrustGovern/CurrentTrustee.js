@@ -3,24 +3,24 @@ import { Mixin } from '../../components';
 import { groupArrayByCount, Inject } from '../../utils';
 import * as styles from './index.less';
 
-@Inject(({ trustStore, electionStore }) => ({ trustStore, electionStore }))
+@Inject(({ electionStore }) => ({ electionStore }))
 class CurrentTrustee extends Mixin {
   startInit = () => {
-    this.getSign();
+    this.fetchPoll(this.getHotColdEntity);
   };
 
-  getSign = () => {
+  getHotColdEntity = () => {
     const {
-      trustStore: { dispatch },
+      model: { dispatch },
     } = this.props;
     return dispatch({
-      type: 'getWithdrawTx',
+      type: 'getHotColdEntity',
     });
   };
+
   render() {
     const {
-      model: { name, dispatch },
-      trustStore: { hotEntity, coldEntity },
+      model: { name, dispatch, hotEntity, coldEntity },
       electionStore: { validatorsWithRecords, trustIntentions: trustIntentions_prev },
     } = this.props;
     const trustIntentions = trustIntentions_prev.slice(); // mobx空数组的原因导致需要slice一下

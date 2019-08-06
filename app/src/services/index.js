@@ -292,6 +292,8 @@ export const getPendingListFor = payload => trustee.getPendingListFor(payload);
 
 export const trusteeGovernSign = (...payload) => trustee.confirm(...payload);
 
+export const trusteeRemoveMultiSig = (...payload) => trustee.removeMultiSigFor(...payload);
+
 export const trusteeGovernExecute = payload => {
   const { account, addrs } = payload;
   return trustee.execute(account, api.tx.xBridgeFeatures.transitionTrusteeSession('Bitcoin', addrs));

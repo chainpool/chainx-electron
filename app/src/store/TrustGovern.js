@@ -5,6 +5,8 @@ import {
   getPendingListFor,
   getTrusteeInfoByAccount,
   trusteeGovernSign,
+  trusteeRemoveMultiSig,
+  trusteeGovernExecute,
 } from '../services';
 import ModelExtend from './ModelExtend';
 
@@ -19,13 +21,15 @@ export default class TrustGovern extends ModelExtend {
   @observable ownerList = []; //信托列表，不是已经签名的列表,计算属性proposalTrusteeList做了详细的整理
   @observable proposalMaxSignCount = '';
   @observable trusteeProposal = '';
+  @observable hotEntity = {}; // 普通交易本届信托的热多签，包含热多签地址和热多签赎回脚本
+  @observable coldEntity = {};
 
   @computed get normalizedTrusteeProposal() {
     if (!this.trusteeProposal) return '';
     return {
       ...this.trusteeProposal,
       newTrustees: this.trusteeProposal.newTrustees.map(item => {
-        const findOne = this.rootStore.electionStore.trustIntentions.find(
+        const findOne = this.rootStore.electionStore.originIntentions.find(
           one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
         );
         if (findOne) {
@@ -53,16 +57,16 @@ export default class TrustGovern extends ModelExtend {
       const newItem = {
         ...item,
         isSelf: currentAccount.address === item.addr,
-        trusteeSign: ownersDone[index],
+        trusteeSign: Number(ownersDone[index]) === 1,
       };
-      const findOne = this.rootStore.electionStore.trustIntentions.find(
+      const findOne = this.rootStore.electionStore.originIntentions.find(
         one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
       );
       if (findOne) {
         return {
           ...newItem,
           name: findOne.name,
-          trusteeSign: ownersDone[index],
+          trusteeSign: Number(ownersDone[index]) === 1,
         };
       } else {
         return {
@@ -82,6 +86,7 @@ export default class TrustGovern extends ModelExtend {
   reload = () => {
     this.getMultiSigAddrInfo();
     this.getPendingListFor();
+    this.getHotColdEntity();
   };
 
   getParticularAccounts = async () => {
@@ -113,7 +118,9 @@ export default class TrustGovern extends ModelExtend {
     const res = await getPendingListFor(particularBTCTrusteeAccount);
     console.log(res, '----pendinglist');
     const trusteeProposal = res.find(item => item.proposal.methodName === 'xBridgeFeatures::transitionTrusteeSession');
-    if (trusteeProposal) {
+    if (res && !res.length) {
+      this.changeModel('trusteeProposal', '');
+    } else if (trusteeProposal) {
       const {
         ownersDone,
         proposalId,
@@ -168,15 +175,33 @@ export default class TrustGovern extends ModelExtend {
     };
   };
 
-  trusteeGovernExecute = async ({ addrs }) => {
+  removeMultiSign = async () => {
     const getParticularAccounts = this.particularBTCTrusteeAccount;
-    console.log(getParticularAccounts, addrs, '---getParticularAccounts, addrs');
-    const extrinsic = await trusteeGovernSign(getParticularAccounts, addrs);
+    const proposalId = this.trusteeProposal.proposalId;
+    const extrinsic = await trusteeRemoveMultiSig(getParticularAccounts, proposalId);
     return {
       extrinsic,
-      success: res => {
-        console.log(res, '----res');
-      },
+      success: this.reload,
     };
+  };
+
+  trusteeGovernExecute = async ({ addrs }) => {
+    const getParticularAccounts = this.particularBTCTrusteeAccount;
+    const extrinsic = await trusteeGovernExecute({ account: getParticularAccounts, addrs });
+    return {
+      extrinsic,
+      success: this.reload,
+    };
+  };
+
+  getHotColdEntity = async () => {
+    const res = await this.rootStore.trustStore.getTrusteeSessionInfo('Bitcoin');
+    if (res) {
+      const { coldEntity, hotEntity } = res;
+      this.changeModel({
+        coldEntity,
+        hotEntity,
+      });
+    }
   };
 }
