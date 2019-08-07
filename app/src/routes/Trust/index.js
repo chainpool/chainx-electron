@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mixin, ButtonGroup, Button, Icon, FormattedMessage, RouterGo } from '../../components';
 import { TableTitle, HoverTip } from '../components';
-import { PATH } from '../../constants';
+import { PATH, ShowTrusteeSwitch } from '../../constants';
 import { classNames, Inject } from '../../utils';
 import { ForceTrustee } from '../../constants';
 import SettingTable from './SettingTable';
@@ -128,12 +128,14 @@ class Trust extends Mixin {
                     <FormattedMessage id={'SetupTrustee'} />
                   </span>
                 </Button>
-                <Button>
-                  <RouterGo type="blank" go={{ pathname: PATH.trustGovern }}>
-                    <Icon name="icon-shezhixintuo" />
-                    <span>信托治理</span>
-                  </RouterGo>
-                </Button>
+                {ShowTrusteeSwitch && (
+                  <Button>
+                    <RouterGo type="blank" go={{ pathname: PATH.trustGovern }}>
+                      <Icon name="icon-shezhixintuo" />
+                      <span>信托治理</span>
+                    </RouterGo>
+                  </Button>
+                )}
 
                 <div className={styles.utils}>
                   <span className={classNames(styles.trustutils)}>

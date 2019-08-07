@@ -87,3 +87,5 @@ export const TrustNode = '47.111.89.46:18332';
 export const ShowLanguage = true;
 
 export const ForceTrustee = true;
+
+export const ShowTrusteeSwitch = false;
