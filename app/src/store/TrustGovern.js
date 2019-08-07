@@ -18,69 +18,74 @@ export default class TrustGovern extends ModelExtend {
   }
   @observable name = 'TrustGovern';
   @observable particularBTCTrusteeAccount = '';
-  @observable ownerList = []; //信托列表，不是已经签名的列表,计算属性proposalTrusteeList做了详细的整理
+  @observable ownerList = []; //信托列表，不是已经签名的列表
   @observable proposalMaxSignCount = '';
-  @observable trusteeProposal = '';
+  @observable trusteeProposals = [];
   @observable hotEntity = {}; // 普通交易本届信托的热多签，包含热多签地址和热多签赎回脚本
   @observable coldEntity = {};
 
-  @computed get normalizedTrusteeProposal() {
-    if (!this.trusteeProposal) return '';
-    return {
-      ...this.trusteeProposal,
-      newTrustees: this.trusteeProposal.newTrustees.map(item => {
-        const findOne = this.rootStore.electionStore.originIntentions.find(
-          one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
-        );
-        if (findOne) {
-          return {
-            ...item,
-            name: findOne.name,
-          };
-        }
-        return item;
-      }),
-    };
+  @computed get normalizedTrusteeProposals() {
+    if (!this.trusteeProposals) return [];
+    return this.trusteeProposals.map(proposal => {
+      return {
+        ...proposal,
+        newTrustees: proposal.newTrustees.map(item => {
+          const findOne = this.rootStore.electionStore.originIntentions.find(
+            one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
+          );
+          if (findOne) {
+            return {
+              ...item,
+              name: findOne.name,
+            };
+          }
+          return item;
+        }),
+      };
+    });
   }
 
-  @computed get proposalTrusteeList() {
+  // 每个proposal的新的信托列表详细
+  @computed get proposalTrusteeLists() {
     let ownerList = this.ownerList.map(item => ({
       addr: item[0],
       action: item[1],
     }));
     const currentAccount = this.getCurrentAccount();
-    let ownersDone = '';
-    if (this.trusteeProposal) {
-      ownersDone = this.trusteeProposal.ownersDoneShow.split('').reverse();
-    }
-    ownerList = ownerList.map((item, index) => {
-      const newItem = {
-        ...item,
-        isSelf: currentAccount.address === item.addr,
-        trusteeSign: Number(ownersDone[index]) === 1,
-      };
-      const findOne = this.rootStore.electionStore.originIntentions.find(
-        one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
-      );
-      if (findOne) {
-        return {
-          ...newItem,
-          name: findOne.name,
+    return this.trusteeProposals.map(proposal => {
+      let ownersDone = '';
+      if (proposal) {
+        ownersDone = proposal.ownersDoneShow.split('').reverse();
+      }
+      ownerList = ownerList.map((item, index) => {
+        const newItem = {
+          ...item,
+          isSelf: currentAccount.address === item.addr,
           trusteeSign: Number(ownersDone[index]) === 1,
         };
-      } else {
-        return {
-          ...newItem,
-          name: `${item.addr.slice(0, 5)}...${item.addr.slice(-5)}`,
-        };
-      }
+        const findOne = this.rootStore.electionStore.originIntentions.find(
+          one => one.account === `0x${this.decodeAddressAccountId(item.addr)}`
+        );
+        if (findOne) {
+          return {
+            ...newItem,
+            name: findOne.name,
+            trusteeSign: Number(ownersDone[index]) === 1,
+          };
+        } else {
+          return {
+            ...newItem,
+            name: `${item.addr.slice(0, 5)}...${item.addr.slice(-5)}`,
+          };
+        }
+      });
+      return ownerList;
     });
-    return ownerList;
   }
 
   @computed get proposalTotalSignCount() {
     // 信托列表的长度
-    return this.proposalTrusteeList.length;
+    return this.ownerList.length;
   }
 
   reload = () => {
@@ -113,57 +118,80 @@ export default class TrustGovern extends ModelExtend {
   getPendingListFor = async () => {
     const particularBTCTrusteeAccount = await this.getParticularAccounts();
     const res = await getPendingListFor(particularBTCTrusteeAccount);
-    const trusteeProposal = res.find(item => item.proposal.methodName === 'xBridgeFeatures::transitionTrusteeSession');
+    const trusteeProposals = res.filter(
+      item => item.proposal.methodName === 'xBridgeFeatures::transitionTrusteeSession'
+    );
     if (res && !res.length) {
-      this.changeModel('trusteeProposal', '');
-    } else if (trusteeProposal) {
-      const {
-        ownersDone,
-        proposalId,
-        proposal: {
-          args: { chain, new_trustees },
-        },
-      } = trusteeProposal;
-      const newTrustees = new_trustees.map(item => ({
-        addr: item,
-        chain,
-      }));
-
-      this.changeModel('trusteeProposal', {
-        ownersDone,
-        proposalId,
-        ownersDoneShow: Number(trusteeProposal.ownersDone).toString('2'),
-        newTrustees: newTrustees.map(item => {
-          const findOne = (this.trusteeProposal.newTrustees || []).find(one => one.addr === item.addr);
-          if (findOne) {
-            return {
-              ...item,
-              ...findOne,
-            };
-          }
-          return item;
-        }),
-      });
-      const trusteeInfos = newTrustees.map(item => getTrusteeInfoByAccount(item.addr));
-      let infos = await Promise.all(trusteeInfos);
-      if (infos && infos.length) {
-        this.changeModel('trusteeProposal', {
-          ...this.trusteeProposal,
-          newTrustees: this.trusteeProposal.newTrustees.map((item, index) => {
-            return {
-              ...item,
-              ...infos[index][item.chain],
-            };
+      this.changeModel('trusteeProposals', []);
+    } else if (trusteeProposals) {
+      const newProposalsFirst = trusteeProposals.map(trusteeProposal => {
+        const {
+          ownersDone,
+          proposalId,
+          proposal: {
+            args: { chain, new_trustees },
+          },
+        } = trusteeProposal;
+        const newTrustees = new_trustees.map(item => ({
+          addr: item,
+          chain,
+        }));
+        const findOne = this.trusteeProposals.find(item => item.proposalId === proposalId);
+        return {
+          ownersDone,
+          proposalId,
+          proposal: {
+            args: { chain, new_trustees },
+          },
+          ownersDoneShow: Number(trusteeProposal.ownersDone).toString('2'),
+          newTrustees: newTrustees.map((item, index) => {
+            if (findOne) {
+              return {
+                ...findOne.newTrustees[index],
+                ...item,
+              };
+            }
+            return item;
           }),
-        });
+        };
+      });
+
+      this.changeModel(`trusteeProposals`, newProposalsFirst);
+      let results = [];
+      for (let i = 0; i < trusteeProposals.length; i++) {
+        const trusteeProposal = trusteeProposals[i];
+        const {
+          proposalId,
+          proposal: {
+            args: { chain, new_trustees },
+          },
+        } = trusteeProposal;
+        const newTrustees = new_trustees.map(item => ({
+          addr: item,
+          chain,
+        }));
+        const findOne = this.trusteeProposals.find(item => item.proposalId === proposalId);
+        const trusteeInfos = newTrustees.map(item => getTrusteeInfoByAccount(item.addr));
+        const infos = await Promise.all(trusteeInfos);
+        if (infos && infos.length) {
+          results.push({
+            ...findOne,
+            newTrustees: findOne.newTrustees.map((item, index) => {
+              return {
+                ...item,
+                ...infos[index][item.chain],
+              };
+            }),
+          });
+        }
       }
+      this.changeModel(`trusteeProposals`, results);
     }
   };
 
-  trusteeGovernSign = async () => {
+  trusteeGovernSign = async ({ proposalId }) => {
     // trusteeGovernSign
     const getParticularAccounts = this.particularBTCTrusteeAccount;
-    const proposalId = this.trusteeProposal.proposalId;
     const extrinsic = await trusteeGovernSign(getParticularAccounts, proposalId);
     return {
       extrinsic,
@@ -171,9 +199,8 @@ export default class TrustGovern extends ModelExtend {
     };
   };
 
-  removeMultiSign = async () => {
+  removeMultiSign = async ({ proposalId }) => {
     const getParticularAccounts = this.particularBTCTrusteeAccount;
-    const proposalId = this.trusteeProposal.proposalId;
     const extrinsic = await trusteeRemoveMultiSig(getParticularAccounts, proposalId);
     return {
       extrinsic,

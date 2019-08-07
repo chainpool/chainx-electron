@@ -8,18 +8,23 @@ import { classNames, observer } from '../../utils';
 class ProposalSwitchTrustee extends Mixin {
   render() {
     const {
+      proposalIndex,
       model: {
-        proposalTrusteeList,
+        proposalTrusteeLists,
         proposalTotalSignCount,
         proposalMaxSignCount,
-        normalizedTrusteeProposal = {},
+        normalizedTrusteeProposals = [],
         dispatch,
         openModal,
         getCurrentAccount,
       },
       electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
+
     const trustIntentions = trustIntentions_prev.slice();
+    const normalizedTrusteeProposal = normalizedTrusteeProposals[proposalIndex];
+    const proposalTrusteeList = proposalTrusteeLists[proposalIndex];
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -131,6 +136,9 @@ class ProposalSwitchTrustee extends Mixin {
                           callback: () => {
                             return dispatch({
                               type: 'trusteeGovernSign',
+                              payload: {
+                                proposalId: normalizedTrusteeProposal.proposalId,
+                              },
                             });
                           },
                         },
@@ -152,6 +160,9 @@ class ProposalSwitchTrustee extends Mixin {
                         callback: () => {
                           return dispatch({
                             type: 'removeMultiSign',
+                            payload: {
+                              proposalId: normalizedTrusteeProposal.proposalId,
+                            },
                           });
                         },
                       },

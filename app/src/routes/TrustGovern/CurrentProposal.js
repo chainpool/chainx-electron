@@ -31,9 +31,11 @@ class CurrentProposal extends Mixin {
   render() {
     const { active } = this.state;
     const {
-      model: { openModal, trusteeProposal, getCurrentAccount },
+      model: { openModal, trusteeProposals, getCurrentAccount },
       electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
+    const haveProposals = trusteeProposals && trusteeProposals.length > 0;
+
     const trustIntentions = trustIntentions_prev.slice();
 
     const canStartProposal = () => {
@@ -57,7 +59,7 @@ class CurrentProposal extends Mixin {
         </div>
         <ul className={styles.operation}>
           {[
-            { name: '信托换届', value: 'switch', disabled: !trusteeProposal },
+            { name: '信托换届', value: 'switch', disabled: !haveProposals },
             { name: '手续费调整', value: 'fee', disabled: true },
             { name: '移除未认领', value: 'removeUnclaimed', disabled: true },
             { name: '撤销用户提现', value: 'cancelWithdraw', disabled: true },
@@ -79,7 +81,15 @@ class CurrentProposal extends Mixin {
             </li>
           ))}
         </ul>
-        {active === 'switch' && trusteeProposal && <ProposalSwitchTrustee {...this.props} />}
+        <div>
+          <ul>
+            {trusteeProposals.map((proposal, index) => (
+              <li key={proposal.proposalId}>
+                <ProposalSwitchTrustee proposalIndex={index} {...this.props} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   }
