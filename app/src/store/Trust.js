@@ -735,7 +735,6 @@ export default class Trust extends ModelExtend {
     return window
       .fetchFromNodeHttp({
         url: `https://${url}`,
-        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
         methodAlias: 'listunspent',
         method: 'POST',
         timeOut: Authorization ? 6500 : 3500,
@@ -750,29 +749,6 @@ export default class Trust extends ModelExtend {
         }
       })
       .catch(err => Promise.reject(err));
-  };
-
-  fetchNodeFeeRate = async url => {
-    let Authorization;
-    if (/@/.test(url)) {
-      const str = url
-        .split('@')[0]
-        .replace('[', '')
-        .replace(']', '');
-      Authorization = Base64.encode(str);
-      url = url.split('@')[1];
-    }
-    const res = await fetchFromHttp({
-      url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
-      methodAlias: 'estimatesmartfee',
-      method: 'POST',
-      timeOut: 3500,
-      params: [10],
-      header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
-    });
-    if (res && res.result) {
-      return res.result.feerate / 1024;
-    }
   };
 
   fetchNodeTxsFromTxidList = async (url, ids) => {
@@ -805,30 +781,6 @@ export default class Trust extends ModelExtend {
     }
   };
 
-  subScribeNodeStatus = () => {
-    const trusts = _.cloneDeep(this._trusts);
-    const currentAccount = this.getCurrentAccount();
-    const { address } = currentAccount;
-    trusts.forEach(item => {
-      if (item.node && item.address === address) {
-        this.fetchNodeStatus(item.node)
-          .then(res => {
-            if (res) {
-              item.connected = true;
-              this.changeModel('trusts', trusts);
-            } else {
-              item.connected = false;
-              this.changeModel('trusts', trusts);
-            }
-          })
-          .catch(() => {
-            item.connected = false;
-            this.changeModel('trusts', trusts);
-          });
-      }
-    });
-  };
-
   subScribeApiNodeStatus = async ({ url }) => {
     let Authorization;
     if (/@/.test(url)) {
@@ -842,7 +794,6 @@ export default class Trust extends ModelExtend {
     const res = await window
       .fetchFromNodeHttp({
         url: `https://${url}`,
-        // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
         methodAlias: 'getblockchaininfo',
         method: 'POST',
         timeOut: 3500,
@@ -887,7 +838,6 @@ export default class Trust extends ModelExtend {
       if (decodedHotPrivateKey || decodedHotPrivateKey === '') findOne.decodedHotPrivateKey = decodedHotPrivateKey;
     }
     this.changeModel('trusts', trusts);
-    //this.subScribeNodeStatus();
   };
 
   updateTrustToChain = ({ about = '', hotPubKey, coldPubKey }) => {
