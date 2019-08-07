@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, FormattedMessage } from '../../../components';
+import { Button, FormattedMessage, Input, Modal } from '../../../components';
 import { Patterns } from '../../../utils';
-import * as styles from './WithdrawConstructModal.less';
 
 class WithdrawConstructModal extends Component {
   state = {
@@ -133,14 +132,6 @@ class WithdrawConstructModal extends Component {
             type={loading ? 'disabeld' : 'confirm'}
             onClick={async () => {
               if (await checkAll.confirm()) {
-                // openModal({
-                //   name: 'WithdrawSignModal',
-                //   data: {
-                //     desc: 'createWithdrawTxAndSign',
-                //     withdrawList: this.getWithdrawList(withDrawIndexSignList),
-                //     tx,
-                //   },
-                // });
                 openModal({
                   name: 'SignModal',
                   data: {
