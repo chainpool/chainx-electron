@@ -64,6 +64,10 @@ class ProposalSwitchTrustee extends Mixin {
         trustIntentions.find(item => item.address === currentAccount.address)
       );
     };
+    const canRemove = () => {
+      const currentAccount = getCurrentAccount();
+      return trustIntentions.find(item => item.address === currentAccount.address);
+    };
 
     const renderSignLi = (one, index) => {
       return (
@@ -150,26 +154,30 @@ class ProposalSwitchTrustee extends Mixin {
                   <Button type={'disabled'}>签名</Button>
                 )}
 
-                <Button
-                  className={classNames(styles.refuseButton)}
-                  onClick={() => {
-                    openModal({
-                      name: 'SignModal',
-                      data: {
-                        description: [{ name: 'operation', value: '删除 ' }],
-                        callback: () => {
-                          return dispatch({
-                            type: 'removeMultiSign',
-                            payload: {
-                              proposalId: normalizedTrusteeProposal.proposalId,
-                            },
-                          });
+                {canRemove() ? (
+                  <Button
+                    className={classNames(styles.refuseButton)}
+                    onClick={() => {
+                      openModal({
+                        name: 'SignModal',
+                        data: {
+                          description: [{ name: 'operation', value: '删除 ' }],
+                          callback: () => {
+                            return dispatch({
+                              type: 'removeMultiSign',
+                              payload: {
+                                proposalId: normalizedTrusteeProposal.proposalId,
+                              },
+                            });
+                          },
                         },
-                      },
-                    });
-                  }}>
-                  删除
-                </Button>
+                      });
+                    }}>
+                    删除
+                  </Button>
+                ) : (
+                  <Button type={'disabled'}>删除</Button>
+                )}
               </ButtonGroup>
             </div>
           </div>

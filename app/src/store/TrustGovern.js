@@ -209,6 +209,7 @@ export default class TrustGovern extends ModelExtend {
   };
 
   trusteeGovernExecute = async ({ addrs }) => {
+    console.log(addrs, '----addrs');
     const getParticularAccounts = this.particularBTCTrusteeAccount;
     const extrinsic = await trusteeGovernExecute({ account: getParticularAccounts, addrs });
     return {
