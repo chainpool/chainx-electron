@@ -22,6 +22,9 @@ class SettingTable extends Component {
           title: '跨链节点',
           dataIndex: 'apiNode',
           width: 320,
+          render: v => {
+            return v.replace(/:.+@/, ':*****@');
+          },
         },
         // {
         //   title: <FormattedMessage id={'NodeStatus'} />,
