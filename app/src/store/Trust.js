@@ -3,7 +3,6 @@ import {
   autorun,
   ChainX,
   convertAddressChecksumAll,
-  fetchFromHttp,
   formatNumber,
   getAllPubsFromRedeemScript,
   getMNFromRedeemScript,
@@ -11,7 +10,6 @@ import {
   localSave,
   moment_helper,
   observable,
-  toJS,
   add0x,
 } from '../utils';
 import memoize from 'memoizee';
@@ -496,8 +494,6 @@ export default class Trust extends ModelExtend {
         txb.addOutput(withdraw.addr, fee);
         feeSum += fee;
       });
-      //const fee = await caculateCommentFeeFromSatoshiKB(0.00001, targetUtxos.length, withdrawList.length);
-      // const change = totalInputAmount - totalWithdrawAmount - minerFee;
       const change = totalInputAmount - feeSum - calculateUserInputbitFee;
 
       if (change < 0) {
@@ -513,7 +509,6 @@ export default class Trust extends ModelExtend {
       txb.setLockTime(0);
 
       rawTransaction = txb.buildIncomplete().toHex();
-      //caculateCommentFee(nodeUrl, targetUtxos.length, withdrawList.length);
       return rawTransaction;
     };
     return compose();
@@ -527,14 +522,6 @@ export default class Trust extends ModelExtend {
       redeemScript = redeemScript.replace(/^0x/, '');
       tx_trans = await this.sign({ tx, redeemScript, privateKey });
     }
-    console.log(
-      toJS(withdrawList),
-      tx,
-      redeemScript,
-      privateKey,
-      tx_trans,
-      '---withdrawList,tx,redeemScript, privateKey,tx_trans'
-    );
     const extrinsic = createWithdrawTx(ids, `0x${tx_trans}`);
     return {
       extrinsic,
