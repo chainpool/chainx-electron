@@ -21,12 +21,20 @@ class WithdrawConstructModal extends Component {
       const {
         model: { dispatch },
       } = this.props;
+
+      const withdrawList = (withDrawIndexSignList || []).map(withdrawal => {
+        return {
+          addr: withdrawal.addr,
+          amount: withdrawal.amount,
+        };
+      });
+
       let error = '';
       try {
         await dispatch({
           type: 'sign',
           payload: {
-            withdrawList: this.getWithdrawList(withDrawIndexSignList),
+            withdrawList,
             ...(fee ? { userInputbitFee: fee } : {}),
           },
         });
@@ -64,45 +72,44 @@ class WithdrawConstructModal extends Component {
     },
   };
 
-  getWithdrawList = withDrawIndexSignList => {
-    const {
-      model: { normalizedOnChainAllWithdrawList },
-    } = this.props;
-    return withDrawIndexSignList.map((item = {}) => {
-      const findOne = normalizedOnChainAllWithdrawList.filter((one = {}) => item.value === one.id)[0] || {};
-      return {
-        ...findOne,
-        amount: findOne.balance_primary,
-      };
-    });
-  };
   render() {
     const { checkAll } = this;
     const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg, loading } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
+
     const options = normalizedOnChainAllWithdrawList
+      .filter((item = {}) => item.status !== 'signing' && item.status !== 'processing')
       .map((item = {}) => ({
         label: item.id,
         value: item.id,
+        id: item.id,
+        amount: item.balance_primary,
+        addr: item.addr,
         status: item.status,
-      }))
-      .filter((item = {}) => item.status !== 'signing' && item.status !== 'processing');
+      }));
 
     const setTxFromIndexOrFee = async () => {
       const { withDrawIndexSignList, fee } = this.state;
+      const withdrawList = (withDrawIndexSignList || []).map(withdrawal => {
+        return {
+          addr: withdrawal.addr,
+          amount: withdrawal.amount,
+        };
+      });
+
       try {
-        this.setState({
-          loading: true,
-        });
+        this.setState({ loading: true });
+
         const tx = await dispatch({
           type: 'sign',
           payload: {
-            withdrawList: this.getWithdrawList(withDrawIndexSignList),
+            withdrawList: withdrawList,
             ...(fee ? { userInputbitFee: fee } : {}),
           },
         });
+
         if (tx) {
           this.setState(
             {
@@ -110,9 +117,7 @@ class WithdrawConstructModal extends Component {
             },
             () => {
               checkAll.checkTx();
-              this.setState({
-                loading: false,
-              });
+              this.setState({ loading: false });
             }
           );
         }
@@ -139,12 +144,11 @@ class WithdrawConstructModal extends Component {
                       { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
                     ],
                     callback: () => {
+                      const ids = withDrawIndexSignList.map(item => item.id);
+
                       return dispatch({
                         type: 'createWithdrawTx',
-                        payload: {
-                          withdrawList: this.getWithdrawList(withDrawIndexSignList),
-                          tx,
-                        },
+                        payload: { ids, tx },
                       });
                     },
                   },

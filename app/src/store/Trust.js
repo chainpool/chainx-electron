@@ -542,8 +542,7 @@ export default class Trust extends ModelExtend {
     };
   };
 
-  createWithdrawTx = ({ withdrawList = [], tx }) => {
-    const ids = withdrawList.map((item = {}) => item.id);
+  createWithdrawTx = ({ ids = [], tx }) => {
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
       extrinsic,
