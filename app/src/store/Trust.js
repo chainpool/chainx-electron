@@ -1,32 +1,32 @@
 import {
   _,
-  ChainX,
-  observable,
-  formatNumber,
-  localSave,
   autorun,
-  fetchFromHttp,
-  moment_helper,
-  hexPrefix,
-  toJS,
+  ChainX,
   convertAddressChecksumAll,
+  fetchFromHttp,
+  formatNumber,
+  hexPrefix,
+  localSave,
+  moment_helper,
+  observable,
+  toJS,
 } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  getWithdrawalList,
   createWithdrawTx,
-  getWithdrawTx,
-  signWithdrawTx,
-  getTrusteeInfoByAccount,
-  setupBitcoinTrustee,
   getBlockTime,
+  getTrusteeInfoByAccount,
   getTrusteeSessionInfo,
+  getWithdrawalList,
+  getWithdrawTx,
+  setupBitcoinTrustee,
+  signWithdrawTx,
 } from '../services';
 import { computed } from 'mobx';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as BigNumber } from 'bignumber.js';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap } from 'rxjs/operators';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Base64 } from 'js-base64';
 import { default as reverse } from 'buffer-reverse';
 

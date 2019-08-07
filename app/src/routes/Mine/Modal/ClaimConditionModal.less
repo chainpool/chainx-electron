@@ -1,25 +1,49 @@
 .ClaimConditionModal{
-  .grayBlock{
-    height:62px;
-    background: #F2F3F4;
-    border: 1px solid #DCE0E2;
-    margin:0 -24px;
-    margin-top: -24px;
+  margin-top: -24px;
+  margin-bottom: -12px;
+
+  .items {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #DCE0E2;
+    margin-left: -24px;
+    margin-right: -24px;
+
+    & > section {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      padding: 17px 0;
+
+      & > div {
+        text-align: center;
+        margin-bottom: 8px;
+      }
+
+      & > p {
+        text-align: center;
+      }
+    }
+
   }
-  .claimHeight,.pcxlock{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .claimHeight{
-    color: #C2C2C2;
-    margin-top: 16px;
-  }
-  .pcxlock{
-    margin-top: 12px;
+  .nextClaimHeight {
+    border-right: 1px solid #DCE0E2;
+
   }
 
+  ol {
+    margin: 0;
+    padding: 0;
+    color: #000;
+  }
+
+  .ok {
+    color: #D89601;
+  }
+  p {
+    margin: 0;
+    font-weight: 500;
+    line-height: 20px;
+  }
 }

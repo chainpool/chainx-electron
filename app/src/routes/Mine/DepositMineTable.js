@@ -1,14 +1,14 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Mixin, Table, FormattedMessage, Icon } from '../../components';
-import { observer, _, showAssetName, Inject, formatNumber } from '../../utils';
+import { Button, ButtonGroup, FormattedMessage, Icon, Mixin, Table } from '../../components';
+import { _, formatNumber, Inject, showAssetName } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
 import miniLogo from '../../resource/miniLogo.png';
 import LBTCIcon from '../../resource/LBTC.png';
 
-@Inject(({ chainStore }) => ({ chainStore }))
+@Inject(({ chainStore, assetStore }) => ({ chainStore, assetStore }))
 class DepositMineTable extends Mixin {
   startInit = async () => {
     const {
@@ -24,9 +24,11 @@ class DepositMineTable extends Mixin {
 
   render() {
     const {
+      assetStore: { nativeAccountAssets: [{ reservedStaking }] = [] },
       chainStore: { blockNumber },
       model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
     } = this.props;
+
     const tableProps = {
       className: styles.tableContainer,
       columns: [
@@ -109,16 +111,15 @@ class DepositMineTable extends Mixin {
           title: '',
           dataIndex: '_action',
           render: (value, item) => {
-            const targetNominateAmount = formatNumber.toFixed(item.interest * 10, getDefaultPrecision());
+            const requiredStakingContribution = Number(formatNumber.toFixed(item.interest * 10, getDefaultPrecision()));
             const isWarn = item.interest > 0;
-            const isCanClaim =
-              item.interest > 0 && item.balance > targetNominateAmount && item.nextClaim <= blockNumber;
+
             return (
               <ButtonGroup>
                 <Button
-                  type={isCanClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
+                  type={item.canClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
                   onClick={() => {
-                    if (isCanClaim) {
+                    if (item.canClaim) {
                       openModal({
                         name: 'SignModal',
                         data: {
@@ -141,7 +142,10 @@ class DepositMineTable extends Mixin {
                         name: 'ClaimConditionModal',
                         data: {
                           claimHeight: item.nextClaim,
-                          targetNominateAmount,
+                          requiredStakingContribution,
+                          blockNumber,
+                          reserved: reservedStaking / Math.pow(10, 8),
+                          intention: item,
                         },
                       });
                     }

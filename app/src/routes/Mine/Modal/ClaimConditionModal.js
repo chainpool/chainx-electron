@@ -1,28 +1,71 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal } from '../../../components';
+import { Warn } from '../../components';
 import * as styles from './ClaimConditionModal.less';
+import { formatNumber, moment_helper } from '../../../utils';
+import FormattedMessage from '@components/FormattedMessage';
 
-class ClaimConditionModal extends Component {
-  render() {
-    const {
-      globalStore: {
-        modal: {
-          data: { claimHeight, targetNominateAmount },
-        },
+function ClaimConditionModal(props) {
+  const {
+    globalStore: {
+      modal: {
+        data: { claimHeight, blockNumber, intention },
       },
-    } = this.props;
-    return (
-      <Modal title={'提息条件'}>
-        <div className={styles.ClaimConditionModal}>
-          <div className={styles.grayBlock}>你的PCX投票冻结必须大于待领利息的10倍；且每次提息时间间隔不少于7天</div>
-          <div className={styles.claimHeight}>
-            下次可提息高度：{claimHeight}（预估 {claimHeight}）
-          </div>
-          <div className={styles.pcxlock}>预估最低PCX投票冻结：{targetNominateAmount}</div>
+    },
+  } = props;
+
+  const showClaimHeight = intention.nextClaim && intention.nextClaim > blockNumber;
+
+  const ok = (
+    <p className={styles.ok}>
+      <FormattedMessage id={'Satisfied'} />
+    </p>
+  );
+  const nextClaim = (
+    <p>
+      <FormattedMessage
+        id={'CrossChainNextClaimDetail'}
+        values={{
+          claimHeight,
+          claimTime: moment_helper.formatHMS(intention.nextClaimTimestamp, 'YYYY/MM/DD HH:mm:ss'),
+        }}
+      />
+    </p>
+  );
+
+  const estimatedLock = <p>{formatNumber.toFixed(intention.need / Math.pow(10, 8), 8)} PCX</p>;
+
+  return (
+    <Modal title={<FormattedMessage id={'CrossChainClaimRequirements'} />}>
+      <div className={styles.ClaimConditionModal}>
+        <div className={styles.items}>
+          <section className={styles.nextClaimHeight}>
+            <div>
+              <FormattedMessage id={'CrossChainNextClaimTime'} />
+            </div>
+            {showClaimHeight ? nextClaim : ok}
+          </section>
+          <section>
+            <div>
+              <FormattedMessage id={'CrossChainEstimatedAddBonded'} />
+            </div>
+            {typeof intention.need === 'number' && intention.need > 0 ? estimatedLock : ok}
+          </section>
         </div>
-      </Modal>
-    );
-  }
+
+        <Warn>
+          <ol>
+            <li>
+              <FormattedMessage id={'CrossChainClaimRequirement1'} />
+            </li>
+            <li>
+              <FormattedMessage id={'CrossChainClaimRequirement2'} />
+            </li>
+          </ol>
+        </Warn>
+      </div>
+    </Modal>
+  );
 }
 
 export default ClaimConditionModal;

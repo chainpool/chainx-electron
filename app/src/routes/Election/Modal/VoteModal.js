@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Input, Mixin, Modal, FormattedMessage } from '../../../components';
 import { InputHorizotalList, FreeBalance } from '../../components';
 import { PlaceHolder } from '../../../constants';
-import { Inject, Patterns, setBlankSpace, classNames } from '../../../utils';
+import { Inject, Patterns, setBlankSpace, classNames, moment_helper } from '../../../utils';
 import * as styles from './VoteModal.less';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
@@ -29,6 +29,7 @@ class VoteModal extends Mixin {
     dispatch({ type: 'getBlockPeriod' });
     electionDispatch({ type: 'getBondingDuration' });
     electionDispatch({ type: 'getIntentionBondingDuration' });
+    electionDispatch({ type: 'getNextRenominateByAccount' });
   };
 
   checkAll = {
@@ -72,18 +73,22 @@ class VoteModal extends Mixin {
   };
 
   render() {
+    const switchInfo = (
+      <div className={styles.info}>
+        <FormattedMessage id={'SwitchInterval'} />
+      </div>
+    );
+
     const { checkAll } = this;
     const { amount, amountErrMsg, remark, action, selectNode, selectNodeErrMsg } = this.state;
     const {
       model: { dispatch, openModal, setDefaultPrecision, getDefaultPrecision, originIntentions = [] },
       globalStore: {
-        modal: {
-          data: { target, myTotalVote = 0, isCurrentAccount, isActive, nextRenominate, selfVote, totalNomination } = {},
-        },
+        modal: { data: { target, myTotalVote = 0, isCurrentAccount, isActive, selfVote, totalNomination } = {} },
         nativeAssetName: token,
       },
-      chainStore: { blockDuration, blockNumber },
-      electionStore: { bondingDuration, intentionBondingDuration },
+      chainStore: { blockDuration, blockNumber, blockTime },
+      electionStore: { bondingDuration, intentionBondingDuration, nextRenominateHeight, myRevocationCount },
       assetStore: { normalizedAccountNativeAssetFreeBalance: freeShow },
       accountStore: { isValidator },
     } = this.props;
@@ -113,15 +118,19 @@ class VoteModal extends Mixin {
       isActive: item.isActive,
     }));
 
-    const isCanSwitch = nextRenominate <= blockNumber;
+    const overNodeLimit = Number(amount) + Number(totalNomination) > selfVote * 10;
+    const canRenominate = nextRenominateHeight === null || blockNumber > nextRenominateHeight;
 
-    const isCanAdd = totalNomination <= selfVote * 10;
+    const canSwitch = (isCurrentAccount && canRenominate) || (!isCurrentAccount && !overNodeLimit && canRenominate);
+    const canAdd = !overNodeLimit || isCurrentAccount;
 
     const getButtonStatus = () => {
       if (action === 'switch') {
-        return !isCanSwitch ? 'disabled' : 'confirm';
+        return !canSwitch ? 'disabled' : 'confirm';
       } else if (action === 'add') {
-        return !isCanAdd ? 'disabled' : 'confirm';
+        return !canAdd ? 'disabled' : 'confirm';
+      } else if (action === 'cancel') {
+        return myRevocationCount >= 10 ? 'disabled' : 'confirm';
       }
       return 'confirm';
     };
@@ -283,19 +292,37 @@ class VoteModal extends Mixin {
               />
             )}
           </FormattedMessage>
-          {action === 'cancel' && (
+          {action === 'cancel' ? (
             <div className={styles.lockweek}>
               <FormattedMessage id={'LockTime'} values={{ time: bondingSeconds }} />
             </div>
-          )}
-          {action === 'add' && !isCanAdd && (
-            <div className={styles.isCanAdd}>节点总得票不能超过节点自抵押的10倍，请联系节点追加抵押</div>
-          )}
-          {action === 'switch' && !isCanSwitch && (
-            <div className={styles.canSwitchHeight}>
-              下次可切换高度：{nextRenominate}（预估 {nextRenominate}）
+          ) : null}
+          {action === 'cancel' && myRevocationCount >= 7 ? (
+            <div className={styles.lockweek}>
+              <FormattedMessage id={'MeanwhileRevocations'} values={{ myRevocationCount }} />
+            </div>
+          ) : null}
+          {action === 'add' && !canAdd && (
+            <div className={styles.isCanAdd}>
+              <FormattedMessage id={'IntentionBondedLimitation'} />
             </div>
           )}
+          {action === 'switch' && canSwitch ? switchInfo : null}
+          {action === 'switch' && !canSwitch ? (
+            <div className={styles.canSwitchHeight}>
+              <FormattedMessage
+                id={'NextClaimTime'}
+                values={{
+                  nextRenominateHeight,
+                  claimTime: moment_helper.formatHMS(
+                    blockTime.getTime() + (nextRenominateHeight - blockNumber) * blockDuration,
+                    'YYYY/MM/DD HH:mm:ss'
+                  ),
+                }}
+              />
+              ）
+            </div>
+          ) : null}
         </div>
       </Modal>
     );

@@ -1,20 +1,20 @@
-import { _, formatNumber, moment_helper, observable, computed, localSave, parseQueryString, moment } from '../utils';
+import { _, computed, formatNumber, localSave, moment, moment_helper, observable, parseQueryString } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
-  getOrderPairs,
-  getQuotationsApi,
-  getQuotations,
-  putOrder,
   cancelOrder,
-  getOrders,
-  getOrdersApi,
-  getLatestOrderApi,
+  getBlockTime,
   getFillOrdersApi,
   getKlineApi,
-  getBlockTime,
+  getLatestOrderApi,
+  getOrderPairs,
+  getOrders,
+  getOrdersApi,
+  getQuotations,
+  getQuotationsApi,
+  putOrder,
 } from '../services';
-import { from, of, combineLatest as combine } from 'rxjs';
-import { combineLatest, mergeMap, map, mergeAll, catchError, filter, tap, startWith } from 'rxjs/operators';
+import { combineLatest as combine, from, of } from 'rxjs';
+import { catchError, combineLatest, map, mergeMap, startWith, tap } from 'rxjs/operators';
 import { OrderStatus } from '../constants';
 
 export default class Trade extends ModelExtend {
