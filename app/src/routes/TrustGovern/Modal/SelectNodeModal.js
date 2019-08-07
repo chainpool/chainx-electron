@@ -7,10 +7,11 @@ import { Inject } from '../../../utils';
 class SelectNodeModal extends Component {
   state = {
     selectNode: '',
+    selectNodeErrMsg: '',
   };
 
   render() {
-    const { selectNode } = this.state;
+    const { selectNode, selectNodeErrMsg } = this.state;
     const {
       electionStore: { originIntentions = [] },
       model: { openModal, dispatch, encodeAddressAccountId },
@@ -31,29 +32,42 @@ class SelectNodeModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              openModal({
-                name: 'SignModal',
-                data: {
-                  description: [{ name: 'operation', value: '发起提议' }],
-                  callback: () => {
-                    return dispatch({
-                      type: 'trusteeGovernExecute',
-                      payload: {
-                        addrs: selectNode.map(item => encodeAddressAccountId(item.value)),
+              const addrs = selectNode.map(item => encodeAddressAccountId(item.value));
+              dispatch({
+                type: 'getMockBitcoinNewTrustees',
+                payload: {
+                  addrs,
+                },
+              })
+                .then(res => {
+                  console.log(res, '---res');
+                  if (res) {
+                    openModal({
+                      name: 'TrusteeSwitchModal',
+                      data: {
+                        addrs,
+                        mockResult: res,
                       },
                     });
-                  },
-                },
-              });
-              // openModal({
-              //   name: 'TrusteeSwitchModal',
-              // });
+                  } else {
+                    this.setState({
+                      selectNodeErrMsg: '模拟生成错误，请检查所选节点',
+                    });
+                  }
+                })
+                .catch(() =>
+                  this.setState({
+                    selectNodeErrMsg: '模拟生成错误，请检查所选节点',
+                  })
+                );
             }}>
             <FormattedMessage id={'Confirm'} />
           </Button>
         }>
         <div className={styles.ProposalSelectModal}>
           <Input.Select
+            errMsgIsOutside
+            errMsg={selectNodeErrMsg}
             multi={true}
             allowCreate={false}
             value={selectNode}
@@ -62,6 +76,7 @@ class SelectNodeModal extends Component {
             onChange={value => {
               this.setState({
                 selectNode: value,
+                selectNodeErrMsg: '',
               });
             }}
           />

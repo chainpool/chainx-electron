@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Button, FormattedMessage, Modal } from '../../../components';
 import * as styles from './TrusteeSwitchModal.less';
+import { observer } from '../../../utils';
 
+@observer
 class TrusteeSwitchModal extends Component {
   render() {
     const {
-      model: { closeModal },
+      model: { openModal, dispatch },
+      globalStore: {
+        modal: {
+          data: { addrs, mockResult },
+        },
+      },
     } = this.props;
 
     return (
@@ -17,7 +24,20 @@ class TrusteeSwitchModal extends Component {
             size="full"
             type="confirm"
             onClick={() => {
-              closeModal();
+              openModal({
+                name: 'SignModal',
+                data: {
+                  description: [{ name: 'operation', value: '发起提议' }],
+                  callback: () => {
+                    return dispatch({
+                      type: 'trusteeGovernExecute',
+                      payload: {
+                        addrs,
+                      },
+                    });
+                  },
+                },
+              });
             }}>
             <FormattedMessage id={'Confirm'} />
           </Button>
@@ -25,29 +45,30 @@ class TrusteeSwitchModal extends Component {
         <div className={styles.TrusteeSwitchModal}>
           <div className={styles.top}>
             模拟多签热地址:
-            <div className={styles.address}>5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9aa</div>
+            <div className={styles.address}>{mockResult.coldEntity.addr}</div>
             模拟多签热赎回脚本:
-            <div className={styles.redescript}>
-              5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9a5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9aa5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9aa5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9aaa
-            </div>
+            <div className={styles.redescript}>{mockResult.coldEntity.redeemScript}</div>
             模拟多签冷地址:
-            <div className={styles.address}>5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9aa</div>
+            <div className={styles.address}>{mockResult.hotEntity.addr}</div>
             模拟多签冷赎回脚本:
-            <div className={styles.redescript}>5345773718cb9c8d0cb9c8d09aa5345773718cb9c8d0cb9c8d09aa9aa9a5</div>
+            <div className={styles.redescript}>{mockResult.hotEntity.redeemScript}</div>
           </div>
           <div className={styles.down}>
             <ul>
-              {new Array(3).fill().map((item, index) => (
+              {mockResult.trusteeList.map((item, index) => (
                 <li key={index}>
                   <div className={styles.name}>nuildlinks</div>
                   <div>
-                    <span>地址：</span>19zdMbaZnD8ze6XUZuVTYtV8ze6XUZuVTYtVQ4
+                    <span>地址：</span>
+                    <div>{item.accountId}</div>
                   </div>
                   <div>
-                    <span>热公钥：</span>19zdMbaZnD8ze6XUZuVTYtV8ze6XUZuVTYtVQ4
+                    <span>热公钥：</span>
+                    <div>{item.props.hotEntity}</div>
                   </div>
                   <div>
-                    <span>冷公钥:</span>19zdMbaZnD8ze6XUZuVTYtV8ze6XUZuVTYtVQ4
+                    <span>冷公钥:</span>
+                    <div>{item.props.coldEntity}</div>
                   </div>
                 </li>
               ))}

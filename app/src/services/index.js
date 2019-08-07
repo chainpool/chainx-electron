@@ -1,4 +1,4 @@
-import { ChainX, fetchFromHttp, localSave, isEmpty } from '../utils';
+import { ChainX, fetchFromHttp, localSave, isEmpty, fetchFromBrowserWs } from '../utils';
 import { default as store } from '../store';
 
 const checkLogin = func => {
@@ -25,9 +25,24 @@ const getBestApi = () => {
   return api.filter((item = {}) => item.best)[0] || {};
 };
 
+const getBestNode = () => {
+  const currentNetWork = localSave.get('currentNetWork') || { value: 'test' };
+  let nodes = [];
+  if (currentNetWork.value === 'test') {
+    nodes = localSave.get('testNodes') || [];
+  } else if (currentNetWork.value === 'premain') {
+    nodes = localSave.get('premainNodes') || [];
+  } else if (currentNetWork.value === 'main') {
+    nodes = localSave.get('mainNodes') || [];
+  }
+  return nodes.filter((item = {}) => item.best)[0] || {};
+};
+
 const { stake, asset, chain, trade, trustee, api } = ChainX;
 
 const API = getBestApi().address;
+
+const Node = getBestNode().address;
 
 export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
 
@@ -247,6 +262,14 @@ export const bindTxHash = payload => {
     url: `https://wallet.chainx.org/api/rpc?url=http://47.99.192.159:8100`,
     methodAlias: 'tx_hash',
     params: [params],
+  });
+};
+
+export const getMockBitcoinNewTrustees = payload => {
+  return fetchFromBrowserWs({
+    url: `${Node}`,
+    method: 'chainx_getMockBitcoinNewTrustees',
+    params: [payload],
   });
 };
 

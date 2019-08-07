@@ -7,6 +7,7 @@ import {
   trusteeGovernSign,
   trusteeRemoveMultiSig,
   trusteeGovernExecute,
+  getMockBitcoinNewTrustees,
 } from '../services';
 import ModelExtend from './ModelExtend';
 
@@ -209,13 +210,20 @@ export default class TrustGovern extends ModelExtend {
   };
 
   trusteeGovernExecute = async ({ addrs }) => {
-    console.log(addrs, '----addrs');
     const getParticularAccounts = this.particularBTCTrusteeAccount;
     const extrinsic = await trusteeGovernExecute({ account: getParticularAccounts, addrs });
     return {
       extrinsic,
       success: this.reload,
     };
+  };
+
+  getMockBitcoinNewTrustees = async ({ addrs }) => {
+    addrs = addrs.map(item => `0x${this.decodeAddressAccountId(item)}`);
+    const res = await getMockBitcoinNewTrustees(addrs);
+    if (res && res.data) {
+      return res.data;
+    }
   };
 
   getHotColdEntity = async () => {

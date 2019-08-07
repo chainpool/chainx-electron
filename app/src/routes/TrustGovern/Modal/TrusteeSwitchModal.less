@@ -26,7 +26,7 @@
       li{
         line-height: 14px;
         padding:12px;
-        height:110px;
+        min-height:110px;
         >div+div{
           margin-top: 10px;
         }
@@ -36,8 +36,12 @@
           }
           display: flex;
           span{
+            white-space: nowrap;
             display: block;
             width:62px;
+          }
+          div{
+            word-break: break-all;
           }
         }
       }
