@@ -388,130 +388,127 @@ export default class Trust extends ModelExtend {
 
   sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    const compose = async () => {
-      let rawTransaction;
-      const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-      const nodeUrl = findOne.apiNode;
-      let multisigAddress = await this.getBitcoinTrusteeAddress();
-      let redeemScriptMatch;
-      if (fromAddress) {
-        //特殊交易
-        multisigAddress = fromAddress;
-        redeemScriptMatch = redeemScript;
-      } else {
-        redeemScriptMatch = this.redeemScript;
-      }
+    let rawTransaction;
+    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
+    const nodeUrl = findOne.apiNode;
+    let multisigAddress = await this.getBitcoinTrusteeAddress();
+    let redeemScriptMatch;
+    if (fromAddress) {
+      //特殊交易
+      multisigAddress = fromAddress;
+      redeemScriptMatch = redeemScript;
+    } else {
+      redeemScriptMatch = this.redeemScript;
+    }
 
-      if (!nodeUrl) {
-        throw new Error({
-          info: '未设置节点',
-          toString: () => 'NotSetNode',
-        });
-      }
-
-      if (!multisigAddress) {
-        throw new Error({
-          info: '未获取到信托地址',
-          toString: () => 'NotFindTrusteeAddress',
-        });
-      }
-
-      const BitCoinFee = this.BitCoinFee;
-      if (!fromAddress && !BitCoinFee) {
-        throw new Error({
-          info: '未获取到提现手续费',
-          toString: () => 'NotFindTrusteeFee',
-        });
-      }
-
-      const getUnspents = address =>
-        this.fetchNodeStatus(nodeUrl, address)
-          .then((res = {}) => {
-            return res.result;
-          })
-          .catch(() => Promise.reject('超时'));
-
-      const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
-        return result + Number(withdraw.amount);
-      }, 0);
-
-      if (totalWithdrawAmount <= 0) {
-        throw new Error({
-          info: '提现总额应大于0',
-          toString: () => 'WithDrawTotalMustBiggerZero',
-        });
-      }
-
-      let utxos = await getUnspents(multisigAddress).catch(() => {
-        throw new Error({
-          info: '超时',
-          toString: () => 'OverTime',
-        });
+    if (!nodeUrl) {
+      throw new Error({
+        info: '未设置节点',
+        toString: () => 'NotSetNode',
       });
+    }
 
-      utxos = utxos.map(item => ({
-        ...item,
-        amount: new BigNumber(10)
-          .exponentiatedBy(8)
-          .multipliedBy(item.amount)
-          .toNumber(),
-      }));
-
-      if (!(utxos && utxos.length)) {
-        throw new Error({
-          info: '当前节点无任何utxo',
-          toString: () => 'NodeHasNoUTXO',
-        });
-      }
-
-      const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
-      const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
-        utxos,
-        withdrawList,
-        m,
-        n,
-        Number(userInputbitFee),
-        BitCoinFee
-      );
-
-      if (targetUtxos.length <= 0) {
-        throw new Error({
-          info: '构造失败，账户余额不足',
-          toString: () => 'ConstructionFailedBalanceInnsufficient',
-        });
-      }
-
-      const totalInputAmount = targetUtxos.reduce((result, utxo) => {
-        return result + utxo.amount;
-      }, 0);
-
-      const txb = new bitcoin.TransactionBuilder(network);
-      txb.setVersion(1);
-      targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
-      let feeSum = 0;
-      withdrawList.forEach(withdraw => {
-        const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
-        txb.addOutput(withdraw.addr, fee);
-        feeSum += fee;
+    if (!multisigAddress) {
+      throw new Error({
+        info: '未获取到信托地址',
+        toString: () => 'NotFindTrusteeAddress',
       });
-      const change = totalInputAmount - feeSum - calculateUserInputbitFee;
+    }
 
-      if (change < 0) {
-        throw new Error({
-          info: 'utxo总额不够支付提现',
-          toString: () => 'UTXONotEnoughFee',
-        });
-      }
+    const BitCoinFee = this.BitCoinFee;
+    if (!fromAddress && !BitCoinFee) {
+      throw new Error({
+        info: '未获取到提现手续费',
+        toString: () => 'NotFindTrusteeFee',
+      });
+    }
 
-      if (change > 10000) {
-        txb.addOutput(multisigAddress, change);
-      }
-      txb.setLockTime(0);
+    const getUnspents = address =>
+      this.fetchNodeStatus(nodeUrl, address)
+        .then((res = {}) => {
+          return res.result;
+        })
+        .catch(() => Promise.reject('超时'));
 
-      rawTransaction = txb.buildIncomplete().toHex();
-      return rawTransaction;
-    };
-    return compose();
+    const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
+      return result + Number(withdraw.amount);
+    }, 0);
+
+    if (totalWithdrawAmount <= 0) {
+      throw new Error({
+        info: '提现总额应大于0',
+        toString: () => 'WithDrawTotalMustBiggerZero',
+      });
+    }
+
+    let utxos = await getUnspents(multisigAddress).catch(() => {
+      throw new Error({
+        info: '超时',
+        toString: () => 'OverTime',
+      });
+    });
+
+    utxos = utxos.map(item => ({
+      ...item,
+      amount: new BigNumber(10)
+        .exponentiatedBy(8)
+        .multipliedBy(item.amount)
+        .toNumber(),
+    }));
+
+    if (!(utxos && utxos.length)) {
+      throw new Error({
+        info: '当前节点无任何utxo',
+        toString: () => 'NodeHasNoUTXO',
+      });
+    }
+
+    const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
+    const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
+      utxos,
+      withdrawList,
+      m,
+      n,
+      Number(userInputbitFee),
+      BitCoinFee
+    );
+
+    if (targetUtxos.length <= 0) {
+      throw new Error({
+        info: '构造失败，账户余额不足',
+        toString: () => 'ConstructionFailedBalanceInnsufficient',
+      });
+    }
+
+    const totalInputAmount = targetUtxos.reduce((result, utxo) => {
+      return result + utxo.amount;
+    }, 0);
+
+    const txb = new bitcoin.TransactionBuilder(network);
+    txb.setVersion(1);
+    targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
+    let feeSum = 0;
+    withdrawList.forEach(withdraw => {
+      const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
+      txb.addOutput(withdraw.addr, fee);
+      feeSum += fee;
+    });
+    const change = totalInputAmount - feeSum - calculateUserInputbitFee;
+
+    if (change < 0) {
+      throw new Error({
+        info: 'utxo总额不够支付提现',
+        toString: () => 'UTXONotEnoughFee',
+      });
+    }
+
+    if (change > 10000) {
+      txb.addOutput(multisigAddress, change);
+    }
+    txb.setLockTime(0);
+
+    rawTransaction = txb.buildIncomplete().toHex();
+    return rawTransaction;
   };
 
   createWithdrawTxAndSign = async ({ withdrawList = [], tx, redeemScript, privateKey }) => {
