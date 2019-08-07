@@ -387,10 +387,17 @@ export default class Trust extends ModelExtend {
   };
 
   sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
+    const targetTrusteeSetting = this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {};
+    const nodeUrl = targetTrusteeSetting.apiNode;
+    if (!nodeUrl) {
+      throw new Error({
+        info: '未设置节点',
+        toString: () => 'NotSetNode',
+      });
+    }
+
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     let rawTransaction;
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-    const nodeUrl = findOne.apiNode;
     let multisigAddress = await this.getBitcoinTrusteeAddress();
     let redeemScriptMatch;
     if (fromAddress) {
@@ -399,13 +406,6 @@ export default class Trust extends ModelExtend {
       redeemScriptMatch = redeemScript;
     } else {
       redeemScriptMatch = this.redeemScript;
-    }
-
-    if (!nodeUrl) {
-      throw new Error({
-        info: '未设置节点',
-        toString: () => 'NotSetNode',
-      });
     }
 
     if (!multisigAddress) {
@@ -426,7 +426,13 @@ export default class Trust extends ModelExtend {
     const getUnspents = address =>
       this.fetchNodeStatus(nodeUrl, address)
         .then((res = {}) => {
-          return res.result;
+          return (res.result || []).map(item => ({
+            ...item,
+            amount: new BigNumber(10)
+              .exponentiatedBy(8)
+              .multipliedBy(item.amount)
+              .toNumber(),
+          }));
         })
         .catch(() => Promise.reject('超时'));
 
@@ -447,14 +453,6 @@ export default class Trust extends ModelExtend {
         toString: () => 'OverTime',
       });
     });
-
-    utxos = utxos.map(item => ({
-      ...item,
-      amount: new BigNumber(10)
-        .exponentiatedBy(8)
-        .multipliedBy(item.amount)
-        .toNumber(),
-    }));
 
     if (!(utxos && utxos.length)) {
       throw new Error({
