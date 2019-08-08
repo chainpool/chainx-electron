@@ -88,4 +88,4 @@ export const ShowLanguage = true;
 
 export const ForceTrustee = true;
 
-export const ShowTrusteeSwitch = false;
+export const ShowTrusteeSwitch = true;
