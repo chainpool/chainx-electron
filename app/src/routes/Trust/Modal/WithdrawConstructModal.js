@@ -32,7 +32,7 @@ class WithdrawConstructModal extends Component {
       let error = '';
       try {
         await dispatch({
-          type: 'sign',
+          type: 'constructWithdrawTx',
           payload: {
             withdrawList,
             feeRate: fee,
@@ -103,7 +103,7 @@ class WithdrawConstructModal extends Component {
         this.setState({ loading: true });
 
         const tx = await dispatch({
-          type: 'sign',
+          type: 'constructWithdrawTx',
           payload: {
             withdrawList: withdrawList,
             feeRate: fee,

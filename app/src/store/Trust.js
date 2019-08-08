@@ -472,7 +472,7 @@ export default class Trust extends ModelExtend {
     return rawTransaction;
   };
 
-  sign = async ({ withdrawList, feeRate = 1 }) => {
+  constructWithdrawTx = async ({ withdrawList, feeRate = 1 }) => {
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
     if (!nodeUrl) {
       throw new Error({
