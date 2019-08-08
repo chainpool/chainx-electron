@@ -35,7 +35,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList,
-            ...(fee ? { userInputbitFee: fee } : {}),
+            feeRate: fee,
           },
         });
       } catch (err) {
@@ -106,7 +106,7 @@ class WithdrawConstructModal extends Component {
           type: 'sign',
           payload: {
             withdrawList: withdrawList,
-            ...(fee ? { userInputbitFee: fee } : {}),
+            feeRate: fee,
           },
         });
 

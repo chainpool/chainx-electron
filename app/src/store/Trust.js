@@ -472,9 +472,8 @@ export default class Trust extends ModelExtend {
     return rawTransaction;
   };
 
-  sign = async ({ withdrawList, userInputbitFee = 0, fromAddress, redeemScript }) => {
-    const targetTrusteeSetting = this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {};
-    const nodeUrl = targetTrusteeSetting.apiNode;
+  sign = async ({ withdrawList, feeRate = 1 }) => {
+    const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
     if (!nodeUrl) {
       throw new Error({
         info: '未设置节点',
@@ -483,17 +482,7 @@ export default class Trust extends ModelExtend {
     }
 
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
-    let rawTransaction;
     let multisigAddress = await this.getBitcoinTrusteeAddress();
-    let redeemScriptMatch;
-    if (fromAddress) {
-      //特殊交易
-      multisigAddress = fromAddress;
-      redeemScriptMatch = redeemScript;
-    } else {
-      redeemScriptMatch = this.redeemScript;
-    }
-
     if (!multisigAddress) {
       throw new Error({
         info: '未获取到信托地址',
@@ -501,8 +490,7 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    const BitCoinFee = this.BitCoinFee;
-    if (!fromAddress && !BitCoinFee) {
+    if (!this.BitCoinFee) {
       throw new Error({
         info: '未获取到提现手续费',
         toString: () => 'NotFindTrusteeFee',
@@ -534,14 +522,14 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    const { m, n } = getMNFromRedeemScript(redeemScriptMatch.replace(/^0x/, ''));
+    const { m, n } = getMNFromRedeemScript(this.redeemScript.replace(/^0x/, ''));
     const { targetInputs: targetUtxos, minerFee: calculateUserInputbitFee } = this.pickNeedUtxos(
       utxos,
       withdrawList,
       m,
       n,
-      Number(userInputbitFee),
-      BitCoinFee
+      Number(feeRate),
+      this.BitCoinFee
     );
 
     if (targetUtxos.length <= 0) {
@@ -558,13 +546,13 @@ export default class Trust extends ModelExtend {
     const txb = new bitcoin.TransactionBuilder(network);
     txb.setVersion(1);
     targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
-    let feeSum = 0;
+    let finalTotalWithdrawAmount = 0;
     withdrawList.forEach(withdraw => {
-      const fee = fromAddress ? Number(withdraw.amount) : withdraw.amount - BitCoinFee;
-      txb.addOutput(withdraw.addr, fee);
-      feeSum += fee;
+      const finalWithdrawalAmount = Number(withdraw.amount) - this.BitCoinFee;
+      txb.addOutput(withdraw.addr, finalWithdrawalAmount);
+      finalTotalWithdrawAmount += finalWithdrawalAmount;
     });
-    const change = totalInputAmount - feeSum - calculateUserInputbitFee;
+    const change = totalInputAmount - finalTotalWithdrawAmount - calculateUserInputbitFee;
 
     if (change < 0) {
       throw new Error({
@@ -578,8 +566,7 @@ export default class Trust extends ModelExtend {
     }
     txb.setLockTime(0);
 
-    rawTransaction = txb.buildIncomplete().toHex();
-    return rawTransaction;
+    return txb.buildIncomplete().toHex();
   };
 
   createWithdrawTxAndSign = async ({ withdrawList = [], tx, redeemScript, privateKey }) => {
