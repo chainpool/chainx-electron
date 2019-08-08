@@ -108,10 +108,10 @@ class ConstructSpecialTradeModal extends Component {
         }));
 
       dispatch({
-        type: 'sign',
+        type: 'constructSpecialTx',
         payload: {
           withdrawList,
-          userInputbitFee: feeRate,
+          feeRate,
           fromAddress: sender,
           redeemScript,
         },
