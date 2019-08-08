@@ -1,15 +1,13 @@
 import React from 'react';
-import { Mixin, ButtonGroup, Button, Icon, FormattedMessage, RouterGo } from '../../components';
-import { TableTitle, HoverTip } from '../components';
-import { PATH, ShowTrusteeSwitch } from '../../constants';
+import { Button, ButtonGroup, FormattedMessage, Icon, Mixin, RouterGo } from '../../components';
+import { HoverTip, TableTitle } from '../components';
+import { ForceTrustee, PATH, ShowTrusteeSwitch } from '../../constants';
 import { classNames, Inject } from '../../utils';
-import { ForceTrustee } from '../../constants';
 import SettingTable from './SettingTable';
 import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
-import WithdrawSignModal from './Modal/WithdrawSignModal';
 import TrustSetting from './Modal/TrustSettingModal';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import SignResultModal from './Modal/SignResultModal';
@@ -252,7 +250,6 @@ class Trust extends Mixin {
         {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...props} /> : null}
         {name === 'NodeSettingModal' ? <NodeSettingModal {...props} /> : null}
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
-        {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
         {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
         {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}

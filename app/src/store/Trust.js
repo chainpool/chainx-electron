@@ -569,21 +569,6 @@ export default class Trust extends ModelExtend {
     return txb.buildIncomplete().toHex();
   };
 
-  createWithdrawTxAndSign = async ({ withdrawList = [], tx, redeemScript, privateKey }) => {
-    const ids = withdrawList.map((item = {}) => item.id);
-    let tx_trans = null;
-    if (tx) {
-      tx = tx.replace(/^0x/, '');
-      redeemScript = redeemScript.replace(/^0x/, '');
-      tx_trans = await this.sign({ tx, redeemScript, privateKey });
-    }
-    const extrinsic = createWithdrawTx(ids, `0x${tx_trans}`);
-    return {
-      extrinsic,
-      success: this.reload,
-    };
-  };
-
   createWithdrawTx = ({ ids = [], tx }) => {
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
     return {
