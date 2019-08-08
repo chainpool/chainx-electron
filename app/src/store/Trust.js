@@ -591,12 +591,12 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    const [resTx = {}, resRede = {}] = await Promise.all([
+    const [withdrawTxInfo = {}, trusteeInfo = {}] = await Promise.all([
       getWithdrawTx(findOne.chain),
       this.getTrusteeSessionInfo(findOne.chain),
     ]);
-    const { tx, trusteeList = [] } = resTx || {};
-    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = resRede || {};
+    const { tx, trusteeList = [] } = withdrawTxInfo || {};
+    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = trusteeInfo || {};
     if (this.tx === tx && this.redeemScript === redeemScript) {
       return;
     }
