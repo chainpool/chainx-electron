@@ -403,6 +403,7 @@ export const fetchFromBrowserWs = ({ url, method, params = [], timeOut = 5000 })
             resolve({
               data: data.result,
               wastTime: endTime - startTime,
+              ...(data.error ? { error: data.error } : {}),
             });
             ws.close();
           }

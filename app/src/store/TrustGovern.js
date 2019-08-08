@@ -1,4 +1,5 @@
 import { observable, autorun, toJS, _ } from '../utils';
+import { Toast } from '../components';
 import {
   particularAccounts,
   getMultiSigAddrInfo,
@@ -223,6 +224,8 @@ export default class TrustGovern extends ModelExtend {
     const res = await getMockBitcoinNewTrustees(addrs);
     if (res && res.data) {
       return res.data;
+    } else if (res && res.error && res.error.message) {
+      Toast.warn(res.error.message);
     }
   };
 

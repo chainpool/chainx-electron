@@ -34,17 +34,18 @@ class ProposalSelectModal extends Component {
           <ul>
             {[
               { name: 'switch', desc: '信托换届' },
-              { name: '手续费调整', desc: '手续费调整' },
-              { name: '移除未认领', desc: '移除未认领' },
-              { name: '撤销用户提现', desc: '撤销用户提现' },
+              { name: '手续费调整', desc: '手续费调整', disabled: true },
+              { name: '移除未认领', desc: '移除未认领', disabled: true },
+              { name: '撤销用户提现', desc: '撤销用户提现', disabled: true },
             ].map((item, index) => (
               <li
                 className={classNames(
                   selectOne === item.name || selectOne === item.desc ? styles.active : null,
-                  item.disabeld ? styles.disabeld : null
+                  item.disabled ? styles.disabeld : null
                 )}
                 key={index}
                 onClick={() => {
+                  if (this.disabled) return;
                   this.setState({
                     selectOne: item.name,
                   });
