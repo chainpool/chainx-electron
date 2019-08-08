@@ -597,7 +597,7 @@ export default class Trust extends ModelExtend {
     ]);
     const { tx, trusteeList = [] } = withdrawTxInfo || {};
     const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = trusteeInfo || {};
-    if (this.tx === tx && this.redeemScript === redeemScript) {
+    if (this.tx === tx && this.redeemScript === redeemScript && trusteeList.length === this.trusteeList.length) {
       return;
     }
 
