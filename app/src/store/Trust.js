@@ -386,6 +386,19 @@ export default class Trust extends ModelExtend {
     return pickUtxosWithMinerFeeRate(unSpents, withdrawals, n, m, feeRate, chainxFee);
   };
 
+  getUnspents = (nodeUrl, address) =>
+    this.fetchNodeStatus(nodeUrl, address)
+      .then((res = {}) => {
+        return (res.result || []).map(item => ({
+          ...item,
+          amount: new BigNumber(10)
+            .exponentiatedBy(8)
+            .multipliedBy(item.amount)
+            .toNumber(),
+        }));
+      })
+      .catch(() => Promise.reject('超时'));
+
   constructSpecialTx = async ({ withdrawList, feeRate = 1, fromAddress, redeemScript }) => {
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
     if (!nodeUrl) {
@@ -398,19 +411,6 @@ export default class Trust extends ModelExtend {
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
     let rawTransaction;
 
-    const getUnspents = address =>
-      this.fetchNodeStatus(nodeUrl, address)
-        .then((res = {}) => {
-          return (res.result || []).map(item => ({
-            ...item,
-            amount: new BigNumber(10)
-              .exponentiatedBy(8)
-              .multipliedBy(item.amount)
-              .toNumber(),
-          }));
-        })
-        .catch(() => Promise.reject('超时'));
-
     const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
       return result + Number(withdraw.amount);
     }, 0);
@@ -422,7 +422,7 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    let utxos = await getUnspents(fromAddress).catch(() => {
+    let utxos = await this.getUnspents(nodeUrl, fromAddress).catch(() => {
       throw new Error({
         info: '请求UTXO列表超时',
         toString: () => 'OverTime',
@@ -509,19 +509,6 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    const getUnspents = address =>
-      this.fetchNodeStatus(nodeUrl, address)
-        .then((res = {}) => {
-          return (res.result || []).map(item => ({
-            ...item,
-            amount: new BigNumber(10)
-              .exponentiatedBy(8)
-              .multipliedBy(item.amount)
-              .toNumber(),
-          }));
-        })
-        .catch(() => Promise.reject('超时'));
-
     const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
       return result + Number(withdraw.amount);
     }, 0);
@@ -533,7 +520,7 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    let utxos = await getUnspents(multisigAddress).catch(() => {
+    let utxos = await this.getUnspents(nodeUrl, multisigAddress).catch(() => {
       throw new Error({
         info: '超时',
         toString: () => 'OverTime',
