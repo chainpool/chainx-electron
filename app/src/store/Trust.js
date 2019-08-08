@@ -69,7 +69,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecial = '';
   @observable redeemScript = ''; //普通交易赎回脚本
   @observable redeemScriptSpecial = ''; //特殊交易赎回脚本
-  @observable trusteeList = []; //普通交易已签名的节点列表,被计算属性signTrusteeList使用得到完整细节
+  @observable trusteeList = []; //普通交易已签名的节点列表,被计算属性signTrusteeList使用得到完整细节 [['0x...', true|false]]
   @observable chainConfigTrusteeList = []; //链上配置的信托列表，账户跟公钥一一对应
   @observable totalSignCount = ''; // 普通交易总签名个数
   @observable maxSignCount = ''; // 普通交易最大签名个数
@@ -177,17 +177,18 @@ export default class Trust extends ModelExtend {
 
   @computed get signTrusteeList() {
     if (!this.tx) return [];
+
     const currentAccount = this.getCurrentAccount();
     return this.rootStore.electionStore.trustIntentions.map((item = {}) => {
       const newItem = {
         ...item,
         isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
       };
-      const findOne = this.trusteeList.filter((one = []) => {
+      const findOne = this.trusteeList.find((one = []) => {
         if (one[0]) {
           return `0x${this.decodeAddressAccountId(one[0])}` === item.account;
         }
-      })[0];
+      });
       if (findOne) {
         return {
           ...newItem,
