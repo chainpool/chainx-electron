@@ -21,7 +21,6 @@ class ResponseList extends Component {
         dispatch,
         tx,
         txSpecial,
-        redeemScript,
         txOutputList = [],
         txInputList = [],
         txSpecialOutputList = [],
