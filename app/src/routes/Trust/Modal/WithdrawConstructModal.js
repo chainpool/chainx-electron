@@ -22,6 +22,13 @@ class WithdrawConstructModal extends Component {
         model: { dispatch },
       } = this.props;
 
+      let errorMsg = '';
+      if ((withDrawIndexSignList || []).length <= 0) {
+        errorMsg = '必填';
+        this.setState({ withDrawIndexSignListErrMsg: errorMsg });
+        return errorMsg;
+      }
+
       const withdrawList = (withDrawIndexSignList || []).map(withdrawal => {
         return {
           addr: withdrawal.addr,
@@ -29,7 +36,6 @@ class WithdrawConstructModal extends Component {
         };
       });
 
-      let error = '';
       try {
         await dispatch({
           type: 'constructWithdrawTx',
@@ -40,15 +46,14 @@ class WithdrawConstructModal extends Component {
         });
       } catch (err) {
         if (err.message === 'UTXONotEnoughFee') {
-          error = <FormattedMessage id={'UTXONotEnoughFee'} />;
+          errorMsg = <FormattedMessage id={'UTXONotEnoughFee'} />;
         } else {
-          error = err.message;
+          errorMsg = err.message;
         }
       }
 
-      const errMsg = Patterns.check('required')(withDrawIndexSignList) || error;
-      this.setState({ withDrawIndexSignListErrMsg: errMsg });
-      return errMsg;
+      this.setState({ withDrawIndexSignListErrMsg: errorMsg });
+      return errorMsg;
     },
     checkTx: () => {
       const { tx } = this.state;
@@ -184,7 +189,6 @@ class WithdrawConstructModal extends Component {
             }
             onBlur={() => {
               checkAll.checkFee();
-              checkAll.checkWithDrawIndexSignList();
             }}
           />
           <Input.Select
