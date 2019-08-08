@@ -12,7 +12,6 @@ class WithdrawConstructModal extends Component {
     txErrMsg: '',
     fee: '',
     feeErrMsg: '',
-    loading: false,
   };
 
   checkAll = {
@@ -79,7 +78,7 @@ class WithdrawConstructModal extends Component {
 
   render() {
     const { checkAll } = this;
-    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg, loading } = this.state;
+    const { withDrawIndexSignList, withDrawIndexSignListErrMsg, tx, txErrMsg, fee, feeErrMsg } = this.state;
     const {
       model: { normalizedOnChainAllWithdrawList = [], dispatch, openModal },
     } = this.props;
@@ -105,8 +104,6 @@ class WithdrawConstructModal extends Component {
       });
 
       try {
-        this.setState({ loading: true });
-
         const tx = await dispatch({
           type: 'constructWithdrawTx',
           payload: {
@@ -122,7 +119,6 @@ class WithdrawConstructModal extends Component {
             },
             () => {
               checkAll.checkTx();
-              this.setState({ loading: false });
             }
           );
         }
@@ -139,7 +135,7 @@ class WithdrawConstructModal extends Component {
         button={
           <Button
             size="full"
-            type={loading ? 'disabeld' : 'confirm'}
+            type="confirm"
             onClick={async () => {
               if (await checkAll.confirm()) {
                 openModal({
