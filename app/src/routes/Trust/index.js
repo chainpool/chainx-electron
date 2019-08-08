@@ -31,9 +31,6 @@ class Trust extends Mixin {
     this.fetchPoll(this.getSign);
     this.getSomeOneInfo();
     this.getMinimalWithdrawalValueByToken();
-    // this.props.model.openModal({
-    //   name: 'TrezorPasswordModal',
-    // });
   };
 
   getAllWithdrawalList = async () => {
