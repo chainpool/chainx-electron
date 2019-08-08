@@ -223,7 +223,16 @@ export default class TrustGovern extends ModelExtend {
     addrs = addrs.map(item => `0x${this.decodeAddressAccountId(item)}`);
     const res = await getMockBitcoinNewTrustees(addrs);
     if (res && res.data) {
-      return res.data;
+      return {
+        ...res.data,
+        trusteeList: res.data.trusteeList.map(item => {
+          const findOne = this.rootStore.electionStore.originIntentions.find(one => one.account === item.accountId);
+          return {
+            ...item,
+            name: findOne.name,
+          };
+        }),
+      };
     } else if (res && res.error && res.error.message) {
       Toast.warn(res.error.message);
     }

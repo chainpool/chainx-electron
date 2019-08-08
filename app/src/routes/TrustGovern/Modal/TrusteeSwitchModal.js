@@ -57,7 +57,7 @@ class TrusteeSwitchModal extends Component {
             <ul>
               {mockResult.trusteeList.map((item, index) => (
                 <li key={index}>
-                  <div className={styles.name}>nuildlinks</div>
+                  <div className={styles.name}>{item.name}</div>
                   <div>
                     <span>地址：</span>
                     <div>{item.accountId}</div>
