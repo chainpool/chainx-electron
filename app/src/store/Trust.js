@@ -79,6 +79,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
 
+  // 提现交易收取的手续费
   @computed get BitCoinFeeShow() {
     return this.setPrecision(this.BitCoinFee * this.txInputList.length, 8);
   }
