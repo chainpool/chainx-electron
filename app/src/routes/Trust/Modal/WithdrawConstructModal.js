@@ -172,6 +172,7 @@ class WithdrawConstructModal extends Component {
                 {
                   fee: value,
                   withDrawIndexSignListErrMsg: '',
+                  tx: '',
                 },
                 async () => {
                   await setTxFromIndexOrFee();
@@ -196,6 +197,7 @@ class WithdrawConstructModal extends Component {
             onChange={value => {
               this.setState(
                 {
+                  tx: '',
                   withDrawIndexSignList: value,
                 },
                 async () => {
