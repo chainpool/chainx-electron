@@ -76,12 +76,13 @@ export default class Trust extends ModelExtend {
   @observable BitCoinFee = ''; // 普通交易需要的chianx链上比特币手续费，特殊交易不需要要用
   @observable txInputList = []; // 普通交易input
   @observable txOutputList = [];
+  @observable withdrawalIdList = []; // 提现交易对应的id列表
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
 
   // 提现交易收取的手续费
   @computed get BitCoinFeeShow() {
-    return this.setPrecision(this.BitCoinFee * this.txInputList.length, 8);
+    return this.setPrecision(this.BitCoinFee * this.withdrawalIdList.length, 8);
   }
 
   @computed
@@ -596,7 +597,8 @@ export default class Trust extends ModelExtend {
       getWithdrawTx(findOne.chain),
       this.getTrusteeSessionInfo(findOne.chain),
     ]);
-    const { tx, trusteeList = [] } = withdrawTxInfo || {};
+
+    const { tx, trusteeList = [], withdrawalIdList = [] } = withdrawTxInfo || {};
     const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = trusteeInfo || {};
     if (this.tx === tx && this.redeemScript === redeemScript && trusteeList.length === this.trusteeList.length) {
       return;
@@ -609,6 +611,7 @@ export default class Trust extends ModelExtend {
       totalSignCount,
       maxSignCount,
       chainConfigTrusteeList,
+      withdrawalIdList,
     });
 
     this.getInputsAndOutputsFromTx({
