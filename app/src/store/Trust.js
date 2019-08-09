@@ -80,7 +80,7 @@ export default class Trust extends ModelExtend {
   @observable txSpecialOutputList = [];
 
   @computed get BitCoinFeeShow() {
-    return this.setPrecision(this.BitCoinFee * this.normalizedOnChainAllWithdrawList.length, 8);
+    return this.setPrecision(this.BitCoinFee * this.txInputList.length, 8);
   }
 
   @computed
