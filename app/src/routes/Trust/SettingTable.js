@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Inject } from '../../utils';
-import { Button, ButtonGroup, FormattedMessage, Table } from '../../components';
+import { FormattedMessage, Table } from '../../components';
 import * as styles from './index.less';
 
 @Inject(({ trustStore }) => ({ trustStore }))
@@ -50,36 +50,6 @@ class SettingTable extends Component {
           ellipse: 0,
           dataIndex: 'coldPubKey',
         },
-        // {
-        //   title: '',
-        //   dataIndex: '_action',
-        //   render: (value, item) => (
-        //     <ButtonGroup>
-        //       {item.decodedHotPrivateKey && item.hotPubKey ? (
-        //         <Button type="disabeld">
-        //           <FormattedMessage id={'Imported'} />
-        //         </Button>
-        //       ) : (
-        //         <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal', data: { chain: item.chain } })}>
-        //           <FormattedMessage id={'ImportHotPrivateKey'} />
-        //         </Button>
-        //       )}
-        //
-        //       <Button
-        //         onClick={() =>
-        //           openModal({
-        //             name: 'NodeSettingModal',
-        //             data: {
-        //               chain: item.chain,
-        //               node: item.node,
-        //             },
-        //           })
-        //         }>
-        //         <FormattedMessage id={'SetupNode'} />
-        //       </Button>
-        //     </ButtonGroup>
-        //   ),
-        // },
       ],
       dataSource: trusts,
     };
