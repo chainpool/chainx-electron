@@ -455,7 +455,7 @@ export default class Trust extends ModelExtend {
 
     const txb = new bitcoin.TransactionBuilder(network);
     txb.setVersion(1);
-    targetInputs.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
+    targetInputs.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
     withdrawList.forEach(item => txb.addOutput(item.addr, Number(item.amount)));
     const change = totalInputAmount - totalWithdrawAmount - minerFee;
 
@@ -469,7 +469,6 @@ export default class Trust extends ModelExtend {
     if (change > 10000) {
       txb.addOutput(fromAddress, change);
     }
-    txb.setLockTime(0);
 
     rawTransaction = txb.buildIncomplete().toHex();
     return rawTransaction;
@@ -548,7 +547,7 @@ export default class Trust extends ModelExtend {
 
     const txb = new bitcoin.TransactionBuilder(network);
     txb.setVersion(1);
-    targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout, 0));
+    targetUtxos.forEach(utxo => txb.addInput(utxo.txid, utxo.vout));
     let finalTotalWithdrawAmount = 0;
     withdrawList.forEach(withdraw => {
       const finalWithdrawalAmount = Number(withdraw.amount) - this.BitCoinFee;
