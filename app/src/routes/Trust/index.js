@@ -4,7 +4,6 @@ import * as styles from './index.less';
 import { TableTitle, HoverTip } from '../components';
 import { Inject } from '../../utils';
 import SettingTable from './SettingTable';
-import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
@@ -262,7 +261,6 @@ class Trust extends Mixin {
           </TableTitle>
           <WithdrawTable {...props} />
         </div>
-        {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...props} /> : null}
         {name === 'NodeSettingModal' ? <NodeSettingModal {...props} /> : null}
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'WithdrawSignModal' ? <WithdrawSignModal {...props} /> : null}
