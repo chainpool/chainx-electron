@@ -7,7 +7,7 @@ import * as styles from './index.less';
 class SettingTable extends Component {
   render() {
     const {
-      trustStore: { trusts, openModal },
+      trustStore: { trusts },
     } = this.props;
 
     const tableProps = {
