@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Inject } from '../../utils';
-import { Button, ButtonGroup, FormattedMessage, Table } from '../../components';
+import { FormattedMessage, Table } from '../../components';
 import * as styles from './index.less';
 
 @Inject(({ trustStore }) => ({ trustStore }))
 class SettingTable extends Component {
   render() {
     const {
-      trustStore: { trusts, openModal },
+      trustStore: { trusts },
     } = this.props;
 
     const tableProps = {
