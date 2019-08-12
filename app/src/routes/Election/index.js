@@ -48,7 +48,7 @@ class Election extends Mixin {
           <FormattedMessage id={'DropOut'} />,
           <FormattedMessage id={'MyNominations'} />,
         ]
-      : [<FormattedMessage id={'ValidatorNode'} />, <FormattedMessage id={'StandbyNode'} />];
+      : [<FormattedMessage id={'Candidate'} />, <FormattedMessage id={'DropOut'} />];
 
     const getOperations = activeIndex => (
       <div className={styles.operation}>
