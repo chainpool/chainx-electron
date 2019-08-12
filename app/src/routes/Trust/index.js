@@ -4,7 +4,6 @@ import { HoverTip, TableTitle } from '../components';
 import { ForceTrustee, PATH, ShowTrusteeSwitch } from '../../constants';
 import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
-import ImportHotPrivateKeyModal from './Modal/ImportHotPrivateKeyModal';
 import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
 import WithdrawConstructModal from './Modal/WithdrawConstructModal';
@@ -244,7 +243,6 @@ class Trust extends Mixin {
           </TableTitle>
           <WithdrawTable {...props} />
         </div>
-        {name === 'ImportHotPrivateKeyModal' ? <ImportHotPrivateKeyModal {...props} /> : null}
         {name === 'NodeSettingModal' ? <NodeSettingModal {...props} /> : null}
         {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
