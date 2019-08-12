@@ -50,36 +50,6 @@ class SettingTable extends Component {
           ellipse: true,
           dataIndex: 'coldPubKey',
         },
-        {
-          title: '',
-          dataIndex: '_action',
-          render: (value, item) => (
-            <ButtonGroup>
-              {item.decodedHotPrivateKey && item.hotPubKey ? (
-                <Button type="disabeld">
-                  <FormattedMessage id={'Imported'} />
-                </Button>
-              ) : (
-                <Button onClick={() => openModal({ name: 'ImportHotPrivateKeyModal', data: { chain: item.chain } })}>
-                  <FormattedMessage id={'ImportHotPrivateKey'} />
-                </Button>
-              )}
-
-              <Button
-                onClick={() =>
-                  openModal({
-                    name: 'NodeSettingModal',
-                    data: {
-                      chain: item.chain,
-                      node: item.node,
-                    },
-                  })
-                }>
-                <FormattedMessage id={'SetupNode'} />
-              </Button>
-            </ButtonGroup>
-          ),
-        },
       ],
       dataSource: trusts,
     };
