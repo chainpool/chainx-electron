@@ -30,8 +30,8 @@ class CurrentTrustee extends Mixin {
 
   render() {
     const {
-      model: { name, dispatch, hotEntity, coldEntity },
-      electionStore: { validatorsWithRecords, trustIntentions: trustIntentions_prev },
+      model: { hotEntity, coldEntity },
+      electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
     const trustIntentions = trustIntentions_prev.slice(); // mobx空数组的原因导致需要slice一下
 
@@ -60,7 +60,7 @@ class CurrentTrustee extends Mixin {
                 redeemScript: hotEntity.redeemScript,
               },
               {
-                addressDesc: '本届信托热地址：',
+                addressDesc: '本届信托冷地址：',
                 address: coldEntity.addr,
                 redeemScriptDesc: '赎回脚本：',
                 redeemScript: coldEntity.redeemScript,
