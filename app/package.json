@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node config/scripts/start.js",
-    "build": "yarn && node config/scripts/build.js",
+    "build": "ci=false yarn && node config/scripts/build.js",
     "test": "node config/scripts/test.js"
   },
   "dependencies": {
