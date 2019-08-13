@@ -35,8 +35,8 @@
     ],
     "publish": {
       "provider": "github",
-      "repo": "chainx-wallet",
-      "owner": "chainx-org"
+      "repo": "chainx-trustee-publish",
+      "owner": "chainpool"
     },
     "dmg": {
       "contents": [
