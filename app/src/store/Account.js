@@ -34,6 +34,8 @@ export default class Store extends ModelExtend {
     } else if (this.isPreMainNetWork()) {
       return this.currentSelectPreMain;
     }
+
+    return null;
   }
 
   set currentAccount(account) {
@@ -55,6 +57,8 @@ export default class Store extends ModelExtend {
     } else if (this.isPreMainNetWork()) {
       return this.accountsPreMain;
     }
+
+    return [];
   }
 
   set accounts(accounts) {
