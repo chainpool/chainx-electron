@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, FormattedMessage, Icon, RouterGo } from '../../../components';
+import { Button, FormattedMessage, RouterGo } from '../../../components';
 import Win from '../../../resource/Win.png';
 import Mac from '../../../resource/Mac.png';
 import Linux from '../../../resource/Linux.png';
@@ -8,7 +8,7 @@ import mathwalletIcon from '../../../resource/mathwalletIcon.png';
 import hashkeyIcon from '../../../resource/hashkeyIcon.png';
 import hashquarkIcon from '../../../resource/hashquarkIcon.png';
 
-import { Device, classNames } from '../../../utils';
+import { classNames, Device } from '../../../utils';
 import { DowloadWalletUrl } from '../../../constants';
 
 class DownLoadWallet extends Component {
