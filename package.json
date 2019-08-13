@@ -11,12 +11,10 @@
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
     "dist": "yarn build && rimraf dist && electron-builder",
-    "postinstall": "electron-rebuild",
-    "oss": "./scripts/ossUpload.js"
+    "postinstall": "electron-rebuild"
   },
   "license": "MIT",
   "devDependencies": {
-    "ali-oss": "^6.1.1",
     "electron": "^5.0.2",
     "electron-builder": "^20.41.0",
     "electron-debug": "^3.0.0",
