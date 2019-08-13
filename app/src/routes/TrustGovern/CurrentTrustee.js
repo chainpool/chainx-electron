@@ -60,7 +60,7 @@ class CurrentTrustee extends Mixin {
                 redeemScript: hotEntity.redeemScript,
               },
               {
-                addressDesc: '本届信托热地址：',
+                addressDesc: '本届信托冷地址：',
                 address: coldEntity.addr,
                 redeemScriptDesc: '赎回脚本：',
                 redeemScript: coldEntity.redeemScript,
