@@ -2,7 +2,7 @@
   "name": "chainx",
   "productName": "ChainX Wallet for Trustee",
   "version": "1.0.3",
-  "description": "My Electron application description",
+  "description": "ChainX Wallet for Trustee",
   "main": "./main.js",
   "scripts": {
     "build": "cd app && yarn build",
