@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Input, Mixin, Modal, FormattedMessage } from '../../../components';
-import { InputHorizotalList, FreeBalance } from '../../components';
-import { PlaceHolder } from '../../../constants';
-import { Inject, Patterns, setBlankSpace, classNames, moment_helper } from '../../../utils';
+import { Button, Input, Mixin, Modal, FormattedMessage } from '@components';
+import { InputHorizotalList, FreeBalance } from '../../../components';
+import { PlaceHolder } from '@constants';
+import { Inject, Patterns, setBlankSpace, classNames, moment_helper } from '@utils';
 import * as styles from './VoteModal.less';
 
 @Inject(({ electionStore: model, chainStore, assetStore }) => ({ model, chainStore, assetStore }))
@@ -93,8 +93,12 @@ class VoteModal extends Mixin {
       accountStore: { isValidator },
     } = this.props;
 
-    const bondingSeconds =
-      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) / (1000 * 60 * 60 * 24);
+    const pcxPrecision = getDefaultPrecision();
+
+    const bondingSeconds = (
+      (blockDuration * (isCurrentAccount ? intentionBondingDuration : bondingDuration)) /
+      (1000 * 60 * 60 * 24)
+    ).toFixed(2);
 
     let operation;
     let operationAmount;
@@ -116,13 +120,21 @@ class VoteModal extends Mixin {
       label: item.name,
       value: item.account,
       isActive: item.isActive,
+      totalNomination: item.totalNomination,
+      selfVote: item.selfVote,
     }));
 
-    const overNodeLimit = Number(amount) + Number(totalNomination) > selfVote * 10;
-    const canRenominate = nextRenominateHeight === null || blockNumber > nextRenominateHeight;
+    const overAddNodeLimit = Number(amount) + Number(totalNomination) > selfVote * 10;
 
-    const canSwitch = (isCurrentAccount && canRenominate) || (!isCurrentAccount && !overNodeLimit && canRenominate);
-    const canAdd = !overNodeLimit || isCurrentAccount;
+    // 超过切换目标节点的投票限制
+    const overSwitchNodeLimit =
+      Number(amount) * Math.pow(10, pcxPrecision) + Number(selectNode.totalNomination) > selectNode.selfVote * 10;
+    const reachRenominateHeight = nextRenominateHeight === null || blockNumber > nextRenominateHeight;
+
+    const canSwitch =
+      (isCurrentAccount && reachRenominateHeight) ||
+      (!isCurrentAccount && !overSwitchNodeLimit && reachRenominateHeight);
+    const canAdd = !overAddNodeLimit || isCurrentAccount;
 
     const getButtonStatus = () => {
       if (action === 'switch') {
@@ -134,6 +146,43 @@ class VoteModal extends Mixin {
       }
       return 'confirm';
     };
+
+    const tabs = myTotalVote ? (
+      <>
+        <ul className={styles.changeVote}>
+          {[
+            { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
+            {
+              label: <FormattedMessage id={'SwitchNomination'} />,
+              value: 'switch',
+              disabeld: isValidator && isCurrentAccount,
+            },
+            { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
+          ]
+            .filter(item => item.disabeld !== true)
+            .map((item, index) => (
+              <li
+                key={index}
+                className={classNames(
+                  action === item.value ? styles.active : null,
+                  item.disabeld ? styles.disabeld : null
+                )}
+                onClick={() => {
+                  this.setState({ action: item.value, amount: '', amountErrMsg: '' });
+                }}>
+                {item.label}
+              </li>
+            ))}
+        </ul>
+
+        <div className={styles.afterchange}>
+          <FormattedMessage id={'NominationAmountAfterModified'}>{msg => `${msg}:`}</FormattedMessage>
+          {action === 'add' && setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))}
+          {(action === 'cancel' || action === 'switch') &&
+            setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
+        </div>
+      </>
+    ) : null;
 
     return (
       <Modal
@@ -194,42 +243,7 @@ class VoteModal extends Mixin {
           </Button>
         }>
         <div className={styles.voteModal}>
-          {myTotalVote ? (
-            <>
-              <ul className={styles.changeVote}>
-                {[
-                  { label: <FormattedMessage id={'IncreaseNomination'} />, value: 'add' },
-                  {
-                    label: <FormattedMessage id={'SwitchNomination'} />,
-                    value: 'switch',
-                    disabeld: isValidator && isCurrentAccount,
-                  },
-                  { label: <FormattedMessage id={'DecreaseNomination'} />, value: 'cancel' },
-                ]
-                  .filter(item => item.disabeld !== true)
-                  .map((item, index) => (
-                    <li
-                      key={index}
-                      className={classNames(
-                        action === item.value ? styles.active : null,
-                        item.disabeld ? styles.disabeld : null
-                      )}
-                      onClick={() => {
-                        this.setState({ action: item.value, amount: '', amountErrMsg: '' });
-                      }}>
-                      {item.label}
-                    </li>
-                  ))}
-              </ul>
-
-              <div className={styles.afterchange}>
-                <FormattedMessage id={'NominationAmountAfterModified'}>{msg => `${msg}:`}</FormattedMessage>
-                {action === 'add' && setDefaultPrecision(myTotalVote + Number(setDefaultPrecision(amount, true)))}
-                {(action === 'cancel' || action === 'switch') &&
-                  setDefaultPrecision(myTotalVote - Number(setDefaultPrecision(amount, true)))}
-              </div>
-            </>
-          ) : null}
+          {tabs}
 
           {action === 'add' && (
             <InputHorizotalList
@@ -307,8 +321,14 @@ class VoteModal extends Mixin {
               <FormattedMessage id={'IntentionBondedLimitation'} />
             </div>
           )}
+
           {action === 'switch' && canSwitch ? switchInfo : null}
-          {action === 'switch' && !canSwitch ? (
+          {action === 'switch' && overAddNodeLimit ? (
+            <div className={styles.canSwitchHeight}>
+              <FormattedMessage id={'IntentionBondedLimitation'} />
+            </div>
+          ) : null}
+          {action === 'switch' && !reachRenominateHeight ? (
             <div className={styles.canSwitchHeight}>
               <FormattedMessage
                 id={'NextClaimTime'}

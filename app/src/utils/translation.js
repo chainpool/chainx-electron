@@ -288,6 +288,8 @@ const translation = ({
       info = merge(args, [{ name: 'hot_entity', dataTrans: v => v }, { name: 'cold_entity', dataTrans: v => v }]);
       break;
     }
+    default:
+      break;
   }
 
   return {
