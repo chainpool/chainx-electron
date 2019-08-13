@@ -11,11 +11,6 @@ import * as styles from './index.less';
 
 @Inject(({ trustGovernStore: model, globalStore }) => ({ model, globalStore }))
 class TrustGovern extends Mixin {
-  startInit = () => {
-    const {
-      model: { openModal },
-    } = this.props;
-  };
   render() {
     const {
       model: {},

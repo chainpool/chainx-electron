@@ -1,14 +1,14 @@
-import { observable, autorun, toJS, _ } from '../utils';
+import { observable } from '../utils';
 import { Toast } from '../components';
 import {
-  particularAccounts,
+  getMockBitcoinNewTrustees,
   getMultiSigAddrInfo,
   getPendingListFor,
   getTrusteeInfoByAccount,
+  particularAccounts,
+  trusteeGovernExecute,
   trusteeGovernSign,
   trusteeRemoveMultiSig,
-  trusteeGovernExecute,
-  getMockBitcoinNewTrustees,
 } from '../services';
 import ModelExtend from './ModelExtend';
 

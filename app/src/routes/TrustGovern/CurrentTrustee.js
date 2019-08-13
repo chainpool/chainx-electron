@@ -30,8 +30,8 @@ class CurrentTrustee extends Mixin {
 
   render() {
     const {
-      model: { name, dispatch, hotEntity, coldEntity },
-      electionStore: { validatorsWithRecords, trustIntentions: trustIntentions_prev },
+      model: { hotEntity, coldEntity },
+      electionStore: { trustIntentions: trustIntentions_prev },
     } = this.props;
     const trustIntentions = trustIntentions_prev.slice(); // mobx空数组的原因导致需要slice一下
 
