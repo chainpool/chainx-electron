@@ -60,7 +60,7 @@ class Configure extends Mixin {
               </span>
               <div>
                 <Input.Select
-                  value={languages.filter(item => item.value === language)[0]}
+                  value={languages.find(item => item.value === language)}
                   options={languages}
                   onChange={item => {
                     dispatchGlobal({
