@@ -244,6 +244,7 @@ export default class Configure extends ModelExtend {
     } else if (this.isPreMainNetWork()) {
       return this.premainNodes;
     }
+    return [];
   }
 
   set nodes(nodes) {
@@ -265,6 +266,8 @@ export default class Configure extends ModelExtend {
     } else if (this.isPreMainNetWork()) {
       return this.premainApi;
     }
+
+    return null;
   }
 
   set api(api) {
