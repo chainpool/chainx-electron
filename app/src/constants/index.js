@@ -97,8 +97,10 @@ export const DowloadWalletUrl = {
 
 export const InnerWebSite = ['weixiaoyi.club'];
 
+export const deprecatedSimulatedAddresses = ['5PtnfKx7mj34utdUxYhgtyMs1ePFAe85S1NQjqqsyffXKdPx'];
+
 export const SimulatedAccount = {
   tag: 'SimulateAccount',
-  address: '5PtnfKx7mj34utdUxYhgtyMs1ePFAe85S1NQjqqsyffXKdPx',
+  address: '5TGy4d488i7pp3sjzi1gibqFUPLShddfk7qPY2S445ErhDGq',
   net: 'main',
 };
