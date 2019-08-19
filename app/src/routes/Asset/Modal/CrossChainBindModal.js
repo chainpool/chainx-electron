@@ -12,7 +12,7 @@ import {
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, Patterns, observer, showAssetName } from '../../../utils';
+import { classNames, Inject, Patterns, observer, showAssetName, isElectron } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -881,6 +881,11 @@ class L_BTC extends Mixin {
                 <Icon name={'help'} />
                 <FormattedMessage id={'LockCourse'} />
               </RouterGo>
+              {isElectron() ? null : (
+                <span className={styles.warntitle}>
+                  <FormattedMessage id={'DoNotLockDemoAccount'} />
+                </span>
+              )}
             </div>
           </div>
         }
@@ -1220,26 +1225,27 @@ class S_DOT extends Mixin {
             }}
             onBlur={checkAll.checkTradeId}
           />
-
-          <Button
-            size="full"
-            type="confirm"
-            loading={loading.bindTxHashLoading}
-            onClick={() => {
-              if (checkAll.confirm()) {
-                const params = this.getTradeId();
-                dispatch({
-                  type: 'bindTxHash',
-                  payload: {
-                    params,
-                  },
-                }).then(res => {
-                  if (res) closeModal();
-                });
-              }
-            }}>
-            <FormattedMessage id={'Confirm'} />
-          </Button>
+          {isElectron() && (
+            <Button
+              size="full"
+              type="confirm"
+              loading={loading.bindTxHashLoading}
+              onClick={() => {
+                if (checkAll.confirm()) {
+                  const params = this.getTradeId();
+                  dispatch({
+                    type: 'bindTxHash',
+                    payload: {
+                      params,
+                    },
+                  }).then(res => {
+                    if (res) closeModal();
+                  });
+                }
+              }}>
+              <FormattedMessage id={'Confirm'} />
+            </Button>
+          )}
         </div>
       </>
     );
@@ -1259,6 +1265,11 @@ class S_DOT extends Mixin {
                 <Icon name={'help'} />
                 <FormattedMessage id={'MappingCourse'} />
               </RouterGo>
+              {isElectron() ? null : (
+                <span className={styles.warntitle}>
+                  <FormattedMessage id={'DoNotMapDemoAccount'} />
+                </span>
+              )}
             </div>
           </div>
         }

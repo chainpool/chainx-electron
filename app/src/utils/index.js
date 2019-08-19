@@ -9,6 +9,7 @@ import wif from 'wif';
 import bip38 from 'bip38';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as WAValidator } from 'wallet-address-validator';
+import { SimulatedAccount, InnerWebSite } from '../constants';
 
 //------------------通用部分
 export { request } from './request';
@@ -513,6 +514,18 @@ export const groupArrayByCount = (array = [], count) => {
   }
 
   return result;
+};
+
+export const isSimulatedAccount = item => {
+  if (_.isString(item)) {
+    return item === SimulatedAccount.address;
+  } else {
+    return item.address === SimulatedAccount.address;
+  }
+};
+
+export const isInnerWebSite = () => {
+  return InnerWebSite.find(item => item === window.location.host);
 };
 
 export const showAssetName = asset => {

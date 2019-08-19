@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal, FormattedMessage } from '../../../components';
 import { FreeBalance, InputHorizotalList } from '../../components';
-import { Inject, Patterns, setBlankSpace, showAssetName } from '../../../utils';
+import { Inject, Patterns, setBlankSpace, isElectron, isSimulatedAccount, showAssetName } from '../../../utils';
 import { PlaceHolder } from '../../../constants';
 
 @Inject(({ accountStore, addressManageStore }) => ({ accountStore, addressManageStore }))
@@ -132,6 +132,9 @@ class TransferModal extends Component {
             prefix="ChainX"
             label={<FormattedMessage id={'ReceiveAddress'} />}
             value={address}
+            getOptionLabel={item =>
+              !isElectron() && isSimulatedAccount(item.value) ? <FormattedMessage id={item.label} /> : item.label
+            }
             errMsg={addressErrMsg}
             options={allAccounts}
             onChange={value => {

@@ -84,3 +84,23 @@ export const OrderStatus = {
 export const TrustNode = '47.111.89.46:18332';
 
 export const ShowLanguage = true;
+
+export const CloseFetures = {
+  onlySimulate: false,
+};
+
+export const DowloadWalletUrl = {
+  Win: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.6/chainx-1.0.6-win.zip',
+  Mac: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.6/chainx-1.0.6.dmg',
+  Linux: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.6/chainx-1.0.6-x86_64.AppImage',
+};
+
+export const InnerWebSite = ['weixiaoyi.club'];
+
+export const deprecatedSimulatedAddresses = ['5PtnfKx7mj34utdUxYhgtyMs1ePFAe85S1NQjqqsyffXKdPx'];
+
+export const SimulatedAccount = {
+  tag: 'SimulateAccount',
+  address: '5TGy4d488i7pp3sjzi1gibqFUPLShddfk7qPY2S445ErhDGq',
+  net: 'main',
+};

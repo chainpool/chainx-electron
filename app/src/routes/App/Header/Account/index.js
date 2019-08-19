@@ -1,7 +1,15 @@
 import React from 'react';
-import { FormattedMessage, Mixin, RouterGo, Scroller } from '../../../../components';
-import { classNames, Inject, Device } from '../../../../utils';
-import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
+import {
+  Button,
+  ButtonGroup,
+  Clipboard,
+  FormattedMessage,
+  Icon,
+  Mixin,
+  RouterGo,
+  Scroller,
+} from '../../../../components';
+import { classNames, Inject, isElectron, isInnerWebSite, isSimulatedAccount } from '../../../../utils';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import ExportSecretModal from './Modal/ExportSecretModal';
@@ -12,9 +20,6 @@ import CreateAccountModal from './Modal/CreateAccountModal';
 import SetKeystorePasswordModal from './Modal/SetKeystorePasswordModal';
 import ExportKeystoreModal from './Modal/ExportKeystoreModal';
 import * as styles from './index.less';
-import Linux from '../../../../resource/Linux.png';
-import Mac from '../../../../resource/Mac.png';
-import Win from '../../../../resource/Win.png';
 
 @Inject(({ accountStore: model }) => ({ model }))
 class Account extends Mixin {
@@ -23,6 +28,7 @@ class Account extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
+
     dispatch({
       type: 'getAccountAssets',
     });
@@ -60,82 +66,92 @@ class Account extends Mixin {
               }}>
               <div className={styles.leftbar} />
               <div>
-                <div className={styles.tag}>{item.tag}</div>
-                <div className={styles.popover}>
-                  <Icon name="icon-gengduocaozuo" />
-                  <div
-                    className={classNames(
-                      accounts.length > Account.AccountListLength && index >= accounts.length - 2 ? styles.down : ''
-                    )}>
-                    <ul className={styles.clickPopover}>
-                      <li
-                        onClick={e => {
-                          e.stopPropagation();
-                          openModal({
-                            name: 'ForgetAccountModal',
-                            data: {
-                              encoded: item.encoded,
-                              address: item.address,
-                            },
-                          });
-                        }}>
-                        <FormattedMessage id={'ForgetAccount'} />
-                      </li>
-                      <li
-                        onClick={e => {
-                          e.stopPropagation();
-                          openModal({
-                            name: 'EditLabelModal',
-                            data: {
-                              address: item.address,
-                            },
-                          });
-                        }}>
-                        <FormattedMessage id={'ModifyLabel'} />
-                      </li>
-                      <li
-                        onClick={e => {
-                          e.stopPropagation();
-                          openModal({
-                            name: 'EditPasswordModal',
-                            data: {
-                              encoded: item.encoded,
-                              address: item.address,
-                            },
-                          });
-                        }}>
-                        <FormattedMessage id={'ChangePassword'} />
-                      </li>
-                      <li
-                        onClick={e => {
-                          e.stopPropagation();
-                          openModal({
-                            name: 'ExportSecretModal',
-                            data: {
-                              encoded: item.encoded,
-                            },
-                          });
-                        }}>
-                        <FormattedMessage id={'ExportPrivateKey'} />
-                      </li>
-                      <li
-                        onClick={e => {
-                          e.stopPropagation();
-                          openModal({
-                            name: 'ExportKeystoreModal',
-                            data: {
-                              tag: item.tag,
-                              address: item.address,
-                              encoded: item.encoded,
-                              net: item.net,
-                            },
-                          });
-                        }}>
-                        <FormattedMessage id={'ExportKeystore'} />
-                      </li>
-                    </ul>
-                  </div>
+                <div className={styles.tag}>
+                  {!isElectron() && isSimulatedAccount(item) ? <FormattedMessage id="SimulateAccount" /> : item.tag}
                 </div>
+                {!isElectron() && !isSimulatedAccount(item) && (
+                  <div className={styles.popover}>
+                    <Icon name="icon-gengduocaozuo" />
+                    <div
+                      className={classNames(
+                        accounts.length > Account.AccountListLength && index >= accounts.length - 2 ? styles.down : ''
+                      )}>
+                      <ul className={styles.clickPopover}>
+                        <>
+                          <li
+                            onClick={e => {
+                              e.stopPropagation();
+                              openModal({
+                                name: 'ForgetAccountModal',
+                                data: {
+                                  encoded: item.encoded,
+                                  address: item.address,
+                                },
+                              });
+                            }}>
+                            <FormattedMessage id={'ForgetAccount'} />
+                          </li>
+                          {isInnerWebSite() && (
+                            <>
+                              <li
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  openModal({
+                                    name: 'EditLabelModal',
+                                    data: {
+                                      address: item.address,
+                                    },
+                                  });
+                                }}>
+                                <FormattedMessage id={'ModifyLabel'} />
+                              </li>
+                              <li
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  openModal({
+                                    name: 'EditPasswordModal',
+                                    data: {
+                                      encoded: item.encoded,
+                                      address: item.address,
+                                    },
+                                  });
+                                }}>
+                                <FormattedMessage id={'ChangePassword'} />
+                              </li>
+                            </>
+                          )}
+                          <li
+                            onClick={e => {
+                              e.stopPropagation();
+                              openModal({
+                                name: 'ExportSecretModal',
+                                data: {
+                                  encoded: item.encoded,
+                                },
+                              });
+                            }}>
+                            <FormattedMessage id={'ExportPrivateKey'} />
+                          </li>
+                          <li
+                            onClick={e => {
+                              e.stopPropagation();
+                              openModal({
+                                name: 'ExportKeystoreModal',
+                                data: {
+                                  tag: item.tag,
+                                  address: item.address,
+                                  encoded: item.encoded,
+                                  net: item.net,
+                                },
+                              });
+                            }}>
+                            <FormattedMessage id={'ExportKeystore'} />
+                          </li>
+                        </>
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <Clipboard>
@@ -148,44 +164,55 @@ class Account extends Mixin {
       </ul>
     );
 
+    const canAddAccount = isElectron() || process.env.NODE_ENV === 'development';
+
     return (
       <div className={styles.account}>
         {isLogin() ? (
           <div className={styles.login}>
             <Icon name="icon-zhanghu" style={{ fontSize: 16 }} />
-            <span style={{ marginLeft: 9 }}>{currentAccount.tag}</span>
+            <span style={{ marginLeft: 9 }}>
+              {!isElectron() && isSimulatedAccount(currentAccount) ? (
+                <FormattedMessage id={currentAccount.tag} />
+              ) : (
+                currentAccount.tag
+              )}
+            </span>
             <div className={classNames(styles.accountlist)}>
               <div>
-                <div className={styles.quickentry}>
-                  <div>
-                    <Button
-                      type="blank"
-                      onClick={() => {
-                        openModal({
-                          name: 'ImportAccountModal',
-                        });
-                      }}>
-                      <Icon name="icon-daoruzhanghu" className={styles.icon} />
-                      <span style={{ color: '#555555' }}>
-                        <FormattedMessage id={'ImportAccount'} />
-                      </span>
-                    </Button>
+                {canAddAccount ? null : (
+                  <div className={styles.quickentry}>
+                    <div>
+                      <Button
+                        type="blank"
+                        onClick={() => {
+                          openModal({
+                            name: 'ImportAccountModal',
+                          });
+                        }}>
+                        <Icon name="icon-daoruzhanghu" className={styles.icon} />
+                        <span style={{ color: '#555555' }}>
+                          <FormattedMessage id={'ImportAccount'} />
+                        </span>
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        type="blank"
+                        onClick={() => {
+                          openModal({
+                            name: 'CreateAccountModal',
+                          });
+                        }}>
+                        <Icon name="icon-tianjia" className={styles.icon} />
+                        <span style={{ color: '#555555' }}>
+                          <FormattedMessage id={'NewAccount'} />
+                        </span>
+                      </Button>
+                    </div>
                   </div>
-                  <div>
-                    <Button
-                      type="blank"
-                      onClick={() => {
-                        openModal({
-                          name: 'CreateAccountModal',
-                        });
-                      }}>
-                      <Icon name="icon-tianjia" className={styles.icon} />
-                      <span style={{ color: '#555555' }}>
-                        <FormattedMessage id={'NewAccount'} />
-                      </span>
-                    </Button>
-                  </div>
-                </div>
+                )}
+
                 {accounts.length > Account.AccountListLength ? (
                   <Scroller scroll={{ y: 97 * Account.AccountListLength, forceRefresh: true }}>
                     {accountULList}
@@ -225,51 +252,6 @@ class Account extends Mixin {
                 </div>
               </div>
             </Button>
-            {false && (
-              <Button type="success" className={styles.download} Ele={'div'}>
-                下载钱包
-                <div>
-                  <div>
-                    <div className={styles.desc}>
-                      <Icon name="icon-xiazai" className={styles.downloadicon} />
-                      <div className={styles.appname}>桌面端安全钱包</div>
-                    </div>
-                    <div className={styles.desc}>去中心化全节点钱包，不依赖中心化交易所</div>
-                    <ul>
-                      {[
-                        {
-                          src: Win,
-                          alias: 'Win',
-                          name: 'Windows',
-                        },
-                        {
-                          src: Mac,
-                          alias: 'Mac',
-                          name: 'MacOs',
-                        },
-                        {
-                          src: Linux,
-                          alias: 'Linux',
-                          name: 'Linux',
-                        },
-                      ].map(item => (
-                        <li key={item.name}>
-                          <img src={item.src} alt={`${item.src}`} />
-                          <div>{item.name}</div>
-                          <div
-                            className={classNames(
-                              styles.button,
-                              Device.getOS() === `${item.alias}` ? styles.active : null
-                            )}>
-                            下载
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </Button>
-            )}
           </ButtonGroup>
         )}
 

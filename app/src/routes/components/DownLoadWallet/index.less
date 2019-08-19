@@ -1,0 +1,130 @@
+@import '~@styles/index.less';
+.download {
+  position: relative;
+  &:hover {
+    >div {
+      display: block !important;
+    }
+  }
+  > div {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    right: 0;
+    top: 26px;
+    > div {
+      position:relative;
+      top:5px;
+      cursor: Default;
+      box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      background: white;
+    }
+  }
+}
+.download {
+  white-space: unset !important;
+  font-size: 12px;
+  padding:0 12px !important;
+  color:@fontgray;
+  > div {
+    > div {
+      margin-top: 8px;
+      .desc{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        div{
+          text-align: center;
+          width:100%;
+        }
+      }
+      .textdesc{
+        text-align: center;
+        margin-top: 12px;
+        line-height: 16px;
+        word-break:break-all;
+        word-wrap:break-word;
+      }
+      padding:24px 0;
+      // padding: 16px 32px 32px;
+      color: #95989a;
+      width: 480px;
+      .downloadicon {
+        font-size: 50px;
+        color: @yellow;
+      }
+      .appname,.shequ{
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+        margin:0 0 16px;
+
+        color: #3F3F3F;
+      }
+      .shequ{
+        margin:30px 0 16px;
+      }
+      .desc {
+        font-size: 14px;
+        margin-top: 12px;
+      }
+      ul {
+        padding:0 60px;
+        // margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        li+li{
+          margin-left: 16px;
+        }
+        li {
+          &:nth-child(4n){
+            margin-left: 0;
+          }
+          //width: 128px;
+          //min-width: 128px;
+          //max-width: 128px;
+          // height: 152px;
+          // border: 1px solid #dce0e2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          // justify-content: space-between;
+          .linkUrl{
+            color: #3F3F3F;
+          }
+          .name{
+            font-size: 14px;
+            white-space: nowrap;
+            color: #3F3F3F;
+            margin-top: 8px;
+            margin-bottom: 16px;
+          }
+          a{
+            max-width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+          img {
+            width: 60px;
+          }
+          .button {
+            font-size: 12px;
+            padding:0 16px;
+            height: 26px;
+            .mixin_button();
+            border: 1px solid @yellow;
+            color: @yellow;
+            .downloadUrl{
+              color:unset;
+            }
+          }
+        }
+      }
+    }
+  }
+}
