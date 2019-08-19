@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-  _,
-  ChainX,
-  Inject,
-  Patterns,
-  resFail,
-  resOk,
-  isElectron,
-  isSimulatedAccount,
-  isInnerWebSite,
-} from '../../../utils';
-import { Modal, Button, Input, Mixin, Slider, Toast, FormattedMessage } from '../../../components';
+import { _, ChainX, Inject, isElectron, Patterns, resFail, resOk } from '../../../utils';
+import { Button, FormattedMessage, Input, Mixin, Modal, Slider, Toast } from '../../../components';
 
 import * as styles from './index.less';
 
@@ -160,11 +150,13 @@ class SignModal extends Mixin {
       step: 1,
     };
 
+    const canSubmit = isElectron() || process.env.NODE_ENV === 'development';
+
     return (
       <Modal
         title={<FormattedMessage id={'TransactionSignature'} />}
         button={
-          !isElectron() && (isSimulatedAccount(currentAccount) || !isInnerWebSite()) ? null : (
+          !canSubmit ? null : (
             <Button
               size="full"
               type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
@@ -316,7 +308,7 @@ class SignModal extends Mixin {
               </span>
             </div>
           ) : null}
-          {!isElectron() && (isSimulatedAccount(currentAccount) || !isInnerWebSite()) ? null : (
+          {!canSubmit ? null : (
             <FormattedMessage id={'InputPassword'}>
               {msg => (
                 <Input.Text
