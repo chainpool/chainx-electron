@@ -91,7 +91,7 @@ class ActiveValidatorsList extends Component {
                     {...this.props}>
                     <div className={styles.left}>
                       {item.imageUrl ? (
-                        <img src={item.imageUrl} width={40} height={40} />
+                        <img src={item.imageUrl} width={40} height={40} alt="" />
                       ) : (
                         <div>{item.name[0].toUpperCase()}</div>
                       )}

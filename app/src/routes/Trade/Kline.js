@@ -1,7 +1,7 @@
 import React from 'react';
 import SwitchPair from './Mixin/SwitchPair';
-import { _, moment_helper, SetFullScreen, formatNumber, showAssetName } from '../../utils';
-import { chartProperties, insertIndicator, fullScreen } from '../../resource/index';
+import { _, formatNumber, moment_helper, SetFullScreen } from '../../utils';
+import { chartProperties, fullScreen, insertIndicator } from '../../resource/index';
 
 import * as styles from './Kline.less';
 import { FormattedMessage } from '../../components';
@@ -68,29 +68,19 @@ class Kline extends SwitchPair {
       case '1':
       case '5':
       case '30':
-        {
-          interval = 60 * Number(resolution);
-        }
+        interval = 60 * Number(resolution);
         break;
       case 'D':
-        {
-          interval = 1 * dayMinutes;
-        }
+        interval = 1 * dayMinutes;
         break;
       case '5D':
-        {
-          interval = 5 * dayMinutes;
-        }
+        interval = 5 * dayMinutes;
         break;
       case 'W':
-        {
-          interval = 7 * dayMinutes;
-        }
+        interval = 7 * dayMinutes;
         break;
       case 'M':
-        {
-          interval = 30 * dayMinutes;
-        }
+        interval = 30 * dayMinutes;
         break;
     }
     return interval;
@@ -146,11 +136,9 @@ class Kline extends SwitchPair {
             callback({});
           });
         },
-        resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
+        resolveSymbol(symbolName, onSymbolResolvedCallback) {
           const filterOne = orderPairs.filter((item = {}) => `${item.currency}/${item.assets}` === symbolName)[0];
           const pricescale = filterOne.precision - filterOne.unitPrecision;
-          const symbolPairs = [showAssetName(symbolName.split('/')[0]), showAssetName(symbolName.split('/')[1])];
-          const symbolShow = `${symbolPairs[0]}/${symbolPairs[1]}`;
           setTimeout(() => {
             onSymbolResolvedCallback({
               name: symbolName,

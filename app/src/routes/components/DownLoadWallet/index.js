@@ -90,7 +90,7 @@ class DownLoadWallet extends Component {
                 },
               ].map(item => (
                 <li key={item.name}>
-                  <a href={item.linkUrl} className={styles.linkUrl} target="_blank">
+                  <a href={item.linkUrl} className={styles.linkUrl} target="_blank" rel="noopener noreferrer">
                     <img src={item.src} alt={`${item.src}`} />
                     <div className={styles.name}>{item.name}</div>
                   </a>
