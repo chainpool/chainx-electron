@@ -46,7 +46,7 @@ console.log = (...payload) => {
 )
 class Main extends Component {
   componentDidMount = () => {
-    if (!isElectron() && !/mywallet1.com/.test(window.location.href)) {
+    if (!isElectron()) {
       Toast.warn(
         '请下载ChainX桌面钱包',
         'ChainX在线钱包仅提供一个模拟账户供新用户体验,历史已导入账户只保留忘记账户、导出私钥和keystore功能。用户可以下载ChainX桌面钱包继续体验.相比在线钱包，桌面钱包更加安全。',

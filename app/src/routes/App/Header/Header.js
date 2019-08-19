@@ -7,7 +7,7 @@ import * as styles from './Header.less';
 import logo from '../../../resource/logo.png';
 import classNames from 'classnames';
 import Account from './Account';
-import { Inject, getDeepPath } from '../../../utils';
+import { Inject, getDeepPath, isElectron } from '../../../utils';
 
 @Inject(({ configureStore, accountStore }) => ({ configureStore, accountStore }))
 class Header extends Component {
@@ -129,9 +129,11 @@ class Header extends Component {
                   </li>
                 )}
               </ul>
-              <div className={styles.download}>
-                <DownLoadWallet {...this.props} />
-              </div>
+              {isElectron() ? null : (
+                <div className={styles.download}>
+                  <DownLoadWallet {...this.props} />
+                </div>
+              )}
             </div>
           </div>
         </div>
