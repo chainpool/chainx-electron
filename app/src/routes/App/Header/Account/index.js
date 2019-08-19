@@ -1,8 +1,15 @@
 import React from 'react';
-import { FormattedMessage, Mixin, RouterGo, Scroller } from '../../../../components';
+import {
+  Button,
+  ButtonGroup,
+  Clipboard,
+  FormattedMessage,
+  Icon,
+  Mixin,
+  RouterGo,
+  Scroller,
+} from '../../../../components';
 import { classNames, Inject, isElectron, isInnerWebSite, isSimulatedAccount } from '../../../../utils';
-import { ButtonGroup, Button, Icon, Clipboard } from '../../../../components';
-import { CloseFetures } from '../../../../constants';
 import ImportAccountModal from './Modal/ImportAccountModal';
 import SetPasswordModal from './Modal/SetPasswordModal';
 import ExportSecretModal from './Modal/ExportSecretModal';
@@ -21,6 +28,7 @@ class Account extends Mixin {
     const {
       model: { dispatch },
     } = this.props;
+
     dispatch({
       type: 'getAccountAssets',
     });
@@ -156,6 +164,8 @@ class Account extends Mixin {
       </ul>
     );
 
+    const canAddAccount = isElectron() || process.env.NODE_ENV === 'development';
+
     return (
       <div className={styles.account}>
         {isLogin() ? (
@@ -170,7 +180,7 @@ class Account extends Mixin {
             </span>
             <div className={classNames(styles.accountlist)}>
               <div>
-                {!isElectron() && !CloseFetures.onlySimulate && !isInnerWebSite() ? null : (
+                {canAddAccount ? null : (
                   <div className={styles.quickentry}>
                     <div>
                       <Button
