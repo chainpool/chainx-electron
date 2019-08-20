@@ -30,6 +30,7 @@ export default class Election extends ModelExtend {
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
   @observable nextRenominateHeight = null;
+  @observable getPseduIntentionsLoading = false;
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
@@ -238,7 +239,9 @@ export default class Election extends ModelExtend {
   };
 
   getPseduIntentions = async () => {
+    this.changeModel('getPseduIntentionsLoading', true);
     const [intentions, records] = await Promise.all([getPseduIntentions(), this.getPseduNominationRecords()]);
+    this.changeModel('getPseduIntentionsLoading', false);
     this.changeModel('originPseduIntentions', intentions);
     this.changeModel('originPseduRecords', records || []);
   };
