@@ -528,6 +528,11 @@ class X_BTC extends Mixin {
                     <Icon name={'help'} />
                     <FormattedMessage id={'DepositCourse'} />
                   </RouterGo>
+                  {isElectron() ? null : (
+                    <span className={styles.warntitle}>
+                      <FormattedMessage id={'DoNotDepositDemoAccount'} />
+                    </span>
+                  )}
                 </div>
               </>
             )}
