@@ -9,18 +9,17 @@ export default class Global extends ModelExtend {
     super(rootStore);
     this.getDefaultLanguage = () => {
       // local store has language value
-      if (localSave.get('lang')) {
-        return localSave.get('lang');
-      } else {
-        // local store is null, get language from navigator
-        // like "zh-TW", "zh-CN", "en-US"
-        const lang = (navigator.language || navigator.userLanguage).toLowerCase();
-        if (lang.indexOf('zh') > -1) {
-          return 'zh';
-        } else {
-          return 'en';
-        }
+      const storeLanguage = localSave.get('lang');
+      if (storeLanguage) {
+        return storeLanguage;
       }
+      // local store is null, get language from navigator
+      // like "zh-TW", "zh-CN", "en-US"
+      const lang = (navigator.language || navigator.userLanguage).toLowerCase();
+      if (lang.indexOf('zh') > -1) {
+        return 'zh';
+      }
+      return 'en';
     };
 
     autorun(() => {
