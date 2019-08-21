@@ -460,18 +460,21 @@ export default class Asset extends ModelExtend {
     };
   };
 
-  bindTxHash = async ({ params }) => {
+  bindTxHash = async hash => {
     this.changeModel('loading.bindTxHashLoading', true);
-    const res = await bindTxHash({ params, timeOut: 11000 }).catch(err => {
+    const res = await bindTxHash(hash).catch(err => {
       Toast.warn('交易ID绑定失败', err.message);
     });
-    if (_.get(res, 'error.message')) {
-      Toast.warn('交易ID绑定失败', _.get(res, 'error.message'));
-    } else if (_.get(res, 'result')) {
-      Toast.success('交易ID绑定已完成', `Extrinsic Hash: ${_.get(res, 'result')}`);
+
+    if (res && res.error_code) {
+      Toast.warn('交易ID绑定失败', res.error_msg);
+    } else if (res && res.hash) {
+      Toast.success('交易ID绑定已完成', `Extrinsic Hash: ${res.hash}`);
       this.reload();
-      return res;
     }
+
     this.changeModel('loading.bindTxHashLoading', false);
+
+    return res;
   };
 }

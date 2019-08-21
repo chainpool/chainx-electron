@@ -1224,12 +1224,10 @@ class S_DOT extends Mixin {
               loading={loading.bindTxHashLoading}
               onClick={() => {
                 if (checkAll.confirm()) {
-                  const params = this.getTradeId();
+                  const ethHash = this.getTradeId();
                   dispatch({
                     type: 'bindTxHash',
-                    payload: {
-                      params,
-                    },
+                    payload: ethHash,
                   }).then(res => {
                     if (res) closeModal();
                   });
