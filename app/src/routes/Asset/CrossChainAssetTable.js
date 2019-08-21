@@ -1,13 +1,12 @@
 import React from 'react';
 import { _, formatNumber, observer, setColumnsWidth, showAssetName } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, FormattedMessage, Mixin, Table } from '../../components';
+import { Button, ButtonGroup, FormattedMessage, Mixin, Table, Amount } from '../../components';
 import { Balance, HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
 import sdotLogo from '../../resource/xdot.png';
 import btcIcon from '../../resource/btc.png';
 import LBTCIcon from '../../resource/LBTC.png';
-import Asset from './components/Asset';
 
 @observer
 class CrossChainAssetTable extends Mixin {
@@ -59,7 +58,7 @@ class CrossChainAssetTable extends Mixin {
           {
             title: <FormattedMessage id={'FreeBalance'} />,
             dataIndex: 'free',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) => <Amount value={value} precision={item.precision} />,
           },
           {
             title: <FormattedMessage id={'WithdrawalReserved'} />,
@@ -68,7 +67,7 @@ class CrossChainAssetTable extends Mixin {
               item.name === 'L-BTC' || item.name === 'SDOT' ? (
                 <Balance value={setPrecision(value, item.name)} />
               ) : (
-                <Asset value={value} precision={item.precision} />
+                <Amount value={value} precision={item.precision} />
               ),
           },
           {
@@ -78,13 +77,13 @@ class CrossChainAssetTable extends Mixin {
               item.name === 'L-BTC' ? (
                 <Balance value={setPrecision(value, item.name)} />
               ) : (
-                <Asset value={value} precision={item.precision} />
+                <Amount value={value} precision={item.precision} />
               ),
           },
           {
             title: <FormattedMessage id={'TotalBalance'} />,
             dataIndex: 'total',
-            render: (value, item) => <Asset value={value} precision={item.precision} />,
+            render: (value, item) => <Amount value={value} precision={item.precision} />,
           },
           {
             title: '',
