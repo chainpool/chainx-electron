@@ -7,23 +7,19 @@ import { Chain } from '@constants';
 export default class Global extends ModelExtend {
   constructor(rootStore) {
     super(rootStore);
-    this.getDefaultLanguage = language => {
-      if (language === 'cn') {
-        return 'zh';
-      } else if (language === 'en') {
-        return 'en';
-      } else {
-        const lang = (navigator.language || navigator.userLanguage).toLowerCase();
-        if (localSave.get('lang')) {
-          return localSave.get('lang');
-        } else if (lang.indexOf('zh') > -1) {
-          return 'zh';
-        } else if (lang.indexOf('en') > -1) {
-          return 'en';
-        } else {
-          return 'zh';
-        }
+    this.getDefaultLanguage = () => {
+      // local store has language value
+      const storeLanguage = localSave.get('lang');
+      if (storeLanguage) {
+        return storeLanguage;
       }
+      // local store is null, get language from navigator
+      // like "zh-TW", "zh-CN", "en-US"
+      const lang = (navigator.language || navigator.userLanguage).toLowerCase();
+      if (lang.indexOf('zh') > -1) {
+        return 'zh';
+      }
+      return 'en';
     };
 
     autorun(() => {

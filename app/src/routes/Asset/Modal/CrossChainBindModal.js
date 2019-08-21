@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import {
-  Clipboard,
-  Mixin,
-  Modal,
-  Input,
   Button,
-  RouterGo,
+  Clipboard,
   FormattedMessage,
   Icon,
+  Input,
   LanguageContent,
+  Mixin,
+  Modal,
+  RouterGo,
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
-import { classNames, Inject, Patterns, observer, showAssetName, isElectron } from '../../../utils';
+import { classNames, Inject, isElectron, observer, Patterns, showAssetName } from '../../../utils';
 import { u8aToHex } from '@polkadot/util/u8a';
 import imtoken from '../../../resource/imtoken.png';
 import parity from '../../../resource/parity.png';
@@ -39,7 +39,7 @@ class OptionalChannelSelect extends Component {
       electionStore: { originIntentions = [] },
     } = this.props;
     const selectNameOptions = originIntentions.map((item = {}) => ({ label: item.name, value: item.name }));
-    const OptionalChannel = (
+    return (
       <div>
         {isAddChanel && (
           <FormattedMessage id={'NodeName'}>
@@ -59,8 +59,6 @@ class OptionalChannelSelect extends Component {
         )}
       </div>
     );
-
-    return OptionalChannel;
   }
 }
 
@@ -528,6 +526,11 @@ class X_BTC extends Mixin {
                     <Icon name={'help'} />
                     <FormattedMessage id={'DepositCourse'} />
                   </RouterGo>
+                  {isElectron() ? null : (
+                    <span className={styles.warntitle}>
+                      <FormattedMessage id={'DoNotDepositDemoAccount'} />
+                    </span>
+                  )}
                 </div>
               </>
             )}
@@ -957,6 +960,7 @@ class S_DOT extends Mixin {
         },
       },
       getChainXAddressHex,
+      showButton,
     } = this.props;
 
     const chainxAddressHex = getChainXAddressHex(recommendChannel, currentAddress);
@@ -1144,15 +1148,6 @@ class S_DOT extends Mixin {
                   <FormattedMessage id={'AddOptionalChannel'} />
                 </span>
               </Input.Checkbox>
-              {/*<Clipboard*/}
-              {/*id="copy"*/}
-              {/*dataText={findOne.value1}*/}
-              {/*outInner={*/}
-              {/*<span className={styles.desc}>*/}
-              {/*<FormattedMessage id={'CopyMessage'} />*/}
-              {/*</span>*/}
-              {/*}*/}
-              {/*/>*/}
             </div>
 
             <div className={styles.OP_RETURNcopy}>
@@ -1173,9 +1168,6 @@ class S_DOT extends Mixin {
 
               <div>
                 <Clipboard>{findOne.value1}</Clipboard>
-                {/*<HoverTip tip={<FormattedMessage id={'SDOTMapToChainXAddress'} />}>*/}
-                {/*<Icon name={'icon-jieshishuoming'} />*/}
-                {/*</HoverTip>*/}
                 <div className={styles.dataerror}>
                   <FormattedMessage id={'IncorrectDataFormat'}>
                     {msg => {
@@ -1225,19 +1217,17 @@ class S_DOT extends Mixin {
             }}
             onBlur={checkAll.checkTradeId}
           />
-          {isElectron() && (
+          {showButton && (
             <Button
               size="full"
               type="confirm"
               loading={loading.bindTxHashLoading}
               onClick={() => {
                 if (checkAll.confirm()) {
-                  const params = this.getTradeId();
+                  const ethHash = this.getTradeId();
                   dispatch({
                     type: 'bindTxHash',
-                    payload: {
-                      params,
-                    },
+                    payload: ethHash,
                   }).then(res => {
                     if (res) closeModal();
                   });
@@ -1302,7 +1292,9 @@ class CrossChainBindModal extends Mixin {
     const props = {
       ...this.props,
       getChainXAddressHex: this.getChainXAddressHex,
+      showButton: isElectron() || process.env.NODE_ENV === 'development',
     };
+
     return (
       <>
         {token === 'SDOT' && <S_DOT {...props} />}

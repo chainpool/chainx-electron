@@ -27,6 +27,7 @@ class DepositMineTable extends Mixin {
       assetStore: { nativeAccountAssets: [{ reservedStaking }] = [] },
       chainStore: { blockNumber },
       model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
+      electionStore: { getPseduIntentionsLoading },
     } = this.props;
 
     const tableProps = {
@@ -158,6 +159,7 @@ class DepositMineTable extends Mixin {
         },
       ],
       dataSource: _.sortBy(normalizedPseduIntentions, ['id']),
+      loading: getPseduIntentionsLoading,
     };
     return <Table {...tableProps} />;
   }

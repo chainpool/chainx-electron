@@ -29,10 +29,19 @@ export default class ModelExtend {
 
   dispatch = (payloads = {}) => {
     const { type, payload = {} } = payloads;
+    const loadingType = type + 'Loading';
+    const firstLoadingType = type + 'FirstLoading';
+
     const setLoading = status => {
-      // if (_.has(this, `loading.${type}`)) {
-      //   this.changeModel(`loading.${type}`, status);
-      // }
+      if (status && this[firstLoadingType]) {
+        return;
+      }
+      if (_.has(this, loadingType)) {
+        this.changeModel(loadingType, status);
+      }
+      if (_.has(this, firstLoadingType) && !this[firstLoadingType]) {
+        this.changeModel(firstLoadingType, true);
+      }
     };
 
     if (!type || !this[type]) {

@@ -426,6 +426,7 @@ export const fetchFromHttp = ({
       .catch(err => {
         return Promise.reject(err);
       });
+
   if (timeOut) {
     return Promise.race([
       request(),
