@@ -294,6 +294,7 @@ const zh_en = {
   PartialFillAndCanceled: ['部分成交已撤销', 'PartFill&Cancel'],
   ShowCurrentTradingPair: ['只显示当前交易对', 'Only show current pair'],
   NoOrder: ['暂无委托', 'No Orders'],
+  NoData: ['暂无数据', 'No Data'],
   NoThing: ['暂无', 'Nothing'],
   CounterParty: ['对手方', 'counter'],
   BuyPrice: ['买入价', 'Price'],
