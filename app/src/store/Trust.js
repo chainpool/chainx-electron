@@ -62,6 +62,7 @@ export default class Trust extends ModelExtend {
   @observable totalSignCount = '';
   @observable lastPredictTradeLength = '';
   @observable getAllWithdrawalListLoading = false;
+  @observable getAllWithdrawalListFirstLoading = false;
 
   @computed
   get maxSignCount() {
@@ -582,8 +583,7 @@ export default class Trust extends ModelExtend {
   };
 
   getAllWithdrawalList = async () => {
-    this.changeModel('getAllWithdrawalListLoading', true);
-    return from(getWithdrawalList('Bitcoin', 0, 100))
+    const res = await from(getWithdrawalList('Bitcoin', 0, 100))
       .pipe(
         map(res => {
           return res.data;
@@ -611,10 +611,8 @@ export default class Trust extends ModelExtend {
           );
         })
       )
-      .subscribe((res = []) => {
-        this.changeModel('getAllWithdrawalListLoading', false);
-        this.changeModel('onChainAllWithdrawList', res);
-      });
+      .toPromise();
+    this.changeModel('onChainAllWithdrawList', res);
   };
 
   getBitcoinTrusteeAddress = async () => {
