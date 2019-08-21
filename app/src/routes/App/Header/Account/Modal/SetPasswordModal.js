@@ -32,7 +32,7 @@ class SetPasswordModal extends Component {
         Patterns.check('smallerOrEqual')(
           8,
           password.length,
-          <FormattedMessage id={'MinCharacterLength' + ''} values={{ length: 8 }} />
+          <FormattedMessage id={'MinCharacterLength'} values={{ length: 8 }} />
         ) ||
         Patterns.check('passwordUpperAndLower')(password);
       this.setState({ passwordErrMsg: errMsg });

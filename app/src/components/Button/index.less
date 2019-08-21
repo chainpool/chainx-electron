@@ -10,6 +10,8 @@
   cursor: pointer;
   background: none;
   flex-wrap: nowrap;
+  color: @fontgray;
+  font-weight: 600;
   &.loading {
     pointer-events: none !important;
     background: #e0e2e4 !important;
@@ -44,10 +46,16 @@
   &.primary {
     background: @gray;
     border: none;
+    &:hover {
+      background: @deepGray;
+    }
   }
   &.highlight {
     background: @yellow;
     border: none;
+    &:hover {
+      background: @deepYellow;
+    }
   }
 
   &.outline {
@@ -66,6 +74,9 @@
   &.success {
     border: none;
     background: @yellow;
+    &:hover {
+      background: @deepYellow;
+    }
   }
   &.warn {
     background: @yellow;

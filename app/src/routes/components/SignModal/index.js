@@ -1,6 +1,6 @@
 import React from 'react';
-import { _, ChainX, Inject, Patterns, resFail, resOk } from '../../../utils';
-import { Modal, Button, Input, Mixin, Slider, Toast, FormattedMessage } from '../../../components';
+import { _, ChainX, Inject, isElectron, Patterns, resFail, resOk } from '../../../utils';
+import { Button, FormattedMessage, Input, Mixin, Modal, Slider, Toast } from '../../../components';
 
 import * as styles from './index.less';
 
@@ -150,121 +150,125 @@ class SignModal extends Mixin {
       step: 1,
     };
 
+    const canSubmit = isElectron() || process.env.NODE_ENV === 'development';
+
     return (
       <Modal
         title={<FormattedMessage id={'TransactionSignature'} />}
         button={
-          <Button
-            size="full"
-            type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
-            onClick={() => {
-              if (checkAll.confirm()) {
-                const sign = () => {
-                  if (this.result && this.result.extrinsic) {
-                    const result = this.result;
-                    const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
-                    const toastOperation = description.filter(
-                      (item = {}) => !item.willFilter && item.toastShow !== false
-                    );
-                    const toastMessage = (
-                      <div className={styles.toastMessage}>
-                        {toastOperation.map((item = {}, index) => (
-                          <span key={index}>
-                            {item.name}&nbsp;{item.value}
-                            {index === toastOperation.length - 1 ? '' : <>;&nbsp;</>}
-                          </span>
-                        ))}
-                      </div>
-                    );
-
-                    const reCoverLoading = status => {
-                      _.isFunction(result.loading) && result.loading(status);
-                    };
-
-                    const success = res => {
-                      reCoverLoading(false);
-                      _.isFunction(result.success) && result.success(res);
-                      Toast.success(
-                        _.get(result, 'successToast.title') || operationItem.value || `${operation}成功`,
-                        toastMessage
+          !canSubmit ? null : (
+            <Button
+              size="full"
+              type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
+              onClick={() => {
+                if (checkAll.confirm()) {
+                  const sign = () => {
+                    if (this.result && this.result.extrinsic) {
+                      const result = this.result;
+                      const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
+                      const toastOperation = description.filter(
+                        (item = {}) => !item.willFilter && item.toastShow !== false
                       );
-                    };
+                      const toastMessage = (
+                        <div className={styles.toastMessage}>
+                          {toastOperation.map((item = {}, index) => (
+                            <span key={index}>
+                              {item.name}&nbsp;{item.value}
+                              {index === toastOperation.length - 1 ? '' : <>;&nbsp;</>}
+                            </span>
+                          ))}
+                        </div>
+                      );
 
-                    const fail = (err = {}) => {
-                      reCoverLoading(false);
-                      _.isFunction(result.fail) && result.fail(err);
-                      _.get(err, 'data') && console.log(_.get(err, 'data'), _.get(err, 'message'));
-                      Toast.warn(
-                        _.get(result, 'failToast.title') || operationItem.value || `${operation}报错`,
-                        _.get(err, 'data.message') ||
-                          _.get(err, 'message') ||
-                          _.get(err, 'data.message') ||
+                      const reCoverLoading = status => {
+                        _.isFunction(result.loading) && result.loading(status);
+                      };
+
+                      const success = res => {
+                        reCoverLoading(false);
+                        _.isFunction(result.success) && result.success(res);
+                        Toast.success(
+                          _.get(result, 'successToast.title') || operationItem.value || `${operation}成功`,
                           toastMessage
-                      );
-                    };
+                        );
+                      };
 
-                    reCoverLoading(true);
-                    const extrinsic = result.extrinsic;
-                    closeModal();
-                    _.isFunction(result.beforeSend) && result.beforeSend();
-                    try {
-                      const promise = () =>
-                        new Promise((resolve, reject) => {
-                          extrinsic.signAndSend(
-                            ChainX.account.fromKeyStore(currentAccount.encoded, password),
-                            { acceleration },
-                            (err, res) => {
-                              if (!err) {
-                                if (resOk(res)) {
-                                  success(res);
-                                  resolve();
-                                } else if (resFail(res)) {
+                      const fail = (err = {}) => {
+                        reCoverLoading(false);
+                        _.isFunction(result.fail) && result.fail(err);
+                        _.get(err, 'data') && console.log(_.get(err, 'data'), _.get(err, 'message'));
+                        Toast.warn(
+                          _.get(result, 'failToast.title') || operationItem.value || `${operation}报错`,
+                          _.get(err, 'data.message') ||
+                            _.get(err, 'message') ||
+                            _.get(err, 'data.message') ||
+                            toastMessage
+                        );
+                      };
+
+                      reCoverLoading(true);
+                      const extrinsic = result.extrinsic;
+                      closeModal();
+                      _.isFunction(result.beforeSend) && result.beforeSend();
+                      try {
+                        const promise = () =>
+                          new Promise((resolve, reject) => {
+                            extrinsic.signAndSend(
+                              ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                              { acceleration },
+                              (err, res) => {
+                                if (!err) {
+                                  if (resOk(res)) {
+                                    success(res);
+                                    resolve();
+                                  } else if (resFail(res)) {
+                                    fail(err);
+                                    reject();
+                                  }
+                                } else {
                                   fail(err);
                                   reject();
                                 }
-                              } else {
-                                fail(err);
-                                reject();
                               }
-                            }
-                          );
-                        });
+                            );
+                          });
 
-                      Promise.race([
-                        promise(),
-                        new Promise((resovle, reject) => {
-                          setTimeout(() => {
-                            reject(new Error('timeOut'));
-                          }, 7000);
-                        }),
-                      ]).catch(err => {
-                        if (err && err.message === 'timeOut') {
-                          reCoverLoading(false);
-                        }
-                      });
-                    } catch (err) {
-                      fail(err);
+                        Promise.race([
+                          promise(),
+                          new Promise((resovle, reject) => {
+                            setTimeout(() => {
+                              reject(new Error('timeOut'));
+                            }, 7000);
+                          }),
+                        ]).catch(err => {
+                          if (err && err.message === 'timeOut') {
+                            reCoverLoading(false);
+                          }
+                        });
+                      } catch (err) {
+                        fail(err);
+                      }
                     }
+                  };
+                  if (
+                    _.isFunction(checkNativeAsset) &&
+                    !checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)
+                  ) {
+                    openModal({
+                      name: 'LowerPCXWarn',
+                      data: {
+                        callback: sign,
+                        title: 'PCX余额过低预警',
+                      },
+                    });
+                  } else {
+                    sign();
                   }
-                };
-                if (
-                  _.isFunction(checkNativeAsset) &&
-                  !checkNativeAsset(accountNativeAssetFreeBalanceShow, fee, 0.001)
-                ) {
-                  openModal({
-                    name: 'LowerPCXWarn',
-                    data: {
-                      callback: sign,
-                      title: 'PCX余额过低预警',
-                    },
-                  });
-                } else {
-                  sign();
                 }
-              }
-            }}>
-            <FormattedMessage id={'Sign'} />
-          </Button>
+              }}>
+              <FormattedMessage id={'Sign'} />
+            </Button>
+          )
         }>
         <div className={styles.signModal}>
           <div className={styles.descList}>
@@ -304,22 +308,24 @@ class SignModal extends Mixin {
               </span>
             </div>
           ) : null}
-          <FormattedMessage id={'InputPassword'}>
-            {msg => (
-              <Input.Text
-                errMsgIsOutside
-                isPassword
-                placeholder={msg}
-                label=""
-                value={password}
-                errMsg={passwordErrMsg}
-                onChange={value => {
-                  this.setState({ password: value });
-                }}
-                onBlur={checkAll.confirm}
-              />
-            )}
-          </FormattedMessage>
+          {!canSubmit ? null : (
+            <FormattedMessage id={'InputPassword'}>
+              {msg => (
+                <Input.Text
+                  errMsgIsOutside
+                  isPassword
+                  placeholder={msg}
+                  label=""
+                  value={password}
+                  errMsg={passwordErrMsg}
+                  onChange={value => {
+                    this.setState({ password: value });
+                  }}
+                  onBlur={checkAll.confirm}
+                />
+              )}
+            </FormattedMessage>
+          )}
         </div>
       </Modal>
     );

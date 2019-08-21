@@ -47,6 +47,12 @@ header {
             color:#BBBBBB;
             display: flex;
             align-items: center;
+            &:hover {
+              i{
+                color: @yellow;
+              }
+              color:white;
+            }
           }
         }
         .language{
@@ -99,6 +105,9 @@ header {
         }
       }
       display: flex;
+      .download{
+        margin-left: 32px;
+      }
     }
     height: 100%;
     width: 100%;
@@ -147,6 +156,9 @@ header {
           &.active {
             color:white;
             border-bottom: 3px solid @yellow;
+          }
+          &:hover {
+            color: white;
           }
         }
       }

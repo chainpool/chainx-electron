@@ -79,6 +79,8 @@ export default class Trust extends ModelExtend {
   @observable withdrawalIdList = []; // 提现交易对应的id列表
   @observable txSpecialInputList = [];
   @observable txSpecialOutputList = [];
+  @observable getAllWithdrawalListLoading = false;
+  @observable getAllWithdrawalListFirstLoading = false;
 
   // 提现交易收取的手续费
   @computed get BitCoinFeeShow() {
@@ -900,7 +902,7 @@ export default class Trust extends ModelExtend {
   };
 
   getAllWithdrawalList = async () => {
-    return from(getWithdrawalList('Bitcoin', 0, 100))
+    const res = await from(getWithdrawalList('Bitcoin', 0, 100))
       .pipe(
         map(res => {
           return res.data;
@@ -928,9 +930,8 @@ export default class Trust extends ModelExtend {
           );
         })
       )
-      .subscribe((res = []) => {
-        this.changeModel('onChainAllWithdrawList', res);
-      });
+      .toPromise();
+    this.changeModel('onChainAllWithdrawList', res);
   };
 
   getBitcoinTrusteeAddress = async () => {

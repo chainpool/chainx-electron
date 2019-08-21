@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
-import { Modal, Button, RouterGo } from '../../../components';
+import { Button, LanguageContent, Modal } from '../../../components';
 import * as styles from './index.less';
 
 class DownloadWalletWarnModal extends Component {
   render() {
+    const {
+      accountStore: { closeModal },
+    } = this.props;
     return (
       <Modal
-        title="下载ChainX桌面钱包"
+        title={<LanguageContent zh={'请下载ChainX桌面钱包'} en={'请下载ChainX桌面钱包'} />}
         className={styles.DownloadWalletWarnModal}
         button={
-          <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/chainx-wallet/releases' }}>
-            <Button size="full" type="confirm" onClick={() => {}}>
-              下载
-            </Button>
-          </RouterGo>
+          <Button
+            size="full"
+            type="confirm"
+            onClick={() => {
+              closeModal();
+            }}>
+            确定
+          </Button>
         }>
-        ChainX桌面钱包已经发布，您可以前往{' '}
-        <RouterGo isOutSide go={{ pathname: 'https://github.com/chainx-org/chainx-wallet/releases' }}>
-          https://github.com/chainx-org/chainx-wallet/releases{' '}
-        </RouterGo>
-        下载使用。相比在线钱包，桌面钱包更加安全。目前的在线钱包在未来将会停止服务。
+        <LanguageContent
+          zh={
+            <div>
+              ChainX在线钱包仅提供一个模拟账户供新用户体验,
+              历史已导入账户只保留忘记账户、导出私钥和keystore功能。用户可以下载ChainX桌面钱包继续体验.
+              相比在线钱包，桌面钱包更加安全。
+            </div>
+          }
+          en={
+            <div>
+              ChainX在线钱包仅提供一个模拟账户供新用户体验,
+              历史已导入账户只保留忘记账户、导出私钥和keystore功能。用户可以下载ChainX桌面钱包继续体验.
+              相比在线钱包，桌面钱包更加安全。
+            </div>
+          }
+        />
       </Modal>
     );
   }

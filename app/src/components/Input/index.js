@@ -408,6 +408,8 @@ class InputAddress extends React.Component {
           return 0;
         }
       }
+
+      return 0;
     });
 
     return (

@@ -29,6 +29,8 @@ export default class AddressMannage extends ModelExtend {
     } else if (this.isPreMainNetWork()) {
       return this.premainAddresses;
     }
+
+    return [];
   }
 
   set addresses(addresses) {

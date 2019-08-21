@@ -14,8 +14,14 @@
   }
 
   .input {
+    display: flex;
+    border: 1px solid @gray2;
     font-size: 14px !important;
     height: 36px;
+
+    &:focus-within {
+      border-color: @yellow;
+    }
 
     &.textarea {
       line-height: unset;
@@ -26,7 +32,6 @@
       }
       height: unset;
     }
-    display: flex;
     align-items: center;
     .prefix,
     .suffix {
@@ -34,8 +39,7 @@
       display: flex;
       align-items: center;
       color: #95989a;
-      padding: 0 10px;
-      padding-left: 0;
+      padding: 0 10px 0 0;
       white-space: nowrap;
       span {
         white-space: nowrap;
@@ -53,7 +57,6 @@
       flex-grow: 1;
       height: 100%;
     }
-    border: 1px solid @gray2;
 
     &.round {
       border-radius: 2px;
@@ -160,6 +163,7 @@
       width: 100%;
     }
   }
+
   .helpContent{
     margin-top: 6px;
   }

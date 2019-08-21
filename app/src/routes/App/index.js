@@ -10,7 +10,7 @@ import { en_US, zh_CN } from '../../langs/zh_en.js';
 import CommonLayOut from './CommonLayOut';
 import { DownloadWalletWarnModal, LowerPCXWarn, SignModal } from '../components';
 import { PATH, ShowLanguage } from '../../constants';
-import { AuthorityRoute, Loading } from '../../components';
+import { AuthorityRoute, Loading, Toast } from '../../components';
 import routers from './routers';
 import { Inject, toJS, isElectron } from '../../utils';
 import * as styles from './index.less';
@@ -46,15 +46,17 @@ console.log = (...payload) => {
 )
 class Main extends Component {
   componentDidMount = () => {
-    const {
-      globalStore: { openModal },
-    } = this.props;
-    if (!isElectron() && !/mywallet.com/.test(window.location.href)) {
-      openModal({
-        name: 'DownloadWalletWarnModal',
-      });
+    if (!isElectron()) {
+      Toast.warn(
+        '请下载ChainX桌面钱包',
+        'ChainX在线钱包仅提供一个模拟账户供新用户体验,历史已导入账户只保留忘记账户、导出私钥和keystore功能。用户可以下载ChainX桌面钱包继续体验.相比在线钱包，桌面钱包更加安全。',
+        {
+          showStatusIcon: false,
+        }
+      );
     }
   };
+
   render() {
     const {
       globalStore: {
