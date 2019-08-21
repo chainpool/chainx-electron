@@ -315,7 +315,7 @@ export default class TableComponent extends Component {
                         );
                       })}
                     </Tbody>
-                    {dataSource.length < 1 && loading && (
+                    {loading && (
                       <div className={styles.loading}>
                         <LoadingIcon />
                       </div>
