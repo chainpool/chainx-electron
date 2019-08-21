@@ -237,22 +237,23 @@ export default class TableComponent extends Component {
         // 分页的计算不算入table，所以tabel的高度不能放入容器
         // style={{ height: totalPage ? 52 + height : height }}
         className={classNames(styles.tableContainer, className)}>
-        {_.isFunction(noDataTip) && noDataTip() && !dataSource.length ? (
-          <div className="default">{noDataTip()}</div>
-        ) : (
-          <>
-            <Table className={style.table} style={{ height: height }}>
-              {showHead ? (
-                <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
-                  <Tr style={{ height: tableHeight[0] }}>
-                    {columns.map((item = {}, index) => (
-                      <Th key={index} {...getTdThProp(item)}>
-                        {_.isFunction(item.title) ? item.title() : item.title}
-                      </Th>
-                    ))}
-                  </Tr>
-                </Thead>
-              ) : null}
+        <Table className={style.table} style={{ height: height }}>
+          {showHead ? (
+            <Thead style={{ left: this.state.x, minWidth: scroll.x }}>
+              <Tr style={{ height: tableHeight[0] }}>
+                {columns.map((item = {}, index) => (
+                  <Th key={index} {...getTdThProp(item)}>
+                    {_.isFunction(item.title) ? item.title() : item.title}
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+          ) : null}
+
+          {_.isFunction(noDataTip) && noDataTip() && !dataSource.length && !loading ? (
+            <div className="default">{noDataTip()}</div>
+          ) : (
+            <>
               <div className={styles._scrollerTableContainer}>
                 <div className={styles._scrollerTable}>
                   <Scroller {...scrollerConfig}>
@@ -323,23 +324,24 @@ export default class TableComponent extends Component {
                   </Scroller>
                 </div>
               </div>
-            </Table>
-            {totalPage && dataSource.length ? (
-              <Pagination
-                total={totalPage}
-                currentPage={currentPage}
-                onPageChange={value => {
-                  this.setState(
-                    {
-                      currentPage: value,
-                    },
-                    this.getPageData
-                  );
-                }}
-              />
-            ) : null}
-          </>
-        )}
+            </>
+          )}
+        </Table>
+
+        {totalPage && dataSource.length ? (
+          <Pagination
+            total={totalPage}
+            currentPage={currentPage}
+            onPageChange={value => {
+              this.setState(
+                {
+                  currentPage: value,
+                },
+                this.getPageData
+              );
+            }}
+          />
+        ) : null}
       </div>
     );
   }
