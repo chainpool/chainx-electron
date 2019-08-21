@@ -1,18 +1,42 @@
 import React, { Component } from 'react';
-import { formatNumber } from '@utils';
+import * as styles from './Asset.less';
 
 const nonZeroStyle = {
   color: '#3f3f3f',
 };
 
-const zeroStyle = {
-  color: '#c2c2c2',
-};
+function zeroSmoke(value) {
+  if (value > 0) {
+    const str = value.toString();
+    const Reg = new RegExp(/0{3,}$/);
+    if (Reg.test(str)) {
+      return (
+        <>
+          {str.replace(Reg, '')}
+          <span className={styles.opacity4}>{str.match(Reg)[0]}</span>
+        </>
+      );
+    } else {
+      return value;
+    }
+  }
+  return <span className={styles.opacity4}>{value}</span>;
+}
+
+function numberToAmount(number, precision) {
+  const options = {};
+  options.minimumFractionDigits = precision;
+  options.maximumFractionDigits = precision;
+
+  const value = new Intl.NumberFormat(undefined, options).format(number / Math.pow(10, precision));
+
+  return <>{zeroSmoke(value, precision)}</>;
+}
 
 class Asset extends Component {
   render() {
     const { value, precision } = this.props;
-    return <span style={value > 0 ? nonZeroStyle : zeroStyle}>{formatNumber.toPrecision(value, precision)}</span>;
+    return <span style={nonZeroStyle}>{numberToAmount(value, precision)}</span>;
   }
 }
 
