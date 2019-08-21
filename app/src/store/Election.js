@@ -30,6 +30,8 @@ export default class Election extends ModelExtend {
   @observable originPseduIntentions = [];
   @observable originPseduRecords = [];
   @observable nextRenominateHeight = null;
+  @observable getPseduIntentionsLoading = false;
+  @observable getPseduIntentionsFirstLoading = false;
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;

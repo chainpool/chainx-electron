@@ -9,6 +9,7 @@ class WithdrawTable extends Component {
   render() {
     const {
       model: { normalizedOnChainAllWithdrawList = [], isTestBitCoinNetWork },
+      trustStore: { getAllWithdrawalListLoading },
     } = this.props;
 
     const tableProps = {
@@ -91,6 +92,7 @@ class WithdrawTable extends Component {
         },
       ],
       dataSource: normalizedOnChainAllWithdrawList,
+      loading: getAllWithdrawalListLoading,
     };
     return <Table {...tableProps} />;
   }

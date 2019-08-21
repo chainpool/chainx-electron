@@ -46,10 +46,6 @@ class Trust extends Mixin {
     });
   };
 
-  componentWillUnsubscribe = () => {
-    this.subscribeAllWithdrawalList$.unsubscribe();
-  };
-
   render() {
     const {
       accountStore: {
