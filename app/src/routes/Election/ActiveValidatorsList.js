@@ -19,7 +19,7 @@ class ActiveValidatorsList extends Component {
       model: {
         openModal,
         allActiveValidator = [],
-        allInActiveValidator = [],
+        allInactiveValidator = [],
         setDefaultPrecision,
         decodeAddressAccountId,
         encodeAddressAccountId,
@@ -29,7 +29,7 @@ class ActiveValidatorsList extends Component {
       chainStore: { currentChainProducer },
     } = this.props;
 
-    const dataSources = [allActiveValidator, allInActiveValidator][activeIndex];
+    const dataSources = [allActiveValidator, allInactiveValidator][activeIndex];
     let dataSourceResult = _.sortBy([...dataSources], ['name'], ['desc']);
 
     dataSourceResult.sort((a = {}, b = {}) => {
