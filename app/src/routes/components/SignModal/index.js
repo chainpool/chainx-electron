@@ -82,8 +82,11 @@ class SignModal extends Mixin {
     const {
       model: { setDefaultPrecision, currentAccount },
     } = this.props;
+
     if (this.result && this.result.extrinsic) {
-      const fee = await this.result.extrinsic.getFee(currentAccount.address, { acceleration });
+      const nonce = await this.result.extrinsic.getNonce(currentAccount.address);
+
+      const fee = this.result.extrinsic.getFeeSync({ nonce, acceleration });
       const result = setDefaultPrecision(fee);
       this.setState(
         {
