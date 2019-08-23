@@ -29,27 +29,9 @@ class ActiveValidatorsList extends Component {
 
     dataSourceResult.sort((a = {}, b = {}) => {
       return b[sort['value']] - a[sort['value']];
-      // const aLength = _.get(a, 'isTrustee.length');
-      // const bLength = _.get(b, 'isTrustee.length');
-      // if (aLength || bLength) {
-      //   if (aLength && bLength) {
-      //     return b[sort['value']] - a[sort['value']];
-      //   } else {
-      //     return bLength - aLength;
-      //   }
-      // } else {
-      //   return b[sort['value']] - a[sort['value']];
-      // }
     });
 
-    // const rankFromTotalnomination = [...dataSourceResult].sort((item1, item2) => {
-    //   return item2.totalNomination - item1.totalNomination;
-    // }); // rank 排名按总得票数算
-
     dataSourceResult = dataSourceResult.map((item, index) => {
-      // const findIndex = [...dataSourceResult].findIndex(one => {
-      //   return one.account === item.account;
-      // });
       return {
         ...item,
         rank: index + 1,
@@ -61,8 +43,6 @@ class ActiveValidatorsList extends Component {
         return new RegExp(searchName, 'i').test(item.name);
       });
     }
-
-    // const groupDataSources = groupArrayByCount(dataSourceResult, 4);
 
     const validatorCardData = {
       currentAddress,

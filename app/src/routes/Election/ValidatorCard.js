@@ -41,18 +41,6 @@ class ValidatorCard extends Component {
                   !item.isActive ? styles.inActive : item.isValidator ? styles.validator : styles.backupValidators
                 )}
               />
-              {/*<div*/}
-              {/*className={classNames(*/}
-              {/*styles.nodeType,*/}
-              {/*!item.isActive*/}
-              {/*? styles.inActive*/}
-              {/*: item.isTrustee && item.isTrustee.length*/}
-              {/*? styles.trustee*/}
-              {/*: item.isValidator*/}
-              {/*? styles.validator*/}
-              {/*: styles.backupValidators*/}
-              {/*)}*/}
-              {/*/>*/}
               <div>
                 <div className={classNames(styles.overHidden, item.myTotalVote ? styles.myVote : null)}>
                   <span className={styles.name}> {item.name}</span>
@@ -86,12 +74,6 @@ class ValidatorCard extends Component {
                       </FormattedMessage>
                     </div>
                   )}
-
-                  {/*{item.isTrustee && item.isTrustee.length ? (*/}
-                  {/*<span className={styles.trusteeMark}>*/}
-                  {/*(<FormattedMessage id={'Trustee'} />)*/}
-                  {/*</span>*/}
-                  {/*) : null}*/}
                 </div>
               </div>
             </div>
