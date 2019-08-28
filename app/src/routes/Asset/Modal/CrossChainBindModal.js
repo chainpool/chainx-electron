@@ -1232,7 +1232,6 @@ class S_DOT extends Mixin {
                   })
                     .then(resp => {
                       const res = resp.res;
-                      // res.hash = '0x7a3b85a189445ade720015c48b654bc1d931935614fb7799da4d6c13bc20b08c'
                       const reloadAssetData = resp.success;
                       if (res && res.hash) {
                         const url = 'https://scan.chainx.org/txs/' + res.hash;
