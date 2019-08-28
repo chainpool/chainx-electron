@@ -59,13 +59,13 @@ class ActiveValidatorsList extends Component {
       <div className={styles.validatorList}>
         {dataSourceResult.map((item, index) => (
           <div
+            key={index}
             className={
               index + 1 > 4 * 4 && index + 1 > dataSourceResult.length - 3 * 4 - lastLineCount ? styles.up : null
             }>
             <ProducerColorChange
               showChange={item.isActive}
               Ele={'li'}
-              key={index}
               currentChainProducer={currentChainProducer}
               account={encodeAddressAccountId(item.account)}>
               <ValidatorCard item={item} {...validatorCardData} />
