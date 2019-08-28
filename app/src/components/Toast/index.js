@@ -42,7 +42,12 @@ class Toast {
   };
 
   message = (status = 'success', title = 'title', message, options = {}) => {
-    const { showStatusIcon = true, newContent, ...rest } = options;
+    const { showStatusIcon = true, newContent, autoClose = 4000, needLink = false, link, ...rest } = options;
+
+    const messageContent = () => {
+      return message ? <div className={styles.desc}>{message}</div> : null;
+    };
+
     toast(
       <div className={styles.toast_message}>
         {!newContent ? (
@@ -63,15 +68,22 @@ class Toast {
               ) : null}
               {title}
             </div>
-            {message ? <div className={styles.desc}>{message}</div> : null}
+            {needLink ? (
+              <a href={link} target="_blank">
+                {message}
+              </a>
+            ) : (
+              messageContent()
+            )}
           </>
         ) : (
           newContent
         )}
       </div>,
       {
+        closeOnClick: !needLink,
         hideProgressBar: true,
-        autoClose: 4000,
+        autoClose: autoClose,
         closeButton: false,
         bodyClassName: styles.toast_message_body,
         className: styles.toast_message_content,
