@@ -555,6 +555,11 @@ const zh_en = {
     '2. 你的PCX投票冻结必须大于等于挖矿收益（包含推荐渠道收益）的10倍.',
     '2. The PCX voted must be 10 times greater than or equal to the mining revenue (including recommended channel revenue).',
   ],
+  MapToastSuccess: [
+    '映射已提交，可在浏览器查看映射状态：',
+    'The mapping has been submitted and the status can be checked in the browser：',
+  ],
+  MapToastFail: ['映射失败，交易 ID 错误：', 'Mapping failed, transaction ID error：'],
   Satisfied: ['已满足', 'Satisfied'],
   SwitchInterval: ['每3天可切换一次', 'Switch by 3 days intervals'],
 };
