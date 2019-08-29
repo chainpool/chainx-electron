@@ -1,19 +1,22 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import { Modal } from '../../../components';
 import { Warn } from '../../components';
 import * as styles from './ClaimConditionModal.less';
 import { formatNumber, moment_helper } from '../../../utils';
 import FormattedMessage from '@components/FormattedMessage';
 
-function ClaimConditionModal(props) {
+const ClaimConditionModal = observer(props => {
   const {
     globalStore: {
       modal: {
-        data: { claimHeight, blockNumber, intention },
+        data: { claimHeight, blockNumber, id },
       },
     },
+    model: { normalizedPseduIntentions },
   } = props;
 
+  const intention = normalizedPseduIntentions.filter(item => item.id === id)[0];
   const showClaimHeight = intention.nextClaim && intention.nextClaim > blockNumber;
 
   const ok = (
@@ -66,6 +69,6 @@ function ClaimConditionModal(props) {
       </div>
     </Modal>
   );
-}
+});
 
 export default ClaimConditionModal;

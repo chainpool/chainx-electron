@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { _, classNames } from '../../../src/utils';
-import { Scroller, Pagination, LoadingIcon } from '../../components';
+import { Scroller, Pagination, Loading } from '../../components';
 import * as styles from './index.less';
 
 const createElement = _className => {
@@ -318,7 +318,7 @@ export default class TableComponent extends Component {
                     </Tbody>
                     {loading && (
                       <div className={styles.loading}>
-                        <LoadingIcon />
+                        <Loading size={30} />
                       </div>
                     )}
                   </Scroller>
