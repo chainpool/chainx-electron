@@ -93,7 +93,7 @@ class Main extends Component {
                   requireTrustee={item.requireTrustee}
                   key={item.path}
                   path={item.path}
-                  exact
+                  exact={!item.notExact}
                   render={props => <item.component {...props} {...this.props} />}
                 />
               ))}

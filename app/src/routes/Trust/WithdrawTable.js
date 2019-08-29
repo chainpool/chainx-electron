@@ -12,8 +12,21 @@ class WithdrawTable extends Component {
       trustStore: { getAllWithdrawalListLoading },
     } = this.props;
 
+    const noDataTip = () => {
+      return (
+        <div style={{ position: 'relative' }}>
+          <div className={styles.nodata} style={{ top: 20 }}>
+            <div>
+              <FormattedMessage id={'NoData'} />
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     const tableProps = {
       className: styles.tableContainer,
+      noDataTip: noDataTip,
       columns: [
         {
           title: <FormattedMessage id={'ApplicationTime'} />,

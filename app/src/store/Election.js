@@ -32,6 +32,7 @@ export default class Election extends ModelExtend {
   @observable nextRenominateHeight = null;
   @observable getPseduIntentionsLoading = false;
   @observable getPseduIntentionsFirstLoading = false;
+  lastPath = '/election/allActiveValidator';
 
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
@@ -208,7 +209,7 @@ export default class Election extends ModelExtend {
   }
 
   //退选节点
-  @computed get allInActiveValidator() {
+  @computed get allInactiveValidator() {
     return [...this.validatorsWithRecords.filter(intention => !intention.isActive)];
   }
 
@@ -237,6 +238,10 @@ export default class Election extends ModelExtend {
     this.getIntentions();
     this.getPseduIntentions();
     this.getAccountAssets();
+  };
+
+  updateLastPath = path => {
+    this.lastPath = path;
   };
 
   getPseduIntentions = async () => {

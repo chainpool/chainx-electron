@@ -31,7 +31,6 @@ export default class ModelExtend {
     const { type, payload = {} } = payloads;
     const loadingType = type + 'Loading';
     const firstLoadingType = type + 'FirstLoading';
-
     const setLoading = status => {
       if (status && this[firstLoadingType]) {
         return;
@@ -52,10 +51,12 @@ export default class ModelExtend {
     setLoading(true);
     const result = this[type] && this[type](payload);
     if (result && result.then) {
-      return result.then(res => {
-        setLoading(false);
-        return res;
-      });
+      return result
+        .then(res => {
+          setLoading(false);
+          return res;
+        })
+        .catch(() => setLoading(false));
     } else {
       setLoading(false);
       return Promise.resolve(result);
