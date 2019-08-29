@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { Button, ButtonGroup, RouterGo, Table, FormattedMessage, LanguageContent, Icon } from '../../components';
+import {
+  Button,
+  ButtonGroup,
+  RouterGo,
+  Table,
+  FormattedMessage,
+  LanguageContent,
+  Icon,
+  SimpleStr,
+} from '../../components';
 import { HoverTip, Balance } from '../components';
 import { _, classNames, observer } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
@@ -138,7 +147,8 @@ class NodeTable extends Component {
           ellipse: 20,
           width: 124,
           dataIndex: 'address',
-          render: value => (value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : value),
+          render: value =>
+            value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : <SimpleStr value={value} />,
         },
         {
           title: <FormattedMessage id={'IntentionSelfNominated'} />,

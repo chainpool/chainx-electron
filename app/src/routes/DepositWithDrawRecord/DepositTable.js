@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
+import { FormattedMessage, Mixin, RouterGo, Table, SimpleStr } from '../../components';
 import { _, Inject, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 
@@ -41,7 +41,7 @@ class DepositTable extends Mixin {
           width: 300,
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
-              {hexPrefix(value)}
+              <SimpleStr value={hexPrefix(value)} />
             </RouterGo>
           ),
         },
@@ -56,6 +56,7 @@ class DepositTable extends Mixin {
           ellipse: 20,
           width: 300,
           dataIndex: 'address',
+          render: value => <SimpleStr value={value} />,
         },
         {
           title: <FormattedMessage id={'Amount'} />,

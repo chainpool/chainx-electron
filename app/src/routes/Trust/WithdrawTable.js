@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { FormattedMessage, RouterGo, Table } from '../../components';
+import { FormattedMessage, RouterGo, Table, SimpleStr } from '../../components';
 import { _, observer, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
@@ -43,7 +43,7 @@ class WithdrawTable extends Component {
           dataIndex: 'address',
           render: (value, item) => (
             <RouterGo isOutSide go={{ pathname: blockChain.accountId(item.accountId) }}>
-              {value}
+              <SimpleStr value={value} />
             </RouterGo>
           ),
         },
@@ -59,7 +59,7 @@ class WithdrawTable extends Component {
           dataIndex: 'addr',
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
-              {value}
+              <SimpleStr value={value} />
             </RouterGo>
           ),
         },
