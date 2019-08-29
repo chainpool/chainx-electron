@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { FormattedMessage, Mixin, RouterGo, Table } from '../../components';
+import { FormattedMessage, Mixin, RouterGo, Table, DotInCenterStr } from '../../components';
 import { observer } from '../../utils';
 
 @observer
@@ -29,7 +29,7 @@ class TradeTable extends Mixin {
           dataIndex: 'id',
           render: value => (
             <RouterGo isOutSide go={{ pathname: `https://scan.chainx.org/txs/${value}` }}>
-              {value}
+              <DotInCenterStr value={value} />
             </RouterGo>
           ),
         },
