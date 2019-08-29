@@ -124,7 +124,7 @@ const zh_en = {
   LockAddress: ['锁仓地址', 'Address'],
   LockTotalBalance: ['锁仓总额', 'Balance'],
   NominateQuick: ['投票', 'Vote'],
-  SwitchNominate: ['换票', 'Switch Nominate'],
+  SwitchNominate: ['切换投票', 'Switch Nominate'],
   IncreaseNomination: ['追加投票', 'Increase'],
   DecreaseNomination: ['赎回投票', 'Decrease'],
   PushHeader: ['提交块头', 'Push Header'],
