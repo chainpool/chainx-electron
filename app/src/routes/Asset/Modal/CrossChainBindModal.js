@@ -9,6 +9,7 @@ import {
   Mixin,
   Modal,
   RouterGo,
+  Toast,
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
@@ -951,8 +952,8 @@ class S_DOT extends Mixin {
     const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
-      accountStore: { currentAddress, closeModal },
-      assetStore: { dispatch, loading },
+      accountStore: { currentAddress },
+      assetStore: { dispatch, bindTxHashLoading },
       globalStore: {
         language,
         modal: {
@@ -1221,16 +1222,33 @@ class S_DOT extends Mixin {
             <Button
               size="full"
               type="confirm"
-              loading={loading.bindTxHashLoading}
+              loading={bindTxHashLoading}
               onClick={() => {
                 if (checkAll.confirm()) {
                   const ethHash = this.getTradeId();
                   dispatch({
                     type: 'bindTxHash',
                     payload: ethHash,
-                  }).then(res => {
-                    if (res) closeModal();
-                  });
+                  })
+                    .then(resp => {
+                      const res = resp.res;
+                      const reloadAssetData = resp.success;
+                      if (res && res.hash) {
+                        const url = 'https://scan.chainx.org/txs/' + res.hash;
+                        const option = {
+                          autoClose: 6000,
+                          needLink: true,
+                          link: url,
+                        };
+                        Toast.success(<FormattedMessage id="MapToastSuccess" />, res.hash, option);
+                        reloadAssetData();
+                      } else if (res && res.error_code) {
+                        Toast.warn(<FormattedMessage id="MapToastFail" />, res.error_msg);
+                      }
+                    })
+                    .catch(err => {
+                      Toast.warn(<FormattedMessage id="MapToastFail" />, err.message);
+                    });
                 }
               }}>
               <FormattedMessage id={'Confirm'} />
