@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormattedMessage, LanguageContent, RouterGo, SimpleStr } from '../../components';
+import { Button, FormattedMessage, LanguageContent, RouterGo, DotInCenterStr } from '../../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
 import { _, classNames, groupArrayByCount, hexPrefix, Inject } from '../../utils';
@@ -200,7 +200,7 @@ class ValidatorCard extends Component {
                     go={{
                       pathname: blockChain.chainXAccount(hexPrefix(decodeAddressAccountId(item.address))),
                     }}>
-                    <SimpleStr value={item.address} />
+                    <DotInCenterStr value={item.address} />
                   </RouterGo>
                 </div>
               </div>
@@ -216,7 +216,7 @@ class ValidatorCard extends Component {
                     go={{
                       pathname: blockChain.chainXAccount(hexPrefix(decodeAddressAccountId(item.jackpotAddress))),
                     }}>
-                    <SimpleStr value={item.jackpotAddress} />
+                    <DotInCenterStr value={item.jackpotAddress} />
                   </RouterGo>
                 </div>
               </div>

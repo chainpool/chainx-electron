@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Mixin, RouterGo, Table, FormattedMessage, SimpleStr } from '../../components';
+import { Mixin, RouterGo, Table, FormattedMessage, DotInCenterStr } from '../../components';
 import { observer, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 
@@ -42,7 +42,7 @@ class LockListTable extends Mixin {
           render: value =>
             value ? (
               <RouterGo isOutSide go={{ pathname: blockChain.tx(value) }}>
-                <SimpleStr value={hexPrefix(value)} />
+                <DotInCenterStr value={hexPrefix(value)} />
               </RouterGo>
             ) : (
               '-'
@@ -60,7 +60,7 @@ class LockListTable extends Mixin {
           render: value => {
             return (
               <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
-                <SimpleStr value={value} />
+                <DotInCenterStr value={value} />
               </RouterGo>
             );
           },

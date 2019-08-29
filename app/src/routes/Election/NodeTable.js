@@ -8,7 +8,7 @@ import {
   FormattedMessage,
   LanguageContent,
   Icon,
-  SimpleStr,
+  DotInCenterStr,
 } from '../../components';
 import { HoverTip, Balance } from '../components';
 import { _, classNames, observer } from '../../utils';
@@ -148,7 +148,11 @@ class NodeTable extends Component {
           width: 124,
           dataIndex: 'address',
           render: value =>
-            value === currentAccount.address ? <FormattedMessage id={'ThisAccount'} /> : <SimpleStr value={value} />,
+            value === currentAccount.address ? (
+              <FormattedMessage id={'ThisAccount'} />
+            ) : (
+              <DotInCenterStr value={value} />
+            ),
         },
         {
           title: <FormattedMessage id={'IntentionSelfNominated'} />,
