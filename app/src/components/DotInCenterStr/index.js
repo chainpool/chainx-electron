@@ -1,6 +1,6 @@
 import React from 'react';
 
-function getSimpleStr(value) {
+function getDotInCenterStr(value) {
   if (value && value.length > 13) {
     const length = value.length;
     return value.slice(0, 5) + '...' + value.slice(length - 5, length);
@@ -8,11 +8,11 @@ function getSimpleStr(value) {
   return value;
 }
 
-function SimpleStr(props) {
+function DotInCenterStr(props) {
   const { value, length = 5 } = props;
-  const simpleStr = getSimpleStr(value, length);
+  const simpleStr = getDotInCenterStr(value, length);
 
   return <span>{simpleStr}</span>;
 }
 
-export default SimpleStr;
+export default DotInCenterStr;
