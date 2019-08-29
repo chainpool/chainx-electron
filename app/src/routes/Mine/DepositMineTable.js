@@ -143,10 +143,8 @@ class DepositMineTable extends Mixin {
                         name: 'ClaimConditionModal',
                         data: {
                           claimHeight: item.nextClaim,
-                          requiredStakingContribution,
                           blockNumber,
-                          reserved: reservedStaking / Math.pow(10, 8),
-                          intention: item,
+                          id: item.id,
                         },
                       });
                     }
