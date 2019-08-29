@@ -68,7 +68,7 @@ class Main extends Component {
     const loading = (
       <div className={styles.loading}>
         <div>
-          <Loading size={60} />
+          <Loading />
         </div>
       </div>
     );
