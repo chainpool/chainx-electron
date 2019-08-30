@@ -517,7 +517,9 @@ export default class Configure extends ModelExtend {
       case 'update': {
         const findOne = list.filter((item, ins) => ins === index)[0] || {};
         list.splice(index, 1, { ...findOne, address, name });
+        break;
       }
+      // No Default
     }
 
     if (target === 'Node') {

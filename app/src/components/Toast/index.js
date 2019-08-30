@@ -69,7 +69,7 @@ class Toast {
               {title}
             </div>
             {needLink ? (
-              <a href={link} target="_blank">
+              <a href={link} target="_blank" rel="noopener noreferrer">
                 {message}
               </a>
             ) : (

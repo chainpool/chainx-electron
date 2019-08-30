@@ -193,7 +193,7 @@ class X_BTC extends Mixin {
                   <span key={index} className={styles.anchor}>
                     <HoverTip
                       width={item.imgWidth}
-                      tip={<img src={item.src} width={item.imgWidth} />}
+                      tip={<img src={item.src} width={item.imgWidth} alt="" />}
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
@@ -454,7 +454,7 @@ class X_BTC extends Mixin {
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} alt="" />} className={styles.imgtip}>
                     {item.content}
                   </HoverTip>
                 </span>

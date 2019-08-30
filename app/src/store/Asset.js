@@ -22,7 +22,6 @@ import { _, formatNumber, moment, observable } from '../utils/index';
 import { Chain } from '../constants';
 import { combineLatest as combine, from, of } from 'rxjs';
 import { catchError, combineLatest, map, mergeMap } from 'rxjs/operators';
-import { Toast } from '../components';
 
 function getAssetWithZeroBalance(info) {
   return {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, FormattedMessage, LanguageContent, RouterGo, DotInCenterStr } from '../../components';
 import { HoverTip } from '../components';
 import { blockChain } from '../../constants';
-import { _, classNames, groupArrayByCount, hexPrefix, Inject } from '../../utils';
+import { classNames, hexPrefix } from '../../utils';
 import trustee_zh from '../../resource/trustee_zh.png';
 import trustee_en from '../../resource/trustee_en.png';
 import officialMember_zh from '../../resource/officialMember_zh.png';
