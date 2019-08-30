@@ -216,6 +216,8 @@ class InputText extends Mixin {
       size = 'middle',
       type = 'primary',
       value = '',
+      loading = false,
+      onEnter,
       onChange,
       onBlur,
       onFocus,
@@ -267,6 +269,14 @@ class InputText extends Mixin {
       onBlur: e => {
         if (!disabled) {
           _.isFunction(onBlur) && onBlur(e.target.value);
+          setTimeout(() => {
+            this.checkStatus(true);
+          });
+        }
+      },
+      onKeyPress: e => {
+        if (e && e.charCode === 13 && !loading) {
+          _.isFunction(onEnter) && onEnter();
           setTimeout(() => {
             this.checkStatus(true);
           });
