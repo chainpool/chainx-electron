@@ -519,7 +519,8 @@ export default class Configure extends ModelExtend {
         list.splice(index, 1, { ...findOne, address, name });
         break;
       }
-      // No Default
+
+      // no default
     }
 
     if (target === 'Node') {
