@@ -157,6 +157,8 @@ class HistoryOrderTable extends SwitchPair {
                 case OrderStatus.Canceled:
                   statusShow = <FormattedMessage id={'Cancelled'} />;
                   break;
+
+                // no default
               }
               return (
                 <span

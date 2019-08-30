@@ -169,9 +169,7 @@ export default class Trust extends ModelExtend {
         isSelf: `0x${this.decodeAddressAccountId(currentAccount)}` === item.account,
       };
       const findOne = this.trusteeList.filter((one = []) => {
-        if (one[0]) {
-          return `0x${this.decodeAddressAccountId(one[0])}` === item.account;
-        }
+        return one[0] && `0x${this.decodeAddressAccountId(one[0])}` === item.account;
       })[0];
       if (findOne) {
         return {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router';
-import { Dropdown, FormattedMessage, Mixin, Tabs } from '../../components';
+import { Dropdown, FormattedMessage, Mixin } from '../../components';
 import * as styles from './index.less';
 import NodeTable from './NodeTable';
 import UpdateNodeModal from './Modal/UpdateNodeModal';

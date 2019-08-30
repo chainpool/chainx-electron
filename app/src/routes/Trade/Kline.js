@@ -82,6 +82,8 @@ class Kline extends SwitchPair {
       case 'M':
         interval = 30 * dayMinutes;
         break;
+
+      // no default
     }
     return interval;
   };

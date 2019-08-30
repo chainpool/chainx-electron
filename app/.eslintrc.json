@@ -1,0 +1,8 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "no-loop-func": 0,
+    "no-useless-escape": 0,
+    "react/jsx-pascal-case": 0
+  }
+}
