@@ -923,6 +923,7 @@ class S_DOT extends Mixin {
       tradeId: '',
       tradeIdErrMsg: '',
     };
+    this.dispatch = this.props.assetStore.dispatch;
   }
 
   checkAll = {
@@ -947,8 +948,37 @@ class S_DOT extends Mixin {
     }
   };
 
+  submit = () => {
+    if (this.checkAll.confirm()) {
+      const ethHash = this.getTradeId();
+      this.dispatch({
+        type: 'bindTxHash',
+        payload: ethHash,
+      })
+        .then(resp => {
+          const res = resp.res;
+          const reloadAssetData = resp.success;
+          if (res && res.hash) {
+            const url = 'https://scan.chainx.org/txs/' + res.hash;
+            const option = {
+              autoClose: 6000,
+              needLink: true,
+              link: url,
+            };
+            Toast.success(<FormattedMessage id="MapToastSuccess" />, res.hash, option);
+            reloadAssetData();
+          } else if (res && res.error_code) {
+            Toast.warn(<FormattedMessage id="MapToastFail" />, res.error_msg);
+          }
+        })
+        .catch(err => {
+          Toast.warn(<FormattedMessage id="MapToastFail" />, err.message);
+        });
+    }
+  };
+
   render() {
-    const { checkAll } = this;
+    const { checkAll, submit } = this;
     const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
@@ -1217,40 +1247,11 @@ class S_DOT extends Mixin {
               });
             }}
             onBlur={checkAll.checkTradeId}
+            loading={bindTxHashLoading}
+            onEnter={submit}
           />
           {showButton && (
-            <Button
-              size="full"
-              type="confirm"
-              loading={bindTxHashLoading}
-              onClick={() => {
-                if (checkAll.confirm()) {
-                  const ethHash = this.getTradeId();
-                  dispatch({
-                    type: 'bindTxHash',
-                    payload: ethHash,
-                  })
-                    .then(resp => {
-                      const res = resp.res;
-                      const reloadAssetData = resp.success;
-                      if (res && res.hash) {
-                        const url = 'https://scan.chainx.org/txs/' + res.hash;
-                        const option = {
-                          autoClose: 6000,
-                          needLink: true,
-                          link: url,
-                        };
-                        Toast.success(<FormattedMessage id="MapToastSuccess" />, res.hash, option);
-                        reloadAssetData();
-                      } else if (res && res.error_code) {
-                        Toast.warn(<FormattedMessage id="MapToastFail" />, res.error_msg);
-                      }
-                    })
-                    .catch(err => {
-                      Toast.warn(<FormattedMessage id="MapToastFail" />, err.message);
-                    });
-                }
-              }}>
+            <Button size="full" type="confirm" loading={bindTxHashLoading} onClick={submit}>
               <FormattedMessage id={'Confirm'} />
             </Button>
           )}
