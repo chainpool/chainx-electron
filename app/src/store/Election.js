@@ -70,8 +70,14 @@ export default class Election extends ModelExtend {
         discountResultShow,
       };
 
-      const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
-      if (record) {
+      const record = this.originPseduRecords.find(record => record.id === intention.id);
+      if (!record) {
+        Object.assign(result, {
+          canClaim: false,
+          interest: this.setPrecision(0, nativeAssetPrecision),
+          balance: this.setPrecision(0, token),
+        });
+      } else {
         // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
         const myWeight =
           (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance +
