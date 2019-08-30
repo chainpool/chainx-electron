@@ -20,3 +20,4 @@ export { default as LanguageContent } from './LanguageContent';
 export { default as Popover } from './Popover';
 export { default as Dropdown } from './Dropdown';
 export { default as Amount } from './Amount';
+export { default as DotInCenterStr } from './DotInCenterStr';

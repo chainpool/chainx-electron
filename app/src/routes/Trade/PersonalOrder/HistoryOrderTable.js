@@ -3,7 +3,7 @@ import SwitchPair from '../Mixin/SwitchPair';
 import { _, observer, setBlankSpace, setColumnsWidth, showAssetName } from '../../../utils';
 
 import * as styles from './index.less';
-import { FormattedMessage, Icon, Table } from '../../../components';
+import { FormattedMessage, Icon, Table, DotInCenterStr } from '../../../components';
 import { OrderStatus } from '../../../constants';
 
 @observer
@@ -199,7 +199,8 @@ class HistoryOrderTable extends SwitchPair {
                 render: value => {
                   return (
                     <div className={styles.otherFace}>
-                      <FormattedMessage id={'CounterParty'} />：{value}
+                      <FormattedMessage id={'CounterParty'} />：
+                      <DotInCenterStr value={value} />
                     </div>
                   );
                 },

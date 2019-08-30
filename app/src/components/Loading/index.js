@@ -11,7 +11,8 @@ class LoadingIcon extends PureComponent {
 
 class Loading extends PureComponent {
   render() {
-    return <img src={loading} alt="" />;
+    const { size = 40 } = this.props;
+    return <img style={{ width: size, height: size }} src={loading} alt="" />;
   }
 }
 
