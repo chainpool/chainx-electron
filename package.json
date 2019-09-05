@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
@@ -10,16 +10,14 @@
     "startWin": "cross-env NODE_ENV=development electron . --debug",
     "start:watch": "nodemon --watch ./src/**/* --exec electron . --debug",
     "pack": "electron-builder --dir",
-    "dist": "yarn build && rimraf dist && electron-builder",
-    "postinstall": "electron-rebuild"
+    "dist": "yarn build && rimraf dist && electron-builder"
   },
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.2",
-    "electron-builder": "^20.41.0",
+    "electron": "^6.0.7",
+    "electron-builder": "^21.2.0",
     "electron-debug": "^3.0.0",
-    "electron-rebuild": "^1.8.4",
-    "rimraf": "^2.6.3"
+    "rimraf": "^3.0.0"
   },
   "build": {
     "productName": "ChainX Wallet",

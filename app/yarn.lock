@@ -911,115 +911,109 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@chainx/account@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/account/-/account-2.21.0-alpha.0.tgz#92f6286a9a5e2e3fdd386ca05df90a6e9a9f2ebd"
-  integrity sha512-2xyjN0C6WyaHjjmq4Nb/vJc0Df4GLlOOThoVC6XODVfr1Xsn3EwnbGoVce1LcyBDjEudLRbcVYxu6cPVCrfncg==
+"@chainx/account@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/account/-/account-2.21.0.tgz#dca59418a225ac3227c1676e56f41cabadf7c6af"
+  integrity sha512-g0bsK2vceGvVhT3lnGRlvTImIpBEXCEiddZMCYd6sPYqkw/lqh3q/hGGMsCdJBvcsrWdkLGG3ZGapf9ncGn4rQ==
   dependencies:
-    "@chainx/keyring" "^2.21.0-alpha.0"
-    "@chainx/keystore" "^2.20.2"
+    "@chainx/keyring" "^2.21.0"
+    "@chainx/keystore" "^2.21.0"
     bip32 "^1.0.2"
     bs58 "^4.0.1"
     tweetnacl "^1.0.0"
 
-"@chainx/extrinsics@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/extrinsics/-/extrinsics-2.21.0-alpha.0.tgz#248136a2059d81260052ebdc3bb8127b8cbed760"
-  integrity sha512-vlWTB6VUJvIhr8CaNtzPp8/FA/4XtVFgoPEFV/UmxtKSSjp/tx2mr4exnKOCvbw68urZaDv7qttV0Ln2ttMQRw==
+"@chainx/extrinsics@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/extrinsics/-/extrinsics-2.21.0.tgz#72a56d92d6f1b6641fa9f8f92bcb96d209d55db1"
+  integrity sha512-wbo7XLak8gNPqDqN5QSWPo7DSG8yVaVgM3EEwMDQVqAwUxQzKqPSJKf9Eo2S+NAvYfec9sstXpDiOa+Pwtv21w==
   dependencies:
-    "@chainx/keyring" "^2.21.0-alpha.0"
-    "@chainx/types" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
+    "@chainx/keyring" "^2.21.0"
+    "@chainx/types" "^2.21.0"
+    "@chainx/util" "^2.21.0"
 
-"@chainx/jsonrpc@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/jsonrpc/-/jsonrpc-2.21.0-alpha.0.tgz#44d394e8c74a4083eea5aff2823f46a955ba376b"
-  integrity sha512-SQ0wL/tL/T9VCuTJV9uXbsNFDLM6c8Jmo9Ur+eFM7tNnFeHBpamki1Ks3z6ozS73+lEl8d73VbB8pzoGBvPmyA==
+"@chainx/jsonrpc@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/jsonrpc/-/jsonrpc-2.21.0.tgz#d461e561c3956b17dbc84734d54f6f1ca5bc27e5"
+  integrity sha512-gr75k+gw1pvOSBiDAEL7lFMM+aoz2xfpdEoV8pXR7YXkoAkCqM6w4Fbi5GadiDy3YA/5YS38Mv3y2rBW4XF/1A==
 
-"@chainx/keyring@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/keyring/-/keyring-2.21.0-alpha.0.tgz#fa98c3e0da16786cf0ed91ae046e22d8c4db7fe1"
-  integrity sha512-mIppb7689LOcY79A+UuALbfFEiLTUTBCErRJcOM2AunssM1N3zwJQEjjJJy0dTA0yVGSdScTE3gh+Pm3xVUHaw==
+"@chainx/keyring@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/keyring/-/keyring-2.21.0.tgz#9547286b2c4a5d518ba699433bffa77a48de74a4"
+  integrity sha512-qMMhWmfp9dSFZNx60BjWSW0A8DT8pw4U7AQTHPb9EUDj6lClmJZifekzR9VnNzzWr1dOa+ga5H9UyGOey+CWDA==
   dependencies:
     "@babel/runtime" "^7.4.5"
-    "@chainx/util" "^2.20.2"
-    "@chainx/util-crypto" "^2.21.0-alpha.0"
-    "@types/bs58" "^4.0.0"
+    "@chainx/util" "^2.21.0"
+    "@chainx/util-crypto" "^2.21.0"
     bs58 "^4.0.1"
 
-"@chainx/keystore@^2.20.2":
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/@chainx/keystore/-/keystore-2.20.2.tgz#9401202e7cb4508a0566d8d7e5799ae7fdde2428"
-  integrity sha512-Zk8RDlOu7+WtFo8OOXcS4i1o6HK3ekhH49tY3DHbFbOtvUJBXZfVGpIuU+9zVcdC5oUkysDG/ZvOMDc1sxzZ+A==
+"@chainx/keystore@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/keystore/-/keystore-2.21.0.tgz#00154f0f09c2ba8028cd691d301569abc21a4038"
+  integrity sha512-YmMQ38QlFrRXj4RqbQuaN8aMBgfekgNti0wZUSb+qzb7c+B10onr+W4maqeT4iAkKLj1Fb/fvBGGlIOx06BFjA==
   dependencies:
-    "@chainx/util" "^2.20.2"
+    "@chainx/util" "^2.21.0"
     blakejs "^1.1.0"
     crypto-browserify "^3.12.0"
     pbkdf2 "^3.0.17"
     randombytes "^2.0.6"
 
-"@chainx/rpc-core@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/rpc-core/-/rpc-core-2.21.0-alpha.0.tgz#11f5b1c2dc02e82448e42e00e6ce069c7a50071f"
-  integrity sha512-Go3aHObOHx+bRjPCZDyrqkbxRugblofmLUbbNLGVpL8cFIJFj2tw36m5FGjZRthGLDw20lDTewjpdFemNHK09A==
+"@chainx/rpc-core@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/rpc-core/-/rpc-core-2.21.0.tgz#fca9e377710e98c8cba69ebcc8659e6e326fbe9d"
+  integrity sha512-rjw3Eu6hjxED2QPeXA638NG7T/e0KJpplcrZmvwgDvPdTw5lv4UN4+RBR0KsSf50amUTxST8G/WqibgRVNG8tg==
   dependencies:
-    "@chainx/jsonrpc" "^2.21.0-alpha.0"
-    "@chainx/rpc-provider" "^2.20.2"
-    "@chainx/storage" "^2.21.0-alpha.0"
-    "@chainx/types" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
+    "@chainx/jsonrpc" "^2.21.0"
+    "@chainx/rpc-provider" "^2.21.0"
+    "@chainx/storage" "^2.21.0"
+    "@chainx/types" "^2.21.0"
+    "@chainx/util" "^2.21.0"
 
-"@chainx/rpc-provider@^2.20.2":
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/@chainx/rpc-provider/-/rpc-provider-2.20.2.tgz#84eda12a541f6cad79aa81e336647d846998df4f"
-  integrity sha512-bkKjCDZc3XV0MblpGgcvsdZpy7c6nfcATJpnFc8kahTytqGM3CkADhNws9Tvv+TwxW1SPeTZT6jwc9rus1+7Gg==
+"@chainx/rpc-provider@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/rpc-provider/-/rpc-provider-2.21.0.tgz#16d80a495887556040f23fbb8467259a1babfbf1"
+  integrity sha512-P4OwTrGF3MG0b9ypZ8KwqI0MVM9KajfID/XcsXQPSw2sD1n2bO9feLaJ1yjEUp6ebiOkMxvOJUCEV86GjtXZsw==
   dependencies:
-    "@chainx/util" "^2.20.2"
+    "@chainx/util" "^2.21.0"
     eventemitter3 "^3.1.0"
     isomorphic-fetch "^2.2.1"
     websocket "^1.0.28"
 
-"@chainx/rpc-rx@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/rpc-rx/-/rpc-rx-2.21.0-alpha.0.tgz#3121cddbb0f02e7232c1078a7d6b411e1dc36bc2"
-  integrity sha512-8dMI72+wSpewx+sbaALRPFKl9HuzuYHnjR71F+LzBd0O6YrAWkr/hFUw8BSED4XkwdgFE04l6v17oEZPWpwabA==
+"@chainx/rpc-rx@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/rpc-rx/-/rpc-rx-2.21.0.tgz#c67386d3b89858dd8eed9764d8cae20ebb62ea98"
+  integrity sha512-wTJg1vk+OZjupsxksdoCrdGXnn9w3VRIK5VM/+nd0pZUBs5hKFdKLthw86EFc7g0fS0G2x/Yf5HyK20z/uAhFg==
   dependencies:
-    "@chainx/rpc-core" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
+    "@chainx/rpc-core" "^2.21.0"
+    "@chainx/util" "^2.21.0"
     rxjs "^6.3.3"
 
-"@chainx/storage@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/storage/-/storage-2.21.0-alpha.0.tgz#d2ed0cc87577127575222cb6b3d1446a3b687173"
-  integrity sha512-R+YOy9DP2evevXxkWCFh4uSpV8w4/879H2oR50gqnfQpf/ZrepvJc41z/x4fr4VwKwANvB/zc4eWznzizi/GxQ==
+"@chainx/storage@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/storage/-/storage-2.21.0.tgz#3c5625458a9e2f1058a6e3b0d0f22c5e0a1d2e0b"
+  integrity sha512-HfRfBz7W8H6Qupde/K4sSKNX1zXtG0TPy8ttImFOVUj+Yz8pg3SFZLisomu8V/KNl22H69P0jWNFugE37SJ15w==
   dependencies:
-    "@chainx/types" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
-    "@chainx/util-crypto" "^2.21.0-alpha.0"
+    "@chainx/types" "^2.21.0"
+    "@chainx/util" "^2.21.0"
+    "@chainx/util-crypto" "^2.21.0"
 
-"@chainx/types@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/types/-/types-2.21.0-alpha.0.tgz#274ba4682584b4e34e9083c0dd036032c6057bb2"
-  integrity sha512-PCfhnlhprZitlGFPL2cZky17rsP2+MroVuOtMfEJEJEJVWoQWmUUtq6rO3GsMUK7MxkTEGYrPLDi1oSAZKW8yg==
+"@chainx/types@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/types/-/types-2.21.0.tgz#f186135f8ee00a6247e60cad0ffdf7beb0b9c9e4"
+  integrity sha512-/rZYOVLSLMBFVa69cU5f/PvhXQKPz1M66+w+XLVdOQ76PWcLg6ncty5RnBQw1NovbNBnr2y+Z7YjkVtb975bmA==
   dependencies:
-    "@chainx/keyring" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
+    "@chainx/keyring" "^2.21.0"
+    "@chainx/util" "^2.21.0"
     bitcoinjs-lib "^4.0.2"
     bn.js "^4.11.8"
 
-"@chainx/util-crypto@^2.21.0-alpha.0":
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@chainx/util-crypto/-/util-crypto-2.21.0-alpha.0.tgz#5a81bab1de9f3addf7a42ae7205033007fd5e0a4"
-  integrity sha512-iTC2TEACQXFV4VoxkT1d5edDaHqV9eFNJIi5EtKCwxIq3iWsiFMVeZIbEravfIp/XC0wkayRtOUxSnRri+YPog==
+"@chainx/util-crypto@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/util-crypto/-/util-crypto-2.21.0.tgz#b8957fcbef9ff3fd2083d2be3be37fc1a75a0282"
+  integrity sha512-n+6OS7wNNiV+I9L2Q6xVaDwJ/EFqJEqQSG9t3UB0LODskHJxHCxa9aQ5pHkieyVqfB7xU3yhbzHMQoQCacAGiA==
   dependencies:
     "@babel/runtime" "^7.4.5"
-    "@chainx/util" "^2.20.2"
-    "@chainx/wasm-crypto" "^2.20.2"
-    "@types/bip39" "^2.4.2"
-    "@types/pbkdf2" "^3.0.0"
-    "@types/secp256k1" "^3.5.0"
-    "@types/webassembly-js-api" "^0.0.2"
-    "@types/xxhashjs" "^0.2.1"
+    "@chainx/util" "^2.21.0"
+    "@chainx/wasm-crypto" "^2.21.0"
     bip39 "^2.5.0"
     blakejs "^1.1.0"
     js-sha3 "^0.8.0"
@@ -1027,24 +1021,22 @@
     tweetnacl "^1.0.1"
     xxhashjs "^0.2.2"
 
-"@chainx/util@^2.20.2":
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/@chainx/util/-/util-2.20.2.tgz#ec58ca55d5a7637c035ae2f1d96308bdc944eea3"
-  integrity sha512-8ariunWQzIdww2y4EdVxDsnRs+TzHb9Ubhx57NZHZb/EnacpmovGFfrUMy+ZiVHFv7bg0vkVUWkNe+pVWUEJ2g==
+"@chainx/util@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/util/-/util-2.21.0.tgz#fc57eec30e0a64df9f55fc2e3fec98efa7a72b85"
+  integrity sha512-sm/Zv6AX23pQrTQ6+w3p3+NJ8EKiZ2kfHtNf6Gw9fMrmiWc0xWyHGKrSrbf85UQvBz3o8TFjSF70RbzShQHkTw==
   dependencies:
     "@babel/runtime" "^7.4.5"
-    "@types/bn.js" "^4.11.5"
-    "@types/deasync" "^0.1.0"
     bn.js "^4.11.8"
     camelcase "^5.3.1"
     chalk "^2.4.2"
     ip-regex "^4.1.0"
     moment "^2.24.0"
 
-"@chainx/wasm-crypto@^2.20.2":
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/@chainx/wasm-crypto/-/wasm-crypto-2.20.2.tgz#59363a40f091004dc31a115af2f4596fbfc53da9"
-  integrity sha512-BNEZ/HTHKmlkIhIRw9ijO114I8P2K5+k0i73tVIZYEUlG+8O5oP87qDWKdGuT/Gezjz1vm7f/Xe1FsQa9ZwuUA==
+"@chainx/wasm-crypto@^2.21.0":
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/@chainx/wasm-crypto/-/wasm-crypto-2.21.0.tgz#b35740322b1086c33e98c4ad98dd7a3316874275"
+  integrity sha512-LSDmaSsqLJVJyWKiPLFLzHGpM+H2QQmdjfmlE9PpewdDehxFnaOYjDeoIro35RAwHrfZCGXoNKNN7dvuVIYc6A==
 
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
@@ -1208,33 +1200,12 @@
     "@svgr/core" "^2.4.1"
     loader-utils "^1.1.0"
 
-"@types/base-x@*":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/base-x/-/base-x-3.0.0.tgz#a1365259d1d3fa3ff973ab543192a6bdd4cb2f90"
-  integrity sha512-vnqSlpsv9uFX5/z8GyKWAfWHhLGJDBkrgRRsnxlsX23DHOlNyqP/eHQiv4TwnYcZULzQIxaWA/xRWU9Dyy4qzw==
-  dependencies:
-    "@types/node" "*"
-
-"@types/bip39@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@types/bip39/-/bip39-2.4.2.tgz#f5d6617212be496bb998d3969f657f77a10c5287"
-  integrity sha512-Vo9lqOIRq8uoIzEVrV87ZvcIM0PN9t0K3oYZ/CS61fIYKCBdOIM7mlWzXuRvSXrDtVa1uUO2w1cdfufxTC0bzg==
-  dependencies:
-    "@types/node" "*"
-
-"@types/bn.js@^4.11.3", "@types/bn.js@^4.11.5":
+"@types/bn.js@^4.11.3":
   version "4.11.5"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.5.tgz#40e36197433f78f807524ec623afcf0169ac81dc"
   integrity sha512-AEAZcIZga0JgVMHNtl1CprA/hXX7/wPt79AgR4XqaDt7jyj3QWYw6LPoOiznPtugDmlubUnAahMs2PFxGcQrng==
   dependencies:
     "@types/node" "*"
-
-"@types/bs58@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/bs58/-/bs58-4.0.0.tgz#baec75cb007b419ede3ec6b3410d2c8f14c92fc5"
-  integrity sha512-gYX+MHD4G/R+YGYwdhG5gbJj4LsEQGr3Vg6gVDAbe7xC5Bn8dNNG2Lpo6uDX/rT5dE7VBj0rGEFuV8L0AEx4Rg==
-  dependencies:
-    "@types/base-x" "*"
 
 "@types/camelcase@^4.1.0":
   version "4.1.0"
@@ -1256,46 +1227,20 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.8.tgz#e469b4bf9d1c9832aee4907ba8a051494357c12c"
   integrity sha512-aX+gFgA5GHcDi89KG5keey2zf0WfZk/HAQotEamsK2kbey+8yGKcson0hbK8E+v0NArlCJQCqMP161YhV6ZXLg==
 
-"@types/pbkdf2@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/pbkdf2/-/pbkdf2-3.0.0.tgz#5d9ca5f12a78a08cc89ad72883ad4a30af359229"
-  integrity sha512-6J6MHaAlBJC/eVMy9jOwj9oHaprfutukfW/Dyt0NEnpQ/6HN6YQrpvLwzWdWDeWZIdenjGHlbYDzyEODO5Z+2Q==
-  dependencies:
-    "@types/node" "*"
-
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
-
-"@types/secp256k1@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@types/secp256k1/-/secp256k1-3.5.0.tgz#0f3baf16b07488c6da2633a63b4160bcf8d0fd5b"
-  integrity sha512-ZE39QhkIaNK6xbKIp1VLN5O36r97LuslLmRnjAcT0sVDxcfvrk3zqp/VnIfmGza7J6jDxR8dIai3hsCxPYglPA==
-  dependencies:
-    "@types/node" "*"
 
 "@types/tapable@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
   integrity sha512-42zEJkBpNfMEAvWR5WlwtTH22oDzcMjFsL9gDGExwF8X8WvAiw7Vwop7hPw03QT8TKfec83LwbHj6SvpqM4ELQ==
 
-"@types/webassembly-js-api@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@types/webassembly-js-api/-/webassembly-js-api-0.0.2.tgz#43a04bd75fa20332133c6c3986156bfeb4a3ced7"
-  integrity sha512-htlxJRag6RUiMYUkS8Fjup+TMHO0VarpiF9MrqYaGJ0wXtIraQFz40rfA8VIeCiWy8sgpv3RLmigpgicG8fqGA==
-
 "@types/xxhashjs@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@types/xxhashjs/-/xxhashjs-0.1.1.tgz#980709096c7138713b7777f49dccd4b8f93908e5"
   integrity sha512-6mHo5kJME0Ydtms1ZW8qIV34xs4QryS6O8e8xQ5d3kXZgFOtdfV3h1HXhb11EhYSTO94fEj95xa+08VFZB5ZBQ==
-
-"@types/xxhashjs@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@types/xxhashjs/-/xxhashjs-0.2.1.tgz#6cd06b2eca5228765ff45960cf2c2a557ddf109a"
-  integrity sha512-Akm13wkwsQylVnBokl/aiKLtSxndSjfgTjdvmSxXNehYy4NymwdfdJHwGhpV54wcYfmOByOp3ak8AGdUlvp0sA==
-  dependencies:
-    "@types/node" "*"
 
 "@webassemblyjs/ast@1.7.6":
   version "1.7.6"
@@ -2871,19 +2816,19 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chainx.js@^2.21.0-alpha.0:
-  version "2.21.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.21.0-alpha.0.tgz#33dda243f001401fb6bead3f61fe3aa73cc8b9c4"
-  integrity sha512-F8zY24dlOAhLCpFxSJd6Ccubnc0C86Tn6ZqlXBX4J/TI5RpsT9baqImn2cSToo8f84RZ18gTNlfzBY9tC8A8hQ==
+chainx.js@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.21.0.tgz#87637fea42ac7c81b9c1d80840c508e035597705"
+  integrity sha512-JqCZboj0TlY5MC++Z0+ZKLu4AkcMEBaxjzzREZbptu6MqpgtfqVYo+7FDj0+2tavbB9sP9bGCEj6QV1c1aciPg==
   dependencies:
-    "@chainx/account" "^2.21.0-alpha.0"
-    "@chainx/extrinsics" "^2.21.0-alpha.0"
-    "@chainx/keyring" "^2.21.0-alpha.0"
-    "@chainx/rpc-provider" "^2.20.2"
-    "@chainx/rpc-rx" "^2.21.0-alpha.0"
-    "@chainx/storage" "^2.21.0-alpha.0"
-    "@chainx/types" "^2.21.0-alpha.0"
-    "@chainx/util" "^2.20.2"
+    "@chainx/account" "^2.21.0"
+    "@chainx/extrinsics" "^2.21.0"
+    "@chainx/keyring" "^2.21.0"
+    "@chainx/rpc-provider" "^2.21.0"
+    "@chainx/rpc-rx" "^2.21.0"
+    "@chainx/storage" "^2.21.0"
+    "@chainx/types" "^2.21.0"
+    "@chainx/util" "^2.21.0"
     eventemitter3 "^3.1.0"
     rxjs "^6.3.3"
 
