@@ -24,7 +24,7 @@ cache:
     - $HOME/.cache/electron-builder
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libudev-dev; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libudev-dev && yarn global add node-gyp; fi
 
 script:
   - |
