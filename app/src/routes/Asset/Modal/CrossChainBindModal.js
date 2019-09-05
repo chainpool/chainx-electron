@@ -193,7 +193,7 @@ class X_BTC extends Mixin {
                   <span key={index} className={styles.anchor}>
                     <HoverTip
                       width={item.imgWidth}
-                      tip={<img src={item.src} width={item.imgWidth} />}
+                      tip={<img src={item.src} width={item.imgWidth} alt="" />}
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
@@ -454,7 +454,7 @@ class X_BTC extends Mixin {
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} alt="" />} className={styles.imgtip}>
                     {item.content}
                   </HoverTip>
                 </span>
@@ -600,7 +600,7 @@ class L_BTC extends Mixin {
     const {
       model: { isTestBitCoinNetWork },
       accountStore: { currentAddress },
-      assetStore: { btcAddresses = [], btcTrusteeAddress },
+      assetStore: { btcTrusteeAddress },
       globalStore: {
         modal: {
           data: { token },
@@ -706,7 +706,7 @@ class L_BTC extends Mixin {
                   <span key={index} className={styles.anchor}>
                     <HoverTip
                       width={item.imgWidth}
-                      tip={<img src={item.src} width={item.imgWidth} />}
+                      tip={<img src={item.src} width={item.imgWidth} alt="" />}
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
@@ -983,7 +983,7 @@ class S_DOT extends Mixin {
     const recommendChannel = recommendChannelSelect.value;
     const {
       accountStore: { currentAddress },
-      assetStore: { dispatch, bindTxHashLoading },
+      assetStore: { bindTxHashLoading },
       globalStore: {
         language,
         modal: {
@@ -1104,7 +1104,7 @@ class S_DOT extends Mixin {
                   },
                 ].map((item, index) => (
                   <span key={index} className={styles.anchor}>
-                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                    <HoverTip tip={<img src={item.src} width={item.imgWidth} alt="" />} className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
                     {index === 7 ? null : ', '}
