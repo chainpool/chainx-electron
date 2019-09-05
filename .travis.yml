@@ -14,7 +14,7 @@ matrix:
 
     - os: windows
       language: node_js
-      node_js: "8"
+      node_js: '8'
 
 cache:
   directories:
@@ -23,14 +23,11 @@ cache:
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libudev-dev; fi
+
 script:
   - |
-    if [ "$TRAVIS_BRANCH" == "master" ]; then
-      if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-        sudo apt-get install -y libudev-dev && yarn global add node-gyp && yarn dist
-      else
-        yarn dist
-      fi
-    fi
+    if [ "$TRAVIS_BRANCH" == "master" ]; then yarn dist; fi
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
