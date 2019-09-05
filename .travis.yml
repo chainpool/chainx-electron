@@ -27,7 +27,7 @@ script:
   - |
     if [ "$TRAVIS_BRANCH" == "master" ]; then
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-        apt-get update && apt-get install -y libudev-dev && yarn global add node-gyp && yarn dist
+        sudo apt-get install -y libudev-dev && yarn global add node-gyp && yarn dist
       else
         yarn dist
       fi
