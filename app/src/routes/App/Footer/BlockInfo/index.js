@@ -21,7 +21,9 @@ class BlockInfo extends Component {
   }
 
   componentWillUnmount() {
-    this.subscribeNewHead.unsubscribe();
+    if (this.subscribeNewHead) {
+      this.subscribeNewHead.unsubscribe();
+    }
   }
 
   render() {
