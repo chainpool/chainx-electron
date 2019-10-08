@@ -70,15 +70,22 @@ export default class Election extends ModelExtend {
         discountResultShow,
       };
 
-      const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
-      if (record) {
+      const record = this.originPseduRecords.find(record => record.id === intention.id);
+      if (!record) {
+        Object.assign(result, {
+          canClaim: false,
+          interest: this.setPrecision(0, nativeAssetPrecision),
+          balance: this.setPrecision(0, token),
+        });
+      } else {
         // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
         const myWeight =
-          (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance + record.lastTotalDepositWeight;
+          (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance +
+          Number(record.lastTotalDepositWeight);
         // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
         const nodeVoteWeight =
           (this.blockNumber - intention.lastTotalDepositWeightUpdate) * intention.circulation +
-          intention.lastTotalDepositWeight;
+          Number(intention.lastTotalDepositWeight);
         // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
 
         // TODO: record.lastTotalDepositWeightUpdate <= 0的条件属于补救措施，后边应改掉
@@ -172,11 +179,11 @@ export default class Election extends ModelExtend {
       }, 0);
 
       // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
-      const myWeight = (this.blockNumber - record.lastVoteWeightUpdate) * myTotalVote + record.lastVoteWeight;
+      const myWeight = (this.blockNumber - record.lastVoteWeightUpdate) * myTotalVote + Number(record.lastVoteWeight);
       // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
       const nodeVoteWeight =
         (this.blockNumber - intention.lastTotalVoteWeightUpdate) * intention.totalNomination +
-        intention.lastTotalVoteWeight;
+        Number(intention.lastTotalVoteWeight);
       // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
       const myInterest = (myWeight / nodeVoteWeight) * intention.jackpot;
 

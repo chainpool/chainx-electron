@@ -45,7 +45,7 @@ export const withdraw = (...payload) => asset.withdraw(...payload);
 
 export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdrawalLimitByToken(...payload);
 
-export const getIntentions = (...payload) => stake.getIntentions(...payload);
+export const getIntentions = (...payload) => stake.getIntentionsV1(...payload);
 
 export const getIntentionsByAccount = (...payload) => stake.getIntentionByAccount(...payload);
 
@@ -53,7 +53,7 @@ export const nominate = (...payload) => stake.nominate(...payload);
 
 export const renominate = (...payload) => stake.renominate(...payload);
 
-export const getNominationRecords = (...payload) => stake.getNominationRecords(...payload);
+export const getNominationRecords = (...payload) => stake.getNominationRecordsV1(...payload);
 
 export const refresh = (...payload) => stake.refresh(...payload);
 
@@ -67,9 +67,10 @@ export const depositClaim = (...payload) => stake.depositClaim(...payload);
 
 export const claim = (...payload) => stake.claim(...payload);
 
-export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
+export const getPseduIntentions = (...payload) => stake.getPseduIntentionsV1(...payload);
 
-export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
+export const getPseduNominationRecords = (...payload) =>
+  checkLogin(() => stake.getPseduNominationRecordsV1(...payload));
 
 export const getTrusteeInfoByAccount = (...payload) => trustee.getTrusteeInfoByAccount(...payload);
 
