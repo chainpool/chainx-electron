@@ -22,7 +22,6 @@ import { _, formatNumber, moment, observable } from '../utils/index';
 import { Chain } from '../constants';
 import { combineLatest as combine, from, of } from 'rxjs';
 import { catchError, combineLatest, map, mergeMap } from 'rxjs/operators';
-import { Toast } from '../components';
 
 function getAssetWithZeroBalance(info) {
   return {
@@ -51,9 +50,7 @@ export default class Asset extends ModelExtend {
   @observable accountAssets = []; // 现账户资产
   @observable accountLock = [];
   @observable btcTrusteeAddress; // BTC公共多签地址
-  @observable loading = {
-    bindTxHashLoading: false,
-  };
+  @observable bindTxHashLoading = false;
 
   @computed
   get normalizedAccountAssets() {
@@ -461,20 +458,10 @@ export default class Asset extends ModelExtend {
   };
 
   bindTxHash = async hash => {
-    this.changeModel('loading.bindTxHashLoading', true);
-    const res = await bindTxHash(hash).catch(err => {
-      Toast.warn('交易ID绑定失败', err.message);
-    });
-
-    if (res && res.error_code) {
-      Toast.warn('交易ID绑定失败', res.error_msg);
-    } else if (res && res.hash) {
-      Toast.success('交易ID绑定已完成', `Extrinsic Hash: ${res.hash}`);
-      this.reload();
-    }
-
-    this.changeModel('loading.bindTxHashLoading', false);
-
-    return res;
+    const res = await bindTxHash(hash);
+    return {
+      res,
+      success: () => this.reload(),
+    };
   };
 }

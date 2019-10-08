@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styles from './index.less';
 import { Button, ButtonGroup, FormattedMessage, Icon, Mixin, Table } from '../../components';
-import { _, formatNumber, Inject, showAssetName } from '../../utils';
+import { _, Inject, showAssetName } from '../../utils';
 import { Balance, HoverTip } from '../components';
 import btcIcon from '../../resource/btc.png';
 import sdotLogo from '../../resource/xdot.png';
@@ -24,9 +24,8 @@ class DepositMineTable extends Mixin {
 
   render() {
     const {
-      assetStore: { nativeAccountAssets: [{ reservedStaking }] = [] },
       chainStore: { blockNumber },
-      model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
+      model: { openModal, dispatch, normalizedPseduIntentions = [] },
       electionStore: { getPseduIntentionsLoading },
     } = this.props;
 
@@ -112,7 +111,6 @@ class DepositMineTable extends Mixin {
           title: '',
           dataIndex: '_action',
           render: (value, item) => {
-            const requiredStakingContribution = Number(formatNumber.toFixed(item.interest * 10, getDefaultPrecision()));
             const isWarn = item.interest > 0;
 
             return (
@@ -143,10 +141,8 @@ class DepositMineTable extends Mixin {
                         name: 'ClaimConditionModal',
                         data: {
                           claimHeight: item.nextClaim,
-                          requiredStakingContribution,
                           blockNumber,
-                          reserved: reservedStaking / Math.pow(10, 8),
-                          intention: item,
+                          id: item.id,
                         },
                       });
                     }

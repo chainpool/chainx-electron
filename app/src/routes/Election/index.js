@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dropdown, FormattedMessage, Mixin, Tabs } from '../../components';
+import { Switch, Route, Redirect } from 'react-router';
+import { Dropdown, FormattedMessage, Mixin } from '../../components';
 import * as styles from './index.less';
 import NodeTable from './NodeTable';
 import VoteModal from './Modal/VoteModal';
@@ -32,7 +33,10 @@ class Election extends Mixin {
   render() {
     const { sort, searchName } = this.state;
     const {
+      model: { dispatch },
+      location: { pathname } = {},
       accountStore: { currentAddress },
+      electionStore: { lastPath },
     } = this.props;
     const {
       globalStore: {
@@ -40,92 +44,124 @@ class Election extends Mixin {
       },
     } = this.props;
 
-    const tabs = currentAddress
-      ? [
-          <FormattedMessage id={'Candidate'} />,
-          <FormattedMessage id={'DropOut'} />,
-          <FormattedMessage id={'MyNominations'} />,
-        ]
-      : [<FormattedMessage id={'Candidate'} />, <FormattedMessage id={'DropOut'} />];
+    const subRoutePath = ['/election/allActiveValidator', '/election/allInactiveValidator', '/election/myNominations'];
+    const candidate = {
+      path: subRoutePath[0],
+      text: <FormattedMessage id={'Candidate'} />,
+    };
+    const dropout = {
+      path: subRoutePath[1],
+      text: <FormattedMessage id={'DropOut'} />,
+    };
+    const myNominations = {
+      path: subRoutePath[2],
+      text: <FormattedMessage id={'MyNominations'} />,
+    };
 
-    const getOperations = activeIndex => (
+    const tabs = currentAddress ? [candidate, dropout, myNominations] : [candidate, dropout];
+
+    const getOperations = () => (
       <div className={styles.operation}>
-        {activeIndex !== 2 && (
-          <div className={styles.filterandsort}>
-            <FormattedMessage id={'SearchNodeName'}>
-              {msg => (
-                <input
-                  placeholder={msg}
-                  value={searchName}
-                  onChange={e => {
-                    this.setState({
-                      searchName: e.target.value.trim(),
-                    });
-                  }}
-                />
-              )}
-            </FormattedMessage>
+        <div className={styles.filterandsort}>
+          <FormattedMessage id={'SearchNodeName'}>
+            {msg => (
+              <input
+                placeholder={msg}
+                value={searchName}
+                onChange={e => {
+                  this.setState({
+                    searchName: e.target.value.trim(),
+                  });
+                }}
+              />
+            )}
+          </FormattedMessage>
 
-            <Dropdown
-              style={{ top: 30 }}
-              zIndex={10003}
-              trigger="click"
-              drop={
-                <span>
-                  <FormattedMessage id={'Sort'} />: {sort.name}
-                  <span className={styles.triangle}>{dropdownIcon}</span>
-                </span>
-              }
-              place="right-bottom"
-              distance={0}
-              className={styles.sortdropdowm}>
-              <ul className={styles.sortList}>
-                {[
-                  { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
-                  { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
-                  // { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
-                ].map((item, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      this.setState({
-                        sort: item,
-                      });
-                    }}>
-                    {item.name}
-                  </li>
-                ))}
-              </ul>
-            </Dropdown>
-          </div>
-        )}
+          <Dropdown
+            style={{ top: 30 }}
+            zIndex={10003}
+            trigger="click"
+            drop={
+              <span>
+                <FormattedMessage id={'Sort'} />: {sort.name}
+                <span className={styles.triangle}>{dropdownIcon}</span>
+              </span>
+            }
+            place="right-bottom"
+            distance={0}
+            className={styles.sortdropdowm}>
+            <ul className={styles.sortList}>
+              {[
+                { name: <FormattedMessage id={'SelfIntentionBonded'} />, value: 'selfVote' },
+                { name: <FormattedMessage id={'TotalVotes'} />, value: 'totalNomination' },
+                // { name: <FormattedMessage id={'NodeName'} />, value: 'name' },
+              ].map((item, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    this.setState({
+                      sort: item,
+                    });
+                  }}>
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+          </Dropdown>
+        </div>
       </div>
     );
 
     return (
       <div className={styles.election}>
         <div className={styles.tabLine}>
-          <Tabs tabs={tabs} defaultActiveIndex={0}>
-            {activeIndex => (
-              <>
-                {currentAddress ? getOperations(activeIndex) : null}
-                {activeIndex === 0 || activeIndex === 1 ? (
-                  <div className={styles.ActiveValidatorsListContainer}>
-                    <ActiveValidatorsList
-                      activeIndex={activeIndex}
-                      sort={sort}
-                      searchName={searchName}
-                      {...this.props}
-                    />
-                  </div>
-                ) : (
-                  <div className={styles.nodetable}>
-                    <NodeTable activeIndex={activeIndex} {...this.props} />
-                  </div>
-                )}
-              </>
-            )}
-          </Tabs>
+          <ul className={styles.tab}>
+            {tabs.map((item, index) => (
+              <li
+                className={pathname === item.path ? styles.active : null}
+                key={index}
+                onClick={() => {
+                  if (pathname === item.path) {
+                    return;
+                  }
+                  dispatch({
+                    type: 'updateLastPath',
+                    payload: item.path,
+                  });
+                  this.props.history.push(item.path);
+                }}>
+                {item.text}
+              </li>
+            ))}
+          </ul>
+          {currentAddress && pathname !== subRoutePath[2] ? getOperations() : null}
+          <Switch>
+            <Route exact path="/election" render={() => <Redirect to={lastPath} />} />
+            <Route
+              path={subRoutePath[0]}
+              render={props => (
+                <div className={styles.ActiveValidatorsListContainer}>
+                  <ActiveValidatorsList activeIndex={0} sort={sort} searchName={searchName} {...this.props} />
+                </div>
+              )}
+            />
+            <Route
+              path={subRoutePath[1]}
+              render={props => (
+                <div className={styles.ActiveValidatorsListContainer}>
+                  <ActiveValidatorsList activeIndex={1} sort={sort} searchName={searchName} {...this.props} />
+                </div>
+              )}
+            />
+            <Route
+              path={subRoutePath[2]}
+              render={props => (
+                <div className={styles.nodetable}>
+                  <NodeTable activeIndex={2} {...this.props} />
+                </div>
+              )}
+            />
+          </Switch>
         </div>
         {name === 'VoteModal' ? <VoteModal {...this.props} /> : null}
         {name === 'UnFreezeModal' ? <UnFreezeModal {...this.props} /> : null}

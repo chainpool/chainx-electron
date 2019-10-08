@@ -78,9 +78,6 @@ class Header extends Component {
                       <li>
                         <RouterGo isOutSide go={{ pathname: 'https://chainx.org/help' }}>
                           <Icon name="icon-jieshishuoming" className={styles.helpicon} />
-                          <span style={{ marginLeft: 9 }} className={styles.help}>
-                            <FormattedMessage id={'Help'} />
-                          </span>
                         </RouterGo>
                       </li>
                       <li className={classNames(styles.navli, isTestNet ? styles.warn : null)}>

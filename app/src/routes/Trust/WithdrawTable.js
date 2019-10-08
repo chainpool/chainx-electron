@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as styles from './index.less';
-import { FormattedMessage, RouterGo, Table } from '../../components';
+import { FormattedMessage, RouterGo, Table, DotInCenterStr } from '../../components';
 import { _, observer, showAssetName } from '../../utils';
 import { blockChain } from '../../constants';
 
@@ -12,8 +12,21 @@ class WithdrawTable extends Component {
       trustStore: { getAllWithdrawalListLoading },
     } = this.props;
 
+    const noDataTip = () => {
+      return (
+        <div style={{ position: 'relative' }}>
+          <div className={styles.nodata} style={{ top: 20 }}>
+            <div>
+              <FormattedMessage id={'NoData'} />
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     const tableProps = {
       className: styles.tableContainer,
+      noDataTip: noDataTip,
       columns: [
         {
           title: <FormattedMessage id={'ApplicationTime'} />,
@@ -30,7 +43,7 @@ class WithdrawTable extends Component {
           dataIndex: 'address',
           render: (value, item) => (
             <RouterGo isOutSide go={{ pathname: blockChain.accountId(item.accountId) }}>
-              {value}
+              <DotInCenterStr value={value} />
             </RouterGo>
           ),
         },
@@ -46,7 +59,7 @@ class WithdrawTable extends Component {
           dataIndex: 'addr',
           render: value => (
             <RouterGo isOutSide go={{ pathname: blockChain.address(value, isTestBitCoinNetWork()) }}>
-              {value}
+              <DotInCenterStr value={value} />
             </RouterGo>
           ),
         },

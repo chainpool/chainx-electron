@@ -180,7 +180,7 @@ class Account extends Mixin {
             </span>
             <div className={classNames(styles.accountlist)}>
               <div>
-                {canAddAccount ? null : (
+                {!canAddAccount ? null : (
                   <div className={styles.quickentry}>
                     <div>
                       <Button

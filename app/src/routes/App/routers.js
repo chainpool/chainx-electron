@@ -34,7 +34,7 @@ export default [
     authority: [1],
   },
   {
-    title: '交易记录',
+    title: 'TradeRecord',
     show: false,
     path: PATH.tradeRecord,
     component: TradeRecord,
@@ -67,7 +67,7 @@ export default [
     warn: 'ComingSoon',
   },
   {
-    title: '配置',
+    title: 'Configure',
     show: false,
     path: PATH.configure,
     component: Configure,

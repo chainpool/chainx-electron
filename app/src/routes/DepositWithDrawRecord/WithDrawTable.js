@@ -1,6 +1,6 @@
 import React from 'react';
 import * as styles from './index.less';
-import { Mixin, RouterGo, Table, FormattedMessage } from '../../components';
+import { Mixin, RouterGo, Table, FormattedMessage, DotInCenterStr } from '../../components';
 import { observer, _, setBlankSpace, showAssetName, hexPrefix } from '../../utils';
 import { blockChain } from '../../constants';
 import removewithdrawl from '../../resource/removewithdrawl.png';
@@ -42,7 +42,7 @@ class WithDrawTable extends Mixin {
           render: value =>
             value ? (
               <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
-                {hexPrefix(value)}
+                <DotInCenterStr value={hexPrefix(value)} />
               </RouterGo>
             ) : (
               '-'
@@ -58,6 +58,7 @@ class WithDrawTable extends Mixin {
           title: <FormattedMessage id={'Address'} />,
           ellipse: 20,
           dataIndex: 'address',
+          render: value => <DotInCenterStr value={value} />,
         },
         {
           title: <FormattedMessage id={'Amount'} />,

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { formatNumber, Inject, setColumnsWidth, fetchFromHttp, _ } from '../../utils';
 import * as styles from './index.less';
-import { Button, ButtonGroup, Table, FormattedMessage, Icon } from '../../components';
+import { Button, ButtonGroup, Table, FormattedMessage, Icon, Amount } from '../../components';
 import { HoverTip } from '../components';
 import miniLogo from '../../resource/miniLogo.png';
-import Asset from './components/Asset';
 
 function loadDynamicScript(callback) {
   const existingScript = document.getElementById('recaptcha');
@@ -91,7 +90,7 @@ class PrimaryAssetTable extends Component {
                 ) : null;
               return (
                 <>
-                  <Asset value={value} precision={nativeAssetPrecision} />
+                  <Amount value={value} precision={nativeAssetPrecision} />
                   {tip}
                 </>
               );
@@ -100,22 +99,22 @@ class PrimaryAssetTable extends Component {
           {
             title: <FormattedMessage id={'StakingReserved'} />,
             dataIndex: 'reservedStaking',
-            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
+            render: value => <Amount value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: <FormattedMessage id={'UnfreezeReserved'} />,
             dataIndex: 'reservedStakingRevocation',
-            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
+            render: value => <Amount value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: <FormattedMessage id={'DexReserved'} />,
             dataIndex: 'reservedDexSpot',
-            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
+            render: value => <Amount value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: <FormattedMessage id={'TotalBalance'} />,
             dataIndex: 'total',
-            render: value => <Asset value={value} precision={nativeAssetPrecision} />,
+            render: value => <Amount value={value} precision={nativeAssetPrecision} />,
           },
           {
             title: '',

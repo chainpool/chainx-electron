@@ -9,6 +9,7 @@ import {
   Mixin,
   Modal,
   RouterGo,
+  Toast,
 } from '../../../components';
 import { HoverTip, Warn } from '../../components';
 import * as styles from './CrossChainBindModal.less';
@@ -192,7 +193,7 @@ class X_BTC extends Mixin {
                   <span key={index} className={styles.anchor}>
                     <HoverTip
                       width={item.imgWidth}
-                      tip={<img src={item.src} width={item.imgWidth} />}
+                      tip={<img src={item.src} width={item.imgWidth} alt="" />}
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
@@ -453,7 +454,7 @@ class X_BTC extends Mixin {
                 },
               ].map((item, index) => (
                 <span key={index} className={styles.anchor}>
-                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                  <HoverTip width tip={<img src={item.src} width={item.imgWidth} alt="" />} className={styles.imgtip}>
                     {item.content}
                   </HoverTip>
                 </span>
@@ -599,7 +600,7 @@ class L_BTC extends Mixin {
     const {
       model: { isTestBitCoinNetWork },
       accountStore: { currentAddress },
-      assetStore: { btcAddresses = [], btcTrusteeAddress },
+      assetStore: { btcTrusteeAddress },
       globalStore: {
         modal: {
           data: { token },
@@ -705,7 +706,7 @@ class L_BTC extends Mixin {
                   <span key={index} className={styles.anchor}>
                     <HoverTip
                       width={item.imgWidth}
-                      tip={<img src={item.src} width={item.imgWidth} />}
+                      tip={<img src={item.src} width={item.imgWidth} alt="" />}
                       className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
@@ -922,6 +923,7 @@ class S_DOT extends Mixin {
       tradeId: '',
       tradeIdErrMsg: '',
     };
+    this.dispatch = this.props.assetStore.dispatch;
   }
 
   checkAll = {
@@ -946,13 +948,42 @@ class S_DOT extends Mixin {
     }
   };
 
+  submit = () => {
+    if (this.checkAll.confirm()) {
+      const ethHash = this.getTradeId();
+      this.dispatch({
+        type: 'bindTxHash',
+        payload: ethHash,
+      })
+        .then(resp => {
+          const res = resp.res;
+          const reloadAssetData = resp.success;
+          if (res && res.hash) {
+            const url = 'https://scan.chainx.org/txs/' + res.hash;
+            const option = {
+              autoClose: 6000,
+              needLink: true,
+              link: url,
+            };
+            Toast.success(<FormattedMessage id="MapToastSuccess" />, res.hash, option);
+            reloadAssetData();
+          } else if (res && res.error_code) {
+            Toast.warn(<FormattedMessage id="MapToastFail" />, res.error_msg);
+          }
+        })
+        .catch(err => {
+          Toast.warn(<FormattedMessage id="MapToastFail" />, err.message);
+        });
+    }
+  };
+
   render() {
-    const { checkAll } = this;
+    const { checkAll, submit } = this;
     const { recommendChannelSelect = {}, tradeId, tradeIdErrMsg, isAddChanel } = this.state;
     const recommendChannel = recommendChannelSelect.value;
     const {
-      accountStore: { currentAddress, closeModal },
-      assetStore: { dispatch, loading },
+      accountStore: { currentAddress },
+      assetStore: { bindTxHashLoading },
       globalStore: {
         language,
         modal: {
@@ -1073,7 +1104,7 @@ class S_DOT extends Mixin {
                   },
                 ].map((item, index) => (
                   <span key={index} className={styles.anchor}>
-                    <HoverTip tip={<img src={item.src} width={item.imgWidth} />} className={styles.imgtip}>
+                    <HoverTip tip={<img src={item.src} width={item.imgWidth} alt="" />} className={styles.imgtip}>
                       {item.content}
                     </HoverTip>
                     {index === 7 ? null : ', '}
@@ -1216,23 +1247,11 @@ class S_DOT extends Mixin {
               });
             }}
             onBlur={checkAll.checkTradeId}
+            loading={bindTxHashLoading}
+            onEnter={submit}
           />
           {showButton && (
-            <Button
-              size="full"
-              type="confirm"
-              loading={loading.bindTxHashLoading}
-              onClick={() => {
-                if (checkAll.confirm()) {
-                  const ethHash = this.getTradeId();
-                  dispatch({
-                    type: 'bindTxHash',
-                    payload: ethHash,
-                  }).then(res => {
-                    if (res) closeModal();
-                  });
-                }
-              }}>
+            <Button size="full" type="confirm" loading={bindTxHashLoading} onClick={submit}>
               <FormattedMessage id={'Confirm'} />
             </Button>
           )}

@@ -3,15 +3,20 @@ import Header from './Header/Header';
 import Content from './Content';
 import Footer from './Footer/Footer';
 import * as styles from './CommonLayOut.less';
-import { ChainX, parseQueryString, classNames, setNet } from '../../utils';
+import { ChainX, parseQueryString, classNames, setNet, localSave } from '../../utils';
 import { PATH } from '../../constants';
-import { Loading } from '../../components';
+import { Loading, Toast } from '../../components';
 
 class CommonLayOut extends Component {
   // 此组件不要设置startInit 方法
-  state = {
-    ready: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false,
+    };
+    this.retryKey = 'chainxRetryTime';
+    this.currentRetryTime = localSave.get(this.retryKey) || 0;
+  }
 
   async componentDidMount() {
     const {
@@ -62,15 +67,14 @@ class CommonLayOut extends Component {
       ]);
     wsPromise()
       .then(async () => {
+        localSave.set(this.retryKey, 0);
         const currentNetWork = getCurrentNetWork();
         let net = await dispatchChain({
           type: 'getChainProperties',
         });
         if (currentNetWork.value !== net) {
           alert(
-            `当前节点网络类型(${net})与当前所选择的网络类型(${
-              currentNetWork.value
-            })不匹配,请检查节点网络类型，默认设置为当前所选择的网络类型${currentNetWork.value}`
+            `当前节点网络类型(${net})与当前所选择的网络类型(${currentNetWork.value})不匹配,请检查节点网络类型，默认设置为当前所选择的网络类型${currentNetWork.value}`
           );
           net = currentNetWork.value;
           return false;
@@ -93,7 +97,20 @@ class CommonLayOut extends Component {
         });
       })
       .catch(async err => {
+        // 重试超过三次之后，Toast 提醒，不再自动刷新
+        if (this.currentRetryTime > 1) {
+          localSave.set(this.retryKey, 0);
+          console.log('已重试3次，暂停重试');
+          this.setState({
+            ready: true,
+          });
+          Toast.warn('节点连接异常，请稍后重试');
+          return;
+        }
+
         console.log('当前节点连接超时，切换节点', err);
+        localSave.set(this.retryKey, this.currentRetryTime + 1);
+
         subscribeNodeOrApi({
           refresh: false,
           target: 'Node',
@@ -119,7 +136,7 @@ class CommonLayOut extends Component {
     const loading = (
       <div className={styles.loading}>
         <div>
-          <Loading size={60} />
+          <Loading />
         </div>
       </div>
     );
