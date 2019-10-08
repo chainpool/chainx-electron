@@ -24,6 +24,7 @@ export default [
   {
     title: 'NominationsElections',
     path: PATH.election,
+    notExact: true,
     component: Election,
   },
   {
