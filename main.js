@@ -1,7 +1,8 @@
-const { app, BrowserWindow, dialog, shell } = require("electron");
+const { app, BrowserWindow, dialog, shell, globalShortcut } = require("electron");
 const path = require("path");
 const semver = require("semver");
 const https = require("https");
+const url = require('url');
 const utils = require("./utils");
 const { session } = require("electron");
 
@@ -116,11 +117,7 @@ app.on("ready", async () => {
 
   mainWindow.show();
 
-  mainWindow.loadURL(
-    process.env.NODE_ENV === "development"
-      ? `http://localhost:8000`
-      : `file://${__dirname}/app/build/index.html`
-  );
+  reload(mainWindow);
 
   mainWindow.on("close", event => {
     if (process.platform === "darwin") {
@@ -136,7 +133,24 @@ app.on("ready", async () => {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+
+  globalShortcut.register('CommandOrControl+R', () => {
+    console.log('CommandOrControl+R is pressed');
+    reload(mainWindow);
+  })
+
+  mainWindow.webContents.on('did-fail-load', () => {
+    reload(mainWindow);
+  });
 });
+
+function reload(win) {
+  win.loadURL(
+    process.env.NODE_ENV === "development"
+      ? `http://localhost:8000`
+      : `file://${__dirname}/app/build/index.html`
+  );
+}
 
 function setSession() {
   // Modify the user agent for all requests to the following urls.
