@@ -134,11 +134,6 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
-  globalShortcut.register('CommandOrControl+R', () => {
-    console.log('CommandOrControl+R is pressed');
-    reload(mainWindow);
-  })
-
   mainWindow.webContents.on('did-fail-load', () => {
     reload(mainWindow);
   });
