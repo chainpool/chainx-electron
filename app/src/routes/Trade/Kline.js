@@ -119,7 +119,7 @@ class Kline extends SwitchPair {
       ],
       toolbar_bg: 'transparent',
       symbol: this.getSymbol(),
-      library_path: './',
+      library_path: `file://${window.__dirname}/app/build/`,
       width: '100%',
       height: 344,
       autosize: false,

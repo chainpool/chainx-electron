@@ -10,3 +10,5 @@ window.openExternal = url => shell.openExternal(url);
 window.fetchFromWs = ({ url, method, params = [], timeOut = 5000 }) => {
   return remote.app.utils.fetchFromWs({ url, method, params, timeOut });
 };
+
+window.__dirname = __dirname;
