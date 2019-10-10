@@ -6,6 +6,8 @@ const url = require('url');
 const utils = require("./utils");
 const { session } = require("electron");
 
+app.commandLine.appendSwitch('disable-site-isolation-trials')
+
 function requestUpdateInfo() {
   const currentVersion = app.getVersion();
   return new Promise((resolve, reject) => {
@@ -134,9 +136,9 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('did-fail-load', () => {
-    reload(mainWindow);
-  });
+  // mainWindow.webContents.on('did-fail-load', () => {
+  //   reload(mainWindow);
+  // });
 });
 
 function reload(win) {
