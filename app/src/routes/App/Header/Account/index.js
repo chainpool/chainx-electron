@@ -69,7 +69,7 @@ class Account extends Mixin {
                 <div className={styles.tag}>
                   {!isElectron() && isSimulatedAccount(item) ? <FormattedMessage id="SimulateAccount" /> : item.tag}
                 </div>
-                {!isElectron() && !isSimulatedAccount(item) && (
+                {isElectron() && !isSimulatedAccount(item) && (
                   <div className={styles.popover}>
                     <Icon name="icon-gengduocaozuo" />
                     <div
