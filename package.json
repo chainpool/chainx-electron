@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "My Electron application description",
   "main": "./main.js",
   "scripts": {
