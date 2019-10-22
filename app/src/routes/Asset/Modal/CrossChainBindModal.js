@@ -317,15 +317,15 @@ class X_BTC extends Mixin {
                 <span>
                   使用支持OP_RETURN的钱包向信托热多签地址充值
                   <span className={styles.depositCount}>（充值金额必须 >=0.001 BTC）</span>
-                  并输入OP_RETURN信息。注意：类似imToken钱包的memo不是OP_RETURN；目前仅支持1和3开头的BTC地址发起的跨链充值。
+                  并输入OP_RETURN信息。目前仅支持1和3开头的BTC地址发起的跨链充值。
                 </span>
               }
               en={
                 <span>
                   Use a wallet that supports OP_RETURN to recharge the hot multi-signature address of the trust{' '}
                   <span className={styles.depositCount}>(the amount of recharge must be >= 0.001 BTC)</span> and enter
-                  OP_RETURN information. Note: Memo similar to imToken wallet is not OP_RETURN; at present, it only
-                  supports cross-chain recharge initiated by BTC addresses at the beginning of 1 and 3.
+                  OP_RETURN information. at present, it only supports cross-chain recharge initiated by BTC addresses at
+                  the beginning of 1 and 3.
                 </span>
               }
             />
