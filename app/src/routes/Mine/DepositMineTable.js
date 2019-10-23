@@ -65,9 +65,20 @@ class DepositMineTable extends Mixin {
                 <HoverTip
                   multiline={false}
                   tip={
-                    item.id === 'SDOT'
-                      ? `${item.discountResultShow}（跨链挖矿折扣）`
-                      : `每小时均价（X-BTC/PCX） * ${item.discountResultShow}（跨链挖矿折扣）`
+                    item.id === 'SDOT' ? (
+                      <FormattedMessage
+                        id={'CrossChainDiscountSdot'}
+                        values={{
+                          discountShow: item.discountResultShow,
+                        }}></FormattedMessage>
+                    ) : (
+                      <FormattedMessage
+                        id={'CrossChainDiscount'}
+                        values={{
+                          discountShow: item.discountResultShow,
+                        }}
+                      />
+                    )
                   }>
                   {' '}
                   {`1: ${value}`}
