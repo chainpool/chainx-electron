@@ -563,6 +563,12 @@ const zh_en = {
   MapToastFail: ['映射失败，交易 ID 错误：', 'Mapping failed, transaction ID error：'],
   Satisfied: ['已满足', 'Satisfied'],
   SwitchInterval: ['每3天可切换一次', 'Switch by 3 days intervals'],
+  CrossChainDiscountSdot: ['{discountShow}（跨链挖矿折扣）', '{discountShow} (Minning Power Discount)'],
+  CrossChainDiscount: [
+    '每小时均价（X-BTC/PCX） * {discountShow}（跨链挖矿折扣）',
+    'Hourly average(X-BTC/PCX) * {discountShow} (Minning Power Discount)',
+  ],
+  CommunityWallet: ['社区钱包', 'Community wallet'],
 };
 
 export const zh_CN = {};

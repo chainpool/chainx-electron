@@ -67,7 +67,9 @@ class DownLoadWallet extends Component {
                 </li>
               ))}
             </ul>
-            <div className={styles.shequ}>社区钱包</div>
+            <div className={styles.shequ}>
+              <FormattedMessage id={'CommunityWallet'} />
+            </div>
             <ul>
               {[
                 {
