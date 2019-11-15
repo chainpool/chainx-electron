@@ -2690,10 +2690,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chainx.js@^2.22.27:
-  version "2.22.27"
-  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.22.27.tgz#8372e5123c37e91519dfd5f83e7ff267b90aee3b"
-  integrity sha512-3Llz2milY+ISjbPiYdZicxLCbevgKrqSWPV+DAGAuWGZt/KlwPNsLoDrQojIwg0IOXe91hM5Oo6/egR6B68pLA==
+chainx.js@^2.22.28:
+  version "2.22.28"
+  resolved "https://registry.yarnpkg.com/chainx.js/-/chainx.js-2.22.28.tgz#cdf3068cfdf82a83f5868adadf26cbb79f21a37c"
+  integrity sha512-IHj0Kadq6VQHhsFZ0w+TA/Jy9CaFO3OWiP6UUwOXRAP+CLaY4gojjbFxk0lFOLzUv3XyMsBYpbZp9FT+MshKAA==
   dependencies:
     "@chainx/account" "^2.22.2"
     "@chainx/api-contract" "^2.22.25"
