@@ -41,7 +41,7 @@ export const register = (...payload) => stake.register(...payload);
 
 export const transfer = (...payload) => asset.transfer(...payload);
 
-export const withdraw = (...payload) => asset.withdraw(...payload);
+export const withdraw = (...payload) => api.tx.xAssetsProcess.withdraw(...payload);
 
 export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdrawalLimitByToken(...payload);
 
@@ -78,7 +78,7 @@ export const setupBitcoinTrustee = (...payload) => trustee.setupBitcoinTrustee(.
 
 export const getAssets = (...payload) => asset.getAssets(...payload);
 
-export const revokeWithdraw = (...payload) => asset.revokeWithdraw(...payload);
+export const revokeWithdraw = (...payload) => api.tx.xAssetsProcess.revokeWithdraw(...payload);
 
 export const getWithdrawalListByAccount = (...payload) =>
   checkLogin(() => asset.getWithdrawalListByAccount(...payload));
