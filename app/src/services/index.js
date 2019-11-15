@@ -25,7 +25,7 @@ const getBestApi = () => {
   return api.filter((item = {}) => item.best)[0] || {};
 };
 
-const { stake, asset, chain, trade, trustee } = ChainX;
+const { stake, asset, chain, trade, trustee, api } = ChainX;
 
 const API = getBestApi().address;
 
