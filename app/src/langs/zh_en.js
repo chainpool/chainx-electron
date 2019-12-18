@@ -73,7 +73,7 @@ const zh_en = {
   RegisterNode: ['注册节点', 'Register Node'],
   TrusteeSettings: ['信托设置', 'Trustee Settings'],
   SetupTrustee: ['设置信托', 'Setup Trustee'],
-  WithdrawalList: ['提现列表', 'Withdrawal List'],
+  WithdrawalList: ['全链提现列表', 'All Withdrawal List'],
   CancelWithdrawal: ['撤销提现', 'Cancel Withdraw'],
   OriginalDataToSigned: ['待签原文', 'Original data to be signed'],
   WithdrawAmount: ['提现数量', 'Withdrawal Amount'],
