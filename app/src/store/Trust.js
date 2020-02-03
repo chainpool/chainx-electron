@@ -771,7 +771,7 @@ export default class Trust extends ModelExtend {
         methodAlias: 'listunspent',
         method: 'POST',
         timeOut: Authorization ? 6500 : 3500,
-        params: [0, 9999, [trusteeAddress]],
+        params: [0, 9999999, [trusteeAddress]],
         header: Authorization ? { Authorization: `Basic ${Authorization}` } : null,
       })
       .then(res => {

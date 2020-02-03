@@ -1,7 +1,7 @@
 {
   "name": "chainx",
   "productName": "ChainX Wallet for Trustee",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ChainX Wallet for Trustee",
   "main": "./main.js",
   "scripts": {
