@@ -20,7 +20,7 @@
     "bitcoinjs-lib": "4.0.2",
     "bitcore-lib": "^8.3.4",
     "buffer-reverse": "^1.0.1",
-    "chainx.js": "2.17.0-y.4",
+    "chainx.js": "2.22.32",
     "classnames": "^2.2.6",
     "clipboard": "^2.0.4",
     "cross-env": "^5.2.0",
