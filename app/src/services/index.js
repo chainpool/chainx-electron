@@ -60,7 +60,7 @@ export const withdraw = (...payload) => asset.withdraw(...payload);
 
 export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdrawalLimitByToken(...payload);
 
-export const getIntentions = (...payload) => stake.getIntentions(...payload);
+export const getIntentions = (...payload) => stake.getIntentionsV1(...payload);
 
 export const getIntentionsByAccount = (...payload) => stake.getIntentionByAccount(...payload);
 
