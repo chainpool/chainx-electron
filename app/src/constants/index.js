@@ -90,9 +90,9 @@ export const CloseFetures = {
 };
 
 export const DowloadWalletUrl = {
-  Win: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.9/ChainX-Wallet-1.0.9-win.zip',
-  Mac: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.9/ChainX-Wallet-1.0.9.dmg',
-  Linux: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.9/ChainX-Wallet-1.0.9.AppImage',
+  Win: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.10/ChainX-Wallet-1.0.10-win.zip',
+  Mac: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.10/ChainX-Wallet-1.0.10.dmg',
+  Linux: 'https://chainx-wallet-release.oss-cn-hangzhou.aliyuncs.com/1.0.10/ChainX-Wallet-1.0.10.AppImage',
 };
 
 export const InnerWebSite = ['weixiaoyi.club'];
