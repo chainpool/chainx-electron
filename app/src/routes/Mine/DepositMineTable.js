@@ -123,11 +123,12 @@ class DepositMineTable extends Mixin {
           dataIndex: '_action',
           render: (value, item) => {
             const isWarn = item.interest > 0;
+            const disabled = ['L-BTC', 'SDOT'].includes(item.id);
 
             return (
               <ButtonGroup>
                 <Button
-                  type={item.canClaim ? 'success' : isWarn ? 'primary' : 'disabled'}
+                  type={item.canClaim ? 'success' : isWarn && !disabled ? 'primary' : 'disabled'}
                   onClick={() => {
                     if (item.canClaim) {
                       openModal({
