@@ -277,6 +277,7 @@ class PutOrder extends SwitchPair {
         {isLogin() ? (
           <div className={styles.submit}>
             <Button
+              type={currentPair.id === 1 ? 'disabled' : ''}
               loading={loading[loadingAction]}
               className={classNames(styles[action], loading[loadingAction] ? styles.loading : null)}
               onClick={() => {

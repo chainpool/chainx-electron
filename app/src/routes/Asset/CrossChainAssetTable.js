@@ -113,6 +113,7 @@ class CrossChainAssetTable extends Mixin {
                   {/*SDOT映射 */}
                   {isSDOT && (
                     <Button
+                      type="disabled"
                       onClick={() => {
                         openModal({
                           name: 'CrossChainBindModal',
@@ -129,6 +130,7 @@ class CrossChainAssetTable extends Mixin {
                   {/*LBTC锁仓 */}
                   {isLBTC && (
                     <Button
+                      type="disabled"
                       onClick={() => {
                         openModal({
                           name: 'CrossChainBindModal',
@@ -178,7 +180,7 @@ class CrossChainAssetTable extends Mixin {
                   {/*BTC和SDOT转账*/}
                   {(isSDOT || isBTC) && _.get(item, 'limitProps.CanTransfer') && (
                     <Button
-                      type={item.free > 0 ? 'primary' : 'disabled'}
+                      type="disabled"
                       onClick={() => {
                         openModal({
                           name: 'TransferModal',

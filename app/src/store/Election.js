@@ -112,6 +112,11 @@ export default class Election extends ModelExtend {
         }
       }
 
+      if (token === 'L-BTC' || token === 'SDOT') {
+        // 根据提案11、12，禁掉L-BTC和S-DOT挖矿
+        Object.assign(result, { canClaim: false });
+      }
+
       return result;
     });
   }
