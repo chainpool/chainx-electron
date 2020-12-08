@@ -38,66 +38,104 @@ const getBestNode = () => {
   return nodes.filter((item = {}) => item.best)[0] || {};
 };
 
-const { stake, asset, chain, trade, trustee, api } = ChainX;
-
 const API = getBestApi().address;
 
 const Node = getBestNode().address;
 
-export const getAsset = (...payload) => checkLogin(() => asset.getAssetsByAccount(...payload));
+export const getAsset = async (...payload) => checkLogin(async () => ChainX.rpc.xassets.getAssetsByAccount(...payload));
 
-export const createWithdrawTx = (...payload) => trustee.createWithdrawTx(...payload);
+export const createWithdrawTx = async (...payload) => {
+  await ChainX.isReady;
+  return ChainX.tx['xGatewayBitcoin']['createWithdrawTx'](...payload);
+};
 
-export const getWithdrawTx = (...payload) => trustee.getWithdrawTx(...payload);
+export const getWithdrawTx = async (...payload) => {
+  await ChainX.isReady;
+  const { parentHash } = await this.api.rpc.chain.getHeader();
+  const btcTxLists = await this.api.query.xGatewayBitcoin.withdrawalProposal.at(parentHash);
+  if (JSON.stringify(btcTxLists) === 'null') {
+    return null;
+  }
+  return JSON.parse(JSON.stringify(btcTxLists));
+};
 
-export const signWithdrawTx = (...payload) => trustee.signWithdrawTx(...payload);
+export const signWithdrawTx = async (...payload) => {
+  await ChainX.isReady;
+  return ChainX.tx['xGatewayBitcoin']['signWithdrawTx'](...payload);
+};
 
-export const register = (...payload) => stake.register(...payload);
+export const register = (...payload) => {}; //stake.register(...payload);
 
-export const transfer = (...payload) => asset.transfer(...payload);
+export const transfer = (...payload) => {}; //asset.transfer(...payload);
 
-export const withdraw = (...payload) => asset.withdraw(...payload);
+export const withdraw = (...payload) => {}; //asset.withdraw(...payload);
 
-export const getMinimalWithdrawalValueByToken = (...payload) => asset.getWithdrawalLimitByToken(...payload);
+export const getMinimalWithdrawalValueByToken = (...payload) => {}; //asset.getWithdrawalLimitByToken(...payload);
 
-export const getIntentions = (...payload) => stake.getIntentionsV1(...payload);
+export const getIntentions = (...payload) => {}; //stake.getIntentionsV1(...payload);
 
-export const getIntentionsByAccount = (...payload) => stake.getIntentionByAccount(...payload);
+export const getIntentionsByAccount = (...payload) => {}; //stake.getIntentionByAccount(...payload);
 
-export const nominate = (...payload) => stake.nominate(...payload);
+export const nominate = (...payload) => {}; //stake.nominate(...payload);
 
-export const renominate = (...payload) => stake.renominate(...payload);
+export const renominate = (...payload) => {}; //stake.renominate(...payload);
 
-export const getNominationRecords = (...payload) => stake.getNominationRecords(...payload);
+export const getNominationRecords = (...payload) => {}; //stake.getNominationRecords(...payload);
 
-export const refresh = (...payload) => stake.refresh(...payload);
+export const refresh = (...payload) => {}; //stake.refresh(...payload);
 
-export const unnominate = (...payload) => stake.unnominate(...payload);
+export const unnominate = (...payload) => {}; //stake.unnominate(...payload);
 
-export const unfreeze = (...payload) => stake.unfreeze(...payload);
+export const unfreeze = (...payload) => {}; //stake.unfreeze(...payload);
 
-export const voteClaim = (...payload) => stake.voteClaim(...payload);
+export const voteClaim = (...payload) => {}; //stake.voteClaim(...payload);
 
-export const depositClaim = (...payload) => stake.depositClaim(...payload);
+export const depositClaim = (...payload) => {}; //stake.depositClaim(...payload);
 
-export const claim = (...payload) => stake.claim(...payload);
+export const claim = (...payload) => {}; //stake.claim(...payload);
 
-export const getPseduIntentions = (...payload) => stake.getPseduIntentions(...payload);
+export const getPseduIntentions = (...payload) => {}; //stake.getPseduIntentions(...payload);
 
-export const getPseduNominationRecords = (...payload) => checkLogin(() => stake.getPseduNominationRecords(...payload));
+export const getPseduNominationRecords = (...payload) => {}; //checkLogin(() => stake.getPseduNominationRecords(...payload));
 
-export const getTrusteeInfoByAccount = (...payload) => checkLogin(() => trustee.getTrusteeInfoByAccount(...payload));
+export const getTrusteeInfoByAccount = (...payload) => {}; //checkLogin(() => trustee.getTrusteeInfoByAccount(...payload));
 
-export const setupBitcoinTrustee = (...payload) => trustee.setupBitcoinTrustee(...payload);
+export const setupBitcoinTrustee = (...payload) => {}; //trustee.setupBitcoinTrustee(...payload);
 
-export const getAssets = (...payload) => asset.getAssets(...payload);
+export const getAssets = async (...payload) =>
+  checkLogin(async () => await ChainX.rpc.xassets.getAssetsByAccount(...payload));
 
-export const revokeWithdraw = (...payload) => asset.revokeWithdraw(...payload);
+export const revokeWithdraw = (...payload) => {}; //asset.revokeWithdraw(...payload);
 
 export const getWithdrawalListByAccount = (...payload) =>
-  checkLogin(() => asset.getWithdrawalListByAccount(...payload));
+  checkLogin(async () => {
+    const withdrawObject = await ChainX.rpc.xgatewayrecords.withdrawalListByChain('Bitcoin');
+    const withdrawList = [];
+    Object.entries(JSON.parse(withdrawObject)).forEach(([key, value]) => {
+      withdrawList.push({
+        id: key,
+        // @ts-ignore
+        ...value,
+      });
+    });
+    // @ts-ignore
+    return withdrawList;
+  });
 
-export const getWithdrawalList = (...payload) => asset.getWithdrawalList(...payload);
+export const getWithdrawalList = async payload => {
+  const { accountId, chain, token } = payload;
+  const withdrawList = [];
+  const withdrawObject = await ChainX.rpc.xgatewayrecords.withdrawalListByChain('Bitcoin');
+  Object.entries(JSON.parse(withdrawObject)).forEach(([key, value]) => {
+    withdrawList.push({
+      id: key,
+      // @ts-ignore
+      ...value,
+    });
+  });
+  // @ts-ignore
+  return withdrawList;
+};
 
 export const getWithdrawalListApi = payload => {
   const { accountId, chain, token } = payload;
@@ -126,116 +164,32 @@ export const getLockListApi = payload => {
   });
 };
 
-export const getDepositList = (...payload) => asset.getDepositList(...payload);
+export const getDepositList = (...payload) => {}; //asset.getDepositList(...payload);
 
-export const verifyAddressValidity = (...payload) => asset.verifyAddressValidity(...payload);
+export const verifyAddressValidity = (...payload) => {}; //asset.verifyAddressValidity(...payload);
 
-export const getOrderPairs = (...payload) => trade.getTradingPairs(...payload);
+export const getAddressByAccount = (...payload) => {}; //asset.getAddressByAccount(...payload);
 
-export const getOrderPairsApi = payload =>
-  fetchFromHttp({
-    url: `${API}/trade/pairs`,
-    method: 'get',
-    ...payload,
-  });
+export const getTrusteeSessionInfo = (...payload) => ChainX.rpc.xgatewaycommon.bitcoinTrusteeSessionInfo();
 
-export const getQuotations = (...payload) => trade.getQuotations(...payload);
+export const getBlockPeriod = (...payload) => {}; //chain.getMinimumPeriod(...payload);
 
-export const getQuotationsApi = payload => {
-  const { pairId, count } = payload;
-  return fetchFromHttp({
-    url: `${API}/trade/handicap/${pairId}?count=${count}`,
-    method: 'get',
-    ...payload,
-  });
-};
+export const chainProperties = (...payload) => ChainX.rpc.system.properties(...payload);
 
-export const putOrder = (...payload) => trade.putOrder(...payload);
+export const getBondingDuration = (...payload) => {}; //stake.getBondingDuration(...payload);
 
-export const cancelOrder = (...payload) => trade.cancelOrder(...payload);
+export const getIntentionBondingDuration = (...payload) => {}; //stake.getIntentionBondingDuration(...payload);
 
-export const getOrders = (...payload) => checkLogin(() => trade.getOrders(...payload));
-
-export const getOrdersApi = payload => {
-  const { accountId, page, status, pairid } = payload;
-  return fetchFromHttp({
-    url: `${API}/trade/userorders/${accountId}?page_size=10&&page=${page}&&status=${status}${
-      isEmpty(pairid) ? '' : `&&pairid=${pairid}`
-    }`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getFillOrdersApi = payload => {
-  const { id, pair_id } = payload;
-  return fetchFromHttp({
-    url: `${API}/trade/fill_orders?id=${id}&&pair_id=${pair_id}`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getLatestOrderApi = payload => {
-  const { pairId, count } = payload;
-  return fetchFromHttp({
-    url: `${API}/trade/latestfills/${pairId}?count=${count}`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getKlineApi = payload => {
-  const { pairid, type, start_date, end_date } = payload;
-  return fetchFromHttp({
-    url: `${API}/kline?pairid=${pairid}&type=${type}&start_date=${start_date}&end_date=${end_date}`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getAddressByAccount = (...payload) => asset.getAddressByAccount(...payload);
-
-export const subscribeNewHead = (...payload) => chain.subscribeNewHead(...payload);
-
-export const getTrusteeSessionInfo = (...payload) => trustee.getTrusteeSessionInfo(...payload);
-
-export const getBlockPeriod = (...payload) => chain.getMinimumPeriod(...payload);
-
-export const chainProperties = (...payload) => chain.chainProperties(...payload);
-
-export const getBondingDuration = (...payload) => stake.getBondingDuration(...payload);
-
-export const getIntentionBondingDuration = (...payload) => stake.getIntentionBondingDuration(...payload);
-
-export const getTokenDiscount = (...payload) => stake.getTokenDiscount(...payload);
+export const getTokenDiscount = (...payload) => {}; //stake.getTokenDiscount(...payload);
 
 export const getNextRenominateByAccount = accountId => {
-  return stake.getNextRenominateByAccount(accountId);
+  return {}; //stake.getNextRenominateByAccount(accountId);
 };
 
 export const getBlockTime = payload => {
   const { height } = payload;
   return fetchFromHttp({
     url: `${API}/block/${height}?fields=time`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getTradeRecordApi = payload => {
-  const { accountId, page } = payload;
-  return fetchFromHttp({
-    url: `${API}/account/${accountId}/txs?page_size=10&&page=${page}&include_payee=true`,
-    method: 'get',
-    ...payload,
-  });
-};
-
-export const getTradeDetailApi = payload => {
-  const { txhash } = payload;
-  return fetchFromHttp({
-    url: `${API}/tx/${txhash}`,
     method: 'get',
     ...payload,
   });
@@ -306,17 +260,18 @@ export const getElectionMembersAPI = () => {
   });
 };
 
-export const particularAccounts = () => chain.particularAccounts();
+export const particularAccounts = () => {}; //chain.particularAccounts();
 
-export const getMultiSigAddrInfo = payload => trustee.getMultiSigAddrInfo(payload);
+export const getMultiSigAddrInfo = payload => {}; //trustee.getMultiSigAddrInfo(payload);
 
-export const getPendingListFor = payload => trustee.getPendingListFor(payload);
+export const getPendingListFor = payload => {}; //trustee.getPendingListFor(payload);
 
-export const trusteeGovernSign = (...payload) => trustee.confirm(...payload);
+export const trusteeGovernSign = (...payload) => {}; //trustee.confirm(...payload);
 
-export const trusteeRemoveMultiSig = (...payload) => trustee.removeMultiSigFor(...payload);
+export const trusteeRemoveMultiSig = (...payload) => {}; //trustee.removeMultiSigFor(...payload);
 
 export const trusteeGovernExecute = payload => {
   const { account, addrs } = payload;
-  return trustee.execute(account, api.tx.xBridgeFeatures.transitionTrusteeSession('Bitcoin', addrs));
+  return ChainX.tx.xBridgeFeatures.transitionTrusteeSession('Bitcoin', addrs);
+  //trustee.execute(account, ChainX.tx.xBridgeFeatures.transitionTrusteeSession('Bitcoin', addrs));
 };

@@ -15,14 +15,9 @@ class BlockInfo extends Component {
     const {
       chainStore: { dispatch },
     } = this.props;
-    this.subscribeNewHead = await dispatch({
-      type: 'subscribeNewHead',
-    });
   }
 
-  componentWillUnmount() {
-    this.subscribeNewHead.unsubscribe();
-  }
+  componentWillUnmount() {}
 
   render() {
     const {

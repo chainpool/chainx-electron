@@ -1,8 +1,8 @@
 import ModelExtend from './ModelExtend';
 import { computed, observable } from 'mobx';
 import { _ } from '@utils/index';
-import { subscribeNewHead, getBlockPeriod, chainProperties } from '../services';
-import { fetchFromWs } from '../utils';
+import { getBlockPeriod, chainProperties } from '../services';
+import { fetchFromWs, ChainX } from '../utils';
 
 class Chain extends ModelExtend {
   @observable blockNumber;
@@ -19,15 +19,17 @@ class Chain extends ModelExtend {
     this.changeModel('blockNumber', blockNumber);
   }
 
-  subscribeNewHead({ callback }) {
-    return subscribeNewHead().subscribe(head => {
-      const blockTime = new Date(head.now * 1000);
-      this.setBlockNumber(head.number);
-      this.changeModel('blockTime', blockTime);
-      this.changeModel('currentChainProducer', head.producer);
-      _.isFunction(callback) && callback(blockTime);
-    });
-  }
+  // subscribeNewHead({ callback }) {
+
+  //   return ChainX.rpc.chain.subscribeNewHeads()
+  //   // return subscribeNewHead().subscribe(head => {
+  //   //   const blockTime = new Date(head.now * 1000);
+  //   //   this.setBlockNumber(head.number);
+  //   //   this.changeModel('blockTime', blockTime);
+  //   //   this.changeModel('currentChainProducer', head.producer);
+  //   //   _.isFunction(callback) && callback(blockTime);
+  //   // });
+  // }
 
   async getBlockPeriod() {
     const period = await getBlockPeriod();

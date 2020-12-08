@@ -37,76 +37,9 @@ export default class Election extends ModelExtend {
   @computed get normalizedPseduIntentions() {
     const nativeAssetPrecision = this.rootStore.globalStore.nativeAssetPrecision;
     const precisionMap = this.rootStore.globalStore.assetNamePrecisionMap;
-    const orderPairs = this.rootStore.tradeStore.orderPairs;
+    // const orderPairs = this.rootStore.tradeStore.orderPairs;
 
-    return this.originPseduIntentions.map((intention = {}) => {
-      let discountResultShow = '';
-      const token = intention.id;
-      // 折合投票数
-      const discountVote = (intention.power * intention.circulation) / Math.pow(10, precisionMap[token]);
-      const price = formatNumber.toPrecision(intention.power, nativeAssetPrecision);
-
-      if (token === 'BTC' || token === 'L-BTC') {
-        const findAssetOne = orderPairs.find(one => one.currency === 'BTC') || {};
-        const discount = intention.discount * Math.pow(10, -2);
-        const secondDiscount =
-          ((Math.pow(10, findAssetOne.precision) * Math.pow(10, this.getDefaultPrecision())) / findAssetOne.averPrice) *
-          Math.pow(10, -this.getDefaultPrecision()) *
-          discount;
-        discountResultShow = formatNumber.toFixed(
-          Number((price / secondDiscount) * discount),
-          this.getPrecision(token)
-        );
-      } else if (token === 'SDOT') {
-        discountResultShow = formatNumber.toFixed(Number(price), this.getPrecision('PCX'));
-      }
-
-      const result = {
-        ...intention,
-        discountVote: formatNumber.toPrecision(discountVote, nativeAssetPrecision),
-        circulation: this.setPrecision(intention.circulation, token),
-        price,
-        jackpot: this.setPrecision(intention.jackpot, nativeAssetPrecision),
-        discountResultShow,
-      };
-
-      const record = this.originPseduRecords.find(record => record.id === intention.id) || {};
-      if (record) {
-        // 用户最新总票龄  = （链最新高度 - 用户总票龄更新高度）*用户投票金额 +用户总票龄
-        const myWeight =
-          (this.blockNumber - record.lastTotalDepositWeightUpdate) * record.balance + record.lastTotalDepositWeight;
-        // 节点最新总票龄  = （链最新高度 - 节点总票龄更新高度）*节点得票总额 +节点总票龄
-        const nodeVoteWeight =
-          (this.blockNumber - intention.lastTotalDepositWeightUpdate) * intention.circulation +
-          intention.lastTotalDepositWeight;
-        // 待领利息 = 用户最新总票龄 / 节点最新总票龄 * 节点奖池金额
-
-        // TODO: record.lastTotalDepositWeightUpdate <= 0的条件属于补救措施，后边应改掉
-        const interest =
-          nodeVoteWeight <= 0 || record.lastTotalDepositWeightUpdate <= 0
-            ? 0
-            : (myWeight / nodeVoteWeight) * intention.jackpot * 0.9;
-
-        const canClaim = interest > 0 && this.reservedPCX > (interest * 100) / 9 && this.blockNumber > record.nextClaim;
-
-        Object.assign(result, {
-          originInterest: interest,
-          interest: this.setPrecision(interest, nativeAssetPrecision),
-          balance: this.setPrecision(record.balance, token),
-          nextClaim: record.nextClaim,
-          canClaim,
-        });
-
-        if (!canClaim) {
-          Object.assign(result, {
-            need: (interest * 100) / 9 - this.reservedPCX,
-            nextClaimTimestamp: this.blockTimestamp + this.blockDuration * (record.nextClaim - this.blockNumber),
-          });
-        }
-      }
-
-      return result;
-    });
+    return {};
   }
 
   @computed get validatorsWithAddress() {
