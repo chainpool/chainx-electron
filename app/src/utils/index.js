@@ -4,7 +4,9 @@ import { default as queryString } from 'query-string';
 import { inject, observer as observerable } from 'mobx-react';
 import device from 'current-device';
 import { SCRYPT_PARAMS } from '../constants';
-import { default as Chainx } from 'chainx.js';
+//import { default as Chainx } from 'chainx.js';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { options } from '@chainx-v2/api';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { default as bitcoin } from 'bitcoinjs-lib';
@@ -39,7 +41,9 @@ const getBestNode = () => {
   return [bestAddress, otherNodesAddress];
 };
 const [bestAddress, otherNodesAddress] = getBestNode();
-export const ChainX = new Chainx(bestAddress, otherNodesAddress);
+const wsProvider = new WsProvider('wss://btc-test.chainx.org/ws');
+const api = new ApiPromise(options({ provider: wsProvider }));
+export const ChainX = api;
 
 export const hexPrefix = hex => {
   if (/^0x/.test(hex)) {
@@ -550,7 +554,7 @@ export const SetFullScreen = Ele => {
   }
 };
 
-export const setNet = net => ChainX.account.setNet(net);
+export const setNet = net => net;
 
 export const isElectron = () => window.electronStore;
 

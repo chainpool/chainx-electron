@@ -78,14 +78,14 @@ export default class Configure extends ModelExtend {
       ? localSave.get('testApi')
       : this.concatNodeOrApi(
           [
-            // {
-            //   type: 'SystemDefault',
-            //   name: 'api.chainx.org',
-            //   best: true,
-            //   address: 'https://api.chainx.org',
-            //   isSystem: true,
-            //   Version: ConfigureVersion,
-            // },
+            {
+              type: 'SystemDefault',
+              name: 'api.chainx.org',
+              best: true,
+              address: 'https://api-v2.chainx.org',
+              isSystem: true,
+              Version: ConfigureVersion,
+            },
           ],
           (localSave.get('testApi') || []).filter((item = {}) => !item.isSystem)
         )
@@ -100,7 +100,7 @@ export default class Configure extends ModelExtend {
               type: 'SystemDefault',
               name: 'api.chainx.org',
               best: true,
-              address: 'https://api.chainx.org',
+              address: 'https://api-v2.chainx.org',
               isSystem: true,
               Version: ConfigureVersion,
             },
@@ -118,15 +118,9 @@ export default class Configure extends ModelExtend {
               type: 'SystemDefault',
               name: 'api.org',
               best: true,
-              address: 'https://api.chainx.org',
+              address: 'https://api-v2.chainx.org',
               isSystem: true,
               Version: ConfigureVersion,
-            },
-            {
-              type: 'SystemDefault',
-              name: 'api.cn',
-              address: 'https://api.chainx.org.cn',
-              isSystem: true,
             },
           ],
           (localSave.get('mainApi') || []).filter((item = {}) => !item.isSystem)
@@ -138,32 +132,14 @@ export default class Configure extends ModelExtend {
       ? localSave.get('testNodes')
       : this.concatNodeOrApi(
           [
-            // {
-            //   type: 'SystemDefault',
-            //   name: 'w1.org',
-            //   best: true,
-            //   isSystem: true,
-            //   Version: ConfigureVersion,
-            //   address: 'wss://w1.chainx.org/ws',
-            // },
-            // {
-            //   type: 'SystemDefault',
-            //   name: 'w2.org',
-            //   isSystem: true,
-            //   address: 'wss://w2.chainx.org/ws',
-            // },
-            // {
-            //   type: 'SystemDefault',
-            //   name: 'hashquark',
-            //   isSystem: true,
-            //   address: 'wss://chainx.hashquark.io',
-            // },
-            // {
-            //   type: 'SystemDefault',
-            //   name: 'buildlinks',
-            //   isSystem: true,
-            //   address: 'wss://chainx.buildlinks.org',
-            // },
+            {
+              type: 'SystemDefault',
+              name: 'w1.org',
+              best: true,
+              isSystem: true,
+              Version: ConfigureVersion,
+              address: 'wss://btc-test.chainx.org/ws',
+            },
           ],
           (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)
         )
@@ -180,13 +156,13 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://w1.chainx.org/ws',
+              address: 'wss://btc-test.chainx.org/ws',
             },
             {
               type: 'SystemDefault',
               name: 'w2',
               isSystem: true,
-              address: 'wss://w2.chainx.org/ws',
+              address: 'wss://btc-test.chainx.org/ws',
             },
           ],
           (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem)
@@ -204,31 +180,13 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://w1.chainx.org/ws',
+              address: 'wss://btc-test.chainx.org/ws',
             },
             {
               type: 'SystemDefault',
               name: 'w2.org',
               isSystem: true,
-              address: 'wss://w2.chainx.org/ws',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'HashQuark',
-              isSystem: true,
-              address: 'wss://chainx.hashquark.io',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'BuildLinks',
-              isSystem: true,
-              address: 'wss://chainx.buildlinks.org',
-            },
-            {
-              type: 'SystemDefault',
-              name: 'w1.cn',
-              isSystem: true,
-              address: 'wss://w1.chainx.org.cn/ws',
+              address: 'wss://btc-test.chainx.org/ws',
             },
           ],
           (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)

@@ -63,14 +63,14 @@ export const blockChain = {
   tx: (v, isTest = false) => {
     return isTest ? `https://live.blockcypher.com/btc-testnet/tx/${v}` : `https://live.blockcypher.com/btc/tx/${v}`;
   },
-  accountId: v => `https://scan.chainx.org/accounts/${v}`,
+  accountId: v => `https://scan-v2.chainx.org/accounts/${v}`,
   address: (v, isTest = false) => {
     return isTest
       ? `https://live.blockcypher.com/btc-testnet/address/${v}`
       : `https://live.blockcypher.com/btc/address/${v}`;
   },
   chainXAccount: address => {
-    return `https://scan.chainx.org/accounts/${address}`;
+    return `https://scan-v2.chainx.org/accounts/${address}`;
   },
 };
 
