@@ -34,9 +34,9 @@ class CommonLayOut extends Component {
     const {
       globalStore: { dispatch: dispatchGlobal, getCurrentNetWork },
       accountStore: { dispatch: dispatchAccount },
-      electionStore: { dispatch: dispatchElection },
+
       configureStore: { subscribeNodeOrApi, setBestNodeOrApi },
-      tradeStore: { dispatch: dispatchTrade },
+
       chainStore: { dispatch: dispatchChain },
       trustStore: { dispatch: dispatchTrust },
       addressManageStore: { dispatch: dispatchAddressManage },
@@ -85,8 +85,7 @@ class CommonLayOut extends Component {
           },
         });
         await dispatchGlobal({ type: 'getAllAssets' });
-        await dispatchElection({ type: 'getIntentions' });
-        await dispatchTrade({ type: 'getOrderPairs' });
+
         this.setState({
           ready: true,
         });

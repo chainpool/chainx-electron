@@ -1,12 +1,11 @@
 import { default as AssetStore } from './Asset';
 import { default as ElectionStroe } from './Election';
 import { default as GlobalStore } from './Global';
-import { default as TradeStore } from './Trade';
 import { default as AccountStore } from './Account';
 import { default as Configure } from './Configure';
 import { default as Trust } from './Trust';
 import { default as AddressManage } from './AddressManage';
-import { default as TradeRecord } from './TradeRecord';
+
 import Chain from './Chain';
 import TrustGovern from './TrustGovern';
 
@@ -14,7 +13,6 @@ class RootStore {
   constructor() {
     this.assetStore = new AssetStore(this);
     this.electionStore = new ElectionStroe(this);
-    this.tradeStore = new TradeStore(this);
     this.globalStore = new GlobalStore(this);
     this.accountStore = new AccountStore(this);
     this.configureStore = new Configure(this);
@@ -22,7 +20,6 @@ class RootStore {
     this.trustGovernStore = new TrustGovern(this);
     this.chainStore = new Chain(this);
     this.addressManageStore = new AddressManage(this);
-    this.tradeRecordStore = new TradeRecord(this);
   }
 }
 

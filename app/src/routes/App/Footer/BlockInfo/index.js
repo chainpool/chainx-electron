@@ -27,11 +27,7 @@ class BlockInfo extends Component {
   render() {
     const {
       chainStore: { normalizedBlockNumber, blockTime, currentChainProducer },
-      electionStore: { validatorsWithRecords, encodeAddressAccountId },
     } = this.props;
-
-    const findNode =
-      validatorsWithRecords.find(one => encodeAddressAccountId(one.account) === currentChainProducer) || {};
 
     return (
       <div className={styles.blockinfo}>
@@ -40,7 +36,6 @@ class BlockInfo extends Component {
         </span>
         <span>
           <FormattedMessage id={'LatestHeightBlock'} />:<span>{normalizedBlockNumber}</span>
-          {findNode.name && <span className={styles.producer}>({findNode.name})</span>}
         </span>
       </div>
     );
