@@ -109,7 +109,7 @@ export default class Trust extends ModelExtend {
     }
 
     return this.onChainAllWithdrawList.map(withdraw => {
-      let precision = assetNamePrecisionMap[withdraw.token];
+      let precision = 'Bitcoin'; //assetNamePrecisionMap[withdraw.token];
       if (typeof precision === 'undefined') {
         // TODO: 这种情况出现表明有Error
         throw new Error('无法找到提现列表中资产定义');
@@ -162,15 +162,17 @@ export default class Trust extends ModelExtend {
         }
       }
 
+      console.log(JSON.stringify(withdraw));
+
       return {
         id: withdraw.id,
-        accountId: withdraw.accountid,
+        accountId: withdraw.applicant,
         timeShow: withdraw.blockHeight ? withdraw.blockHeight : moment_helper.formatHMS(withdraw.time), // 申请时间
-        address: ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
-        token: withdraw.token, // 币种
-        addr: withdraw.address, // 原链地址，提现的目标地址
+        address: withdraw.applicant, //ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
+        token: 'BTC', // 币种
+        addr: withdraw.addr, // 原链地址，提现的目标地址
         balance_primary: withdraw.balance,
-        balance: formatNumber.toPrecision(withdraw.balance, precision), // 数量
+        balance: formatNumber.toPrecision(withdraw.balance, 8), // 数量
         memo: withdraw.memo, // 提现备注
         state, // 状态
         status: withdraw.status,
@@ -902,35 +904,7 @@ export default class Trust extends ModelExtend {
   };
 
   getAllWithdrawalList = async () => {
-    const res = await from(getWithdrawalList('Bitcoin', 0, 100))
-      .pipe(
-        map(res => {
-          return res.data;
-        }),
-        mergeMap((items = []) => {
-          if (!items.length) return of(items);
-          return combine(
-            items.map(item => {
-              return from(getBlockTime({ height: item.height })).pipe(
-                map((res = {}) => {
-                  return {
-                    ...item,
-                    time: res.time,
-                  };
-                }),
-                catchError(() => {
-                  return of({
-                    ...item,
-                    time: null,
-                    blockHeight: item.height,
-                  });
-                })
-              );
-            })
-          );
-        })
-      )
-      .toPromise();
+    const res = await from(getWithdrawalList('Bitcoin', 0, 100)).toPromise();
     this.changeModel('onChainAllWithdrawList', res);
   };
 

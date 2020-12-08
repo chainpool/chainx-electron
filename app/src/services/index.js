@@ -124,16 +124,18 @@ export const getWithdrawalListByAccount = (...payload) =>
 
 export const getWithdrawalList = async payload => {
   const { accountId, chain, token } = payload;
+  console.log('222222222222222222222222222222222222');
   const withdrawList = [];
   const withdrawObject = await ChainX.rpc.xgatewayrecords.withdrawalListByChain('Bitcoin');
+  console.log(JSON.stringify(withdrawObject));
+  console.log('88888888888888888888888888888888888');
   Object.entries(JSON.parse(withdrawObject)).forEach(([key, value]) => {
     withdrawList.push({
       id: key,
-      // @ts-ignore
       ...value,
     });
   });
-  // @ts-ignore
+  console.log(JSON.stringify(withdrawList));
   return withdrawList;
 };
 
