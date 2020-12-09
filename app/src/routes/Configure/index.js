@@ -19,12 +19,16 @@ class Configure extends Mixin {
         dispatch: dispatchGlobal,
       },
     } = this.props;
-    const languages = [{ value: 'zh', label: '中文' }, { value: 'en', label: 'English' }];
+    const languages = [
+      { value: 'zh', label: '中文' },
+      { value: 'en', label: 'English' },
+    ];
 
     const tableProps = {
       ...this.props,
       widths: [150, 160, 250, 150, 150],
     };
+
     return (
       <div className={styles.configure}>
         <div className={styles.title}>

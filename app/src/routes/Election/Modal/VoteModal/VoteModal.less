@@ -1,0 +1,55 @@
+@import '~@styles/index.less';
+.voteModal {
+  .info {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .canSwitchHeight,.isCanAdd{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0 -12px 0;
+  }
+  .lockweek {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .afterchange{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .addvote{
+    margin-top: 0;
+  }
+  .changeVote{
+    position: relative;
+    top:-6px;
+    height:32px;
+    border: 1px solid #E3E3E3;
+    display: flex;
+    flex-grow: 1;
+    margin-bottom: 16px;
+    li+li{
+      border-left: 1px solid  #E3E3E3;
+    }
+    li{
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width:100%;
+      &.active{
+        background: @yellow;
+        color:@fontgray;
+      }
+      &.disabeld{
+        pointer-events: none;
+        background: #F2F3F4;
+        border-radius: 1px;
+      }
+    }
+  }
+}

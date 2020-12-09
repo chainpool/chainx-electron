@@ -24,7 +24,7 @@ export default class Configure extends ModelExtend {
     };
 
     this.refreshLocalNodesOrApi = target => {
-      const list = localSave.get(target) || [];
+      const list = []; //localSave.get(target) || [];
       return list.filter((item = {}) => item.isSystem && item.Version === ConfigureVersion)[0];
     };
 
@@ -138,7 +138,7 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://btc-test.chainx.org/ws',
+              address: 'wss://testnet-2.chainx.org/ws',
             },
           ],
           (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)
@@ -156,13 +156,13 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://btc-test.chainx.org/ws',
+              address: 'wss://mainnet.chainx.org/ws',
             },
             {
               type: 'SystemDefault',
               name: 'w2',
               isSystem: true,
-              address: 'wss://btc-test.chainx.org/ws',
+              address: 'wss://mainnet.chainx.org/ws',
             },
           ],
           (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem)
@@ -180,13 +180,13 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://btc-test.chainx.org/ws',
+              address: 'wss://mainnet.chainx.org/ws',
             },
             {
               type: 'SystemDefault',
               name: 'w2.org',
               isSystem: true,
-              address: 'wss://btc-test.chainx.org/ws',
+              address: 'wss://mainnet.chainx.org/ws',
             },
           ],
           (localSave.get('mainNodes') || []).filter((item = {}) => !item.isSystem)

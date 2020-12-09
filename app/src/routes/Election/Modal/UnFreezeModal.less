@@ -1,0 +1,42 @@
+@import '~@styles/index.less';
+
+.unFreezeModal {
+  margin: -24px 0 -12px;
+  .desc {
+    font-size: 12px;
+    color: #95989a;
+    margin-left: 2px;
+    font-weight: 400;
+  }
+  .tableContainer {
+    .mixin_tableContainer();
+    :global {
+      .table {
+        //margin-top: -26px;
+        .thead {
+          .tr {
+            margin: 0 -23px;
+            padding: 0 24px;
+          }
+        }
+        .tbody {
+          .tr {
+            border-bottom: none;
+            .td{
+              font-size: 14px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.blockHeight{
+  margin-left: 8px;
+  font-size: 14px;
+  color: #959595;
+  &.unLock{
+    color:unset;
+  }
+}

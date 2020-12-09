@@ -42,7 +42,9 @@ const getBestNode = () => {
   return [bestAddress, otherNodesAddress];
 };
 const [bestAddress, otherNodesAddress] = getBestNode();
-const wsProvider = new WsProvider('wss://btc-test.chainx.org/ws');
+
+console.log('other' + JSON.stringify(otherNodesAddress));
+const wsProvider = new WsProvider(bestAddress);
 const api = new ApiPromise(options({ provider: wsProvider }));
 export const ChainX = api;
 export const ChainXAccount = Account;

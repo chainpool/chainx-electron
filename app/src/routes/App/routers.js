@@ -21,12 +21,6 @@ export default [
     component: Mine,
   },
   {
-    title: 'NominationsElections',
-    path: PATH.election,
-    notExact: true,
-    component: lazy(() => import('../Election')),
-  },
-  {
     title: 'DepositWithdrawalRecords',
     show: false,
     path: PATH.depositWithdrawRecord,

@@ -6,7 +6,7 @@ const checkLogin = func => {
     accountStore: { currentAccount = {} },
   } = store || {};
   if (currentAccount && currentAccount.address) {
-    return func();
+    return func;
   } else {
     return Promise.reject('当前无账户,去权限请求');
   }
@@ -42,7 +42,11 @@ const API = getBestApi().address;
 
 const Node = getBestNode().address;
 
-export const getAsset = async (...payload) => checkLogin(async () => ChainX.rpc.xassets.getAssetsByAccount(...payload));
+export const getAsset = async payload => {
+  await ChainX.isReady;
+
+  return checkLogin(ChainX.rpc.xassets.getAssetsByAccount(payload));
+};
 
 export const createWithdrawTx = async (...payload) => {
   await ChainX.isReady;
@@ -102,8 +106,11 @@ export const getTrusteeInfoByAccount = (...payload) => {}; //checkLogin(() => tr
 
 export const setupBitcoinTrustee = (...payload) => {}; //trustee.setupBitcoinTrustee(...payload);
 
-export const getAssets = async (...payload) =>
-  checkLogin(async () => await ChainX.rpc.xassets.getAssetsByAccount(...payload));
+export const getAssets = async payload => {
+  await ChainX.isReady;
+
+  return ChainX.rpc.xassets.getAssets();
+};
 
 export const revokeWithdraw = (...payload) => {}; //asset.revokeWithdraw(...payload);
 
@@ -124,11 +131,9 @@ export const getWithdrawalListByAccount = (...payload) =>
 
 export const getWithdrawalList = async payload => {
   const { accountId, chain, token } = payload;
-  console.log('222222222222222222222222222222222222');
   const withdrawList = [];
   const withdrawObject = await ChainX.rpc.xgatewayrecords.withdrawalListByChain('Bitcoin');
   console.log(JSON.stringify(withdrawObject));
-  console.log('88888888888888888888888888888888888');
   Object.entries(JSON.parse(withdrawObject)).forEach(([key, value]) => {
     withdrawList.push({
       id: key,

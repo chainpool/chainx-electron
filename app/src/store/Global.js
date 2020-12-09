@@ -58,18 +58,16 @@ export default class Global extends ModelExtend {
   }
 
   @computed get nativeAssetName() {
-    return (this.nativeAsset && this.nativeAsset.name) || '';
+    return 'XBTC';
   }
 
   @computed get nativeAssetPrecision() {
-    return (this.nativeAsset && this.nativeAsset.precision) || 0;
+    return 8;
   }
 
   @computed get assetNamePrecisionMap() {
     let result = {};
-    this.assets.forEach(({ name, precision }) => {
-      result[name] = precision;
-    });
+
     return result;
   }
 
@@ -94,15 +92,14 @@ export default class Global extends ModelExtend {
 
   getAllAssets = async () => {
     const update = async () => {
-      let res = await getAssets(0, 100);
-      const result = res.data.map((item = {}) => {
-        return {
-          ...item,
-          ...(item.details ? item.details : {}),
-        };
-      });
-      this.changeModel('assets', result);
-      return result;
+      let res = await getAssets(1);
+      console.log(JSON.stringify(res));
+      const result = JSON.parse(JSON.stringify(res));
+      const assetsArray = [];
+      assetsArray.push(result['1']);
+      this.changeModel('assets', assetsArray);
+
+      return assetsArray;
     };
     if (this.assets.length) {
       update();
