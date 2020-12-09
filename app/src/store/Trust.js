@@ -115,7 +115,7 @@ export default class Trust extends ModelExtend {
         throw new Error('无法找到提现列表中资产定义');
       }
 
-      let state = withdraw.status;
+      let state = withdraw.state;
       const statusValue = _.get(withdraw.status, 'value') || '';
 
       const applicationStatus = withdraw.applicationStatus;
@@ -158,7 +158,7 @@ export default class Trust extends ModelExtend {
             state = applicationStatus ? applicationStatus : statusValue;
             break;
           default:
-            state = 'Unknown';
+            state = state;
         }
       }
 
@@ -167,13 +167,13 @@ export default class Trust extends ModelExtend {
       return {
         id: withdraw.id,
         accountId: withdraw.applicant,
-        timeShow: withdraw.blockHeight ? withdraw.blockHeight : moment_helper.formatHMS(withdraw.time), // 申请时间
+        timeShow: withdraw.height ? withdraw.height : moment_helper.formatHMS(withdraw.time), // 申请时间
         address: withdraw.applicant, //ChainX.account.encodeAddress(withdraw.accountid), // 申请提现账户地址
         token: 'BTC', // 币种
         addr: withdraw.addr, // 原链地址，提现的目标地址
         balance_primary: withdraw.balance,
         balance: formatNumber.toPrecision(withdraw.balance, 8), // 数量
-        memo: withdraw.memo, // 提现备注
+        memo: withdraw.ext, // 提现备注
         state, // 状态
         status: withdraw.status,
         txid: withdraw.txid, //交易hash

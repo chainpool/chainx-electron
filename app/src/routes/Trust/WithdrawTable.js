@@ -64,17 +64,6 @@ class WithdrawTable extends Component {
           ),
         },
         {
-          title: <FormattedMessage id={'BitcoinTxHash'} />,
-          ellipse: 20,
-          dataIndex: 'txid',
-          render: value =>
-            value && (
-              <RouterGo isOutSide go={{ pathname: blockChain.tx(value, isTestBitCoinNetWork()) }}>
-                {value}
-              </RouterGo>
-            ),
-        },
-        {
           title: <FormattedMessage id={'Balance'} />,
           dataIndex: 'balance',
         },
