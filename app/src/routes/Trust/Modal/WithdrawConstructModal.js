@@ -212,6 +212,11 @@ class WithdrawConstructModal extends Component {
             value={tx}
             errMsg={txErrMsg}
             isTextArea
+            onChange={value => {
+              this.setState({
+                tx: value,
+              });
+            }}
             label={<FormattedMessage id={'OriginalDataToSigned'} />}
             rows={5}
           />

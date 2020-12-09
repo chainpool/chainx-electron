@@ -42,23 +42,23 @@ export default class Global extends ModelExtend {
   @observable language = this.getDefaultLanguage();
 
   @computed get onlineAssets() {
-    return this.assets.filter(asset => asset.online);
+    return this.assets;
   }
 
   @computed get chainNames() {
-    return this.onlineAssets.map(asset => asset.name);
+    return [this.assets[0].info.chain];
   }
 
   @computed get crossChainAssets() {
-    return this.onlineAssets.filter(asset => asset.chain !== Chain.nativeChain);
+    return this.assets;
   }
 
   @computed get nativeAsset() {
-    return this.onlineAssets.find(asset => asset.chain === Chain.nativeChain);
+    return this.assets;
   }
 
   @computed get nativeAssetName() {
-    return 'XBTC';
+    return 'PCX';
   }
 
   @computed get nativeAssetPrecision() {
@@ -66,9 +66,12 @@ export default class Global extends ModelExtend {
   }
 
   @computed get assetNamePrecisionMap() {
-    let result = {};
-
-    return result;
+    return [
+      {
+        ...this.assets.balance,
+        ...this.assets.info,
+      },
+    ];
   }
 
   openModal = (payload = {}) => {
@@ -92,12 +95,19 @@ export default class Global extends ModelExtend {
 
   getAllAssets = async () => {
     const update = async () => {
-      let res = await getAssets(1);
-      console.log(JSON.stringify(res));
+      let res = await getAssets();
+
       const result = JSON.parse(JSON.stringify(res));
       const assetsArray = [];
-      assetsArray.push(result['1']);
+
+      assetsArray.push({
+        ...result['1'].balance,
+        ...result['1'].info,
+      });
+
       this.changeModel('assets', assetsArray);
+
+      console.log(assetsArray);
 
       return assetsArray;
     };

@@ -44,8 +44,7 @@ const Node = getBestNode().address;
 
 export const getAsset = async payload => {
   await ChainX.isReady;
-
-  return checkLogin(ChainX.rpc.xassets.getAssetsByAccount(payload));
+  return checkLogin(ChainX.query.system.account(payload));
 };
 
 export const createWithdrawTx = async (...payload) => {
@@ -112,6 +111,10 @@ export const getAssets = async payload => {
   return ChainX.rpc.xassets.getAssets();
 };
 
+export const getNativeAssets = async payload => {
+  await ChainX.isReady;
+};
+
 export const revokeWithdraw = (...payload) => {}; //asset.revokeWithdraw(...payload);
 
 export const getWithdrawalListByAccount = (...payload) =>
@@ -173,15 +176,24 @@ export const getLockListApi = payload => {
 
 export const getDepositList = (...payload) => {}; //asset.getDepositList(...payload);
 
-export const verifyAddressValidity = (...payload) => {}; //asset.verifyAddressValidity(...payload);
+export const verifyAddressValidity = (...payload) => {}; // asset.verifyAddressValidity(...payload);
 
-export const getAddressByAccount = (...payload) => {}; //asset.getAddressByAccount(...payload);
+export const getAddressByAccount = async payload => {
+  await ChainX.isReady;
+  return ChainX.rpc.xassets.getAssetsByAccount(payload);
+};
 
-export const getTrusteeSessionInfo = (...payload) => ChainX.rpc.xgatewaycommon.bitcoinTrusteeSessionInfo();
+export const getTrusteeSessionInfo = async payload => {
+  await ChainX.isReady;
+  return ChainX.rpc.xgatewaycommon.bitcoinTrusteeSessionInfo();
+};
 
 export const getBlockPeriod = (...payload) => {}; //chain.getMinimumPeriod(...payload);
 
-export const chainProperties = (...payload) => ChainX.rpc.system.properties(...payload);
+export const chainProperties = async payload => {
+  await ChainX.isReady;
+  return ChainX.rpc.system.properties();
+};
 
 export const getBondingDuration = (...payload) => {}; //stake.getBondingDuration(...payload);
 

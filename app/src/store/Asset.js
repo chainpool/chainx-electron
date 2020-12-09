@@ -81,10 +81,10 @@ export default class Asset extends ModelExtend {
         reservedWithdrawal,
         total,
         name: asset.name,
-        tokenName: info.tokenName,
-        desc: info.desc,
+        tokenName: 'X-BTC',
+        desc: "ChainX's Cross-chain Bitcoin",
         chain: info.chain,
-        precision: info.precision,
+        precision: 8,
         trusteeAddr: info.trusteeAddr,
         limitProps: { ...info.limitProps },
         ...(asset.locks ? { locks: asset.locks } : {}), //锁仓L-BTC有
@@ -93,17 +93,13 @@ export default class Asset extends ModelExtend {
   }
 
   @computed get nativeAccountAssets() {
-    const nativeAsset = this.normalizedAccountAssets.find(asset => asset.chain === Chain.nativeChain);
-    if (nativeAsset) {
-      return [nativeAsset];
-    }
-
-    const info = this.rootStore.globalStore.nativeAsset;
-    if (info) {
-      return [getAssetWithZeroBalance(info)];
-    } else {
-      return [];
-    }
+    console.log(JSON.stringify(this.accountAssets) + '222');
+    return [
+      {
+        tokenName: 'PCX',
+        free: 10000000000,
+      },
+    ];
   }
 
   @computed get accountNativeAssetFreeBalance() {
@@ -150,15 +146,42 @@ export default class Asset extends ModelExtend {
 
   getAccountBTCAddresses = async () => {
     const currentAccount = this.getCurrentAccount();
-    const addresses = await getAddressByAccount(currentAccount.address, 'Bitcoin');
+    const addresses = await getAddressByAccount(currentAccount.address);
+
+    console.log(JSON.stringify(addresses));
     this.changeModel('btcAddresses', addresses);
   };
 
   getAccountAssets = async () => {
     const currentAccount = this.getCurrentAccount();
-    const accountAssetsResp = await getAsset(currentAccount.address, 0, 100);
+    const { data: accountAssetsResp } = await getAsset(currentAccount.address);
+
+    console.log(JSON.stringify(accountAssetsResp));
     const names = this.rootStore.globalStore.chainNames;
-    this.changeModel('accountAssets', accountAssetsResp.data.filter(asset => names.includes(asset.name)));
+
+    console.log(`chain names: ${names}`);
+
+    let accountAssets = [];
+
+    const info = {
+      free: 1,
+      name: 'PCX',
+      tokenName: 'PCX',
+      desc: "ChainX's Native Assets",
+      chain: 'ChainX',
+      precision: 8,
+      details: {
+        Free: Number(accountAssetsResp.free) + Number(accountAssetsResp.free),
+        ReservedStaking: 0,
+        ReservedStakingRevocation: 0,
+        ReservedDexSpot: 0,
+        ReservedWithdrawal: 0,
+      },
+    };
+
+    accountAssets.push(info);
+
+    this.changeModel('accountAssets', accountAssets);
     this.getAccountTotalLockPositions();
   };
 

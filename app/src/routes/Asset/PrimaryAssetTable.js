@@ -46,16 +46,29 @@ function drawCandies(address) {
   });
 }
 
-@Inject(({ configureStore }) => ({ configureStore }))
+@Inject(({ configureStore, assetStore }) => ({ configureStore, assetStore }))
 class PrimaryAssetTable extends Component {
+  startInit = () => {
+    const {
+      model: { dispatch },
+    } = this.props;
+    this.fetchPoll(() =>
+      dispatch({
+        type: 'getAccountAssets',
+      })
+    );
+  };
   render() {
     const {
-      model: { openModal, nativeAccountAssets = [], setPrecision },
+      model: { openModal, setPrecision },
+      assetStore: { nativeAccountAssets },
       globalStore: { nativeAssetPrecision, nativeAssetName },
       configureStore: { isTestNet },
       accountStore: { currentAddress },
       widths,
     } = this.props;
+
+    console.log(JSON.stringify(nativeAccountAssets) + '1111');
 
     const tableProps = {
       className: styles.tableContainer,
