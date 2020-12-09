@@ -403,6 +403,8 @@ export default class Trust extends ModelExtend {
 
   constructSpecialTx = async ({ withdrawList, feeRate = 1, fromAddress, redeemScript }) => {
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
+
+    console.log(`nodeUrl: ${nodeUrl}`);
     if (!nodeUrl) {
       throw new Error({
         info: '未设置节点',
@@ -476,6 +478,7 @@ export default class Trust extends ModelExtend {
   constructWithdrawTx = async ({ withdrawList, feeRate = 1 }) => {
     console.log('6666 代签111');
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
+    console.log('node url:' + JSON.stringify(this.trusts));
     if (!nodeUrl) {
       throw new Error({
         info: '未设置节点',
