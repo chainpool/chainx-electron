@@ -24,7 +24,7 @@ class DepositMineTable extends Mixin {
 
   render() {
     const {
-      assetStore: { nativeAccountAssets: [{ reservedStaking }] = [] },
+      assetStore: { nativeAccountAssets: [] = [] },
       chainStore: { blockNumber },
       model: { openModal, dispatch, normalizedPseduIntentions = [], getDefaultPrecision },
       electionStore: { getPseduIntentionsLoading },

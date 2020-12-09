@@ -91,6 +91,8 @@ export default class Trust extends ModelExtend {
   get trusts() {
     const currentAccount = this.getCurrentAccount();
     const currentNetWork = this.getCurrentNetWork();
+
+    console.log(`current: ${JSON.stringify(currentAccount)}  network: ${JSON.stringify(currentNetWork)}`);
     const trusts =
       this._trusts.filter(
         (item = {}) => item.address === currentAccount.address && item.net === currentNetWork.value
@@ -156,8 +158,6 @@ export default class Trust extends ModelExtend {
             state = state;
         }
       }
-
-      console.log(JSON.stringify(withdraw));
 
       return {
         id: withdraw.id,
@@ -474,6 +474,7 @@ export default class Trust extends ModelExtend {
   };
 
   constructWithdrawTx = async ({ withdrawList, feeRate = 1 }) => {
+    console.log('6666 代签111');
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
     if (!nodeUrl) {
       throw new Error({
@@ -481,9 +482,15 @@ export default class Trust extends ModelExtend {
         toString: () => 'NotSetNode',
       });
     }
+    console.log('6666 代签222');
 
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+
+    console.log(`6666 代签333 ${network}`);
+
     let multisigAddress = await this.getBitcoinTrusteeAddress();
+
+    console.log(`6666 代签444 ${JSON.stringify(multisigAddress)}`);
     if (!multisigAddress) {
       throw new Error({
         info: '未获取到信托地址',
@@ -498,6 +505,7 @@ export default class Trust extends ModelExtend {
       });
     }
 
+    console.log(`6666 代签8888`);
     const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
       return result + Number(withdraw.amount);
     }, 0);
@@ -508,6 +516,8 @@ export default class Trust extends ModelExtend {
         toString: () => 'WithDrawTotalMustBiggerZero',
       });
     }
+
+    console.log(`6666 99999 + UTXO`);
 
     let utxos = await this.getUnspents(nodeUrl, multisigAddress).catch(() => {
       throw new Error({
@@ -704,7 +714,7 @@ export default class Trust extends ModelExtend {
     let res;
     if (desc === 'Ledger') {
       if (isSpecialModel) {
-        //console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
+        console.log(this.txSpecial, this.txSpecialInputList, redeemScript, network, '--------特殊签名输入所有参数');
         res = await window.LedgerInterface.sign(
           this.txSpecial.replace(/^0x/, ''),
           this.txSpecialInputList,
@@ -712,7 +722,7 @@ export default class Trust extends ModelExtend {
           network
         ).catch(err => Promise.reject(err));
       } else {
-        //console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
+        console.log(this.tx, this.txInputList, this.redeemScript, network, '--------签名输入所有参数');
         res = await window.LedgerInterface.sign(
           this.tx.replace(/^0x/, ''),
           this.txInputList,

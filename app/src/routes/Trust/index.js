@@ -194,9 +194,9 @@ class Trust extends Mixin {
         <div className={styles.withdraw}>
           <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
             <ButtonGroup className={styles.groups}>
-              {isTrustee ? (
+              {true ? (
                 <Button
-                  {...(isShowConstructureWithdraw ? {} : { type: 'disabeld' })}
+                  {...(true ? {} : { type: 'disabeld' })}
                   onClick={() => {
                     openModal({ name: 'WithdrawConstructModal' });
                   }}>
