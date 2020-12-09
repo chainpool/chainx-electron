@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Warn } from '../../../../components';
-import { ChainX, Patterns } from '../../../../../utils';
+import { ChainXAccount, Patterns } from '../../../../../utils';
 import * as styles from './ExportSecretModal.less';
 
 class ExportSecretModal extends Component {
@@ -43,7 +43,7 @@ class ExportSecretModal extends Component {
               type="confirm"
               onClick={() => {
                 if (checkAll.confirm()) {
-                  this.setState({ showResult: ChainX.account.fromKeyStore(encoded, password).privateKey() });
+                  this.setState({ showResult: ChainXAccount.fromKeyStore(encoded, password).privateKey() });
                 }
               }}>
               <FormattedMessage id={'Confirm'} />

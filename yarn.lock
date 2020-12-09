@@ -25,6 +25,17 @@
     bs58 "^4.0.1"
     tweetnacl "^1.0.0"
 
+"@chainx-v2/account@^0.0.49":
+  version "0.0.49"
+  resolved "https://registry.npm.taobao.org/@chainx-v2/account/download/@chainx-v2/account-0.0.49.tgz#2657c10e78bc190a74df1d0c2f2220f1e29fb219"
+  integrity sha1-JlfBDni8GQp03x0MLyIg8eKfshk=
+  dependencies:
+    "@polkadot/keyring" "^3.4.1"
+    "@types/node" "^14.0.23"
+    bip32 "^1.0.2"
+    bs58 "^4.0.1"
+    tweetnacl "^1.0.0"
+
 "@chainx-v2/api@^0.0.49":
   version "0.0.49"
   resolved "https://registry.npm.taobao.org/@chainx-v2/api/download/@chainx-v2/api-0.0.49.tgz#b59d305c545ea9b659de3936630539f4eac9858a"
@@ -699,6 +710,29 @@ bitcoin-script@^0.1.1:
     sha1 "^1.1.0"
     sha256 "^0.1.1"
 
+bitcoinjs-lib-zcash@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.npm.taobao.org/bitcoinjs-lib-zcash/download/bitcoinjs-lib-zcash-3.6.1.tgz#563fe1a4c7255aa1bf07bb0904ec1de072cbc098"
+  integrity sha1-Vj/hpMclWqG/B7sJBOwd4HLLwJg=
+  dependencies:
+    bech32 "^1.1.2"
+    bigi "^1.4.0"
+    bip66 "^1.1.0"
+    bitcoin-ops "^1.3.0"
+    bitcoin-script "^0.1.1"
+    blake2b "^2.1.2"
+    bs58check "^2.0.0"
+    create-hash "^1.1.0"
+    create-hmac "^1.1.3"
+    ecurve "^1.0.0"
+    merkle-lib "^2.0.10"
+    pushdata-bitcoin "^1.0.1"
+    randombytes "^2.0.1"
+    safe-buffer "^5.0.1"
+    typeforce "1.11.3"
+    varuint-bitcoin "^1.0.4"
+    wif "^2.0.1"
+
 "bitcoinjs-lib-zcash@git+https://github.com/wliyongfeng/bitcoinjs-lib-zcash.git#electron":
   version "3.6.1"
   resolved "git+https://github.com/wliyongfeng/bitcoinjs-lib-zcash.git#7a4d7cfec69a1b0657c40420d40bea462e3a5e0f"
@@ -721,9 +755,10 @@ bitcoin-script@^0.1.1:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-"bitcoinjs-lib@git+https://github.com/chainpool/bitcoinjs-lib.git#electron":
+bitcoinjs-lib@4.0.2:
   version "4.0.2"
-  resolved "git+https://github.com/chainpool/bitcoinjs-lib.git#e51c361601d3f70ddb99b908bbd28c0613f93ae5"
+  resolved "https://registry.npm.taobao.org/bitcoinjs-lib/download/bitcoinjs-lib-4.0.2.tgz#84fc9d14774c07581ad1795f2444706fc3f7a666"
+  integrity sha1-hPydFHdMB1ga0XlfJERwb8P3pmY=
   dependencies:
     bech32 "^1.1.2"
     bip32 "^1.0.0"

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
 import { Patterns } from '../../../../../utils';
 import * as styles from './SetPasswordModal.less';
+import KeyStore from '@chainx/keystore';
 
 class SetPasswordModal extends Component {
   state = {
@@ -70,7 +71,8 @@ class SetPasswordModal extends Component {
             type="confirm"
             onClick={() => {
               if (checkAll.confirm()) {
-                const encoded = account.encrypt(password);
+                const encoded = KeyStore.encrypt(account.privateKey(), password);
+
                 dispatch({
                   type: 'addAccount',
                   payload: {

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, FormattedMessage, Input, Modal } from '../../../../../components';
-import { _, ChainX, classNames, Patterns } from '../../../../../utils';
+import { _, ChainXAccount, classNames, Patterns } from '../../../../../utils';
+
 import * as styles from './CreateAccountModal.less';
 
 class CreateAccountModal extends Component {
   constructor(props) {
     super(props);
     const generateWords = () => {
-      const words = ChainX.account.newMnemonic().split(' ');
+      const words = ChainXAccount.newMnemonic().split(' ');
       return words;
       // if (isRepeat(words)) {
       //   return generateWords();
@@ -53,7 +54,7 @@ class CreateAccountModal extends Component {
     } = this.props;
 
     if (checkAll.confirm()) {
-      const account = ChainX.account.from(mnemonicWord.map(item => item.value).join(' '));
+      const account = ChainXAccount.from(mnemonicWord.map(item => item.value).join(' '));
       openModal({
         name: 'SetPasswordModal',
         data: {

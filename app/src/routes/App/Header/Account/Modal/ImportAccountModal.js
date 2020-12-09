@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, Icon, FormattedMessage, Toast } from '../../../../../components';
-import { ChainX, Patterns } from '../../../../../utils';
+import { ChainXAccount, Patterns } from '../../../../../utils';
 import * as styles from './ImportAccountModal.less';
 
 class ImportAccountModal extends Component {
@@ -64,7 +64,7 @@ class ImportAccountModal extends Component {
               onClick={() => {
                 if (checkAll.confirm()) {
                   const account =
-                    step === 'mnemonic' ? ChainX.account.from(mnemonicWord.join(' ')) : ChainX.account.from(secretKey);
+                    step === 'mnemonic' ? ChainXAccount.from(mnemonicWord.join(' ')) : ChainXAccount.from(secretKey);
                   openModal({
                     name: 'SetPasswordModal',
                     data: {

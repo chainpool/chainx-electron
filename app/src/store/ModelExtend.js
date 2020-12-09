@@ -1,5 +1,5 @@
 import { action } from 'mobx';
-import { _, ChainX, formatNumber, parseQueryString, stringifyQueryString } from '../utils';
+import { _, ChainX, ChainXAccount, formatNumber, parseQueryString, stringifyQueryString } from '../utils';
 
 export default class ModelExtend {
   constructor(rootStore) {
@@ -110,17 +110,17 @@ export default class ModelExtend {
 
   decodeAddressAccountId = account => {
     if (account && account.address) {
-      return ChainX.account.decodeAddress(account.address).replace(/^0x/, '');
+      return ChainXAccount.decodeAddress(account.address).replace(/^0x/, '');
     } else if (typeof account === 'string') {
-      return ChainX.account.decodeAddress(account).replace(/^0x/, '');
+      return ChainXAccount.decodeAddress(account).replace(/^0x/, '');
     }
   };
 
   encodeAddressAccountId = accountId => {
     if (/^0x/.test(accountId)) {
-      return ChainX.account.encodeAddress(accountId);
+      return ChainXAccount.encodeAddress(accountId);
     } else {
-      return ChainX.account.encodeAddress(`0x${accountId}`);
+      return ChainXAccount.encodeAddress(`0x${accountId}`);
     }
   };
 

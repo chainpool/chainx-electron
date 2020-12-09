@@ -7,6 +7,7 @@ import { SCRYPT_PARAMS } from '../constants';
 //import { default as Chainx } from 'chainx.js';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { options } from '@chainx-v2/api';
+import { Account } from '@chainx-v2/account';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { default as bitcoin } from 'bitcoinjs-lib';
@@ -44,6 +45,7 @@ const [bestAddress, otherNodesAddress] = getBestNode();
 const wsProvider = new WsProvider('wss://btc-test.chainx.org/ws');
 const api = new ApiPromise(options({ provider: wsProvider }));
 export const ChainX = api;
+export const ChainXAccount = Account;
 
 export const hexPrefix = hex => {
   if (/^0x/.test(hex)) {
@@ -54,11 +56,11 @@ export const hexPrefix = hex => {
 
 export const convertAddressChecksum = address => {
   try {
-    ChainX.account.decodeAddress(address, false);
+    Account.decodeAddress(address, false);
     return address;
   } catch (error) {
     if (error && error.message && error.message.includes('checksum')) {
-      return ChainX.account.encodeAddress(ChainX.account.decodeAddress(address, true));
+      return ChainXAccount.encodeAddress(ChainXAccount.decodeAddress(address, true));
     } else {
       throw new Error('Invalid address');
     }
@@ -128,7 +130,7 @@ export const getMNFromRedeemScript = redeemScript => {
 export const Patterns = {
   decode: (encoded, password, errMsg = 'PasswordError') => {
     try {
-      ChainX.account.fromKeyStore(encoded, password);
+      ChainXAccount.fromKeyStore(encoded, password);
       return '';
     } catch (err) {
       return errMsg;
@@ -143,7 +145,7 @@ export const Patterns = {
   },
   isMnemonicValid: (mnemonic, errMsg = 'AccountImportMnemonicNotFormat') => {
     try {
-      return ChainX.account.isMnemonicValid(mnemonic) ? '' : errMsg;
+      return ChainXAccount.isMnemonicValid(mnemonic) ? '' : errMsg;
     } catch (err) {
       return errMsg;
     }
@@ -164,7 +166,7 @@ export const Patterns = {
   },
   isChainXAddress: (address, errMsg = 'AddressFormatError') => {
     try {
-      const result = ChainX.account.isAddressValid(address);
+      const result = ChainXAccount.isAddressValid(address);
       if (!result) {
         return errMsg;
       }
@@ -175,7 +177,7 @@ export const Patterns = {
   },
   isChainXAccountPubkey: (accountId, errMsg = 'AddressFormatError') => {
     try {
-      const result = ChainX.account.encodeAddress(hexPrefix(accountId));
+      const result = ChainXAccount.encodeAddress(hexPrefix(accountId));
       if (!result) {
         return errMsg;
       }

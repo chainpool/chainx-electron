@@ -1,4 +1,4 @@
-import { ChainX, computed, formatNumber, observable } from '../utils';
+import { ChainX, ChainXAccount, computed, formatNumber, observable } from '../utils';
 import ModelExtend from './ModelExtend';
 import {
   depositClaim,
@@ -45,8 +45,8 @@ export default class Election extends ModelExtend {
   @computed get validatorsWithAddress() {
     return this.originIntentions.map(intention => {
       return Object.assign({}, intention, {
-        address: ChainX.account.encodeAddress(intention.account),
-        jackpotAddress: ChainX.account.encodeAddress(intention.jackpotAccount),
+        address: ChainXAccount.encodeAddress(intention.account),
+        jackpotAddress: ChainXAccount.encodeAddress(intention.jackpotAccount),
       });
     });
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Input, Button, FormattedMessage } from '../../../../../components';
-import { ChainX, Patterns } from '../../../../../utils';
+import { Patterns, ChainXAccount } from '../../../../../utils';
+import KeyStore from '@chainx/keystore';
 
 class EditPasswordModal extends Component {
   state = {
@@ -95,7 +96,10 @@ class EditPasswordModal extends Component {
                   type: 'updateEncoded',
                   payload: {
                     address,
-                    encoded: ChainX.account.fromKeyStore(encoded, primaryPassword).encrypt(password),
+                    encoded: KeyStore.encrypt(
+                      ChainXAccount.fromKeyStore(encoded, primaryPassword).privateKey(),
+                      password
+                    ),
                   },
                 });
                 closeModal();

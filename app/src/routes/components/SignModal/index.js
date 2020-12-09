@@ -1,5 +1,5 @@
 import React from 'react';
-import { _, ChainX, Inject, isElectron, Patterns, resFail, resOk } from '../../../utils';
+import { _, ChainXAccount, Inject, isElectron, Patterns, resFail, resOk } from '../../../utils';
 import { Button, FormattedMessage, Input, Mixin, Modal, Slider, Toast } from '../../../components';
 
 import * as styles from './index.less';
@@ -214,7 +214,7 @@ class SignModal extends Mixin {
                         const promise = () =>
                           new Promise((resolve, reject) => {
                             extrinsic.signAndSend(
-                              ChainX.account.fromKeyStore(currentAccount.encoded, password),
+                              ChainXAccount.fromKeyStore(currentAccount.encoded, password),
                               { acceleration },
                               (err, res) => {
                                 if (!err) {
