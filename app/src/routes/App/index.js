@@ -97,7 +97,7 @@ class Main extends Component {
                   render={props => <item.component {...props} {...this.props} />}
                 />
               ))}
-              <Redirect key={2} to={PATH.default} />
+              <Redirect key={2} to={PATH.trust} />
             </Switch>
           </Suspense>
           {name === 'SignModal' ? <SignModal {...this.props} /> : null}
@@ -115,7 +115,7 @@ export default class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/trust" render={props => <Main {...props} {...this.props} />} />
+          <Route path="/" render={props => <Main {...props} {...this.props} />} />
         </Switch>
       </Router>
     );

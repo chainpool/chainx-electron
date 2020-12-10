@@ -1,5 +1,5 @@
 export const PATH = {
-  default: '/election',
+  default: '/trust',
   mine: '/mine',
   asset: '/asset',
   election: '/election',

@@ -580,11 +580,10 @@ export default class Trust extends ModelExtend {
   };
 
   createWithdrawTx = async ({ ids = [], tx }) => {
-    debugger;
     const extrinsic = await createWithdrawTx(ids, `0x${tx}`);
     console.log('create success....' + 2444444444444444444444444444444);
     console.log(extrinsic);
-    debugger;
+
     return {
       extrinsic,
       success: this.reload,
@@ -595,7 +594,7 @@ export default class Trust extends ModelExtend {
     console.log('get withdraw tx......');
     console.log('get withdraw tx......');
     console.log('get withdraw tx......111');
-    debugger;
+
     // const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
     // debugger
     // if (!findOne || !findOne.chain) {
@@ -608,11 +607,8 @@ export default class Trust extends ModelExtend {
     //   });
     // }
 
-    debugger;
     let withdrawTxInfo = await getWithdrawTx();
     console.log(JSON.stringify(withdrawTxInfo));
-
-    debugger;
 
     console.log('get withdraw tx......2222');
 
