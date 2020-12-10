@@ -145,7 +145,7 @@ class ResponseList extends Component {
 
     const content = (
       <div>
-        <div className={styles.responsetitle}>{isSpecialModel ? '特殊交易' : '日常提现'}</div>
+        <div className={styles.responsetitle}>{isSpecialModel ? '多签交易' : '日常提现'}</div>
         <div className={styles.signStatus}>
           <div className={styles.reslist}>
             <ul className={styles.statusList}>

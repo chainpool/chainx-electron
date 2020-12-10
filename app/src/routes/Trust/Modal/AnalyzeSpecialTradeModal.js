@@ -46,7 +46,7 @@ class AnalyzeSpecialTradeModal extends Component {
 
     return (
       <Modal
-        title={'解析特殊交易'}
+        title={'解析比特币交易'}
         button={
           <Button
             size="full"

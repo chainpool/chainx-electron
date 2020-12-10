@@ -485,15 +485,11 @@ export default class Trust extends ModelExtend {
         toString: () => 'NotSetNode',
       });
     }
-    console.log('6666 代签222');
 
     const network = this.isTestBitCoinNetWork() ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
 
-    console.log(`6666 代签333 ${network}`);
-
     let multisigAddress = await this.getBitcoinTrusteeAddress();
 
-    console.log(`6666 代签444 ${JSON.stringify(multisigAddress)}`);
     if (!multisigAddress) {
       throw new Error({
         info: '未获取到信托地址',
@@ -583,9 +579,11 @@ export default class Trust extends ModelExtend {
     return txb.buildIncomplete().toHex();
   };
 
-  createWithdrawTx = ({ ids = [], tx }) => {
+  createWithdrawTx = async ({ ids = [], tx }) => {
     debugger;
-    const extrinsic = createWithdrawTx(ids, `0x${tx}`);
+    const extrinsic = await createWithdrawTx(ids, `0x${tx}`);
+    console.log('create success....' + 2444444444444444444444444444444);
+    console.log(extrinsic);
     debugger;
     return {
       extrinsic,
@@ -594,28 +592,39 @@ export default class Trust extends ModelExtend {
   };
 
   getWithdrawTx = async () => {
-    const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
+    console.log('get withdraw tx......');
+    console.log('get withdraw tx......');
+    console.log('get withdraw tx......111');
+    debugger;
+    // const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
+    // debugger
+    // if (!findOne || !findOne.chain) {
+    //   this.changeModel({
+    //     tx: '',
+    //     redeemScript: '',
+    //     trusteeList: [],
+    //     totalSignCount: '',
+    //     maxSignCount: '',
+    //   });
+    // }
 
-    if (!findOne || !findOne.chain) {
-      this.changeModel({
-        tx: '',
-        redeemScript: '',
-        trusteeList: [],
-        totalSignCount: '',
-        maxSignCount: '',
-      });
-    }
+    debugger;
+    let withdrawTxInfo = await getWithdrawTx();
+    console.log(JSON.stringify(withdrawTxInfo));
 
-    const [withdrawTxInfo = {}, trusteeInfo = {}] = await Promise.all([
-      getWithdrawTx(findOne.chain),
-      this.getTrusteeSessionInfo(findOne.chain),
-    ]);
+    debugger;
+
+    console.log('get withdraw tx......2222');
 
     const { tx, trusteeList = [], withdrawalIdList = [] } = withdrawTxInfo || {};
-    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = trusteeInfo || {};
+
+    console.log('get withdraw tx......3333');
+    const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = {};
     if (this.tx === tx && this.redeemScript === redeemScript && trusteeList.length === this.trusteeList.length) {
       return;
     }
+
+    console.log('get withdraw tx......4444');
 
     this.changeModel({
       tx,

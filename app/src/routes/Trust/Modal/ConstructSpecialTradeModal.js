@@ -178,7 +178,7 @@ class ConstructSpecialTradeModal extends Component {
     } = this.props;
 
     return (
-      <Modal title={'构造特殊交易'} button={null}>
+      <Modal title={'构造交易'} button={null}>
         <div className={styles.ConstructSpecialTradeModal}>
           <Input.Text
             isOutSide

@@ -138,7 +138,7 @@ export default class Configure extends ModelExtend {
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
-              address: 'wss://testnet-2.chainx.org/ws',
+              address: 'wss://btc-test.chainx.org/ws',
             },
           ],
           (localSave.get('testNodes') || []).filter((item = {}) => !item.isSystem)

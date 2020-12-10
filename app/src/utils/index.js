@@ -13,6 +13,7 @@ import bip38 from 'bip38';
 import { default as bitcoin } from 'bitcoinjs-lib';
 import { default as WAValidator } from 'wallet-address-validator';
 import { SimulatedAccount, InnerWebSite } from '../constants';
+import KeyStore from '@chainx/keystore';
 
 //------------------通用部分
 export { request } from './request';
@@ -132,7 +133,7 @@ export const getMNFromRedeemScript = redeemScript => {
 export const Patterns = {
   decode: (encoded, password, errMsg = 'PasswordError') => {
     try {
-      ChainXAccount.fromKeyStore(encoded, password);
+      KeyStore.decrypt(encoded, password);
       return '';
     } catch (err) {
       return errMsg;

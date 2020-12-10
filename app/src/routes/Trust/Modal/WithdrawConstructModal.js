@@ -137,8 +137,6 @@ class WithdrawConstructModal extends Component {
             size="full"
             type="confirm"
             onClick={async () => {
-              console.log('1111111');
-              debugger;
               if (await checkAll.confirm()) {
                 openModal({
                   name: 'SignModal',
@@ -147,7 +145,6 @@ class WithdrawConstructModal extends Component {
                       { name: 'operation', value: () => <FormattedMessage id={'BuildMultiSigWithdrawal'} /> },
                     ],
                     callback: () => {
-                      debugger;
                       const ids = withDrawIndexSignList.map(item => item.id);
 
                       return dispatch({

@@ -80,7 +80,7 @@ class Trust extends Mixin {
       },
       model: { trusts = [], tx },
     } = this.props;
-    const isTrustee = ForceTrustee ? true : _isValidator;
+    const isTrustee = true;
     const isValidator = ForceTrustee ? true : _isTrustee;
     const currentTrustNode =
       trusts.filter((item = {}) => item.chain === 'Bitcoin' && address === item.address)[0] || {};
@@ -166,7 +166,7 @@ class Trust extends Mixin {
                                 openModal({ name: 'ConstructSpecialTradeModal' });
                               }}>
                               <Icon name="gouzaoteshujiaoyi" />
-                              <span>构造特殊交易</span>
+                              <span>构造比特币交易</span>
                             </li>
                             <li
                               type="blank"
@@ -174,7 +174,7 @@ class Trust extends Mixin {
                                 openModal({ name: 'AnalyzeSpecialTradeModal' });
                               }}>
                               <Icon name="jiexi" />
-                              <span>解析特殊交易</span>
+                              <span>解析比特币交易</span>
                             </li>
                           </>
                         ) : null}
@@ -196,7 +196,7 @@ class Trust extends Mixin {
             <ButtonGroup className={styles.groups}>
               {true ? (
                 <Button
-                  {...(true ? {} : { type: 'disabeld' })}
+                  {...(false ? {} : { type: 'disabeld' })}
                   onClick={() => {
                     openModal({ name: 'WithdrawConstructModal' });
                   }}>

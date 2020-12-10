@@ -3,6 +3,8 @@ import { _, ChainXAccount, Inject, isElectron, Patterns, resFail, resOk } from '
 import { Button, FormattedMessage, Input, Mixin, Modal, Slider, Toast } from '../../../components';
 
 import * as styles from './index.less';
+import KeyStore from '@chainx/keystore';
+import { Keyring } from '@polkadot/api';
 
 const operation = '操作';
 
@@ -70,9 +72,11 @@ class SignModal extends Mixin {
     } = this.props;
     const token = targetToken || 'PCX';
     if (_.isFunction(callback)) {
+      debugger;
       this.result = await callback({ token });
       this.getFee();
     } else {
+      debugger;
       console.error('callback不是函数');
     }
   };
@@ -162,8 +166,11 @@ class SignModal extends Mixin {
               size="full"
               type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
               onClick={() => {
+                debugger;
                 if (checkAll.confirm()) {
+                  debugger;
                   const sign = () => {
+                    debugger;
                     if (this.result && this.result.extrinsic) {
                       const result = this.result;
                       const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
@@ -214,24 +221,31 @@ class SignModal extends Mixin {
                       try {
                         const promise = () =>
                           new Promise((resolve, reject) => {
-                            extrinsic.signAndSend(
-                              ChainXAccount.fromKeyStore(currentAccount.encoded, password),
-                              { acceleration },
-                              (err, res) => {
-                                if (!err) {
-                                  if (resOk(res)) {
-                                    success(res);
-                                    resolve();
-                                  } else if (resFail(res)) {
-                                    fail(err);
-                                    reject();
-                                  }
-                                } else {
+                            console.log(`privateKey : ${KeyStore.decrypt(currentAccount.encoded, '94941207Hzz@abc')}`);
+                            const keyring = new Keyring({ type: 'ed25519' });
+                            keyring.setSS58Format(this.ss58format);
+                            const alice = keyring.addFromUri('//Alice');
+                            //keyring.addFromUri(KeyStore.decrypt(currentAccount.encoded, '94941207Hzz@abc'));
+
+                            extrinsic.signAndSend(alice, (err, res) => {
+                              debugger;
+
+                              console.log(JSON.stringify(res));
+                              console.log(`err:3333333 + ${JSON.stringify(err)}`);
+                              if (!err) {
+                                if (resOk(res)) {
+                                  success(res);
+                                  resolve();
+                                } else if (resFail(res)) {
                                   fail(err);
                                   reject();
                                 }
+                              } else {
+                                debugger;
+                                fail(err);
+                                reject();
                               }
-                            );
+                            });
                           });
 
                         Promise.race([
