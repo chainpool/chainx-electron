@@ -115,8 +115,7 @@ export default class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/user/(.*)?" render={props => <Main {...props} {...this.props} />} />
-          <Route path="/" render={props => <Main {...props} {...this.props} />} />
+          <Route path="/trust" render={props => <Main {...props} {...this.props} />} />
         </Switch>
       </Router>
     );
