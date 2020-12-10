@@ -97,7 +97,7 @@ class Main extends Component {
                   render={props => <item.component {...props} {...this.props} />}
                 />
               ))}
-              <Redirect key={0} to={PATH.default} />
+              <Redirect key={2} to={PATH.default} />
             </Switch>
           </Suspense>
           {name === 'SignModal' ? <SignModal {...this.props} /> : null}

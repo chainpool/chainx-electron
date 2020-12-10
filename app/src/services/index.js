@@ -44,7 +44,11 @@ const Node = getBestNode().address;
 
 export const getAsset = async payload => {
   await ChainX.isReady;
-  return checkLogin(ChainX.query.system.account(payload));
+  if (payload === '' || payload === undefined || payload === null) {
+    return {};
+  } else {
+    return checkLogin(ChainX.query.system.account(payload));
+  }
 };
 
 export const createWithdrawTx = async (...payload) => {
