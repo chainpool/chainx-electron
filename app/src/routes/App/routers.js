@@ -27,6 +27,7 @@ export default [
     title: 'AssetTrustee',
     path: PATH.trust,
     component: Trust,
+    show: true,
   },
   {
     title: 'TrustGovern',
@@ -36,7 +37,7 @@ export default [
   },
   {
     title: 'Configure',
-    show: false,
+    show: true,
     path: PATH.configure,
     component: Configure,
   },
