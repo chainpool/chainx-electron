@@ -49,6 +49,7 @@ export const getAsset = async payload => {
 
 export const createWithdrawTx = async (...payload) => {
   await ChainX.isReady;
+  console.log('create.... 交易');
   return ChainX.tx['xGatewayBitcoin']['createWithdrawTx'](...payload);
 };
 

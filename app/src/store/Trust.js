@@ -584,7 +584,9 @@ export default class Trust extends ModelExtend {
   };
 
   createWithdrawTx = ({ ids = [], tx }) => {
+    debugger;
     const extrinsic = createWithdrawTx(ids, `0x${tx}`);
+    debugger;
     return {
       extrinsic,
       success: this.reload,

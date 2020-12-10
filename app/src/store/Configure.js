@@ -152,7 +152,7 @@ export default class Configure extends ModelExtend {
           [
             {
               type: 'SystemDefault',
-              name: 'w1',
+              name: 'main1',
               best: true,
               isSystem: true,
               Version: ConfigureVersion,
@@ -160,9 +160,27 @@ export default class Configure extends ModelExtend {
             },
             {
               type: 'SystemDefault',
-              name: 'w2',
+              name: 'main2',
               isSystem: true,
-              address: 'wss://mainnet.chainx.org/ws',
+              address: 'wss://mainnet-2.chainx.org/ws',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'main3',
+              isSystem: true,
+              address: 'wss://mainnet-3.chainx.org/ws',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'main4',
+              isSystem: true,
+              address: 'wss://mainnet-4.chainx.org/ws',
+            },
+            {
+              type: 'SystemDefault',
+              name: 'main5',
+              isSystem: true,
+              address: 'wss://mainnet-5.chainx.org/ws',
             },
           ],
           (localSave.get('premainNodes') || []).filter((item = {}) => !item.isSystem)

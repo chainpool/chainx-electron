@@ -1,7 +1,6 @@
 import { default as Configure } from '../Configure';
 import { PATH } from '../../constants';
-import Asset from '../Asset';
-import Mine from '../Mine';
+
 import DepositWithDrawRecord from '../DepositWithDrawRecord';
 import AddressManage from '../AddressManage';
 import Trust from '../Trust';
@@ -9,17 +8,6 @@ import TrustGovern from '../TrustGovern';
 import { lazy } from 'react';
 
 export default [
-  {
-    title: 'Asset',
-    path: PATH.asset,
-    component: Asset,
-    authority: [1],
-  },
-  {
-    title: 'DepositsMining',
-    path: PATH.mine,
-    component: Mine,
-  },
   {
     title: 'DepositWithdrawalRecords',
     show: false,
