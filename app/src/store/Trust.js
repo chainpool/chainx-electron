@@ -581,7 +581,6 @@ export default class Trust extends ModelExtend {
 
   createWithdrawTx = async ({ ids = [], tx }) => {
     const extrinsic = await createWithdrawTx(ids, `0x${tx}`);
-    console.log('create success....' + 2444444444444444444444444444444);
     console.log(extrinsic);
 
     return {
@@ -591,36 +590,15 @@ export default class Trust extends ModelExtend {
   };
 
   getWithdrawTx = async () => {
-    console.log('get withdraw tx......');
-    console.log('get withdraw tx......');
-    console.log('get withdraw tx......111');
-
-    // const findOne = ForceTrustee ? { chain: 'Bitcoin' } : this.trusts.find((item = {}) => item.chain === 'Bitcoin');
-    // debugger
-    // if (!findOne || !findOne.chain) {
-    //   this.changeModel({
-    //     tx: '',
-    //     redeemScript: '',
-    //     trusteeList: [],
-    //     totalSignCount: '',
-    //     maxSignCount: '',
-    //   });
-    // }
-
     let withdrawTxInfo = await getWithdrawTx();
     console.log(JSON.stringify(withdrawTxInfo));
 
-    console.log('get withdraw tx......2222');
-
     const { tx, trusteeList = [], withdrawalIdList = [] } = withdrawTxInfo || {};
 
-    console.log('get withdraw tx......3333');
     const { redeemScript, totalSignCount, maxSignCount, chainConfigTrusteeList } = {};
     if (this.tx === tx && this.redeemScript === redeemScript && trusteeList.length === this.trusteeList.length) {
       return;
     }
-
-    console.log('get withdraw tx......4444');
 
     this.changeModel({
       tx,
@@ -646,6 +624,12 @@ export default class Trust extends ModelExtend {
         return '';
       }
     };
+
+    function getP2PKHAddressFromInputScript(script) {
+      // returns empty string if not an address starting with 1 (P2PKH)
+      const chunks = bitcoin.script.decompile(script);
+      return bitcoin.payments.p2pkh({ pubkey: chunks[1] }).address;
+    }
     const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
     const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
@@ -664,6 +648,7 @@ export default class Trust extends ModelExtend {
         ...(address ? {} : { err: true }),
       };
     });
+    console.log(11111111111);
     this.changeModel(txOutputList, resultOutputs);
     const ins = txbRAW.__tx.ins.map(item => {
       return {
@@ -671,13 +656,20 @@ export default class Trust extends ModelExtend {
         hash: item.hash.reverse().toString('hex'),
       };
     });
-    // this.changeModel(txInputList, ins.map(item => ({ hash: item.hash })));
+    console.log(22222222222222);
+
+    this.changeModel(
+      txInputList,
+      ins.map(item => ({ hash: item.hash }))
+    );
     const ids = ins.map(item => item.hash);
-    const findOne = this.trusts.filter((item = {}) => item.chain === 'Bitcoin')[0];
-    if (!findOne) return Toast.warn('请设置全节点');
-    const nodeUrl = findOne.apiNode;
+    console.log(33333333333);
+
+    const nodeUrl = 'auth:bitcoin-b2dd077@btc.chainx.org/testnet';
 
     const result = await this.fetchNodeTxsFromTxidList(nodeUrl, ids);
+    console.log('nodes。。。。。。。。。。。。。。' + JSON.stringify(result));
+
     // const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
       const insTXs = ins.map(item => {
@@ -813,7 +805,7 @@ export default class Trust extends ModelExtend {
     }
     const fetchAction = id =>
       window.fetchFromNodeHttp({
-        url: `https://${url}`,
+        url: `https://btc.chainx.org`,
         // url: `https://wallet.chainx.org/api/rpc?url=http://${url}`,
         methodAlias: 'getrawtransaction',
         method: 'POST',

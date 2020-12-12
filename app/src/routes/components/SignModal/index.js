@@ -72,11 +72,9 @@ class SignModal extends Mixin {
     } = this.props;
     const token = targetToken || 'PCX';
     if (_.isFunction(callback)) {
-      debugger;
       this.result = await callback({ token });
       this.getFee();
     } else {
-      debugger;
       console.error('callback不是函数');
     }
   };
@@ -166,11 +164,8 @@ class SignModal extends Mixin {
               size="full"
               type={fee !== undefined && fee !== null ? 'confirm' : 'disabeld'}
               onClick={() => {
-                debugger;
                 if (checkAll.confirm()) {
-                  debugger;
                   const sign = () => {
-                    debugger;
                     if (this.result && this.result.extrinsic) {
                       const result = this.result;
                       const operationItem = description.filter((item = {}) => item.willFilter)[0] || {};
@@ -228,8 +223,6 @@ class SignModal extends Mixin {
                             //keyring.addFromUri(KeyStore.decrypt(currentAccount.encoded, '94941207Hzz@abc'));
 
                             extrinsic.signAndSend(alice, (err, res) => {
-                              debugger;
-
                               console.log(JSON.stringify(res));
                               console.log(`err:3333333 + ${JSON.stringify(err)}`);
                               if (!err) {
@@ -241,7 +234,6 @@ class SignModal extends Mixin {
                                   reject();
                                 }
                               } else {
-                                debugger;
                                 fail(err);
                                 reject();
                               }
