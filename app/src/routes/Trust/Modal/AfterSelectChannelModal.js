@@ -126,9 +126,11 @@ class AfterSelectChannelModal extends Component {
                         console.log('trezor普通签名');
                       } else if (isSpecialModel) {
                         const trezor = window.trezorConnector;
+                        debugger;
                         if (trezor.device) {
                           await trezor.device.steal();
                         }
+                        debugger;
                         trezor.on('pin', (messageType, passwordCheck) => {
                           openModal({
                             name: 'TrezorPasswordModal',
@@ -140,6 +142,7 @@ class AfterSelectChannelModal extends Component {
                         trezor.on('button', () => {});
 
                         if (trezor.isConnected()) {
+                          debugger;
                           const res = await dispatch({
                             type: 'signWithHardware',
                             payload: {

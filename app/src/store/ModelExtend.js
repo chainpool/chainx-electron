@@ -138,8 +138,8 @@ export default class ModelExtend {
       return formatNumber.toPrecision(value, token, multiplication);
     }
     const assets = this.rootStore.globalStore.assets;
-    const findOne = assets.filter((item = {}) => item.name === token)[0] || {};
-    return formatNumber.toPrecision(value, findOne.precision, multiplication);
+
+    return formatNumber.toPrecision(value, 8, multiplication);
   };
 
   setDefaultPrecision = (value, multiplication = false) => {

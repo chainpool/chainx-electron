@@ -4,9 +4,7 @@ import { HoverTip, TableTitle } from '../components';
 import { ForceTrustee, PATH, ShowTrusteeSwitch } from '../../constants';
 import { classNames, Inject } from '../../utils';
 import SettingTable from './SettingTable';
-import NodeSettingModal from './Modal/NodeSettingModal';
 import WithdrawTable from './WithdrawTable';
-import WithdrawConstructModal from './Modal/WithdrawConstructModal';
 import TrustSetting from './Modal/TrustSettingModal';
 import SignChannelSelectModal from './Modal/SignChannelSelectModal';
 import SignResultModal from './Modal/SignResultModal';
@@ -17,8 +15,6 @@ import ViewHardwarePubKey from './Modal/ViewHardwarePubKey';
 import AfterSelectChannelModal from './Modal/AfterSelectChannelModal';
 import TrezorPasswordModal from './Modal/TrezorPasswordModal';
 import ResponseList from './ResponseList';
-import APINodeSettingModal from './Modal/APINodeSettingModal';
-
 import * as styles from './index.less';
 
 @Inject(({ trustStore: model, accountStore, assetStore }) => ({ model, accountStore, assetStore }))
@@ -133,21 +129,6 @@ class Trust extends Mixin {
                   {
                     <div className={styles.utilsContainer}>
                       <ul>
-                        <li
-                          type="blank"
-                          onClick={() => {
-                            openModal({
-                              name: 'APINodeSettingModal',
-                              data: {
-                                chain: 'Bitcoin',
-                                node: currentTrustNode.apiNode,
-                              },
-                            });
-                          }}>
-                          <Icon name="shezhiquanjiedian" />
-                          <span>设置跨链节点</span>
-                        </li>
-
                         {currentTrustNode.apiNode || ForceTrustee ? (
                           <>
                             <li
@@ -190,24 +171,9 @@ class Trust extends Mixin {
         <ResponseList {...this.props} isNormalModel />
 
         <div className={styles.withdraw}>
-          <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}>
-            <ButtonGroup className={styles.groups}>
-              {true ? (
-                <Button
-                  {...(false ? {} : { type: 'disabeld' })}
-                  onClick={() => {
-                    openModal({ name: 'WithdrawConstructModal' });
-                  }}>
-                  <Icon name="icon-goujiantixian" />
-                  <FormattedMessage id={'BuildMultiSigWithdrawal'} />
-                </Button>
-              ) : null}
-            </ButtonGroup>
-          </TableTitle>
+          <TableTitle title={<FormattedMessage id={'WithdrawalList'} />} className={styles.withdrawTitle}></TableTitle>
           <WithdrawTable {...props} />
         </div>
-        {name === 'NodeSettingModal' ? <NodeSettingModal {...props} /> : null}
-        {name === 'WithdrawConstructModal' ? <WithdrawConstructModal {...props} /> : null}
         {name === 'TrustSetting' ? <TrustSetting {...props} /> : null}
         {name === 'SignChannelSelectModal' ? <SignChannelSelectModal {...props} /> : null}
         {name === 'SignResultModal' ? <SignResultModal {...props} /> : null}
@@ -217,7 +183,6 @@ class Trust extends Mixin {
         {name === 'ViewHardwarePubKey' ? <ViewHardwarePubKey {...props} /> : null}
         {name === 'AfterSelectChannelModal' ? <AfterSelectChannelModal {...props} /> : null}
         {name === 'TrezorPasswordModal' ? <TrezorPasswordModal {...props} /> : null}
-        {name === 'APINodeSettingModal' ? <APINodeSettingModal {...this.props} /> : null}
       </div>
     );
   }
