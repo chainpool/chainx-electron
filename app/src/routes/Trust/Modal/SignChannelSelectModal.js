@@ -66,6 +66,7 @@ class SignChannelSelectModal extends Component {
                       },
                     });
                   });
+
                   trezor.on('button', () => {
                     openModal({
                       name: 'AfterSelectChannelModal',
@@ -93,7 +94,9 @@ class SignChannelSelectModal extends Component {
                       Toast.warn('签名错误', _.get(err, 'message'));
                       closeModal();
                     });
+
                     const result = res || _.get(res, 'message.serialized.serialized_tx');
+
                     if (result) {
                       openModal({
                         name: 'SignResultModal',

@@ -122,15 +122,16 @@ class AfterSelectChannelModal extends Component {
                         }
                       });
                     } else if (desc === 'Trezor') {
+                      console.log('啊啊啊啊啊啊啊啊啊');
                       if (!isSpecialModel) {
                         console.log('trezor普通签名');
                       } else if (isSpecialModel) {
                         const trezor = window.trezorConnector;
-                        debugger;
+
                         if (trezor.device) {
                           await trezor.device.steal();
                         }
-                        debugger;
+
                         trezor.on('pin', (messageType, passwordCheck) => {
                           openModal({
                             name: 'TrezorPasswordModal',
@@ -141,22 +142,24 @@ class AfterSelectChannelModal extends Component {
                         });
                         trezor.on('button', () => {});
 
-                        if (trezor.isConnected()) {
-                          debugger;
+                        if (true) {
                           const res = await dispatch({
                             type: 'signWithHardware',
                             payload: {
                               desc,
                               isSpecialModel,
                               redeemScript: isSpecialModel && !haveSigned ? redeemScript : null,
-                              signCallback: (...payload) => {
-                                return trezor.sign(...payload);
+                              signCallback: async (...payload) => {
+                                const result = await trezor.sign(...payload);
+                                return result;
                               },
                             },
                           }).catch(err => {
                             Toast.warn('签名错误', _.get(err, 'message'));
                             closeModal();
                           });
+
+                          console.log(JSON.stringify(res));
                           const result = res || _.get(res, 'message.serialized.serialized_tx');
                           if (result) {
                             openModal({
@@ -167,6 +170,8 @@ class AfterSelectChannelModal extends Component {
                                 isSpecialModel,
                               },
                             });
+                          } else {
+                            Toast.warn('签名错误');
                           }
                         }
                       }

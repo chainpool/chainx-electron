@@ -476,7 +476,6 @@ export default class Trust extends ModelExtend {
   };
 
   constructWithdrawTx = async ({ withdrawList, feeRate = 1 }) => {
-    console.log('6666 代签111');
     const nodeUrl = (this.trusts.find((item = {}) => item.chain === 'Bitcoin') || {}).apiNode;
     console.log('node url:' + JSON.stringify(this.trusts));
     if (!nodeUrl) {
@@ -504,7 +503,6 @@ export default class Trust extends ModelExtend {
       });
     }
 
-    console.log(`6666 代签8888`);
     const totalWithdrawAmount = withdrawList.reduce((result, withdraw) => {
       return result + Number(withdraw.amount);
     }, 0);
@@ -515,8 +513,6 @@ export default class Trust extends ModelExtend {
         toString: () => 'WithDrawTotalMustBiggerZero',
       });
     }
-
-    console.log(`6666 99999 + UTXO`);
 
     let utxos = await this.getUnspents(nodeUrl, multisigAddress).catch(() => {
       throw new Error({
@@ -625,11 +621,6 @@ export default class Trust extends ModelExtend {
       }
     };
 
-    function getP2PKHAddressFromInputScript(script) {
-      // returns empty string if not an address starting with 1 (P2PKH)
-      const chunks = bitcoin.script.decompile(script);
-      return bitcoin.payments.p2pkh({ pubkey: chunks[1] }).address;
-    }
     const txInputList = isSpecialModel ? 'txSpecialInputList' : 'txInputList';
     const txOutputList = isSpecialModel ? 'txSpecialOutputList' : 'txOutputList';
     if (!tx) return;
@@ -648,7 +639,7 @@ export default class Trust extends ModelExtend {
         ...(address ? {} : { err: true }),
       };
     });
-    console.log(11111111111);
+
     this.changeModel(txOutputList, resultOutputs);
     const ins = txbRAW.__tx.ins.map(item => {
       return {
@@ -656,19 +647,16 @@ export default class Trust extends ModelExtend {
         hash: item.hash.reverse().toString('hex'),
       };
     });
-    console.log(22222222222222);
 
     this.changeModel(
       txInputList,
       ins.map(item => ({ hash: item.hash }))
     );
     const ids = ins.map(item => item.hash);
-    console.log(33333333333);
 
     const nodeUrl = 'auth:bitcoin-b2dd077@btc.chainx.org/testnet';
 
     const result = await this.fetchNodeTxsFromTxidList(nodeUrl, ids);
-    console.log('nodes。。。。。。。。。。。。。。' + JSON.stringify(result));
 
     // const result = await getTxsFromTxidList({ ids, isTest: this.isTestBitCoinNetWork() });
     if (result && result.length) {
@@ -688,6 +676,7 @@ export default class Trust extends ModelExtend {
           ...(address ? {} : { err: true }),
         };
       });
+      console.log('nodes:' + JSON.stringify(txInputList));
       this.changeModel(txInputList, insTXs);
     }
   };
@@ -734,6 +723,7 @@ export default class Trust extends ModelExtend {
       }
     } else if (desc === 'Trezor') {
       if (isSpecialModel) {
+        console.log(this.txSpecial, this.txSpecialInputList, this.redeemScript, network, '--------签名输入所有参数');
         res = await signCallback(
           this.txSpecial.replace(/^0x/, ''),
           this.txSpecialInputList,

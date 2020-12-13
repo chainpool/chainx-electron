@@ -219,18 +219,28 @@ class TrezorConnector extends EventEmitter {
   }
 
   async sign(raw, inputsArr, redeemScript, network = "mainnet") {
+    let signResult = "";
+
+    console.log(`sign--------------------------------1  ${raw}`)
     if (!this.device) {
-      throw new Error("No device");
+      signResult = "No device";
     }
+    console.log(`sign--------------------------------2 ${redeemScript}`)
+
+    console.log(inputsArr)
+
+    console.log(JSON.stringify(inputsArr))
 
     if (!redeemScript) {
       redeemScript = getRedeemScriptFromRaw(raw, network);
     }
+    console.log('sign--------------------------------3')
 
     if (!redeemScript) {
-      throw new Error("redeem script not provided");
+      signResult = "redeem script not provided";
     }
 
+    console.log('sign--------------------------------4')
     const transaction = bitcoin.Transaction.fromHex(raw);
 
     const [devicePubKey, deviceXpub] = await this.getDeviceXpub(network);
@@ -238,18 +248,31 @@ class TrezorConnector extends EventEmitter {
     const outputs = constructOutputs(raw, network);
     const txs = constructPreTxs(inputsArr);
 
-    const signResult = await this.device.waitForSessionAndRun(function (
-      session
-    ) {
-      return session.signTx(
-        inputs,
-        outputs,
-        txs,
-        network === "mainnet" ? "bitcoin" : "testnet"
-      );
-    });
+    console.log('sign--------------------------------5')
 
-    return signResult.message.serialized.serialized_tx;
+    console.log(`inputs: ${JSON.stringify(inputs)}`)
+    console.log(`outputs: ${JSON.stringify(outputs)}`)
+    console.log(`txs: ${JSON.stringify(txs)}`)
+
+    try {
+      const signSession = await this.device.waitForSessionAndRun(function (
+        session
+      ) {
+        return session.signTx(
+          inputs,
+          outputs,
+          txs,
+          network === "mainnet" ? "bitcoin" : "testnet"
+        );
+      });
+      signResult = signSession.message.serialized.serialized_tx
+    } catch (err) {
+      return JSON.stringify(err);
+    }
+
+    console.log('sign--------------------------------6')
+
+    return signResult;
   }
 }
 
