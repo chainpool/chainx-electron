@@ -11,7 +11,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@polkadot/util": "^0.33.36",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "better-scroll": "^1.13.2",
     "bignumber.js": "^8.0.2",
     "bip38": "^2.0.2",
